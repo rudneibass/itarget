@@ -6,7 +6,7 @@ use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EventControllerTest extends TestCase
+class EventsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
