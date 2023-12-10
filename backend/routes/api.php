@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\RegistrationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-#php artisan route:list
-
+#run `php artisan route:list` to show full routes
 Route::apiResource('events', EventsController::class);
+Route::apiResource('registrations', RegistrationsController::class);
 
 #Route::controller(EventsController::class)->group(function(){
 #    Route::get('/events', 'index');

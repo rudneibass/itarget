@@ -12,4 +12,8 @@ class Event extends Model
     protected $fillable = ['name', 'start_date', 'end_date', 'status'];
     protected $hidden = [''];
     protected $casts = [''];  
+
+    public function registrations(){
+        return $this->belongsToMany(Registration::class);
+    }
 }
