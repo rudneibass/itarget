@@ -61,7 +61,7 @@ class RegistrationsController extends Controller
 
          } catch (ValidationException $e) {
 
-            return response()->json(['errors' => $e->errors()], 422);   
+            return response()->json( $e->errors(), 422);   
 
         } catch (\Exception $e) {    
 

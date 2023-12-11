@@ -15,7 +15,7 @@ class EventsController extends Controller
     {
         try {
             $events = Event::all();
-            return response()->json(['data' => $events]);
+            return response()->json($events);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

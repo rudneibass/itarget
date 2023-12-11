@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { ReactNode } from 'react';
 import './styles.css'
 
-export default function Index({cardTitle, shortDescription }: {cardTitle: string, shortDescription: string }) {
+export default function Index({cardTitle, shortDescription, children }: {cardTitle: string, shortDescription: string, children: ReactNode }) {
   return (
     <div className="card" >
     <div className="card-header" style={{border: "none", background: "#fff"}}>
@@ -12,7 +12,7 @@ export default function Index({cardTitle, shortDescription }: {cardTitle: string
     </div>
     <div className="card-body">
       <div className="container">
-        <slot></slot>
+        {children}
       </div>
     </div>
   </div>

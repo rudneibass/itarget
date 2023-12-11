@@ -1,17 +1,6 @@
-import axios from 'axios';
-import { getUserLocalStorage } from '../context/AuthProvider/util';
+import axios from 'axios'
 
-export const Api = axios.create({
-    baseURL: "https://jucas.fixtecnologia.com.br/api/v1/userglobal"
+export const api = axios.create({
+    //baseURL: import.meta.env.VITE_APP_BASE_URL
+    baseURL: 'http://127.0.0.1:8000/api/'
 })
-
-Api.interceptors.request.use(
-    (config) => {
-        const user = getUserLocalStorage()
-        config.headers.Authorization = user?.token; 
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    },
-)

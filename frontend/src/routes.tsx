@@ -18,6 +18,10 @@ export const routes = createBrowserRouter([
       {
         path: "/inscricoes",
         element: <Registrations />
+      },
+      {
+        path: "/inscricoes/:eventId",
+        element: <Registrations />
       }
     ]
   },
