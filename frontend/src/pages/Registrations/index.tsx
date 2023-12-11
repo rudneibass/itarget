@@ -1,135 +1,152 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState, FormEvent } from 'react'
+import axios from 'axios';
+
+import { RegistrationInterface } from '../../services/apiRegistrations/types'
+
+import svgLoadingGray from '../../assets/loading-gray-md.svg'
 import CustomCard from '../../components/CustomCard'
-import { Link } from 'react-router-dom'
-import svgLoadingWhite from '../../assets/loading-white-sm.svg'
-import { useParams } from "react-router-dom";
-import { apiRegistrations } from '../../services/apiRegistrations';
-
-import { toastContainer, errorAlert, successAlert } from '../../components/ToastifyAlerts'
-import { isValidCPF, isValidEmail } from '@utils/index';
-import { registrationsValidate } from './formValidate';
-
-type Inputs = {
-  name: string;
-  email: string;
-  cpf: string;
-  event_id?: string
-};
+import { apiRegistrations } from '../../services/apiRegistrations'
 
 export default function Index() {
+  const [data, setData] = useState<RegistrationInterface []>()
   const [loading, setLoading] = useState(false)
-  const { eventId } = useParams();
-  const [inputs, setInputs] = useState<Inputs>({} as Inputs);
+  const [searchParam, setSearchParam] = useState('')
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const name = event.target.name;
-    const value = event.target.value;
-    setInputs((prevValues) => ({ ...prevValues, [name]: value }));
-  }
-
- async function handleSibmit(event: FormEvent<HTMLFormElement>){
+  const [links, setLinks] = useState([])
+ 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault();
-
-    const data = inputs
-    data.event_id = eventId
-    
-    const formValid = registrationsValidate(data)
-
-    if(!formValid){
+    if(!searchParam || searchParam === ''){
+      getData()
       return
     }
-
-
-    setLoading(true)
-    const response = await apiRegistrations.store(data)
-      
-      if(response.length === 0){
-        errorAlert('Erro ao tentar realizar a inscrição., tente novamente mais tarde.')
-        setLoading(false)
-        return
-      }
-    
-      successAlert('Inscrição efetuada com sucesso!')
-      setLoading(false)
-     
-      return
+    setLoading(true) 
+      const response = await apiRegistrations.search(searchParam)
+      setData(response.data) 
+      setLinks(response.links)
+      setLoading(false) 
   }
- 
+
+async function handlePaginate(url: string){
+  try {
+    const response = await axios.get(url);
+    setData(response.data.data);
+    setLinks(response.data.links)
+  } catch (error) {
+    console.error('Erro na requisição GET:', error);
+  } finally {
+    setLoading(false);
+  }
+   
+}
+
+  async function getData(){
+      setLoading(true) 
+      const response = await apiRegistrations.list()
+      setData(response.data) 
+      setLinks(response.links)
+      setLoading(false) 
+  }
+
+  useEffect(()=> {
+    getData()
+  }, [])
+
   return (
     <div>
-      {toastContainer}
-       <CustomCard cardTitle='Inscrições' shortDescription='Listagem de inscrições'>
-          <section>
-            <form action="" onSubmit={handleSibmit}>
-              <div className="row">
-                
-                <div className="col-md-12">
-                  <div className="form-group mb-3">
-                    <label htmlFor="email">Name *</label>
-                    <input 
+      <CustomCard cardTitle='Inscrições' shortDescription='Lista de incrições'>
+        <section>
+            <form onSubmit={handleSubmit}>
+              <div className="row justify-content-end">
+                <div className="col-md-5">
+                  <div className="input-group mb-3">
+                    <input id="serach_param" 
+                      name="searchParam" 
                       type="text" 
-                      className="form-control"  
-                      id="name" 
-                      name="name" 
-                      value={inputs.name}
-                      onChange={handleChange}/>
-                  </div>
-                </div>
-
-                <div className="col-md-12">
-                  <div className="form-group mb-3">
-                    <label htmlFor="email">Email *</label>
-                    <input 
-                      type="text" 
-                      className="form-control"  
-                      id="email" 
-                      name="email"
-                      value={inputs.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-md-12">
-                  <div className="form-group mb-3">
-                    <label htmlFor="cpf">CPF *</label>
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        id="cpf" 
-                        name="cpf"
-                        value={inputs.cpf}
-                        onChange={handleChange}
+                      className="form-control" 
+                      placeholder="Pesquisar" 
+                      value={searchParam}
+                      onChange={(e) =>  setSearchParam(e.target.value)}
                       />
-                  </div>
-                </div>
-                    
-
-                <div className="col-md-12 d-flex justify-content-end pt-4 mt-5 border-top">
-                  
-                  <Link to="/" className="btn btn-outline-secondary">
-                    <i className="fs-7 bi-back"></i> Voltar
-                  </Link>
-                  &nbsp;
-
-                  {!loading && (
-                    <button type="submit" className="btn btn-secondary" style={{minWidth: '100px'}}>
-                      <i className="fs-7 bi-save"></i> Salvar
-                    </button>
-                  )}
-
-                  {loading && (
-                    <button className="btn btn-secondary" style={{minWidth: '100px'}}>
-                      <img src={svgLoadingWhite} />
-                    </button>
-                  )}
-                  
+                    <div className="input-group-append">
+                      <button className="btn bg-warning">
+                        <i className="fs-7 bi-search"></i>
+                      </button>
+                    </div>
+                  </div> 
                 </div>
               </div>
             </form>
           </section>
-        
-        </CustomCard>
+
+          <section>
+            <div className="table-responsive" style={{maxHeight: "40vh", overflowY: "scroll"}}>
+              <table className="table table-striped table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col"><small>nome</small></th>
+                    <th scope="col"><small>Email</small></th>
+                    <th scope="col"><small>Cpf</small></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data && data.length > 0 && !loading && (
+                    data!.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.name}</td>
+                        <td>{item.email}</td>
+                        <td>{item.cpf}</td>
+                      </tr>
+                    ))
+                
+                  )}
+                    
+                </tbody>
+              </table>
+              
+              {data?.length == 0 && !loading && (
+                <div className="alert alert-secondary text-center">
+                  Não há dados cadastrados!
+                </div>
+              )}
+              
+
+              {loading && (
+                <div className="alert alert-secondary text-center">
+                  <img src={svgLoadingGray} />
+                </div>
+              )}
+              
+            </div>
+          </section>
+          <section className='mt-3'>
+          <div className="d-flex justify-content-between p-1">
+                <small>Registros por página: 10</small>
+                
+                  <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                    {links && links.map((item, index)=>(
+                      <li 
+                        key={index} 
+                        className="page-item"
+                      >
+                        <a 
+                          className="page-link" 
+                          onClick={() => handlePaginate(item.url)} 
+                          dangerouslySetInnerHTML={{__html: item.label}} 
+                          style={{whiteSpace: "nowrap", color: "gray"}} 
+                        >
+                        </a>
+                      </li>
+                    ))}
+
+                    </ul>
+                  </nav>
+                
+            </div>
+          </section>
+
+      </CustomCard>
     </div>
   )
 }

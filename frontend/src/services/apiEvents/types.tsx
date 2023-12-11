@@ -3,12 +3,12 @@
 	name: string;
 	start_date: string,
 	end_date: string,
-	status: boolean
+	status: string
   }
 
   export interface EventStoreUpdateInterface {
 		name: string;
 		start_date: string,
 		end_date: string,
-		status: boolean
+		status: string
   }

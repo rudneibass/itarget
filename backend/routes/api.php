@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 #run `php artisan route:list` to show full routes
 Route::apiResource('events', EventsController::class);
+
+Route::get('registrations/search/{name}', [RegistrationsController::class, 'search']);
 Route::apiResource('registrations', RegistrationsController::class);
 
 #Route::controller(EventsController::class)->group(function(){

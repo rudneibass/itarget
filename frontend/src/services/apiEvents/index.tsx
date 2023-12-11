@@ -5,7 +5,7 @@ import { api } from '../api'
 async function list(): Promise<EventInterface[]> { 
   try {
     const response = await api.get('events')
-    
+    console.log(response.data)
     return response.data 
 
   } catch (error) {

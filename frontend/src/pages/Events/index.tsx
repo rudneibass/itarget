@@ -52,9 +52,16 @@ export default function Index() {
                         <td>{dateFormat(item.start_date)}</td>
                         <td>{dateFormat(item.end_date)}</td>
                         <td className="text-center">
-                          <Link to={`/inscricoes/${item.id}`} className="btn btn-sm btn-danger">
-                            <i className="fs-7 bi-pencil"></i> Inscreva-se
-                          </Link>  
+                          {item.status === '1' && (
+                            <Link to={`/inscricoes/${item.id}`} className="btn btn-sm btn-danger">
+                               <i className="fs-7 bi-pencil"></i> Inscreva-se
+                            </Link> 
+                          )} 
+                          {item.status === '0' && (
+                            <button type="button" className="btn btn-sm btn-secondary">
+                               <i className="fs-7 bi-clock"></i> Encerrado
+                            </button> 
+                          )} 
                         </td>
                       </tr>
                     ))

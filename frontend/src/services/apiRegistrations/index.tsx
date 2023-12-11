@@ -1,7 +1,5 @@
 import { RegistrationInterface,RegistrationStoreUpdateInterface } from './types'
 import { api } from '../api'
- 
-import { toastContainer, errorAlert, successAlert } from '../../components/ToastifyAlerts'
 
 async function store(data :RegistrationStoreUpdateInterface): Promise<RegistrationInterface[]>{
   try {
@@ -20,7 +18,9 @@ async function list(): Promise<RegistrationInterface[]> {
   try {
     const response = await api.get('registrations')
     
-    return response.data 
+    console.log(response.data)
+    return response.data
+
 
   } catch (error) {
     console.log(error)
@@ -30,7 +30,8 @@ async function list(): Promise<RegistrationInterface[]> {
 
 async function search(searchParam: string): Promise<RegistrationInterface[]> { 
   try {
-    const response = await api.get(`registrations/${searchParam}`)
+    const response = await api.get(`registrations/search/${searchParam}`)
+   
     return response.data 
 
   } catch (error) {

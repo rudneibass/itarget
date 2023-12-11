@@ -24,8 +24,22 @@ class RegistrationsController extends Controller
     public function index()
     {
         try {
-            $registrations = Registration::all();
-            return response()->json(['data' => $registrations]);
+            $registrations = Registration::paginate(10);
+            return response()->json($registrations);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request, $name){
+        try {
+            $query = Registration::where('name', 'like', "%$name%");
+            $result = $query->paginate(10);
+
+            return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -35,22 +49,6 @@ class RegistrationsController extends Controller
      * @param  \App\Http\Requests\RegistrationsStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    /*public function store(RegistrationsStoreRequest $request)
-    {
-        try {
-
-            #$request_data = $request->all(); 
-            #$request_data['status'] = $request->has('status');
-            #$new_object = Registration::create($request_data);
-
-            $registration = Registration::create($request->all());
-            return response()->json(['data' => $registration], 201);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }*/
-
     public function store(RegistrationsStoreRequest $request)
     {
         try {  
