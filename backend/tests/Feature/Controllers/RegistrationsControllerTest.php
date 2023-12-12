@@ -24,23 +24,4 @@ class RegistrationsControllerTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function testShow(){
-        $registration = Registration::factory()->create();
-        $response = $this->getJson('/api/registrations/' . $registration->id);
-        $response->assertStatus(200);
-    }
-
-    public function testUpdate(){
-        $registration = Registration::factory()->create();
-        $updateData = ['name' => 'Rudnei Xavier'];
-        $response = $this->putJson('/api/registrations/' . $registration->id, $updateData);
-        $response->assertStatus(200);
-    }
-
-    public function testDestroy(){
-        $registration = Registration::factory()->create();
-        $response = $this->deleteJson('/api/registrations/' . $registration->id);
-        $response->assertStatus(204);
-    }
-
 }

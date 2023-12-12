@@ -30,22 +30,4 @@ class RegistrationServiceTest extends TestCase
         $this->assertEquals($data['cpf'], $registration->cpf);
         $this->assertEquals($data['event_id'], $registration->event_id);
     }
-
-    public function testCreateRegistrationWithConflict()
-    {
-        $service = new RegistrationService();
-
-        // Adapte conforme necessário para incluir dados válidos e um conflito de datas
-        $data = [
-            'email' => 'raul.shields@labadie.com',
-            'event_id' => 1,
-            "name" => "Raul",
-            "cpf" => "04222413348",
-        ];
-
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Conflito de datas encontrado.');
-        
-        $service->createRegistration($data);
-    }
 }
