@@ -20,7 +20,7 @@ class RegistrationRepository  extends AbstractRepository {
         return $this->model
         ::where('email', $email)
         ->where('event_id', $eventId)
-        ->get()->first();
+        ->get()->first()->toArray();
     }
     
     public function findByParams(array $params = []): ?array {

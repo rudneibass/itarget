@@ -14,7 +14,7 @@ class AbstractRepository implements RepositoryInterface {
         $this->model = $model;
     }
     
-    public function list(): Collection{
+    public function list(): ?Collection{
         return $this->model::all();
     }
 

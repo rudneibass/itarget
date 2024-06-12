@@ -17,7 +17,7 @@ class RegistrationService extends AbstractService
         return $this->repository->findByParams($registration);
     }
 
-    public function create(array $registration): ?array {
+    public function create(array $registration): array {
 
         $check_existing_registration_event = new CheckExistingRegistrationEvent($registration);
         if($check_existing_registration_event->invalid){

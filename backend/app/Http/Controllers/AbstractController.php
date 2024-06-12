@@ -62,7 +62,7 @@ abstract class AbstractController extends BaseController
         try{
             $this->responseData = $action();
             $this->responseHttpStatus = 200;
-            $this->responseMessage = 'Operação completada com sucesso';
+            $this->responseMessage = '200';
 
         }catch (Exception $e){
             $this->responseData = [];
