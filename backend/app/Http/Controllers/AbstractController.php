@@ -8,8 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Registration\RegistrationCreateRequest;
-use App\Http\Requests\Registration\RegistrationUpdateRequest;
 use Exception;
 
 abstract class AbstractController extends BaseController
@@ -46,9 +44,9 @@ abstract class AbstractController extends BaseController
         });
     }
 
-    public function create(RegistrationCreateRequest $request){
+    public function create(Request $request){
         return $this->executeAction(function() use ($request){
-            return $this->service->create($request->validated());
+            return $this->service->create($request->all());
         });
     }
 
