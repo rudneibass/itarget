@@ -1,19 +1,26 @@
 <?php
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\ServiceInterface;
 
-abstract class AbstractService {
+abstract class AbstractService implements ServiceInterface {
 
     protected $repository;
     
-    public function get(int $id): ?Model {
-        return $this->repository->get($id);
+    public function get(int $id): ?array {
+        return [$this->repository->get($id)];
     }
     
-    public function list(): Collection {
-        return $this->repository->list();
+    public function list(): ?array {
+        $list = [];
+        foreach($this->repository->list() as $item){
+            $list[] = $item;
+        }
+        return $list;
+    }
+
+    public function paginate(int $itemsPerPage = 10): ?array {
+        return [$this->repository->paginate($itemsPerPage)];
     }
 
     public function create(array $request): ?array {

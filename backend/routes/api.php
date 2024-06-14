@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('registrations')->group(function(){
     Route::controller(RegistrationController::class)->group(function(){
         Route::get('/list', 'list');
+        Route::get('/paginate/{itemsPerPage}', 'paginate');
         Route::get('/get/{id}', 'get');
         Route::post('/search', 'findByParams');
         Route::post('/create', 'create');

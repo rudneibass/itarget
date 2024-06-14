@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\RepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,8 +15,12 @@ class AbstractRepository implements RepositoryInterface {
         $this->model = $model;
     }
     
-    public function list(): ?Collection{
+    public function list(): ?Collection {
         return $this->model::all();
+    }
+
+    public function paginate(int $itemsPerPage): ?LengthAwarePaginator {
+        return $this->model::paginate($itemsPerPage);
     }
 
     public function get(int $id): ?Model {

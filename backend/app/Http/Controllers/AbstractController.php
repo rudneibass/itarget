@@ -28,6 +28,12 @@ abstract class AbstractController extends BaseController
         });
     }
 
+    public function paginate(int $itemsPerPage){
+        return $this->executeAction(function() use ($itemsPerPage){
+             return $this->service->paginate($itemsPerPage);
+         });
+     }
+
     public function get($id){
         return $this->executeAction(function() use ($id){
             return $this->service->get((int)$id);

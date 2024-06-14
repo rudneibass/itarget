@@ -1,10 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
 namespace App\Repositories;
-use App\Models\Registration;
-use Illuminate\Database\Eloquent\Collection;
+
 use Illuminate\Support\Facades\DB;
+use App\Models\Registration;
 
 class RegistrationRepository  extends AbstractRepository {
     
@@ -20,7 +21,7 @@ class RegistrationRepository  extends AbstractRepository {
         return $this->model
         ::where('email', $email)
         ->where('event_id', $eventId)
-        ->get()->first()->toArray();
+        ->get()->toArray();
     }
     
     public function findByParams(array $params = []): ?array {
