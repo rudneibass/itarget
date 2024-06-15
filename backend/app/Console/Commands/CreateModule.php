@@ -42,18 +42,19 @@ class CreateModule extends Command
     protected function createRoutes($name)
     {
         $routesPath = base_path('routes/api.php');
+        $name = strtolower($name);
         $routeContent =
-            "Route::prefix('$name')->group(function(){
-                Route::controller({$name}Controller::class)->group(function(){
-                    Route::get('/list', 'list');
-                    Route::get('/paginate/{itemsPerPage}', 'paginate');
-                    Route::get('/get/{id}', 'get');
-                    Route::post('/search', 'findByParams');
-                    Route::post('/create', 'create');
-                    Route::put('/update/{id}', 'update');
-                    Route::delete('/delete/{id}', 'delete');
-                });
-            });";
+"Route::prefix('$name')->group(function(){
+    Route::controller({$name}Controller::class)->group(function(){
+        Route::get('/list', 'list');
+        Route::get('/paginate/{itemsPerPage}', 'paginate');
+        Route::get('/get/{id}', 'get');
+        Route::post('/search', 'findByParams');
+        Route::post('/create', 'create');
+        Route::put('/update/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
+    });
+});";
 
         File::append($routesPath, $routeContent);
         $this->info("Routes for $name added to routes/api.php");
@@ -63,21 +64,22 @@ class CreateModule extends Command
     {
         $controllerPath = app_path("Http/Controllers/{$name}Controller.php");
         $controllerTemplate = 
-        "<?php
+"<?php
 
-            namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-            use App\Services\Registration\\{$name}Service;
+use App\Services\Registration\\{$name}Service;
 
-            class {$name}Controller extends AbstractController
-            {
-                protected \$service;
+class {$name}Controller extends AbstractController
+{
+    protected \$service;
+    protected \$createRequest;
+    protected \$updateRequest;
 
-                public function __construct(){
-                    \$this->service = new {$name}Service;
-                }
-            }
-        ";
+    public function __construct(){
+        \$this->service = new {$name}Service;
+    }
+}";
 
         File::put($controllerPath, $controllerTemplate);
         $this->info("Controller for $name created at app/Http/Controllers/{$name}Controller.php");
@@ -90,23 +92,22 @@ class CreateModule extends Command
 
         $servicePath = "$serviceDirectory/{$name}Service.php";
         $serviceTemplate = 
-        "<?php
+"<?php
 
-            declare(strict_types=1);
-            namespace App\Services\Registration;
+declare(strict_types=1);
+namespace App\Services\Registration;
 
-            use App\Services\AbstractService;
-            use App\Repositories\\{$name}Repository;
+use App\Services\AbstractService;
+use App\Repositories\\{$name}Repository;
 
-            class {$name}Service extends AbstractService
-            {
-                protected \$repository;
+class {$name}Service extends AbstractService
+{
+    protected \$repository;
 
-                public function __construct(){
-                    \$this->repository = new {$name}Repository;
-                }
-            }
-        ";
+    public function __construct(){
+        \$this->repository = new {$name}Repository;
+    }
+}";
 
         File::put($servicePath, $serviceTemplate);
         $this->info("Service for $name created at app/Services/Registration/$name/{$name}Service.php");
@@ -116,21 +117,20 @@ class CreateModule extends Command
     {
         $repositoryPath = app_path("Repositories/{$name}Repository.php");
         $repositoryTemplate = 
-        "<?php
+"<?php
 
-            declare(strict_types=1);
-            namespace App\Repositories;
+declare(strict_types=1);
+namespace App\Repositories;
 
-            use Illuminate\Support\Facades\DB;
-            use App\Models\\{$name};
+use Illuminate\Support\Facades\DB;
+use App\Models\\{$name};
 
-            class {$name}Repository extends AbstractRepository
-            {
-                public function __construct() {
-                    parent::__construct(new {$name});
-                }
-            }
-        ";
+class {$name}Repository extends AbstractRepository
+{
+    public function __construct() {
+        parent::__construct(new {$name});
+    }
+}";
 
         File::put($repositoryPath, $repositoryTemplate);
         $this->info("Repository for $name created at app/Repositories/{$name}Repository.php");

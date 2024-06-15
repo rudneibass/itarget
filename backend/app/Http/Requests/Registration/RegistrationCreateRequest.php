@@ -25,8 +25,8 @@ class RegistrationCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|',
-            'cpf' => 'required|numeric|',
+            'email' => 'required|email',
+            'cpf' => 'required|numeric',
             'event_id' => 'required|exists:events,id',
         ];
     }
