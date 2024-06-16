@@ -34,6 +34,7 @@ class CreateModule extends Command
         $this->createService($name);
         $this->createRepository($name);
         $this->createModel($name);
+        $this->createMigration($name);
 
         $this->info("Module $name created successfully!");
 
@@ -168,6 +169,20 @@ class {$nameCamelCase} extends Model
 }";
 
         File::put($modelPath, $modelTemplate);
-        $this->info("Model for $name created at app/Models/{$nameCamelCase}.php");
-    }    
+        $this->info("Model for $name created at app/Models/{$nameCamelCase}.php.");
+    }   
+    
+    
+    protected function createMigration($name)
+    {
+        $tableName = strtolower($name);
+        $migrationName = "create_{$tableName}_table";
+
+        $this->call('make:migration', [
+            'name' => $migrationName,
+            '--create' => $tableName
+        ]);
+
+        $this->info("Migration for $name created with name $migrationName");
+    }
 }

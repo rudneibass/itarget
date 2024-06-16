@@ -11,6 +11,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Registre o seu comando aqui
         \App\Console\Commands\CreateModule::class,
+        \App\Console\Commands\DeleteModule::class,
     ];
 
 
