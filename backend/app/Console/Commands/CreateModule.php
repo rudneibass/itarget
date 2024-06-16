@@ -33,6 +33,7 @@ class CreateModule extends Command
         $this->createController($name);
         $this->createService($name);
         $this->createRepository($name);
+        $this->createModel($name);
 
         $this->info("Module $name created successfully!");
 
@@ -62,35 +63,41 @@ class CreateModule extends Command
 
     protected function createController($name)
     {
-        $controllerPath = app_path("Http/Controllers/{$name}Controller.php");
+        $nameLowerCase = strtolower($name);
+        $nameCamelCase =  lcfirst($name);
+
+        $controllerPath = app_path("Http/Controllers/{$nameCamelCase}Controller.php");
         $controllerTemplate = 
 "<?php
 
 namespace App\Http\Controllers;
 
-use App\Services\Registration\\{$name}Service;
+use App\Services\Registration\\{$nameCamelCase}Service;
 
-class {$name}Controller extends AbstractController
+class {$nameCamelCase}Controller extends AbstractController
 {
     protected \$service;
     protected \$createRequest;
     protected \$updateRequest;
 
     public function __construct(){
-        \$this->service = new {$name}Service;
+        \$this->service = new {$nameCamelCase}Service;
     }
 }";
 
         File::put($controllerPath, $controllerTemplate);
-        $this->info("Controller for $name created at app/Http/Controllers/{$name}Controller.php");
+        $this->info("Controller for $name created at app/Http/Controllers/{$nameCamelCase}Controller.php");
     }
 
     protected function createService($name)
     {
-        $serviceDirectory = app_path("Services/Registration/$name");
+        $nameLowerCase = strtolower($name);
+        $nameCamelCase =  lcfirst($name);
+
+        $serviceDirectory = app_path("Services/$nameCamelCase");
         File::makeDirectory($serviceDirectory, 0755, true);
 
-        $servicePath = "$serviceDirectory/{$name}Service.php";
+        $servicePath = "$serviceDirectory/{$nameCamelCase}Service.php";
         $serviceTemplate = 
 "<?php
 
@@ -98,24 +105,26 @@ declare(strict_types=1);
 namespace App\Services\Registration;
 
 use App\Services\AbstractService;
-use App\Repositories\\{$name}Repository;
+use App\Repositories\\{$nameCamelCase}Repository;
 
-class {$name}Service extends AbstractService
+class {$nameCamelCase}Service extends AbstractService
 {
     protected \$repository;
 
     public function __construct(){
-        \$this->repository = new {$name}Repository;
+        \$this->repository = new {$nameCamelCase}Repository;
     }
 }";
 
         File::put($servicePath, $serviceTemplate);
-        $this->info("Service for $name created at app/Services/Registration/$name/{$name}Service.php");
+        $this->info("Service for $name created at app/Services/$nameCamelCase/{$nameCamelCase}Service.php");
     }
 
     protected function createRepository($name)
     {
-        $repositoryPath = app_path("Repositories/{$name}Repository.php");
+        $nameLowerCase = strtolower($name);
+        $nameCamelCase =  lcfirst($name);
+        $repositoryPath = app_path("Repositories/{$nameCamelCase}Repository.php");
         $repositoryTemplate = 
 "<?php
 
@@ -123,16 +132,42 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\\{$name};
+use App\Models\\{$nameCamelCase};
 
-class {$name}Repository extends AbstractRepository
+class {$nameCamelCase}Repository extends AbstractRepository
 {
     public function __construct() {
-        parent::__construct(new {$name});
+        parent::__construct(new {$nameCamelCase});
     }
 }";
 
         File::put($repositoryPath, $repositoryTemplate);
-        $this->info("Repository for $name created at app/Repositories/{$name}Repository.php");
+        $this->info("Repository for $name created at app/Repositories/{$nameCamelCase}Repository.php");
     }
+
+    protected function createModel($name)
+    {
+        $nameLowerCase = strtolower($name);
+        $nameCamelCase =  lcfirst($name);
+        $modelPath = app_path("Models/{$name}.php");
+        $modelTemplate =   
+"<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class {$nameCamelCase} extends Model
+{
+    use HasFactory;
+    protected \$table='{$nameLowerCase}';
+    protected \$fillable = [''];
+    protected \$hidden = [''];
+    protected \$casts = [''];
+}";
+
+        File::put($modelPath, $modelTemplate);
+        $this->info("Model for $name created at app/Models/{$nameCamelCase}.php");
+    }    
 }
