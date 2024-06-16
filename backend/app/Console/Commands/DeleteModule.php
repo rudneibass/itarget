@@ -78,11 +78,11 @@ class DeleteModule extends Command
 
     protected function deleteRepository($name)
     {
-        $repositoryDirectory = app_path("Repositories/$name");
+        $repositoryDirectory = app_path("Repositories/{$name}Repository.php");
 
         if (File::exists($repositoryDirectory)) {
-            File::deleteDirectory($repositoryDirectory);
-            $this->info("Deleted app/Repositories/$name");
+            File::delete($repositoryDirectory);
+            $this->info("Deleted app/Repositories/{$name}Repository.php");
         }
     }
 

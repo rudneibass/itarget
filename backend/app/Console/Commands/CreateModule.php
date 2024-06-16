@@ -76,7 +76,7 @@ Route::prefix('$nameLowerCase')->group(function(){
 
 namespace App\Http\Controllers;
 
-use App\Services\Registration\\{$name}Service;
+use App\Services\\{$name}\\{$name}Service;
 
 class {$name}Controller extends AbstractController
 {
@@ -103,7 +103,7 @@ class {$name}Controller extends AbstractController
 "<?php
 
 declare(strict_types=1);
-namespace App\Services\Registration;
+namespace App\Services\\{$name};
 
 use App\Services\AbstractService;
 use App\Repositories\\{$name}Repository;
@@ -123,10 +123,7 @@ class {$name}Service extends AbstractService
 
     protected function createRepository($name)
     {
-        $repositoryDirectory = app_path("Repositories/$name");
-        File::makeDirectory($repositoryDirectory, 0755, true);
-        $repositoryPath = "$repositoryDirectory/{$name}Repository.php";
-
+        $repositoryPath = app_path("Repositories/{$name}Repository.php");
         $repositoryTemplate = 
 "<?php
 
@@ -169,7 +166,7 @@ class {$name} extends Model
 }";
 
         File::put($modelPath, $modelTemplate);
-        $this->info("Created app/Models/{$name}.php. (WARNING! Access the model and fill in the \$fillable attribute)");
+        $this->info("Created app/Models/{$name}.php. (WARNING! Access the model and fill in the \$fillable attribute and check \$table name)");
     }   
     
     

@@ -19,4 +19,3 @@ Route::prefix('registrations')->group(function(){
         Route::delete('/delete/{id}', 'delete');
     });
 });
-
