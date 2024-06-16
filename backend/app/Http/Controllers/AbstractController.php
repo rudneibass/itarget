@@ -97,7 +97,7 @@ abstract class AbstractController extends BaseController
         }catch (Exception $e){
             $this->responseData = [];
             $this->responseHttpStatus = 500;
-            $this->responseMessage = 'Erro ao tentar realizar operação. Exeption: '.$e->getMessage();
+            $this->responseMessage = $e->getMessage();
         }
 
         return response()->json([

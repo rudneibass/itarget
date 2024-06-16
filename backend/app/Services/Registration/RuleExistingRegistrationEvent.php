@@ -3,7 +3,7 @@ namespace App\Services\Registration;
 
 use App\Repositories\RegistrationRepository;
 
-class CheckExistingRegistrationEvent
+class RuleExistingRegistrationEvent
 {
     public array $registration;
     public string $message= 'Endereço de email ainda não está inscrito nesse evento!';

@@ -4,7 +4,7 @@ namespace App\Services\Registration;
 use App\Repositories\EventRepository;
 use App\Repositories\RegistrationRepository;
 
-class CheckConflictBetweenEventData
+class RuleConflictBetweenEventData
 {
     public array $registration;
     public string $message = 'Não conflito de datas entre eventos.';
