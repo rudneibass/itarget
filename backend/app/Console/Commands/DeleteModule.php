@@ -19,7 +19,7 @@ class DeleteModule extends Command
      *
      * @var string
      */
-    protected $description = 'Delete a module with its routes, controller, service, repository, model, and migration';
+    protected $description = 'Delete a module with routes, controller, service, and repository';
 
     /**
      * Execute the console command.
@@ -45,62 +45,54 @@ class DeleteModule extends Command
     {
         $routesPath = base_path('routes/api.php');
         $nameLowerCase = strtolower($name);
-        $routeContent = 
-"Route::prefix('$nameLowerCase')->group(function(){
-    Route::controller({$name}Controller::class)->group(function(){
-        Route::get('/list', 'list');
-        Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/get/{id}', 'get');
-        Route::post('/search', 'findByParams');
-        Route::post('/create', 'create');
-        Route::put('/update/{id}', 'update');
-        Route::delete('/delete/{id}', 'delete');
-    });
-});";
 
-        $routesFileContent = File::get($routesPath);
-        $routesFileContent = str_replace($routeContent, '', $routesFileContent);
-        File::put($routesPath, $routesFileContent);
+        $routeStart = "use App\Http\Controllers\\{$name}Controller;";
+        $routePattern = "/use App\\\Http\\\Controllers\\\{$name}Controller;\nRoute::prefix\('$nameLowerCase'\)->group\(function\(\){\n\s*Route::controller\({$name}Controller::class\)->group\(function\(\){\n\s*Route::get\(\/list\', \'list\'\);\n\s*Route::get\(\/paginate\/\{itemsPerPage\}\', \'paginate\'\);\n\s*Route::get\(\/get\/\{id\}\', \'get\'\);\n\s*Route::post\(\/search\', \'findByParams\'\);\n\s*Route::post\(\/create\', \'create\'\);\n\s*Route::put\(\/update\/\{id\}\', \'update\'\);\n\s*Route::delete\(\/delete\/\{id\}\', \'delete\'\);\n\s*}\);\n\s*}\);\n\n/";
 
-        $this->info("Routes for $name removed from routes/api.php");
+        $routesContent = File::get($routesPath);
+        $routesContent = preg_replace($routePattern, '', $routesContent);
+
+        File::put($routesPath, $routesContent);
+        $this->info("Deleted routes for $name in routes/api.php");
     }
 
     protected function deleteController($name)
     {
-        $nameCamelCase =  lcfirst($name);
-        $controllerPath = app_path("Http/Controllers/{$nameCamelCase}Controller.php");
+        $controllerPath = app_path("Http/Controllers/{$name}Controller.php");
+
         if (File::exists($controllerPath)) {
             File::delete($controllerPath);
-            $this->info("Controller for $name deleted at app/Http/Controllers/{$nameCamelCase}Controller.php");
+            $this->info("Deleted app/Http/Controllers/{$name}Controller.php");
         }
     }
 
     protected function deleteService($name)
     {
-        $nameCamelCase =  lcfirst($name);
-        $serviceDirectory = app_path("Services/$nameCamelCase");
+        $serviceDirectory = app_path("Services/$name");
 
         if (File::exists($serviceDirectory)) {
             File::deleteDirectory($serviceDirectory);
-            $this->info("Service directory for $name deleted at app/Services/$nameCamelCase");
+            $this->info("Deleted app/Services/$name");
         }
     }
 
     protected function deleteRepository($name)
     {
-        $repositoryPath = app_path("Repositories/{$name}Repository.php");
-        if (File::exists($repositoryPath)) {
-            File::delete($repositoryPath);
-            $this->info("Repository for $name deleted at app/Repositories/{$name}Repository.php");
+        $repositoryDirectory = app_path("Repositories/$name");
+
+        if (File::exists($repositoryDirectory)) {
+            File::deleteDirectory($repositoryDirectory);
+            $this->info("Deleted app/Repositories/$name");
         }
     }
 
     protected function deleteModel($name)
     {
         $modelPath = app_path("Models/{$name}.php");
+
         if (File::exists($modelPath)) {
             File::delete($modelPath);
-            $this->info("Model for $name deleted at app/Models/{$name}.php");
+            $this->info("Deleted app/Models/{$name}.php");
         }
     }
 
@@ -112,7 +104,7 @@ class DeleteModule extends Command
         foreach ($migrationFiles as $file) {
             if (strpos($file->getFilename(), "create_{$tableName}_table") !== false) {
                 File::delete($file->getPathname());
-                $this->info("Migration file {$file->getFilename()} deleted.");
+                $this->info("Deleted migration " . $file->getFilename());
             }
         }
     }

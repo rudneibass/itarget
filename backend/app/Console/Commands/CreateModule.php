@@ -43,10 +43,13 @@ class CreateModule extends Command
 
     protected function createRoutes($name)
     {
+        $nameLowerCase = strtolower($name);
+
         $routesPath = base_path('routes/api.php');
-        $name = strtolower($name);
         $routeContent =
-"Route::prefix('$name')->group(function(){
+"
+use App\Http\Controllers\\{$name}Controller;
+Route::prefix('$nameLowerCase')->group(function(){
     Route::controller({$name}Controller::class)->group(function(){
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
@@ -56,49 +59,46 @@ class CreateModule extends Command
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
     });
-});";
+});
+
+";
 
         File::append($routesPath, $routeContent);
-        $this->info("Routes for $name added to routes/api.php");
+        $this->info("Created routes for $name in routes/api.php");
     }
 
     protected function createController($name)
     {
-        $nameLowerCase = strtolower($name);
-        $nameCamelCase =  lcfirst($name);
-
-        $controllerPath = app_path("Http/Controllers/{$nameCamelCase}Controller.php");
+       
+        $controllerPath = app_path("Http/Controllers/{$name}Controller.php");
         $controllerTemplate = 
 "<?php
 
 namespace App\Http\Controllers;
 
-use App\Services\Registration\\{$nameCamelCase}Service;
+use App\Services\Registration\\{$name}Service;
 
-class {$nameCamelCase}Controller extends AbstractController
+class {$name}Controller extends AbstractController
 {
     protected \$service;
     protected \$createRequest;
     protected \$updateRequest;
 
     public function __construct(){
-        \$this->service = new {$nameCamelCase}Service;
+        \$this->service = new {$name}Service;
     }
 }";
 
         File::put($controllerPath, $controllerTemplate);
-        $this->info("Controller for $name created at app/Http/Controllers/{$nameCamelCase}Controller.php");
+        $this->info("Created app/Http/Controllers/{$name}Controller.php");
     }
 
     protected function createService($name)
     {
-        $nameLowerCase = strtolower($name);
-        $nameCamelCase =  lcfirst($name);
-
-        $serviceDirectory = app_path("Services/$nameCamelCase");
+        $serviceDirectory = app_path("Services/$name");
         File::makeDirectory($serviceDirectory, 0755, true);
-
-        $servicePath = "$serviceDirectory/{$nameCamelCase}Service.php";
+        $servicePath = "$serviceDirectory/{$name}Service.php";
+        
         $serviceTemplate = 
 "<?php
 
@@ -106,26 +106,27 @@ declare(strict_types=1);
 namespace App\Services\Registration;
 
 use App\Services\AbstractService;
-use App\Repositories\\{$nameCamelCase}Repository;
+use App\Repositories\\{$name}Repository;
 
-class {$nameCamelCase}Service extends AbstractService
+class {$name}Service extends AbstractService
 {
     protected \$repository;
 
     public function __construct(){
-        \$this->repository = new {$nameCamelCase}Repository;
+        \$this->repository = new {$name}Repository;
     }
 }";
 
         File::put($servicePath, $serviceTemplate);
-        $this->info("Service for $name created at app/Services/$nameCamelCase/{$nameCamelCase}Service.php");
+        $this->info("Created app/Services/$name/{$name}Service.php");
     }
 
     protected function createRepository($name)
     {
-        $nameLowerCase = strtolower($name);
-        $nameCamelCase =  lcfirst($name);
-        $repositoryPath = app_path("Repositories/{$nameCamelCase}Repository.php");
+        $repositoryDirectory = app_path("Repositories/$name");
+        File::makeDirectory($repositoryDirectory, 0755, true);
+        $repositoryPath = "$repositoryDirectory/{$name}Repository.php";
+
         $repositoryTemplate = 
 "<?php
 
@@ -133,23 +134,22 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\\{$nameCamelCase};
+use App\Models\\{$name};
 
-class {$nameCamelCase}Repository extends AbstractRepository
+class {$name}Repository extends AbstractRepository
 {
     public function __construct() {
-        parent::__construct(new {$nameCamelCase});
+        parent::__construct(new {$name});
     }
 }";
 
         File::put($repositoryPath, $repositoryTemplate);
-        $this->info("Repository for $name created at app/Repositories/{$nameCamelCase}Repository.php");
+        $this->info("Created app/Repositories/{$name}Repository.php");
     }
 
     protected function createModel($name)
     {
         $nameLowerCase = strtolower($name);
-        $nameCamelCase =  lcfirst($name);
         $modelPath = app_path("Models/{$name}.php");
         $modelTemplate =   
 "<?php
@@ -159,7 +159,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class {$nameCamelCase} extends Model
+class {$name} extends Model
 {
     use HasFactory;
     protected \$table='{$nameLowerCase}';
@@ -169,7 +169,7 @@ class {$nameCamelCase} extends Model
 }";
 
         File::put($modelPath, $modelTemplate);
-        $this->info("Model for $name created at app/Models/{$nameCamelCase}.php.");
+        $this->info("Created app/Models/{$name}.php. (WARNING! Access the model and fill in the \$fillable attribute)");
     }   
     
     
@@ -183,6 +183,6 @@ class {$nameCamelCase} extends Model
             '--create' => $tableName
         ]);
 
-        $this->info("Migration for $name created with name $migrationName");
+        $this->info("Created migration at database/migrations.");
     }
 }
