@@ -19,3 +19,17 @@ Route::prefix('registrations')->group(function(){
         Route::delete('/delete/{id}', 'delete');
     });
 });
+
+use App\Http\Controllers\EventController;
+Route::prefix('event')->group(function(){
+    Route::controller(EventController::class)->group(function(){
+        Route::get('/list', 'list');
+        Route::get('/paginate/{itemsPerPage}', 'paginate');
+        Route::get('/get/{id}', 'get');
+        Route::post('/search', 'findByParams');
+        Route::post('/create', 'create');
+        Route::put('/update/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
+    });
+});
+
