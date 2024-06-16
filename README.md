@@ -24,3 +24,8 @@ Alguns testes foram implementados no backend. Se estiver no diretório principal
 2. `npm install`
 3. `npm run dev`
 4. Abra o navegador e acesse o sistema em http://127.0.0.1:5173
+
+## Comandos Artisan Personalizados
+
+ - `php artisan create:module YourModuleName`
+ - `php artisan delete:module YourModuleName`
