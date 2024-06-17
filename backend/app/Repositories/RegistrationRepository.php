@@ -42,7 +42,6 @@ class RegistrationRepository  extends AbstractRepository {
 
     public function search(array $params = []): ?LengthAwarePaginator {
         $result = $this->findAllByParams();
-        
         $perPage = isset($params['paginate']) && !empty($params['paginate']) ? (int)$params['paginate'] : 10;
         $page = isset($params['page']) ? (int)$params['page'] : 1;
         $total = count($result);
