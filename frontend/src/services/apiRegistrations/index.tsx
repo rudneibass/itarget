@@ -4,7 +4,7 @@ import  { ENDPOINTS }  from '../../enums/endpoints'
 
 async function store(data :RegistrationStoreUpdateInterface): Promise<RegistrationInterface[]>{
   try {
-    const response = await api.post(ENDPOINTS.registration.endpoint, data)
+    const response = await api.post(`${ENDPOINTS.registration.endpoint}${ENDPOINTS.registration.default_actions.create}`, data)
       return response.data 
   } catch (error) {
     console.log('An error occurred:', error);
