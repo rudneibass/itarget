@@ -28,10 +28,12 @@ export default function Index() {
   }
 
 async function handlePaginate(url: string){
+  
   try {
     const response = await axios.get(url);
-    setData(response.data.data);
-    setLinks(response.data.links)
+    const response_data = response.data.response_data[0];
+    setData(response_data.data);
+    setLinks(response_data.links)
   } catch (error) {
     console.error('Erro na requisição GET:', error);
   } finally {
@@ -42,9 +44,9 @@ async function handlePaginate(url: string){
 
   async function getData(){
       setLoading(true) 
-      const response = await apiRegistrations.list()
-      setData(response.data) 
-      setLinks(response.links)
+      const response_data = await apiRegistrations.list()
+      setData(response_data.data) 
+      setLinks(response_data.links)
       setLoading(false) 
   }
 
