@@ -51,18 +51,20 @@ class CreateModule extends Command
 use App\Http\Controllers\\{$name}Controller;
 Route::prefix('$nameLowerCase')->group(function(){
     Route::controller({$name}Controller::class)->group(function(){
+        # Default routes
+        Route::get('/', 'list');
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
         Route::get('/get/{id}', 'get');
-        Route::post('/search', 'findByParams');
         Route::post('/create', 'create');
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
+
+        # Custom routes
     });
 });
 
 ";
-
         File::append($routesPath, $routeContent);
         $this->info("Created routes for $name in routes/api.php");
     }

@@ -14,8 +14,12 @@ class RegistrationService extends AbstractService
         $this->repository = new  RegistrationRepository;
     }
 
-    public function findByParams(array $registration){
-        return $this->repository->findByParams($registration);
+    public function findAllByParams(array $params){
+        return $this->repository->findAllByParams($params);
+    }
+
+    public function search(array $params){
+        return $this->repository->search($params);
     }
 
     public function create(array $registration): ?array {

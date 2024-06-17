@@ -23,67 +23,7 @@ abstract class AbstractController extends BaseController
     protected int $responseHttpStatus;
     protected string $responseMessage;
 
-    public function list(){
-       return $this->executeAction(function(){
-            return $this->service->list();
-        });
-    }
-
-    public function paginate(int $itemsPerPage){
-        return $this->executeAction(function() use ($itemsPerPage){
-             return $this->service->paginate($itemsPerPage);
-         });
-     }
-
-    public function get($id){
-        return $this->executeAction(function() use ($id){
-            return $this->service->get((int)$id);
-        });
-    }
-
-    public function findByParams(Request $request){
-        return $this->executeAction(function() use ($request){
-            return $this->service->findByParams($request->all());
-        });
-    }
-
-    public function update(Request $request, int $id){
-        return $this->executeAction(function() use ($request, $id){
-            $requestData = $request->all();
-            if(isset($this->createRequest)){
-                $this->createRequest->merge($request->all());
-                $this->createRequest->validate($this->createRequest->rules());
-            }
-            return $this->service->update($requestData, $id);
-        });  
-    }
-    
-    public function delete(int $id){
-        return $this->executeAction(function() use ($id){
-            return $this->service->delete($id);
-        });
-    }
-
-    protected function validateRequest(Request $request)
-    {
-        $this->createRequest->merge($request->all());
-        return $this->createRequest->validate($this->createRequest->rules());
-    }
-
-    public function create(Request $request)
-    {
-        return $this->executeAction(function() use ($request) {
-        
-            $requestData = $request->all();
-            if(isset($this->createRequest)){
-                $this->createRequest->merge($request->all());
-                $this->createRequest->validate($this->createRequest->rules());
-            }
-            return $this->service->create($requestData);
-        });
-    }
-
-    private function executeAction(callable $action){
+    protected function executeAction(callable $action){
         try{
             $this->responseData = $action();
             $this->responseHttpStatus = 200;
@@ -104,5 +44,53 @@ abstract class AbstractController extends BaseController
             'response_message' => $this->responseMessage,
             'response_data' => $this->responseData,
         ], $this->responseHttpStatus);
+    }
+
+    public function list(){
+       return $this->executeAction(function(){
+            return $this->service->list();
+        });
+    }
+
+    public function paginate(int $itemsPerPage){
+        return $this->executeAction(function() use ($itemsPerPage){
+             return $this->service->paginate($itemsPerPage);
+         });
+     }
+
+    public function get($id){
+        return $this->executeAction(function() use ($id){
+            return $this->service->get((int)$id);
+        });
+    }
+
+    public function update(Request $request, int $id){
+        return $this->executeAction(function() use ($request, $id){
+            $requestData = $request->all();
+            if(isset($this->createRequest)){
+                $this->createRequest->merge($request->all());
+                $this->createRequest->validate($this->createRequest->rules());
+            }
+            return $this->service->update($requestData, $id);
+        });  
+    }
+    
+    public function delete(int $id){
+        return $this->executeAction(function() use ($id){
+            return $this->service->delete($id);
+        });
+    }
+
+    public function create(Request $request)
+    {
+        return $this->executeAction(function() use ($request) {
+        
+            $requestData = $request->all();
+            if(isset($this->createRequest)){
+                $this->createRequest->merge($request->all());
+                $this->createRequest->validate($this->createRequest->rules());
+            }
+            return $this->service->create($requestData);
+        });
     }
 }
