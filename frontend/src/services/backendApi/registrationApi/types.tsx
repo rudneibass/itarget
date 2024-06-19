@@ -1,18 +1,18 @@
-  export interface RegistrationInterface {
+export type RegistrationType =  {
   id: number;
 	name: string;
 	email: string,
 	cpf: string,
 	event_id: number
-  }
+}
 
-  export interface RegistrationStoreUpdateInterface {
+export type RegistrationStoreUpdateType = {
 	name: string;
 	email: string,
 	cpf: string,
 	event_id?: string
-  }
+}
 
-  export interface ErrorsInterface {
-    errors: [];
-  }
+export type ErrorsType = {
+  errors: [];
+}

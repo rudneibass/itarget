@@ -6,25 +6,22 @@ import CustomCard from '@components/CustomCard'
 import { dateFormat } from '@utils/index'
 import { endpoints } from '@utils/endpoints'
 
-import { EventInterface } from '@services/apiEvents/types'
+import { EventType } from '@services/backendApi/eventApi/types'
 import { eventApi } from '@services/backendApi/eventApi'
 
 
 export default function Index() {
-  const [data, setData] = useState<EventInterface []>()
+  const [data, setData] = useState<EventType[]>()
   const [loading, setLoading] = useState(false)
   const [thereIsNoData, setThereIsNoData] = useState(false)
 
   async function getData(){
     setLoading(true) 
-
-    const response = await eventApi.list(`${endpoints.event.endpoint}${endpoints.event.default_actions.list}`)
+    const response = await eventApi.list(`${endpoints.event.endpoint}${endpoints.event.actions.list}`)
     setData(response)
-
     if(data?.length == 0){
       setThereIsNoData(true)
     }
-
     setLoading(false) 
   }
 

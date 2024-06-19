@@ -10,7 +10,6 @@ const default_actions = {
 
 const event = {
     endpoint: 'event/',
-    default_actions: default_actions,
     actions: {
         ...default_actions
     }
@@ -18,10 +17,12 @@ const event = {
 
 const registration = {
     endpoint: 'registration/',
-    default_actions: default_actions,
     actions: {
         ...default_actions
     }
 }
 
-export const endpoints = { event, registration }
+export const endpoints = { 
+    event, 
+    registration 
+}

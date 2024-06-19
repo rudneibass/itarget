@@ -3,12 +3,12 @@ import { useEffect, useState, FormEvent } from 'react'
 import svgLoadingGray from '@assets/loading-gray-md.svg'
 import CustomCard from '@components/CustomCard'
 import { endpoints } from '@utils/endpoints'
-import { RegistrationInterface } from '@services/apiRegistrations/types'
+import { RegistrationType } from '@services/backendApi/registrationApi/types'
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { LaravelPaginationLinksType } from '@src/types/LaravelPaginationType'
 
 export default function Index() {
-  const [data, setData] = useState<RegistrationInterface[]>()
+  const [data, setData] = useState<RegistrationType[]>()
   const [links, setLinks] = useState<LaravelPaginationLinksType[]>()
   const [loading, setLoading] = useState(false)
   const [searchParam, setSearchParam] = useState('')
@@ -22,7 +22,7 @@ export default function Index() {
     }
 
     setLoading(true) 
-    const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.default_actions.search}`, [])
+    const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, [])
     setData(response.data) 
     setLinks(response.links)
     setLoading(false) 
@@ -46,7 +46,7 @@ async function handlePaginate(url?: string){
 
   async function getData(){
     setLoading(true) 
-    const response_data = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.default_actions.paginate}`)
+    const response_data = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
     setData(response_data.data) 
     setLinks(response_data.links)
     setLoading(false) 
