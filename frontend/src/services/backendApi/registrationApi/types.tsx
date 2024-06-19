@@ -1,5 +1,5 @@
   export interface RegistrationInterface {
-    id: number;
+  id: number;
 	name: string;
 	email: string,
 	cpf: string,

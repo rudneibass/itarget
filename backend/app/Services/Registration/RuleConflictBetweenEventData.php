@@ -15,7 +15,6 @@ class RuleConflictBetweenEventData
     {
         $eventRepository = new EventRepository;
         $registrationRepository = new RegistrationRepository;
-        $this->registration = $registration;
 
         $event_that_will_receive_new_registration = $eventRepository->get((int)$registration['event_id']);
 
@@ -27,8 +26,8 @@ class RuleConflictBetweenEventData
             if ($event_that_will_receive_new_registration->start_date <= $event->end_date) {
                if($event_that_will_receive_new_registration->end_date >= $event->start_date){
                    $this->message = "Conflito de datas com o evento {$event->name} que sera realizado entre {$event->start_date} e {$event->start_date}";
-                   $this->valid  = true;
-                   $this->invalid = false;
+                   $this->valid  = false;
+                   $this->invalid = true;
                }
             }
         }

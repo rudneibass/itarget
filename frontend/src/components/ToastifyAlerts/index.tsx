@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const successAlert = (message: string) =>
   toast.success(message, {
-    position: "top-center",
+    position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -14,7 +14,7 @@ export const successAlert = (message: string) =>
 
 export const errorAlert = (message: string) =>
   toast.error(message, {
-    position: "top-center",
+    position: "top-right",
     autoClose: false,
     hideProgressBar: false,
     closeOnClick: true,
@@ -26,7 +26,7 @@ export const errorAlert = (message: string) =>
 export const toastContainer = 
   <ToastContainer
     icon
-    position="top-center"
+    position="top-right"
     autoClose={5000}
     hideProgressBar={false}
     newestOnTop={false}

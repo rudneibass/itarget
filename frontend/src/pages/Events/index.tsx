@@ -1,33 +1,36 @@
 import { useEffect, useState } from 'react'
-import { apiEvents } from '../../services/apiEvents'
-import { EventInterface } from '../../services/apiEvents/types'
-import svgLoadingGray from '../../assets/loading-gray-md.svg'
-import CustomCard from '../../components/CustomCard'
 import { Link } from 'react-router-dom'
-import { dateFormat } from '../../utils'
+
+import svgLoadingGray from '@assets/loading-gray-md.svg'
+import CustomCard from '@components/CustomCard'
+import { dateFormat } from '@utils/index'
+import { endpoints } from '@utils/endpoints'
+
+import { EventInterface } from '@services/apiEvents/types'
+import { eventApi } from '@services/backendApi/eventApi'
+
 
 export default function Index() {
   const [data, setData] = useState<EventInterface []>()
   const [loading, setLoading] = useState(false)
   const [thereIsNoData, setThereIsNoData] = useState(false)
-  const [performSearch, setPerformSearch] = useState(false)
-  
 
   async function getData(){
-    if(!performSearch){
-      setLoading(true) 
-      const response = await apiEvents.list()
-      setData(response) 
+    setLoading(true) 
 
-      if(data?.length == 0){
-        setThereIsNoData(true)
-      }
+    const response = await eventApi.list(`${endpoints.event.endpoint}${endpoints.event.default_actions.list}`)
+    setData(response)
+
+    if(data?.length == 0){
+      setThereIsNoData(true)
     }
+
     setLoading(false) 
   }
 
   useEffect(()=> {
     getData()
+
   }, [])
 
   return (

@@ -1,12 +1,11 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
-import CustomCard from '../../components/CustomCard'
-import { Link } from 'react-router-dom'
-import svgLoadingWhite from '../../assets/loading-white-sm.svg'
-import { useParams } from "react-router-dom";
-import { apiRegistrations } from '../../services/apiRegistrations';
-
-import { toastContainer, errorAlert, successAlert } from '../../components/ToastifyAlerts'
-import { registrationsValidate } from './formValidate';
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import CustomCard from '@components/CustomCard'
+import { toastContainer, errorAlert, successAlert } from '@components/ToastifyAlerts'
+import svgLoadingWhite from '@assets/loading-white-sm.svg'
+import { endpoints } from '@utils/endpoints'
+import { registrationApi } from '@services/backendApi/registrationApi'
+import { registrationsValidate } from './formValidate'
 
 type Inputs = {
   name: string;
@@ -38,12 +37,11 @@ export default function Index() {
       return
     }
 
-
     setLoading(true)
-    const response = await apiRegistrations.store(data)
+    const response = await registrationApi.create(`${endpoints.registration.endpoint}${endpoints.registration.actions.create}`, data)
       
       if(response.length === 0){
-        errorAlert('Erro ao tentar realizar a inscrição., tente novamente mais tarde.')
+        errorAlert('Erro ao tentar realizar a inscrição, tente novamente mais tarde.')
         setLoading(false)
         return
       }

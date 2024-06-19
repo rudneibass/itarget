@@ -1,41 +1,43 @@
-import { useEffect, useState, FormEvent } from 'react'
 import axios from 'axios';
-
-import { RegistrationInterface } from '../../services/apiRegistrations/types'
-
-import svgLoadingGray from '../../assets/loading-gray-md.svg'
-import CustomCard from '../../components/CustomCard'
-import { apiRegistrations } from '../../services/apiRegistrations'
+import { useEffect, useState, FormEvent } from 'react'
+import svgLoadingGray from '@assets/loading-gray-md.svg'
+import CustomCard from '@components/CustomCard'
+import { endpoints } from '@utils/endpoints'
+import { RegistrationInterface } from '@services/apiRegistrations/types'
+import { registrationApi } from '@services/backendApi/registrationApi'
+import { LaravelPaginationLinksType } from '@src/types/LaravelPaginationType'
 
 export default function Index() {
-  const [data, setData] = useState<RegistrationInterface []>()
+  const [data, setData] = useState<RegistrationInterface[]>()
+  const [links, setLinks] = useState<LaravelPaginationLinksType[]>()
   const [loading, setLoading] = useState(false)
   const [searchParam, setSearchParam] = useState('')
-
-  const [links, setLinks] = useState([])
- 
+  
   async function handleSubmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault();
+    
     if(!searchParam || searchParam === ''){
       getData()
       return
     }
+
     setLoading(true) 
-      const response = await apiRegistrations.search(searchParam)
-      setData(response.data) 
-      setLinks(response.links)
-      setLoading(false) 
+    const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.default_actions.search}`, [])
+    setData(response.data) 
+    setLinks(response.links)
+    setLoading(false) 
   }
 
-async function handlePaginate(url: string){
-  
+async function handlePaginate(url?: string){
+  if(!url){return}
+
   try {
     const response = await axios.get(url);
     const response_data = response.data.response_data[0];
     setData(response_data.data);
     setLinks(response_data.links)
   } catch (error) {
-    console.error('Erro na requisição GET:', error);
+    console.error(error);
   } finally {
     setLoading(false);
   }
@@ -43,14 +45,14 @@ async function handlePaginate(url: string){
 }
 
   async function getData(){
-      setLoading(true) 
-      const response_data = await apiRegistrations.list()
-      setData(response_data.data) 
-      setLinks(response_data.links)
-      setLoading(false) 
+    setLoading(true) 
+    const response_data = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.default_actions.paginate}`)
+    setData(response_data.data) 
+    setLinks(response_data.links)
+    setLoading(false) 
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     getData()
   }, [])
 
@@ -134,7 +136,7 @@ async function handlePaginate(url: string){
                       >
                         <a 
                           className="page-link" 
-                          onClick={() => handlePaginate(item.url)} 
+                          onClick={() => handlePaginate(item.url || '')}
                           dangerouslySetInnerHTML={{__html: item.label}} 
                           style={{whiteSpace: "nowrap", color: "gray"}} 
                         >
