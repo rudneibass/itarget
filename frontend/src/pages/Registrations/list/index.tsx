@@ -3,12 +3,12 @@ import { useEffect, useState, FormEvent } from 'react'
 import svgLoadingGray from '@assets/loading-gray-md.svg'
 import CustomCard from '@components/CustomCard'
 import { endpoints } from '@utils/endpoints'
-import { RegistrationType } from '@services/backendApi/registrationApi/types'
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { LaravelPaginationLinksType } from '@src/types/LaravelPaginationType'
+import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
+import { RegistrationListType } from './types'
 
 export default function Index() {
-  const [data, setData] = useState<RegistrationType[]>()
+  const [data, setData] = useState<RegistrationListType[]>()
   const [links, setLinks] = useState<LaravelPaginationLinksType[]>()
   const [loading, setLoading] = useState(false)
   const [searchParam, setSearchParam] = useState('')

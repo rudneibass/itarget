@@ -1,57 +1,47 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import CustomCard from '@components/CustomCard'
 import { toastContainer, errorAlert, successAlert } from '@components/ToastifyAlerts'
 import svgLoadingWhite from '@assets/loading-white-sm.svg'
 import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { registrationsValidate } from './formValidate'
+import { validate } from './validatetions'
+import useRegistrationFormContext from './context'
 
-type Inputs = {
-  name: string;
-  email: string;
-  cpf: string;
-  event_id?: string
-};
 
 export default function Index() {
-  const [loading, setLoading] = useState(false)
+  const context = useRegistrationFormContext()
   const { eventId } = useParams();
-  const [inputs, setInputs] = useState<Inputs>({} as Inputs);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const name = event.target.name;
     const value = event.target.value;
-    setInputs((prevValues) => ({ ...prevValues, [name]: value }));
+    context.setInputsContext({[name]: value})
   }
 
  async function handleSibmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault();
-
-    const data = inputs
-    data.event_id = eventId
-    
-    const formValid = registrationsValidate(data)
-
-    if(!formValid){
+    const inputs = context.inputs
+    inputs.event_id = eventId
+    if(!validate(inputs)){
       return
     }
 
-    setLoading(true)
-    const response = await registrationApi.create(`${endpoints.registration.endpoint}${endpoints.registration.actions.create}`, data)
+    context.setLoadingContext(true)
+    const response = await registrationApi.create(`${endpoints.registration.endpoint}${endpoints.registration.actions.create}`, inputs)
       
-      if(response.length === 0){
-        errorAlert('Erro ao tentar realizar a inscrição, tente novamente mais tarde.')
-        setLoading(false)
-        return
-      }
-    
-      successAlert('Inscrição efetuada com sucesso!')
-      setLoading(false)
-     
+    if(response.length === 0){
+      errorAlert('Erro ao tentar realizar a inscrição, tente novamente mais tarde.')
+      context.setLoadingContext(false)
       return
+    }
+    
+    successAlert('Inscrição efetuada com sucesso!')
+    context.setLoadingContext(false)
+    return
   }
  
+
   return (
     <div>
       {toastContainer}
@@ -68,7 +58,7 @@ export default function Index() {
                       className="form-control"  
                       id="name" 
                       name="name" 
-                      value={inputs.name}
+                      value={context.inputs.name}
                       onChange={handleChange}/>
                   </div>
                 </div>
@@ -81,7 +71,7 @@ export default function Index() {
                       className="form-control"  
                       id="email" 
                       name="email"
-                      value={inputs.email}
+                      value={context.inputs.email}
                       onChange={handleChange}
                     />
                   </div>
@@ -95,7 +85,7 @@ export default function Index() {
                         className="form-control" 
                         id="cpf" 
                         name="cpf"
-                        value={inputs.cpf}
+                        value={context.inputs.cpf}
                         onChange={handleChange}
                       />
                   </div>
@@ -109,13 +99,13 @@ export default function Index() {
                   </Link>
                   &nbsp;
 
-                  {!loading && (
+                  {!context.loading && (
                     <button type="submit" className="btn btn-secondary" style={{minWidth: '100px'}}>
                       <i className="fs-7 bi-save"></i> Salvar
                     </button>
                   )}
 
-                  {loading && (
+                  {context.loading && (
                     <button className="btn btn-secondary" style={{minWidth: '100px'}}>
                       <img src={svgLoadingWhite} />
                     </button>

@@ -1,10 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 
-import EventsList from './pages/Events'
-import RegistrationsList from './pages/Registrations'
-import RegistrationsForm from './pages/Registrations/form.tsx'
-import Error from './pages/Error'
+import Error from '@pages/Error'
+
+import RegistrationsList from '@pages/Registrations/list'
+import RegistrationsForm from '@pages/Registrations/form'
+import { RegistrationFormContextProvider } from '@pages/Registrations/form/context.tsx'
+import { RegistrationListContextProvider } from '@pages/Registrations/list/context.tsx'
+
+import EventList from '@pages/Events/list/'
+import { EventListContextProvider } from '@pages/Events/list/context.tsx'
 
 export const routes = createBrowserRouter([
   {
@@ -14,15 +19,15 @@ export const routes = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <EventsList />
+        element: <EventListContextProvider><EventList /></EventListContextProvider> 
       },
       {
         path: "/inscricoes",
-        element: <RegistrationsList />
+        element: <RegistrationListContextProvider><RegistrationsList /></RegistrationListContextProvider>
       },
       {
         path: "/inscricoes/:eventId",
-        element: <RegistrationsForm />
+        element: <RegistrationFormContextProvider><RegistrationsForm /></RegistrationFormContextProvider>
       }
     ]
   },

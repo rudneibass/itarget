@@ -1,4 +1,4 @@
-import { baseApi } from '@services/backendApi/baseApi'
+import { baseApi } from '@services/backendApi/baseApi/index'
 
 export const registrationApi = {
   ...baseApi

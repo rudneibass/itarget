@@ -1,8 +1,8 @@
 
-import { isValidCPF, isValidEmail } from '../../utils/index'
-import {  errorAlert } from '../../components/ToastifyAlerts'
+import { isValidCPF, isValidEmail } from '@utils/index'
+import {  errorAlert } from '@components/ToastifyAlerts'
 
-export function registrationsValidate(data: any){
+export function validate(data: any){
     if(!data.name){
         errorAlert('Nome é obrigatório')
         return false

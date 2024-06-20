@@ -1,33 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import svgLoadingGray from '@assets/loading-gray-md.svg'
 import CustomCard from '@components/CustomCard'
+
 import { dateFormat } from '@utils/index'
 import { endpoints } from '@utils/endpoints'
 
-import { EventType } from '@services/backendApi/eventApi/types'
 import { eventApi } from '@services/backendApi/eventApi'
-
+import useEventListContext from './context'
 
 export default function Index() {
-  const [data, setData] = useState<EventType[]>()
-  const [loading, setLoading] = useState(false)
-  const [thereIsNoData, setThereIsNoData] = useState(false)
-
-  async function getData(){
-    setLoading(true) 
-    const response = await eventApi.list(`${endpoints.event.endpoint}${endpoints.event.actions.list}`)
-    setData(response)
-    if(data?.length == 0){
-      setThereIsNoData(true)
-    }
-    setLoading(false) 
-  }
+  const context = useEventListContext()
 
   useEffect(()=> {
-    getData()
+    async function getData(){
+      context.setLoadingContext(true)
 
+      const response = await eventApi.list(`${endpoints.event.endpoint}${endpoints.event.actions.list}`)
+      context.setDataContext(response)
+
+      if(context.data?.length === 0){
+        context.setThereIsNoDataContext(true)
+      }
+
+      context.setLoadingContext(false)
+    }
+    getData()
   }, [])
 
   return (
@@ -45,8 +44,8 @@ export default function Index() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data && data.length > 0 && (
-                    data!.map((item, index) => (
+                  {context.data && context.data.length > 0 && (
+                    context.data!.map((item, index) => (
                       <tr key={index}>
                         <td>{item.name}</td>
                         <td>{dateFormat(item.start_date)}</td>
@@ -67,18 +66,17 @@ export default function Index() {
                     ))
                 
                   )}
-                    
+
                 </tbody>
               </table>
               
-              {thereIsNoData && !loading && (
+              {context.thereIsNoData && !context.loading && (
                 <div className="alert alert-secondary text-center">
                   Não há dados cadastrados!
                 </div>
               )}
-              
 
-              {loading && (
+              {context.loading && (
                 <div className="alert alert-secondary text-center">
                   <img src={svgLoadingGray} />
                 </div>
@@ -87,7 +85,7 @@ export default function Index() {
             </div>
 
             <div className="d-flex justify-content-between p-1">
-                <small>Total de registros: {data && (data.length )} {!data && (0)}</small>
+                <small>Total de registros: {context.data && (context.data.length )} {!context.data && (0)}</small>
                 <small>Página 1 de 1</small>
             </div>
 
