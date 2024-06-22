@@ -1,8 +1,9 @@
 
 import { isValidCPF, isValidEmail } from '@utils/index'
 import {  errorAlert } from '@components/ToastifyAlerts'
+import { RegistrationFormInputsType } from './types'
 
-export function validate(data: any){
+export function validate(data: RegistrationFormInputsType){
     if(!data.name){
         errorAlert('Nome é obrigatório')
         return false

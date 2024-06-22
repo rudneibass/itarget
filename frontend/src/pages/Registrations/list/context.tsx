@@ -20,8 +20,13 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
     function setDataContext({data, cache = false}: {data: [], cache?: boolean}){
         setData(data)
         if(cache){
-            globalContext.setCacheSearchGlobalContext({data: data, pageIdentifier: indentifiers.pages.registrationsList})
+            globalContext.setListCacheGlobalContext({data: data, pageIdentifier: indentifiers.pages.registrationList})
         }
+    }
+
+    const [paginationLinks, setPaginationLinks] = useState<LaravelPaginationLinksType[]>()
+    function setPaginationLinksContext({ paginationLinks }:{paginationLinks: LaravelPaginationLinksType[]}){
+        setPaginationLinks(paginationLinks)
     }
 
     const [loading, setLoading] = useState(false)
@@ -34,11 +39,7 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
         setThereIsNoData(thereIsNoData)
     }
 
-    const [paginationLinks, setPaginationLinks] = useState<LaravelPaginationLinksType[]>()
-        function setPaginationLinksContext({ paginationLinks }:{paginationLinks: LaravelPaginationLinksType[]}){
-        setPaginationLinks(paginationLinks)
-    }
-
+    
     return (
         <RegistrationListContext.Provider 
             value={{

@@ -6,8 +6,7 @@ import svgLoadingWhite from '@assets/loading-white-sm.svg'
 import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { validate } from './validatetions'
-import useRegistrationFormContext from './context'
-
+import { useRegistrationFormContext } from './context'
 
 export default function Index() {
   const context = useRegistrationFormContext()

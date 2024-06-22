@@ -15,19 +15,22 @@ export default function Index() {
   const context = useRegistrationListContext()
 
   const searchBarProps = {
+    data: [],
     actions: {
       handleSearchAction: async (params:string) => {
-        console.log("handleSearchAction => ", params)
         context.setLoadingContext({loading: true})
         const searchResponse = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
         context.setDataContext({data: searchResponse.data, cache: true})
         context.setPaginationLinksContext({paginationLinks: searchResponse.links})
         context.setLoadingContext({loading: false})
+
+        console.log(params)
       },   
     }
   }
 
   const paginationBarProps = {
+    data: context.paginationLinks,
     actions: {
       handlePaginateAction: async (url: string) => {
         try {
@@ -86,7 +89,7 @@ export default function Index() {
             </div>
           </section>
 
-          <PaginationBar data={context.paginationLinks} actions={paginationBarProps.actions} />
+          <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} />
       </CustomCard>
     </div>
   )

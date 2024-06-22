@@ -26,7 +26,7 @@ export type RegistrationFormInputsType = {
 
 export interface RegistrationFormContextextType  {
 	data: RegistrationType | undefined,
-	setDataContext: (data: RegistrationType) => void,
+	setDataContext: ({ data, cache }: {data: RegistrationType, cache?: boolean}) => void,
 	loading: boolean,
 	setLoadingContext: (loading: boolean) => void,
 	inputs: RegistrationFormInputsType,

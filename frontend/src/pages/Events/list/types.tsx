@@ -1,3 +1,5 @@
+import { LaravelPaginationLinksType } from "@services/backendApi/baseApi/types";
+
   export type EventType = {
     id: number;
 	name: string;
@@ -15,9 +17,11 @@
 
   export interface EventListContextextType  {
 	data: EventType[] | undefined,
-	setDataContext: (data: []) => void,
+	setDataContext: ({ data, cache }: {data: [], cache?: boolean}) => void,
 	loading: boolean,
-	setLoadingContext: (loading: boolean) => void,
+	setLoadingContext: ({loading}:{loading: boolean}) => void,
 	thereIsNoData: boolean,
-	setThereIsNoDataContext: (thereIsNoData: boolean) => void,
+	setThereIsNoDataContext: ({thereIsNoData}:{thereIsNoData: boolean}) => void,
+	paginationLinks: LaravelPaginationLinksType[] | undefined,
+  setPaginationLinksContext: ({ paginationLinks }:{paginationLinks: LaravelPaginationLinksType[]}) => void
 }

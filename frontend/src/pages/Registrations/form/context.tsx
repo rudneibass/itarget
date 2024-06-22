@@ -1,13 +1,25 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import { RegistrationFormContextextType, RegistrationType, RegistrationFormInputsType } from "./types";
+import { useGlobalContext } from "@src/context/context";
+import { indentifiers } from "@utils/indentifiers";
 
 export const RegistrationFormContext = createContext({} as RegistrationFormContextextType)
 
+export const useRegistrationFormContext = () => {
+    const context = useContext( RegistrationFormContext);
+    return context
+}
+
 export const RegistrationFormContextProvider = ({ children }:  { children: JSX.Element }) => {
+    const globalContext = useGlobalContext()
     
     const [data, setData] = useState<RegistrationType>({} as RegistrationType)
-    function setDataContext(data: RegistrationType){
+    function setDataContext({ data, cache = false }:{data: RegistrationType, cache?: boolean}){
         setData(data)
+
+        if(cache){
+            globalContext.setFormCacheGlobalContext({data: data, pageIdentifier: indentifiers.pages.registrationForm})
+        }   
     }
 
     const [loading, setLoading] = useState(false)
@@ -34,10 +46,4 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
             {children}
         </RegistrationFormContext.Provider>
     )
-}
-
-import { useContext } from 'react'
-export default function useRegistrationFormContext(){
-    const context = useContext( RegistrationFormContext);
-    return context
 }

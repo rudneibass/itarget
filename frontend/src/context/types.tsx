@@ -1,9 +1,16 @@
-export type CacheSearchType = {
+export type FormCacheType = {
+    data: object
+    pageIdentifier: string
+}
+
+export type ListCacheType = {
     data: []
     pageIdentifier: string
 }
 
 export type GlobalContextType = {
-	cacheSearch: CacheSearchType[] | undefined,
-	setCacheSearchGlobalContext: ({ data, pageIdentifier }:{data: [], pageIdentifier: string}) => void,
+    formCache: FormCacheType[] | undefined,
+	setFormCacheGlobalContext: ({ data, pageIdentifier }:{data: object, pageIdentifier: string}) => void,
+    listCache: ListCacheType[] | undefined,
+	setListCacheGlobalContext: ({ data, pageIdentifier }:{data: [], pageIdentifier: string}) => void,
 }
