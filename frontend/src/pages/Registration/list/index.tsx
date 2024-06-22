@@ -36,8 +36,8 @@ export default function Index() {
         try {
           const response = await axios.get(url);
           const response_data = response.data.response_data[0];
-          context.setDataContext(response_data.data)
-          context.setPaginationLinksContext(response_data.links)
+          context.setDataContext({data: response_data.data})
+          context.setPaginationLinksContext({paginationLinks: response_data.links})
         } catch (error) {
           console.error(error);
         }

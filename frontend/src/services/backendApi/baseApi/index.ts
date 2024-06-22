@@ -23,7 +23,7 @@ async function paginate(endpoint: string, itemsPerPage = 10): Promise<LaravelPag
       console.log(error)
       return {} as LaravelPaginationType
     }
-  }
+}
 
 async function search(endpoint: string, searchParams?: []): Promise<LaravelPaginationType> { 
   try {
