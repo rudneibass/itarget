@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useEffect } from 'react'
 
-import svgLoadingGray from '@assets/loading-gray-md.svg'
 import CustomCard from '@components/CustomCard'
 import SearchBar from '@components/SearchBar/index'
 import PaginationBar from '@components/PaginationBar/index'
@@ -10,6 +9,7 @@ import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
 
 import { useRegistrationListContext } from './context'
+import ListTable from '@components/ListTable';
 
 export default function Index() {  
   const context = useRegistrationListContext()
@@ -45,6 +45,39 @@ export default function Index() {
     }
   }
 
+  const listTableProps = {
+    data: {
+      tbody: context.data?.map((item) => { 
+        return {
+          id: item.id.toString(),
+          name: item.name.toString(),
+          email: item.email.toString(),
+          cpf: item.cpf.toString()
+        }
+      }),
+      thead: [
+        {name: 'id', displayName: 'ID'},
+        {name: 'name', displayName: 'Nome'},
+        {name: 'email', displayName: 'Email'},
+        {name: 'cpf', displayName: 'Cpf'}
+      ]
+    },
+    actions: {
+      handleEditAction: (itemId: string) => {
+        alert('Edit item '+itemId)
+      },
+      handleDeleteAction: (itemId: string) => {
+        alert('Delete item '+itemId)
+      },
+      handleActiveAction: (itemId: string) => {
+        alert('Active item '+itemId)
+      },
+      handleSortAction: (sortBy: string, sortDirection: string) => {
+        alert('Sort by '+sortBy+' '+sortDirection)
+      }  
+    }
+  }
+
   useEffect(() => {
     searchBarProps.actions.handleSearchAction('');
   }, [])
@@ -53,43 +86,8 @@ export default function Index() {
     <div>
       <CustomCard cardTitle='Inscrições' shortDescription='Lista de incrições'>
         <SearchBar actions={searchBarProps.actions} />
-
-          <section>
-            <div className="table-responsive" style={{height: "40vh", overflowY: "scroll"}}>
-              <table className="table table-striped table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col"><small>nome</small></th>
-                    <th scope="col"><small>Email</small></th>
-                    <th scope="col"><small>Cpf</small></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {context.data && context.data.length > 0 && !context.loading && (
-                    context.data!.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.name}</td>
-                        <td>{item.email}</td>
-                        <td>{item.cpf}</td>
-                      </tr>
-                    ))
-                  )}    
-                </tbody>
-              </table>
-              {context.data?.length == 0 && !context.loading && (
-                <div className="alert alert-secondary text-center">
-                  Não há dados cadastrados!
-                </div>
-              )}
-              {context.loading && (
-                <div className="alert alert-secondary text-center">
-                  <img src={svgLoadingGray} />
-                </div>
-              )}
-            </div>
-          </section>
-
-          <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} />
+        <ListTable data={listTableProps.data} actions={listTableProps.actions}/>  
+        <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} />
       </CustomCard>
     </div>
   )
