@@ -63,6 +63,7 @@ export default function Index({actions, additionalComponents = []} : {actions: a
             </div>
           </form>
         </div>
+        
       </div>
     </section>
   );
