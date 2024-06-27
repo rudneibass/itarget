@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ReactLoading from 'react-loading';
 
 type ListTableType = {
   data:{ 
@@ -13,15 +12,10 @@ type ListTableType = {
     handleSortAction?: (sortBy: string, sortDirection: string) => void
   }
 }
-export default function ListTable({
-  data,
-  actions,
-} : ListTableType) {
 
-  /*
-  const { maxHeight = '45vh' } = styles;
-  const { minHeight = '45vh' } = styles;
-  */
+export default function ListTable({ data, actions } : ListTableType) {
+  const [sortBy, setSortBy] = useState('')
+  const [sortDirection, setSortDirection] = useState('ASC')
 
   function handleActive(itemId: string) {
       if(actions?.handleActiveAction){
@@ -41,20 +35,12 @@ export default function ListTable({
     } 
   }
 
-  const [sortBy, setSortBy] = useState('name')
-  const [sortDirection, setSortDirection] = useState('ASC')
-  
   function handleSort(sortBy: string) {    
     if(actions?.handleSortAction){
-
-      if(sortDirection == 'ASC'){
-        setSortDirection('DESC')
-      }
-      if(sortDirection == 'DESC'){
-        setSortDirection('ASC')
-      }
-
-      actions.handleSortAction(sortBy, sortDirection);
+      const newSortDirection = sortDirection == 'ASC' ? 'DESC' : 'ASC'
+      actions.handleSortAction(sortBy, newSortDirection);
+      
+      setSortDirection(newSortDirection)
       setSortBy(sortBy)
     }
   }
@@ -137,7 +123,6 @@ export default function ListTable({
             ))}
           </tbody>
         </table>
-        {(<div className="d-flex justify-content-center"><ReactLoading  type={'bubbles'} color={'rgba(128, 128, 128, 0.596)'}  width={'30px'} height={'30px'}/></div>)}
       </div>
     </section>
   );

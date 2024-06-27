@@ -25,10 +25,10 @@ async function paginate(endpoint: string, itemsPerPage = 10): Promise<LaravelPag
     }
 }
 
-async function search(endpoint: string, searchParams?: []): Promise<LaravelPaginationType> { 
+async function search(endpoint: string, searchParams?: object): Promise<LaravelPaginationType> { 
   try {
     const response = await api.post(endpoint, searchParams)
-    return response.data 
+    return response.data.response_data
   } catch (error) {
     console.log(error)
     return {} as LaravelPaginationType

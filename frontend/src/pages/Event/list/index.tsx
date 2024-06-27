@@ -50,6 +50,13 @@ export default function Index() {
     searchBarProps.actions.handleSearchAction('');
   }, [])*/
 
+  const customCardProps = {
+    data: {
+      title: 'Eventos',
+      shortDescription:'Inscreva-se em um evento'
+    }
+  }
+
   useEffect(()=> {    
     async function getData(){
       context.setLoadingContext({loading: true})
@@ -66,7 +73,7 @@ export default function Index() {
 
   return (
     <div>
-      <CustomCard cardTitle='Eventos' shortDescription='Inscreva-se em um evento'>
+      <CustomCard data={customCardProps.data}>
         <section>
           <div className="table-responsive">
             <table className="table table-striped table-hover table-bordered">

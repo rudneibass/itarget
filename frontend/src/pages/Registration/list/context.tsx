@@ -1,10 +1,10 @@
-import { createContext, useState,useContext } from  "react"
-
+import { createContext, useState,useContext, useEffect } from  "react"
 import { LaravelPaginationLinksType } from "@services/backendApi/baseApi/types"
 import { RegistrationListContextType } from "./types"
-
 import { indentifiers } from "@utils/indentifiers"
 import { useGlobalContext } from "@src/context/context"
+import { registrationApi } from "@services/backendApi/registrationApi"
+import { endpoints } from "@utils/endpoints"
 
 export const RegistrationListContext = createContext<RegistrationListContextType>({} as RegistrationListContextType)
 
@@ -38,7 +38,16 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
     function setThereIsNoDataContext({thereIsNoData}:{thereIsNoData: boolean}){
         setThereIsNoData(thereIsNoData)
     }
-
+ 
+    
+    useEffect(() => {
+        async function getData(){
+            const searchResponse = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
+            setData(searchResponse.data)
+            setPaginationLinks(searchResponse.links)
+        }
+        getData()
+    }, [])
     
     return (
         <RegistrationListContext.Provider 

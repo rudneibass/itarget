@@ -1,14 +1,12 @@
 import axios from 'axios';
-import { useEffect } from 'react'
+
+import { endpoints } from '@utils/endpoints'
+import { registrationApi } from '@services/backendApi/registrationApi'
+import { useRegistrationListContext } from './context'
 
 import CustomCard from '@components/CustomCard'
 import SearchBar from '@components/SearchBar/index'
 import PaginationBar from '@components/PaginationBar/index'
-
-import { endpoints } from '@utils/endpoints'
-import { registrationApi } from '@services/backendApi/registrationApi'
-
-import { useRegistrationListContext } from './context'
 import ListTable from '@components/ListTable';
 
 export default function Index() {  
@@ -17,14 +15,12 @@ export default function Index() {
   const searchBarProps = {
     data: [],
     actions: {
-      handleSearchAction: async (params:string) => {
+      handleSearchAction: async (searchParams: object) => {
         context.setLoadingContext({loading: true})
-        const searchResponse = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
+        const searchResponse = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, searchParams)
         context.setDataContext({data: searchResponse.data, cache: true})
         context.setPaginationLinksContext({paginationLinks: searchResponse.links})
         context.setLoadingContext({loading: false})
-
-        console.log(params)
       },   
     }
   }
@@ -78,17 +74,20 @@ export default function Index() {
     }
   }
 
-  useEffect(() => {
-    searchBarProps.actions.handleSearchAction('');
-  }, [])
+  const customCardProps = {
+    data: {
+      title:'Inscrições', 
+      shortDescription:'Lista de incrições'
+    }
+  }
 
   return (
-    <div>
-      <CustomCard cardTitle='Inscrições' shortDescription='Lista de incrições'>
+    <>
+      <CustomCard data={customCardProps.data}>
         <SearchBar actions={searchBarProps.actions} />
         <ListTable data={listTableProps.data} actions={listTableProps.actions}/>  
         <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} />
       </CustomCard>
-    </div>
+    </>
   )
 }
