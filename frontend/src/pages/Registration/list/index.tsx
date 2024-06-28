@@ -13,7 +13,7 @@ export default function Index() {
   const context = useRegistrationListContext()
 
   const searchBarProps = {
-    data: [],
+    data: {},
     actions: {
       handleSearchAction: async (searchParams: object) => {
         context.setLoadingContext({loading: true})
@@ -22,7 +22,8 @@ export default function Index() {
         context.setPaginationLinksContext({paginationLinks: searchResponse.links})
         context.setLoadingContext({loading: false})
       },   
-    }
+    },
+    additionalComponents: []
   }
 
   const paginationBarProps = {
@@ -38,7 +39,8 @@ export default function Index() {
           console.error(error);
         }
       }   
-    }
+    },
+    additionalComponents: []
   }
 
   const listTableProps = {
@@ -71,22 +73,25 @@ export default function Index() {
       handleSortAction: (sortBy: string, sortDirection: string) => {
         alert('Sort by '+sortBy+' '+sortDirection)
       }  
-    }
+    },
+    additionalComponents: []
   }
 
   const customCardProps = {
     data: {
       title:'Inscrições', 
       shortDescription:'Lista de incrições'
-    }
+    },
+    actions: {},
+    additionalComponents: []
   }
 
   return (
     <>
-      <CustomCard data={customCardProps.data}>
-        <SearchBar actions={searchBarProps.actions} />
-        <ListTable data={listTableProps.data} actions={listTableProps.actions}/>  
-        <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} />
+      <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={searchBarProps.additionalComponents}>
+        <SearchBar data={searchBarProps.data} actions={searchBarProps.actions} additionalComponents={searchBarProps.additionalComponents} />
+        <ListTable data={listTableProps.data} actions={listTableProps.actions} additionalComponents={searchBarProps.additionalComponents} />  
+        <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} additionalComponents={searchBarProps.additionalComponents}/>
       </CustomCard>
     </>
   )

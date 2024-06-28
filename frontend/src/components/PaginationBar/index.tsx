@@ -1,14 +1,22 @@
 import { LaravelPaginationLinksType } from "@services/backendApi/baseApi/types";
+import { ReactNode } from "react";
 
-type actionsType = {
-  handlePaginateAction: (url: string) => void;
+type PaginationBarType = {
+  data: LaravelPaginationLinksType[] | undefined,
+  actions?: {
+    handlePaginateAction: (url: string) => void;
+  },
+  additionalComponents?: Array<ReactNode>
 }
 
-export default function index({data, actions} : { data: LaravelPaginationLinksType[] | undefined, actions: actionsType}) {
+
+export default function index({data, actions} : PaginationBarType) {
 
   function handlePaginate(url: string) {
-    if (!url) return;
-    actions.handlePaginateAction(url);
+    if(actions?.handlePaginateAction){
+      if (!url) return;
+      actions.handlePaginateAction(url);
+    }
   }
 
   return (

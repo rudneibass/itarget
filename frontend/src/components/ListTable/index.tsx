@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 type ListTableType = {
   data:{ 
@@ -10,7 +10,8 @@ type ListTableType = {
     handleDeleteAction?: (itemId: string) => void,
     handleActiveAction?: (itemId: string) => void,
     handleSortAction?: (sortBy: string, sortDirection: string) => void
-  }
+  },
+  additionalComponents?: Array<ReactNode>
 }
 
 export default function ListTable({ data, actions } : ListTableType) {
