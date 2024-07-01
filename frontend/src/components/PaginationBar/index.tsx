@@ -1,21 +1,28 @@
-import { LaravelPaginationLinksType } from "@services/backendApi/baseApi/types";
+import axios from 'axios';
 import { ReactNode } from "react";
+import { LaravelPaginationLinksType } from "@services/backendApi/baseApi/types";
 
 type PaginationBarType = {
-  data: LaravelPaginationLinksType[] | undefined,
+  data: {paginationLinks: LaravelPaginationLinksType[] | undefined},
   actions?: {
-    handlePaginateAction: (url: string) => void;
+    handlePaginateAction: ({data, paginationLinks}: {data:[], paginationLinks: LaravelPaginationLinksType[]}) => void;
   },
   additionalComponents?: Array<ReactNode>
 }
 
-
 export default function index({data, actions} : PaginationBarType) {
 
-  function handlePaginate(url: string) {
+  async function handlePaginate(url: string) {
     if(actions?.handlePaginateAction){
-      if (!url) return;
-      actions.handlePaginateAction(url);
+      if (url){
+        try {
+          const response = await axios.get(url);
+          const response_data = response.data.response_data[0];
+          actions.handlePaginateAction({data: response_data.data, paginationLinks: response_data.links});
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
   }
 
@@ -25,8 +32,9 @@ export default function index({data, actions} : PaginationBarType) {
         <small>Registros por página: 10</small>
         <nav aria-label="Page navigation example">
           <ul className="pagination">
-            {data &&
-              data.map((item, index) => (
+            {data.paginationLinks &&
+              data.paginationLinks.length > 0 &&
+              data.paginationLinks.map((item, index) => (
                 <li key={index} className="page-item">
                   <a
                     className="page-link"

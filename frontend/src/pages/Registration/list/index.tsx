@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { useRegistrationListContext } from './context'
@@ -8,9 +6,19 @@ import CustomCard from '@components/CustomCard'
 import SearchBar from '@components/SearchBar/index'
 import PaginationBar from '@components/PaginationBar/index'
 import ListTable from '@components/ListTable';
+import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
 
 export default function Index() {  
   const context = useRegistrationListContext()
+
+  const customCardProps = {
+    data: {
+      title:'Inscrições', 
+      shortDescription:'Lista de incrições'
+    },
+    actions: {},
+    additionalComponents: []
+  }
 
   const searchBarProps = {
     data: {},
@@ -22,23 +30,6 @@ export default function Index() {
         context.setPaginationLinksContext({paginationLinks: searchResponse.links})
         context.setLoadingContext({loading: false})
       },   
-    },
-    additionalComponents: []
-  }
-
-  const paginationBarProps = {
-    data: context.paginationLinks,
-    actions: {
-      handlePaginateAction: async (url: string) => {
-        try {
-          const response = await axios.get(url);
-          const response_data = response.data.response_data[0];
-          context.setDataContext({data: response_data.data})
-          context.setPaginationLinksContext({paginationLinks: response_data.links})
-        } catch (error) {
-          console.error(error);
-        }
-      }   
     },
     additionalComponents: []
   }
@@ -77,21 +68,23 @@ export default function Index() {
     additionalComponents: []
   }
 
-  const customCardProps = {
-    data: {
-      title:'Inscrições', 
-      shortDescription:'Lista de incrições'
+  const paginationBarProps = {
+    data: {paginationLinks: context.paginationLinks},
+    actions: {
+      handlePaginateAction: ({data, paginationLinks}: {data:[], paginationLinks: LaravelPaginationLinksType[]}) => {
+          context.setDataContext({data: data})
+          context.setPaginationLinksContext({paginationLinks:  paginationLinks})
+      }   
     },
-    actions: {},
     additionalComponents: []
   }
 
   return (
     <>
-      <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={searchBarProps.additionalComponents}>
+      <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={customCardProps.additionalComponents}>
         <SearchBar data={searchBarProps.data} actions={searchBarProps.actions} additionalComponents={searchBarProps.additionalComponents} />
-        <ListTable data={listTableProps.data} actions={listTableProps.actions} additionalComponents={searchBarProps.additionalComponents} />  
-        <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} additionalComponents={searchBarProps.additionalComponents}/>
+        <ListTable data={listTableProps.data} actions={listTableProps.actions} additionalComponents={listTableProps.additionalComponents} />  
+        <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} additionalComponents={paginationBarProps.additionalComponents}/>
       </CustomCard>
     </>
   )

@@ -40,11 +40,19 @@ export default function Index() {
     return
   }
  
+  const customCardProps = {
+    data: {
+      title:'Inscrições', 
+      shortDescription:'Lista de incrições'
+    },
+    actions: {},
+    additionalComponents: []
+  }
 
   return (
     <div>
       {toastContainer}
-       <CustomCard cardTitle='Inscrições' shortDescription='Listagem de inscrições'>
+       <CustomCard data={customCardProps.data} actions={customCardProps.actions}>
           <section>
             <form action="" onSubmit={handleSibmit}>
               <div className="row">
