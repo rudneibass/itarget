@@ -162,7 +162,7 @@ class {$name} extends Model
 {
     use HasFactory;
     protected \$table='{$nameLowerCase}';
-    protected \$fillable = [''];
+    protected \$fillable = ['*'];
     protected \$hidden = [''];
     protected \$casts = [''];
 }";
