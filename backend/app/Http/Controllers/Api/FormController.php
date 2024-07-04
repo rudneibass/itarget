@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Services\Form\FormService;
+use App\Services\Api\Form\FormService;
 
 class FormController extends AbstractController
 {

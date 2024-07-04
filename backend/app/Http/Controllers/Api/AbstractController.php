@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -91,6 +91,24 @@ abstract class AbstractController extends BaseController
                 $this->createRequest->validate($this->createRequest->rules());
             }
             return $this->service->create($requestData);
+        });
+    }
+
+    public function doc(){
+        return $this->executeAction(function(){
+            return $this->service->doc();
+        });
+    }
+
+    public function getMetadata(int $id){
+        return $this->executeAction(function() use ($id){
+            return $this->service->getMetadata($id);
+        });
+    }
+
+    public function setMetadata(Request $request){
+        return $this->executeAction(function() use ($request){
+            return $this->service->setMetadata($request);
         });
     }
 }

@@ -1,7 +1,7 @@
 <?php 
-namespace App\Services\Registration;
+namespace App\Services\Api\Registration;
 
-use App\Repositories\RegistrationRepository;
+use App\Repositories\Api\RegistrationRepository;
 
 class RuleExistingRegistrationEvent
 {

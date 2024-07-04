@@ -1,8 +1,8 @@
 <?php 
-namespace App\Services\Registration;
+namespace App\Services\Api\Registration;
 
-use App\Repositories\EventRepository;
-use App\Repositories\RegistrationRepository;
+use App\Repositories\Api\EventRepository;
+use App\Repositories\Api\RegistrationRepository;
 
 class RuleConflictBetweenEventData
 {

@@ -1,10 +1,10 @@
 <?php
 
 declare(strict_types=1);
-namespace App\Services\Form;
+namespace App\Services\Api\Form;
 
-use App\Services\AbstractService;
-use App\Repositories\FormRepository;
+use App\Services\Api\AbstractService;
+use App\Repositories\Api\FormRepository;
 
 class FormService extends AbstractService
 {

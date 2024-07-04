@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Api;
 
 use App\Interfaces\ServiceInterface;
 
@@ -34,4 +34,17 @@ abstract class AbstractService implements ServiceInterface {
     public function delete(int $id): int {
         return $this->repository->delete($id);
     }
+
+    public function doc(): array {
+        return $this->repository->doc();
+    }
+
+    public function getMetadata(int $id): array {
+        return $this->repository->getMetadata($id);
+    }
+
+    public function setMetadata(array $request): array {
+        return $this->repository->setMetadata($request);
+    }
+    
 }

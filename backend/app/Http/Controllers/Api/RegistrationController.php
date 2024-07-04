@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Services\Event\EventService;
 use Illuminate\Http\Request;
+use App\Http\Requests\Registration\RegistrationCreateRequest;
+use App\Services\Api\Registration\RegistrationService;
 
-class EventController extends AbstractController
+class RegistrationController extends AbstractController
 {
     protected $service;
     protected $createRequest;
     protected $updateRequest;
-
+    
     public function __construct(){
-        $this->service = new EventService;
+        $this->service = new RegistrationService;
+        $this->createRequest = new RegistrationCreateRequest;
     }
 
     public function findAllByParams(Request $request){

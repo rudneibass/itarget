@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Api;
 
 use App\Interfaces\RepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class AbstractRepository implements RepositoryInterface {
 
@@ -37,5 +38,29 @@ class AbstractRepository implements RepositoryInterface {
 
     public function delete(int $id): int {
         return $this->model::findOrFail($id)->delete();
+    }
+
+    public function doc(){
+        $table = $this->model->getTable();
+        $columns = Schema::getColumnListing($table);
+        $fields = [];
+        foreach ($columns as $column) {
+            $type = Schema::getColumnType($table, $column);
+            $fields[$column] = $type;
+        }
+        return $fields;
+    }
+
+    public function getMetadata(int $id){
+        return json_decode($this->model::findOrFail($id)->metadata, true);
+    }
+
+    public function setMetadata(array $request){
+        $record = $this->model::findOrFail($request['id']);       
+        $existingMetadata = json_decode($record->metadata, true);
+        $newMetadata = array_merge($existingMetadata, $request['metadata']);
+        $record->metadata = json_encode($newMetadata);
+        $record->save();
+        return $record;
     }
 }

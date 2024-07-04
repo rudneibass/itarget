@@ -1,9 +1,9 @@
 <?php 
 
-namespace App\Services\Registration;
+namespace App\Services\Api\Registration;
 
-use App\Repositories\RegistrationRepository;
-use App\Services\AbstractService;
+use App\Repositories\Api\RegistrationRepository;
+use App\Services\Api\AbstractService;
 use Exception;
 
 class RegistrationService extends AbstractService

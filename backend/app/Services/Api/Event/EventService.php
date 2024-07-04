@@ -1,10 +1,10 @@
 <?php
 
 declare(strict_types=1);
-namespace App\Services\Event;
+namespace App\Services\Api\Event;
 
-use App\Services\AbstractService;
-use App\Repositories\EventRepository;
+use App\Services\Api\AbstractService;
+use App\Repositories\Api\EventRepository;
 
 class EventService extends AbstractService
 {
