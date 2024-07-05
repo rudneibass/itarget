@@ -72,6 +72,14 @@ class {$name}Controller extends AbstractController
     public function __construct(){
         \$this->service = new {$name}Service;
     }
+
+    # Custom action exemple:
+    #public function search(Request \$request){
+    #    return \$this->executeAction(function() use (\$request){
+    #        return \$this->service->search(\$request->all());
+    #    });
+    #}
+
 }";
 
         File::put($controllerPath, $controllerTemplate);
@@ -99,6 +107,7 @@ class {$name}Service extends AbstractService
     public function __construct(){
         \$this->repository = new {$name}Repository;
     }
+
 }";
 
         File::put($servicePath, $serviceTemplate);

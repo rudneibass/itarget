@@ -64,3 +64,22 @@ Route::prefix('form')->group(function(){
 });
 
 
+
+use App\Http\Controllers\Api\FormFieldController;
+Route::prefix('form-field')->group(function(){
+    Route::controller(FormFieldController::class)->group(function(){
+        # Default routes
+        Route::get('/', 'list');
+        Route::get('/list', 'list');
+        Route::get('/paginate/{itemsPerPage}', 'paginate');
+        Route::get('/get/{id}', 'get');
+        Route::get('/doc', 'doc');
+        Route::put('/update/{id}', 'update');
+        Route::post('/create', 'create');
+        Route::delete('/delete/{id}', 'delete');
+
+        # Custom routes
+        Route::get('/form/{id}', 'findAllByFormId');
+    });
+});
+
