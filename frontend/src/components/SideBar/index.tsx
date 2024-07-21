@@ -30,7 +30,7 @@ export default function Index() {
           </li>
 
           <li>
-            <Link to="/inscricoes" className={`nav-link align-middle px-0 ${isLinkActive('/inscricoes') ? 'active-route' : ''}`}>
+            <Link to="/registration" className={`nav-link align-middle px-0 ${isLinkActive('/inscricoes') ? 'active-route' : ''}`}>
               <i className="fs-4 bi-people"></i>
               <span className="ms-1 d-none d-sm-inline">Inscrições</span>
             </Link>

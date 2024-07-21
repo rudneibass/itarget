@@ -22,7 +22,21 @@ const registration = {
     }
 }
 
+const formPath = 'form/'
+const formActions = Object.fromEntries(
+    Object.entries(default_actions).map(([key, value]) => [key, formPath + value])
+)
+const form = {
+    path: 'form/',
+    actions: {
+        ...formActions,
+        get_by_name: `${formPath}name/` 
+    }
+}
+
+
 export const endpoints = { 
     event, 
-    registration 
+    registration,
+    form
 }

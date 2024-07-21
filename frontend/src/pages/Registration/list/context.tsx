@@ -43,6 +43,9 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
     useEffect(() => {
         async function getData(){
             const searchResponse = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
+            
+            console.log(searchResponse.data)
+
             setData(searchResponse.data)
             setPaginationLinks(searchResponse.links)
         }

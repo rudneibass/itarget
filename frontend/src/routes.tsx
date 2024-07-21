@@ -22,11 +22,11 @@ export const routes = createBrowserRouter([
         element: <EventListContextProvider><EventList /></EventListContextProvider> 
       },
       {
-        path: "/inscricoes",
+        path: "/registration",
         element: <RegistrationListContextProvider><RegistrationList /></RegistrationListContextProvider>
       },
       {
-        path: "/inscricoes/:eventId",
+        path: "/registration/:eventId",
         element: <RegistrationFormContextProvider><RegistrationForm /></RegistrationFormContextProvider>
       }
     ]

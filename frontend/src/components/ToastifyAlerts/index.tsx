@@ -23,6 +23,25 @@ export const errorAlert = (message: string) =>
     progress: undefined,
   });
 
+export const warningAlertWithHtmlContent = (jsxContent: JSX.Element) =>
+  toast.warning(jsxContent, {
+    position: "top-right",
+    autoClose: false,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+});
+
+export const HtmlContent = ({ htmlContent }: { htmlContent: string }) => (
+    <div>
+      <br/>
+      <h6>Warning:</h6>
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    </div>
+);
+
 export const toastContainer = 
   <ToastContainer
     icon

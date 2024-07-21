@@ -16,7 +16,7 @@ export const GlobalContextProvider = ({ children }: { children: JSX.Element }) =
             (item) => item.pageIdentifier !== pageIdentifier
         )
         newFormCache.push({data: data, pageIdentifier: pageIdentifier});
-        setFormCache(newFormCache)               
+        setFormCache(newFormCache)      
     }
 
     

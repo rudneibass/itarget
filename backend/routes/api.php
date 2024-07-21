@@ -52,7 +52,7 @@ Route::prefix('form')->group(function(){
         Route::get('/', 'list');
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/get/{id}', 'get');
+        Route::get('/{id}', 'get');
         Route::get('/doc', 'doc');
         Route::get('/metadata/{id}', 'getMetadata');
         Route::put('/update/{id}', 'update');
@@ -60,6 +60,7 @@ Route::prefix('form')->group(function(){
         Route::delete('/delete/{id}', 'delete');
 
         # Custom routes
+        Route::get('/name/{name}', 'getByName');
     });
 });
 
@@ -72,7 +73,7 @@ Route::prefix('form-field')->group(function(){
         Route::get('/', 'list');
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/get/{id}', 'get');
+        Route::get('/{id}', 'get');
         Route::get('/doc', 'doc');
         Route::put('/update/{id}', 'update');
         Route::post('/create', 'create');
