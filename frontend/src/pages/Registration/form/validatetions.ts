@@ -1,6 +1,6 @@
 
 import { isValidCPF, isValidEmail } from '@utils/index'
-import {  errorAlert } from '@components/ToastifyAlerts'
+import {  errorAlert } from '@components/Toastify'
 import { RegistrationFormInputsType } from './types'
 
 export function validate(data: RegistrationFormInputsType){

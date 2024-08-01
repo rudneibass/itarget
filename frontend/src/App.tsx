@@ -1,6 +1,6 @@
-import SideBar from "@components/SideBar";
-import NavBar from "@components/NavBar";
-import Footer from "@components/Footer";
+import SideBar from "@components/Bootstrap/SideBar";
+import NavBar from "@components/Bootstrap/NavBar";
+import Footer from "@components/Bootstrap/Footer";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./global.css";

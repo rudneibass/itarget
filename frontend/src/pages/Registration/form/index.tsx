@@ -1,8 +1,8 @@
 //import svgLoadingWhite from '@assets/loading-white-sm.svg'
 import { useRegistrationFormContext } from './context'
 
-import CustomCard from '@components/CustomCard'
-import Form from '@components/Form'
+import CustomCard from '@components/Bootstrap/CustomCard'
+import Form from '@components/Bootstrap/Form'
 import { FieldsType, FormType } from './types'
 
 export default function Index() {

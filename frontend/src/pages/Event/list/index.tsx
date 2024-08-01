@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import svgLoadingGray from '@assets/loading-gray-md.svg'
-import CustomCard from '@components/CustomCard'
+import CustomCard from '@components/Bootstrap/CustomCard'
 
 import { utils } from '@utils/index'
 

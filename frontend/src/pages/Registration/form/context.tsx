@@ -6,7 +6,7 @@ import { formApi } from "@services/backendApi/formApi";
 import { FormType } from "@services/backendApi/formApi/type";
 
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/ToastifyAlerts'
+import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { convertToFormType, isFormType } from "@pages/Form/types";
 
 export const RegistrationFormContext = createContext({} as RegistrationFormContextextType)
