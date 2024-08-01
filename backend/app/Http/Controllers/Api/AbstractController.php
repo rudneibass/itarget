@@ -21,29 +21,25 @@ abstract class AbstractController extends BaseController
 
     protected  $responseData;
     protected int $responseHttpStatus;
-    protected string $responseMessage;
 
     protected function executeAction(callable $action){
         try{
             $this->responseData = $action();
             $this->responseHttpStatus = 200;
-            $this->responseMessage = 'Success';
 
         }catch (ValidationException $e) {
-            $this->responseData = null;
+            $this->responseData = $e->errors();
             $this->responseHttpStatus = 422;
-            $this->responseMessage = $e->errors();
 
         }catch (Exception $e){
-            $this->responseData = null;
+            $this->responseData = $e->getMessage();
             $this->responseHttpStatus = 500;
-            $this->responseMessage = $e->getMessage();
         }
 
-        return response()->json([
+        return response()->json(
             $this->responseData,
-            $this->responseMessage
-        ], $this->responseHttpStatus);
+            $this->responseHttpStatus
+        );
     }
 
     public function list(){

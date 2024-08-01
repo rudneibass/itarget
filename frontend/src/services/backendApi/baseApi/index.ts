@@ -1,73 +1,23 @@
 import axios from 'axios'
-import { LaravelPaginationType } from './types';
-import  jsonToHtmlList  from '../utils/jsonToHtmlList';
+import { utils } from '../utils';
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/' //baseURL: import.meta.env.VITE_APP_BASE_URL
+  //baseURL: import.meta.env.VITE_APP_BASE_URL
+  baseURL: 'http://127.0.0.1:8000/api/' 
 })
+
+const defaultActions = {
+  list: "list/",
+  get: "get/",
+  create: "create/",
+  update: "update/",
+  delete: "delete/",
+  search: "search/",
+  paginate: "paginate/",
+}
 
 function resolvePath(urlPath: string){
   return urlPath.split('/')[1]
-}
-
-async function list(endpoint: string): Promise<[]>{ 
-  try {
-    const response = await api.get(endpoint)
-    return response.data[0]
-  } catch (error) {
-    console.log(error)
-    return []
-  }
-}
-
-async function paginate(endpoint: string, itemsPerPage = 10): Promise<LaravelPaginationType>{ 
-    try {
-      const response = await api.get(`${endpoint}${itemsPerPage}`)
-      return response.data
-    } catch (error) {
-      console.log(error)
-      return {} as LaravelPaginationType
-    }
-}
-
-async function search(endpoint: string, searchParams?: object): Promise<LaravelPaginationType> { 
-  try {
-    const response = await api.post(endpoint, searchParams)
-    return response.data[0]
-  } catch (error) {
-    console.log(error)
-    return {} as LaravelPaginationType
-  }
-}
-
-async function get(endpoint: string, pk_data: string): Promise<[]>{ 
-  try {
-    const response = await api.get(`${endpoint}${pk_data}`)
-    return response.data 
-  } catch (error) {
-    console.log(error)
-    return []
-  }
-}
-
-async function update(endpoint: string, pk_data: string, data: object): Promise<[]>{
-  try {
-    const response = await api.put(`${endpoint}${pk_data}`, data)
-    return response.data 
-  } catch (error) {
-    console.log(error)
-    return []
-  }
-}
-
-async function remove(endpoint: string, pk_data: string): Promise<[]>{
-  try {
-    const response = await api.delete(`${endpoint}${pk_data}`)
-    return response.data 
-  } catch (error) {
-    console.log(error)
-    return []
-  }
 }
 
 async function executeRequest(requestFunction: () => Promise<unknown>): Promise<unknown> {
@@ -75,7 +25,7 @@ async function executeRequest(requestFunction: () => Promise<unknown>): Promise<
     return await requestFunction();
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(jsonToHtmlList(JSON.stringify(error.response?.data)))
+      throw new Error(utils.jsonToHtmlList(JSON.stringify(error.response?.data)))
     }
     throw new Error('Erro ao tentar obter dados da api.')
   }
@@ -87,8 +37,47 @@ async function create(endpoint: string, params: object){
   })
 }
 
+async function search(endpoint: string, searchParams?: object) { 
+  return await executeRequest(async () => {
+    return await api.get(endpoint, {
+      params: searchParams
+    })
+  })
+}
+
+async function list(endpoint: string){
+  return await executeRequest(async () => {
+    return await api.get(endpoint)
+  })
+}
+
+async function paginate(endpoint: string, itemsPerPage = 10){
+  return await executeRequest(async () => {
+    return await api.get(`${endpoint}${itemsPerPage}`)
+  })
+}
+
+async function get(endpoint: string, pk_data: string){
+  return await executeRequest(async () => {
+    return await api.get(`${endpoint}${pk_data}`)
+  })
+}
+
+async function update(endpoint: string, pk_data: string, data: object){
+  return await executeRequest(async () => {
+    return await api.put(`${endpoint}${pk_data}`, data)
+  })
+}
+
+async function remove(endpoint: string, pk_data: string){
+  return await executeRequest(async () => {
+    return await api.delete(`${endpoint}${pk_data}`)
+  })
+}
+
 export const baseApi = {
   api,
+  defaultActions,
   executeRequest,
   resolvePath,
   list,

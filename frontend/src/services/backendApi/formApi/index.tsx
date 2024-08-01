@@ -1,24 +1,30 @@
 import { baseApi } from '../baseApi/index'
-import { FormType, convertToFormType, isObject } from './type'
 
-async function getByName(endpoint: string): Promise<FormType> {
+function isObject(data: unknown): data is Record<string, unknown> {
+  return data !== null && typeof data === 'object' && !Array.isArray(data);
+}
+
+async function getByName(endpoint: string, params?: object){
   const response = await baseApi.executeRequest(async () =>{
-    return await baseApi.api.get(endpoint)
+    return await baseApi.api.get(endpoint, {
+      params: params
+    })
   })
-
   if(response && isObject(response) && response.data){
-    if(Array.isArray(response.data)){
-      return convertToFormType(response.data[0]);
-    }
-    if(!Array.isArray(response.data)){
-      return convertToFormType(response.data);
-    }
+    return response.data
   }
+  return {}
+}
 
-  return {} as FormType
+const path = 'form/'
+const actions = Object.fromEntries(Object.entries(baseApi.defaultActions).map(([key, value]) => [key, path + value]))
+const endpoints = {
+    ...actions,
+    getByName: `${path}name/`
 }
 
 export const formApi = {
   ...baseApi,
-  getByName
+   endpoints,
+   getByName
 }

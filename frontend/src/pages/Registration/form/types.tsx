@@ -13,10 +13,6 @@ export type RegistrationStoreUpdateType = {
 	event_id?: string
 }
 
-export type ErrorsType = {
-  errors: [];
-}
-
 export type RegistrationFormInputsType = {
 	name?: string;
 	email?: string;
@@ -55,4 +51,3 @@ export interface RegistrationFormContextextType  {
 	form: FormType | undefined,
 	setFormContext?: (form: FormType) => void
 }
-

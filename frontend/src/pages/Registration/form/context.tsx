@@ -4,9 +4,10 @@ import { useGlobalContext } from "@src/context/context";
 import { indentifiers } from "@utils/indentifiers";
 import { formApi } from "@services/backendApi/formApi";
 import { FormType } from "@services/backendApi/formApi/type";
-import { endpoints } from '@services/backendApi/endpoints'
+
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/ToastifyAlerts'
+import { convertToFormType, isFormType } from "@pages/Form/types";
 
 export const RegistrationFormContext = createContext({} as RegistrationFormContextextType)
 
@@ -29,7 +30,7 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
     const [inputs, setInputs] = useState<RegistrationFormInputsType>({} as RegistrationFormInputsType);
     async function sendFormDataToBackend(inputs: RegistrationFormInputsType){
         try {
-            await registrationApi.create(endpoints.registration.actions.create, inputs)
+            await registrationApi.create(registrationApi.endpoints.create, inputs)
             successAlert('Inscrição efetuada com sucesso!')
         } catch (error) {
             if (error instanceof Error) {
@@ -47,11 +48,19 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
     
 
     const [form, setForm] = useState<FormType>()
-    function setFormContext(form: FormType){setForm(form)}
-    useEffect(() =>{
+    function setFormContext(form: FormType){
+        setForm(form)
+    }
+    
+    useEffect(() => {
         async function getForm(){
-            const form = await formApi.getByName(`${endpoints.form.actions.getByName}registration`)
-            setFormContext(form)
+            const form = await formApi.getByName(`${formApi.endpoints.getByName}registration`)
+            if(isFormType(form)){
+                setFormContext(form)
+            }
+            if(!isFormType(form)){
+                setFormContext(convertToFormType(form))
+            }
         }
         getForm()
     },[])

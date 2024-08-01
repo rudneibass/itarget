@@ -14,12 +14,12 @@ class FormService extends AbstractService
     }
 
     public function getFormWithFields(int $formId){
-        $database_object_composer = new DOCFormFieldsByFormId($formId);
-        return $database_object_composer->compositeObject;
+        $data_composer_object = new DCOFormFieldsByFormId($formId);
+        return $data_composer_object->compositeObject;
     }
 
-    public function findAllByName(string $name){
-        $database_object_composer = new DOCFormFieldsByFormName($name);
-        return $database_object_composer->compositeObject;
+    public function getByName(string $name){
+        $data_composer_object = new DCOFormFieldsByFormName($name);
+        return $data_composer_object->compositeObject;
     }
 }

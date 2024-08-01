@@ -2,11 +2,14 @@ import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { useRegistrationListContext } from './context'
 
-import CustomCard from '@components/CustomCard'
-import SearchBar from '@components/SearchBar/index'
-import PaginationBar from '@components/PaginationBar/index'
-import ListTable from '@components/ListTable';
+import CustomCard from '@components/Bootstrap/CustomCard'
+import SearchBar from '@components//Bootstrap/SearchBar'
+import PaginationBar from '@components/Bootstrap/PaginationBar/'
+import ListTable from '@components/Bootstrap/ListTable';
+
 import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
+import { isObject } from '@utils/isObject'
+import { isLaravelPaginationType } from '@src/types'
 
 export default function Index() {  
   const context = useRegistrationListContext()
@@ -24,11 +27,13 @@ export default function Index() {
     data: {},
     actions: {
       handleSearchAction: async (searchParams: object) => {
-        context.setLoadingContext({loading: true})
-        const searchResponse = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, searchParams)
-        context.setDataContext({data: searchResponse.data, cache: true})
-        context.setPaginationLinksContext({paginationLinks: searchResponse.links})
-        context.setLoadingContext({loading: false})
+        const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, searchParams)
+        if(response && isObject(response) && response.data){
+          if(isLaravelPaginationType(response.data)){
+            context.setDataContext({data: response.data.data, cache: true})
+            context.setPaginationLinksContext({paginationLinks: response.data.links})
+          }
+      }
       },   
     },
     additionalComponents: []

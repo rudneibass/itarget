@@ -21,7 +21,7 @@ Route::prefix('registration')->group(function(){
         Route::delete('/delete/{id}', 'delete');
         
         # Custom routes
-        Route::post('/search', 'search');
+        Route::get('/search', 'search');
     });
 });
 
@@ -40,7 +40,7 @@ Route::prefix('event')->group(function(){
         Route::delete('/delete/{id}', 'delete');
 
          # Custom routes
-         Route::post('/search', 'search');
+         Route::get('/search', 'search');
     });
 });
 

@@ -5,7 +5,7 @@ namespace App\Services\Api\Form;
 use App\Repositories\Api\FormFieldRepository;
 use App\Repositories\Api\FormRepository;
 
-class DOCFormFieldsByFormId {
+class DCOFormFieldsByFormId {
     public array $compositeObject;
 
     public function __construct(int $formId){

@@ -22,7 +22,7 @@ class FormController extends AbstractController
 
     public function getByName(string $name){
         return $this->executeAction(function() use ($name){
-            return $this->service->findAllByName($name);
+            return $this->service->getByName($name);
         });
     }
 }

@@ -20,8 +20,6 @@ export type LaravelPaginationType = {
     total: number;
 }
 
-
-
 export type ResponseError = {
     code?: string,
     status?: number,

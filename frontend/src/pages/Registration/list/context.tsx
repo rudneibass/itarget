@@ -1,10 +1,10 @@
 import { createContext, useState,useContext, useEffect } from  "react"
-import { LaravelPaginationLinksType } from "@services/backendApi/baseApi/types"
-import { RegistrationListContextType } from "./types"
-import { indentifiers } from "@utils/indentifiers"
 import { useGlobalContext } from "@src/context/context"
+import { indentifiers } from "@utils/indentifiers"
 import { registrationApi } from "@services/backendApi/registrationApi"
-import { endpoints } from "@utils/endpoints"
+import { isPaginatedListType, PaginatedListLinksType, RegistrationListContextType } from "./types"
+import { utils } from "@utils/index"
+
 
 export const RegistrationListContext = createContext<RegistrationListContextType>({} as RegistrationListContextType)
 
@@ -23,33 +23,24 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
             globalContext.setListCacheGlobalContext({data: data, pageIdentifier: indentifiers.pages.registrationList})
         }
     }
-
-    const [paginationLinks, setPaginationLinks] = useState<LaravelPaginationLinksType[]>()
-    function setPaginationLinksContext({ paginationLinks }:{paginationLinks: LaravelPaginationLinksType[]}){
+    
+    const [paginationLinks, setPaginationLinks] = useState<Array<PaginatedListLinksType>>()
+    function setPaginationLinksContext({ paginationLinks }:{paginationLinks: Array<PaginatedListLinksType>}){
         setPaginationLinks(paginationLinks)
     }
 
-    const [loading, setLoading] = useState(false)
-    function setLoadingContext({loading}:{loading: boolean}){
-        setLoading(loading)
-    }
-
-    const [thereIsNoData, setThereIsNoData] = useState(false)
-    function setThereIsNoDataContext({thereIsNoData}:{thereIsNoData: boolean}){
-        setThereIsNoData(thereIsNoData)
-    }
- 
-    
-    useEffect(() => {
-        async function getData(){
-            const searchResponse = await registrationApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
-            
-            console.log(searchResponse.data)
-
-            setData(searchResponse.data)
-            setPaginationLinks(searchResponse.links)
+    async function getListDataAndSetOnStateData(){
+        const response = await registrationApi.search(`${registrationApi.endpoints.search}`, {})
+        if(response && utils.isObject(response) && response.data){
+            if(isPaginatedListType(response.data)){
+                setData(response.data.data)
+                setPaginationLinks(response.data.links)
+            }
         }
-        getData()
+    }
+
+    useEffect(() => {
+        getListDataAndSetOnStateData()
     }, [])
     
     return (
@@ -57,10 +48,6 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
             value={{
                     data, 
                     setDataContext,
-                    loading,
-                    setLoadingContext,
-                    thereIsNoData,
-                    setThereIsNoDataContext,
                     paginationLinks,
                     setPaginationLinksContext
                 }}

@@ -4,51 +4,14 @@ import { Link } from 'react-router-dom'
 import svgLoadingGray from '@assets/loading-gray-md.svg'
 import CustomCard from '@components/CustomCard'
 
-import { dateFormat } from '@utils/index'
-import { endpoints } from '@utils/endpoints'
+import { utils } from '@utils/index'
 
 import { eventApi } from '@services/backendApi/eventApi'
+
 import { useEventListContext } from './context'
-//import axios from 'axios'
 
 export default function Index() {
   const context = useEventListContext()
-
-  /*
-  const searchBarProps = {
-    data: [],
-    actions: {
-      handleSearchAction: async (params:string) => {
-        context.setLoadingContext({loading: true})
-        const searchResponse = await eventApi.paginate(`${endpoints.registration.endpoint}${endpoints.registration.actions.paginate}`)
-        context.setDataContext({data: searchResponse.data, cache: true})
-        context.setPaginationLinksContext({paginationLinks: searchResponse.links})
-        context.setLoadingContext({loading: false})
-
-        console.log(params)
-      },   
-    }
-  }
-
-  const paginationBarProps = {
-    data: context.paginationLinks,
-    actions: {
-      handlePaginateAction: async (url: string) => {
-        try {
-          const response = await axios.get(url);
-          const response_data = response.data.response_data[0];
-          context.setDataContext(response_data.data)
-          context.setPaginationLinksContext(response_data.links)
-        } catch (error) {
-          console.error(error);
-        }
-      }   
-    }
-  }
-
-  useEffect(() => {
-    searchBarProps.actions.handleSearchAction('');
-  }, [])*/
 
   const customCardProps = {
     data: {
@@ -60,7 +23,7 @@ export default function Index() {
   useEffect(()=> {    
     async function getData(){
       context.setLoadingContext({loading: true})
-      const response = await eventApi.list(`${endpoints.event.endpoint}${endpoints.event.actions.list}`)
+      const response = await eventApi.list(eventApi.endpoints.list)
       context.setDataContext({data: response, cache: true})
       context.setLoadingContext({loading: false})
       if(context.data?.length === 0){
@@ -90,8 +53,8 @@ export default function Index() {
                   context.data!.map((item, index) => (
                     <tr key={index}>
                       <td>{item.name}</td>
-                      <td>{dateFormat(item.start_date)}</td>
-                      <td>{dateFormat(item.end_date)}</td>
+                      <td>{utils.dateFormat(item.start_date)}</td>
+                      <td>{utils.dateFormat(item.end_date)}</td>
                       <td className="text-center">
                         {item.status === '1' && (
                           <Link to={`/inscricoes/${item.id}`} className="btn btn-sm btn-danger">
