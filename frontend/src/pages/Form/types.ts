@@ -1,13 +1,19 @@
 
+export type FieldsType = {
+	id: string;
+	form_id: string;
+	attributes: Record<string, string>;
+  }
+  
 export type FormType = {
     id: string;
     name: string;
     code?: string;
     attributes: object;
-    fields: Array<{
+    fields?: Array<{
       id: string;
       form_id: string;
-      attributes: object;
+      attributes: Record<string, string>;
     }>;
   };
   

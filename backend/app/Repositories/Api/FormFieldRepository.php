@@ -17,7 +17,8 @@ class FormFieldRepository extends AbstractRepository
             WHERE 1 = 1"
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
             .(isset($params['name']) && !empty($params['name']) ? " AND form_id = {$params['form_id']}" : "" )
-            .(isset($params['order']) && !empty($params['order']) ? " ORDER BY {$params['order']}" : " ORDER BY id" )
+            .(isset($params['is_active']) && !empty($params['is_active']) ? " AND is_active = {$params['is_active']}" : "" )
+            .(isset($params['order']) && !empty($params['order']) ? " ORDER BY '{$params['order']}'" : " ORDER BY id" )
             .(isset($params['limit']) && !empty($params['limit']) ? " LIMIT {$params['limit']}" : "" )
             .(isset($params['offset']) && !empty($params['offset']) ? " OFFSET {$params['offset']}" : "" );
 

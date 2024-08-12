@@ -54,9 +54,9 @@ abstract class AbstractController extends BaseController
          });
      }
 
-    public function get($id){
+    public function getById($id){
         return $this->executeAction(function() use ($id){
-            return $this->service->get((int)$id);
+            return $this->service->getById((int)$id);
         });
     }
 
@@ -80,7 +80,6 @@ abstract class AbstractController extends BaseController
     public function create(Request $request)
     {
         return $this->executeAction(function() use ($request) {
-        
             $requestData = $request->all();
             if(isset($this->createRequest)){
                 $this->createRequest->merge($request->all());

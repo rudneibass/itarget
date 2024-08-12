@@ -1,13 +1,10 @@
-//import svgLoadingWhite from '@assets/loading-white-sm.svg'
 import { useRegistrationFormContext } from './context'
-
 import CustomCard from '@components/Bootstrap/CustomCard'
 import Form from '@components/Bootstrap/Form'
-import { FieldsType, FormType } from './types'
+import { FormType, FieldsType } from '@pages/Form/types'
 
 export default function Index() {
   const context = useRegistrationFormContext()
-  //const { eventId } = useParams();
 
   const customCardProps = {
     data: {

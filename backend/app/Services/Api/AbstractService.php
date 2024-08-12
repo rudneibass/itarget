@@ -7,10 +7,6 @@ abstract class AbstractService implements ServiceInterface {
 
     protected $repository;
     
-    public function get(int $id): ?array {
-        return [$this->repository->get($id)];
-    }
-    
     public function list(): ?array {
         $list = [];
         foreach($this->repository->list() as $item){
@@ -21,6 +17,10 @@ abstract class AbstractService implements ServiceInterface {
 
     public function paginate(int $itemsPerPage = 10): ?array {
         return [$this->repository->paginate($itemsPerPage)];
+    }
+
+    public function getById(int $id): ?object {
+        return $this->repository->getById($id);
     }
 
     public function create(array $request): ?array {

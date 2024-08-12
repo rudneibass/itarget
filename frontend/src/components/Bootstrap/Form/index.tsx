@@ -1,20 +1,23 @@
-import { ReactNode, ChangeEvent, FormEvent, useState } from "react";
+import { ReactNode, FormEvent, useState } from "react";
 import FormDocUsageExemples from "./FormDocUsageExemples";
 import { Link } from "react-router-dom";
+
+import InputText from './InputText/index'
 
 type FormPropsType = {
     data: {
         form: {
             id: string,
             name: string,
-            code: string,
+            code?: string,
             attributes: object,
         },
-        fields?: [{
+        fields?: Array<{
           id: string,
           form_id: string,
+          rules?: string,
           attributes: Record<string, string>
-      }]
+      }>
     },
     actions?: {
       handleSubmitAction?: (inputsValues: object) => void
@@ -25,17 +28,19 @@ type FormPropsType = {
 export default function Index({data, actions}: FormPropsType) {
   const [inputsValues, setInputsValues] = useState({} as Record<string, string>)
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-      const name = event.target.name;
-      const value = event.target.value;
-      setInputsValues({[name]: value})
-  }
-
   function handleSibmit(event: FormEvent<HTMLFormElement>){
+    console.log(inputsValues)
+    
     if(actions?.handleSubmitAction){
         event.preventDefault();        
         actions.handleSubmitAction(inputsValues)
     }
+  }
+
+  function handleChangeAction(input: Record<string, string>) {
+    const name = input.name;
+    const value = input.value;
+    setInputsValues({...inputsValues, [name]: value})
   }
 
   return (
@@ -46,23 +51,14 @@ export default function Index({data, actions}: FormPropsType) {
     <form name={data.form.name} onSubmit={handleSibmit} >
       <div className="row">
         {data.fields
-          && data.fields.map((field, index) => (
-            <div className={field.attributes?.grid || 'col-md-4'} key={index}>
-              <div className="form-group mb-3">
-                <label htmlFor={field.attributes?.name || field.attributes?.label || ''}>
-                    {field.attributes?.name || ''}
-                </label>
-                <input
-                  type={field.attributes?.type || 'text'}
-                  className={`form-control ${field.attributes?.class}`}
-                  id={field.attributes?.id || field.attributes?.name || ''}
-                  name={field.attributes?.name || field.attributes?.id || ''}
-                  value=''
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          ))
+          && data.fields.length > 0
+          && data.fields.map((field, index) => 
+            
+            field.attributes?.type === 'text' && (              
+                <InputText data={{id: field.id, attributes: field.attributes, rules: field.rules}}  actions={{handleChangeAction}} key={index}/>
+            )
+          
+          )
         }
       </div>
 

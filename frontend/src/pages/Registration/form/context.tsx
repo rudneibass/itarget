@@ -1,13 +1,11 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { RegistrationFormContextextType, RegistrationType, RegistrationFormInputsType } from "./types";
 import { useGlobalContext } from "@src/context/context";
 import { indentifiers } from "@utils/indentifiers";
 import { formApi } from "@services/backendApi/formApi";
-import { FormType } from "@services/backendApi/formApi/type";
-
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
-import { convertToFormType, isFormType } from "@pages/Form/types";
+import { FormType, convertToFormType, isFormType } from "@pages/Form/types";
+import { RegistrationFormContextextType, RegistrationType, RegistrationFormInputsType } from "./types";
 
 export const RegistrationFormContext = createContext({} as RegistrationFormContextextType)
 
@@ -46,7 +44,6 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
         setInputs(inputs)
     }
     
-
     const [form, setForm] = useState<FormType>()
     function setFormContext(form: FormType){
         setForm(form)
@@ -55,12 +52,14 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
     useEffect(() => {
         async function getForm(){
             const form = await formApi.getByName(`${formApi.endpoints.getByName}registration`)
-            if(isFormType(form)){
-                setFormContext(form)
-            }
-            if(!isFormType(form)){
-                setFormContext(convertToFormType(form))
-            }
+            if(form){
+                if(isFormType(form)){
+                    setFormContext(form)
+                }
+                if(!isFormType(form)){
+                    setFormContext(convertToFormType(form))
+                }
+            }   
         }
         getForm()
     },[])

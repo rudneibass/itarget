@@ -24,7 +24,7 @@ class AbstractRepository implements RepositoryInterface {
         return $this->model::paginate($itemsPerPage);
     }
 
-    public function get(int $id): ?Model {
+    public function getById(int $id): ?Model {
         return $this->model::find($id);
     }
 

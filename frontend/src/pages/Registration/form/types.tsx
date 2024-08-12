@@ -1,3 +1,5 @@
+import { FormType } from "@pages/Form/types";
+
 export type RegistrationType =  {
   id: number;
 	name: string;
@@ -6,42 +8,13 @@ export type RegistrationType =  {
 	event_id: number
 }
 
-export type RegistrationStoreUpdateType = {
-	name: string;
-	email: string,
-	cpf: string,
-	event_id?: string
-}
-
 export type RegistrationFormInputsType = {
 	name?: string;
 	email?: string;
 	cpf?: string;
 	event_id?: string
-  };
+};
 
-export type FormsType = {
-	formIdentifier: string, 
-	formFields: []
-}
-
-export type FieldsType = {
-	id: string,
-	form_id: string,
-	attributes: Record<string, string>
-  }
-
-export type FormType = {
-    id: string;
-    name: string;
-    code: string;
-    attributes: object;
-    fields: Array<{
-      id: string;
-      form_id: string;
-      attributes: object;
-    }>;
-  };
 
 export interface RegistrationFormContextextType  {
 	data: RegistrationType | undefined,

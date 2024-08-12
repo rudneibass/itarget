@@ -36,8 +36,8 @@ Route::prefix('$nameLowerCase')->group(function(){
         # Default routes
         Route::get('/', 'list');
         Route::get('/list', 'list');
+        Route::get('/id/{id}', 'getById');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/get/{id}', 'get');
         Route::get('/doc', 'doc');
         Route::put('/update/{id}', 'update');
         Route::post('/create', 'create');

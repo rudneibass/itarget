@@ -13,7 +13,7 @@ Route::prefix('registration')->group(function(){
         Route::get('/', 'list');
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/get/{id}', 'get');
+        Route::get('/id/{id}', 'getById');
         Route::get('/doc', 'doc');
         Route::get('/metadata/{id}', 'getMetadata');
         Route::put('/update/{id}', 'update');
@@ -32,7 +32,7 @@ Route::prefix('event')->group(function(){
         Route::get('/', 'list');
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/get/{id}', 'get');
+        Route::get('/id/{id}', 'getById');
         Route::get('/doc', 'doc');
         Route::get('/metadata/{id}', 'getMetadata');
         Route::put('/update/{id}', 'update');
@@ -52,7 +52,7 @@ Route::prefix('form')->group(function(){
         Route::get('/', 'list');
         Route::get('/list', 'list');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/{id}', 'get');
+        Route::get('/id/{id}', 'getById');
         Route::get('/doc', 'doc');
         Route::get('/metadata/{id}', 'getMetadata');
         Route::put('/update/{id}', 'update');

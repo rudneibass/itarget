@@ -13,7 +13,7 @@ class FormController extends AbstractController
     public function __construct(){
         $this->service = new FormService;
     }
-
+    
     public function get($id){
         return $this->executeAction(function() use ($id){
             return $this->service->getFormWithFields($id);
