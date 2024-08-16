@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useGlobalContext } from "@src/context/context";
 import { indentifiers } from "@utils/indentifiers";
 import { registrationApi } from '@services/backendApi/registrationApi'
@@ -15,6 +16,7 @@ export const useRegistrationFormContext = () => {
 
 export const RegistrationFormContextProvider = ({ children }:  { children: JSX.Element }) => {
     const globalContext = useGlobalContext()
+    const { id } = useParams()
     
     const [data, setData] = useState<RegistrationType>({} as RegistrationType)
     function setDataContext({ data, cache = false }:{data: RegistrationType, cache?: boolean}){
@@ -50,8 +52,13 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
     
     useEffect(() => {
         async function getForm(){
-            const form = await registrationApi.getFormWithFields({ endpoint: `${registrationApi.endpoints.form}`, formName: 'registration'});
+
+            let form = await registrationApi.getFormWithFields({ endpoint: `${registrationApi.endpoints.form}`, formName: 'registration'});
             
+            if(id){
+                form = await registrationApi.getFormWithFieldsAndValues({endpoint: `${registrationApi.endpoints.edit}`, formName: 'registration', id: id })
+            }
+
             if(form){
                 if(isFormType(form)){
                     setFormContext(form)

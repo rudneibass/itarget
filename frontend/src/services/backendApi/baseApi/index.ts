@@ -76,7 +76,7 @@ async function getFormWithFields({ endpoint, formName } : { endpoint: string, fo
 
 async function getFormWithFieldsAndValues({ endpoint, formName, id } : { endpoint: string, formName: string, id: string }){
   return await executeRequest(async () => {
-    const response = await api.get(`${endpoint}${formName}${id}`)
+    const response = await api.get(`${endpoint}${formName}/${id}`)
     return response.data
   })
 }
@@ -89,7 +89,8 @@ const defaultActions = {
   delete: "delete/",
   search: "search/",
   paginate: "paginate/",
-  form: "form/"
+  form: "form/",
+  edit: "edit/"
 }
 
 export const baseApi = {

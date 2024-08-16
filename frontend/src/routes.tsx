@@ -28,6 +28,13 @@ export const routes = createBrowserRouter([
       {
         path: "/registration/:eventId",
         element: <RegistrationFormContextProvider><RegistrationForm /></RegistrationFormContextProvider>
+      },
+      {
+        path: "/registration/form/:id",
+        element: 
+        <RegistrationFormContextProvider>
+          <RegistrationForm />
+        </RegistrationFormContextProvider>
       }
     ]
   },

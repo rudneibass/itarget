@@ -13,6 +13,8 @@ export type FormType = {
     fields?: Array<{
       id: string;
       form_id: string;
+      name?: string;
+      value?: string;
       attributes: Record<string, string>;
     }>;
   };
@@ -80,6 +82,8 @@ export type FormType = {
       fields: fields.map((field) => ({
         id: field.id || '',
         form_id: field.form_id || '',
+        name: field.name || '',
+        value: field.value || '',
         attributes: field.attributes || {}
       }))
     };

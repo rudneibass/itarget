@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom'
+
 import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { useRegistrationListContext } from './context'
@@ -13,6 +15,7 @@ import { isLaravelPaginationType } from '@src/types'
 
 export default function Index() {  
   const context = useRegistrationListContext()
+  const navigate = useNavigate()
 
   const customCardProps = {
     data: {
@@ -58,7 +61,7 @@ export default function Index() {
     },
     actions: {
       handleEditAction: (itemId: string) => {
-        alert('Edit item '+itemId)
+        navigate(`../registration/form/${itemId}`)
       },
       handleDeleteAction: (itemId: string) => {
         alert('Delete item '+itemId)

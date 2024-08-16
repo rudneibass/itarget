@@ -16,6 +16,7 @@ type FormPropsType = {
           id: string,
           form_id: string,
           rules?: string,
+          value?: string,
           attributes: Record<string, string>
       }>
     },
@@ -54,7 +55,7 @@ export default function Index({data, actions}: FormPropsType) {
             
             field.attributes?.type === 'text' && (              
                 <InputText 
-                  data={{id: field.id, attributes: field.attributes, rules: field.rules}}  
+                  data={{id: field.id, attributes: field.attributes, rules: field.rules, value: field.value}}  
                   actions={{handleChangeAction}} 
                   key={index}
                 />
