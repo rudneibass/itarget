@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Services\Api\Form;
 use App\Services\Api\AbstractService;
@@ -11,11 +10,6 @@ class FormService extends AbstractService
 
     public function __construct(){
         $this->repository = new FormRepository;
-    }
-
-    public function getFormWithFields(int $formId){
-        $data_composer_object = new DCOFormFieldsByFormId($formId);
-        return $data_composer_object->compositeObject;
     }
 
     public function getByName(string $name){

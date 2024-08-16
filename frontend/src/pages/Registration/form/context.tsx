@@ -1,7 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { useGlobalContext } from "@src/context/context";
 import { indentifiers } from "@utils/indentifiers";
-import { formApi } from "@services/backendApi/formApi";
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { FormType, convertToFormType, isFormType } from "@pages/Form/types";
@@ -51,7 +50,8 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
     
     useEffect(() => {
         async function getForm(){
-            const form = await formApi.getByName(`${formApi.endpoints.getByName}registration`)
+            const form = await registrationApi.getFormWithFields({ endpoint: `${registrationApi.endpoints.form}`, formName: 'registration'});
+            
             if(form){
                 if(isFormType(form)){
                     setFormContext(form)

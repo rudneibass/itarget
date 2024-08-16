@@ -41,6 +41,12 @@ export default function Index() {
 
   const listTableProps = {
     data: {
+      thead: [
+        {name: 'id', displayName: 'ID'},
+        {name: 'name', displayName: 'Nome'},
+        {name: 'email', displayName: 'Email'},
+        {name: 'cpf', displayName: 'Cpf'}
+      ],
       tbody: context.data?.map((item) => { 
         return {
           id: item.id.toString(),
@@ -48,13 +54,7 @@ export default function Index() {
           email: item.email.toString(),
           cpf: item.cpf.toString()
         }
-      }),
-      thead: [
-        {name: 'id', displayName: 'ID'},
-        {name: 'name', displayName: 'Nome'},
-        {name: 'email', displayName: 'Email'},
-        {name: 'cpf', displayName: 'Cpf'}
-      ]
+      })
     },
     actions: {
       handleEditAction: (itemId: string) => {

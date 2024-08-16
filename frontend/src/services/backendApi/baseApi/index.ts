@@ -6,15 +6,6 @@ const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/' 
 })
 
-const defaultActions = {
-  list: "list/",
-  get: "get/",
-  create: "create/",
-  update: "update/",
-  delete: "delete/",
-  search: "search/",
-  paginate: "paginate/",
-}
 
 function resolvePath(urlPath: string){
   return urlPath.split('/')[1]
@@ -75,6 +66,32 @@ async function remove(endpoint: string, pk_data: string){
   })
 }
 
+
+async function getFormWithFields({ endpoint, formName } : { endpoint: string, formName: string }){
+  return await executeRequest(async () => {
+    const response = await api.get(`${endpoint}${formName}`)
+    return response.data
+  })
+}
+
+async function getFormWithFieldsAndValues({ endpoint, formName, id } : { endpoint: string, formName: string, id: string }){
+  return await executeRequest(async () => {
+    const response = await api.get(`${endpoint}${formName}${id}`)
+    return response.data
+  })
+}
+
+const defaultActions = {
+  list: "list/",
+  get: "get/",
+  create: "create/",
+  update: "update/",
+  delete: "delete/",
+  search: "search/",
+  paginate: "paginate/",
+  form: "form/"
+}
+
 export const baseApi = {
   api,
   defaultActions,
@@ -86,5 +103,7 @@ export const baseApi = {
   update,
   create,
   search,
-  remove
+  remove,
+  getFormWithFields,
+  getFormWithFieldsAndValues
 }

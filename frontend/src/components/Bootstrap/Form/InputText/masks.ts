@@ -6,6 +6,9 @@
         .replace(/(\d{3})(\d)/, '$1.$2') // Add a dot after the next three digits
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Add a hyphen before the last two digits
      },
+     'cpfRemove': (value: string): string => {
+      return value.replace(/\D/g, ''); // Remove todos os caracteres que não sejam dígitos
+    },
     'phone': (value: string) => { 
       return value
       .replace(/\D/g, '') // Remove all non-digit characters

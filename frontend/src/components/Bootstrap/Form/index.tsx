@@ -1,7 +1,7 @@
 import { ReactNode, FormEvent, useState } from "react";
-import FormDocUsageExemples from "./FormDocUsageExemples";
 import { Link } from "react-router-dom";
 
+import FormDocUsageExemples from "./FormDocUsageExemples";
 import InputText from './InputText/index'
 
 type FormPropsType = {
@@ -30,17 +30,15 @@ export default function Index({data, actions}: FormPropsType) {
 
   function handleSibmit(event: FormEvent<HTMLFormElement>){
     console.log(inputsValues)
-    
+
     if(actions?.handleSubmitAction){
         event.preventDefault();        
         actions.handleSubmitAction(inputsValues)
     }
   }
 
-  function handleChangeAction(input: Record<string, string>) {
-    const name = input.name;
-    const value = input.value;
-    setInputsValues({...inputsValues, [name]: value})
+  function handleChangeAction(input: Record<string, string >) {
+    setInputsValues({...inputsValues, [input.name]: input.value})
   }
 
   return (
@@ -55,7 +53,11 @@ export default function Index({data, actions}: FormPropsType) {
           && data.fields.map((field, index) => 
             
             field.attributes?.type === 'text' && (              
-                <InputText data={{id: field.id, attributes: field.attributes, rules: field.rules}}  actions={{handleChangeAction}} key={index}/>
+                <InputText 
+                  data={{id: field.id, attributes: field.attributes, rules: field.rules}}  
+                  actions={{handleChangeAction}} 
+                  key={index}
+                />
             )
           
           )
@@ -63,7 +65,7 @@ export default function Index({data, actions}: FormPropsType) {
       </div>
 
       <div className="col-md-12 d-flex justify-content-end pt-4 mt-5 border-top">
-        <Link to="/" className="btn btn-outline-secondary">
+        <Link to="/registration" className="btn btn-outline-secondary">
           <i className="fs-7 bi-back"></i> Voltar
         </Link>
         &nbsp;

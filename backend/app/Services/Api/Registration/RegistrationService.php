@@ -2,8 +2,12 @@
 
 namespace App\Services\Api\Registration;
 
+use App\Repositories\Api\FormFieldRepository;
+use App\Repositories\Api\FormRepository;
 use App\Repositories\Api\RegistrationRepository;
 use App\Services\Api\AbstractService;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 use Exception;
 
 class RegistrationService extends AbstractService
@@ -12,14 +16,28 @@ class RegistrationService extends AbstractService
     
     public function __construct(){
         $this->repository = new  RegistrationRepository;
+        $this->formRepository = new FormRepository;
+        $this->fieldRepository = new FormFieldRepository;
     }
 
     public function findAllByParams(array $params){
         return $this->repository->findAllByParams($params);
     }
 
-    public function search(array $params){
-        return $this->repository->search($params);
+    public function search(array $params = []): ?LengthAwarePaginator {
+        $perPage = isset($params['paginate']) && !empty($params['paginate']) ? (int)$params['paginate'] : 10;
+        $page = isset($params['page']) ? (int)$params['page'] : 1;
+        $total = count($this->repository->findAllByParams($params));
+        $offset = ($page - 1) * $perPage;
+        $params['limit'] = $perPage;
+        $params['offset'] = $offset;
+        $result = $this->repository->findAllByParams($params);
+
+        return 
+        new LengthAwarePaginator($result,$total, $perPage, $page, [
+            'path' => request()->url(),
+            'query' => request()->query(),
+        ]);
     }
 
     public function create(array $registration): ?array {
@@ -38,4 +56,5 @@ class RegistrationService extends AbstractService
             $this->repository->create($registration)
         ];
     }
+    
 }

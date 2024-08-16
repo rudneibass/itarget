@@ -95,15 +95,15 @@ abstract class AbstractController extends BaseController
         });
     }
 
-    public function getMetadata(int $id){
-        return $this->executeAction(function() use ($id){
-            return $this->service->getMetadata($id);
+    public function getFormWithFields($formName){
+        return $this->executeAction(function() use ($formName){
+            return $this->service->getFormWithFields($formName);
         });
     }
 
-    public function setMetadata(Request $request){
-        return $this->executeAction(function() use ($request){
-            return $this->service->setMetadata($request);
+    public function getFormWithFieldsAndValues($formName, $id){
+        return $this->executeAction(function() use ($formName, $id){
+            return $this->service->getFormWithFieldsAndValues($formName, $id);
         });
     }
 }

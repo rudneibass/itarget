@@ -16,7 +16,7 @@ class RuleConflictBetweenEventData
         $eventRepository = new EventRepository;
         $registrationRepository = new RegistrationRepository;
 
-        $event_that_will_receive_new_registration = $eventRepository->get((int)$registration['event_id']);
+        $event_that_will_receive_new_registration = $eventRepository->getById((int)$registration['event_id']);
 
         $existing_registrations_event_ids = array_filter($registrationRepository->findByEMail($registration['email']), function($item) use ($event_that_will_receive_new_registration){
            return $item['event_id'] != $event_that_will_receive_new_registration->id; 

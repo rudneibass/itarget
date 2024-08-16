@@ -12,7 +12,7 @@ class DCOFormFieldsByFormId {
         $formRepository = new FormRepository;
         $fieldRepository = new FormFieldRepository;
 
-        $form = $formRepository->get($formId)->toArray();
+        $form = $formRepository->getById($formId)->toArray();
         $form['fields'] = $fieldRepository->findAllByParams(array('form_id' => $form['id']));
         
         $this->compositeObject = $form;

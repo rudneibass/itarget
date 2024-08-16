@@ -37,9 +37,11 @@ export default function Index({data, actions}: InputTextPropsType) {
       setValue(inputValue)
 
       if(actions?.handleChangeAction){ 
+        
         if(!inputRules){
-          actions?.handleChangeAction({name: inputName, value: inputValue})
+          actions?.handleChangeAction({name: inputName, value: inputValue })
         }
+
         if(inputRules){
           const arrayOfRules = JSON.parse(inputRules)
           let countOfSatisfiedRules = 0
