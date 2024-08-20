@@ -1,22 +1,19 @@
 
 export type FieldsType = {
 	id: string;
-	form_id: string;
-	attributes: Record<string, string>;
-  }
+  form_id: string;
+  name: string;
+  value?: string;
+  rules?: string;
+  attributes: Record<string, string>;
+}
   
 export type FormType = {
     id: string;
     name: string;
     code?: string;
     attributes: object;
-    fields?: Array<{
-      id: string;
-      form_id: string;
-      name?: string;
-      value?: string;
-      attributes: Record<string, string>;
-    }>;
+    fields?: Array<FieldsType>;
   };
   
   export function isFormType(data: unknown): data is FormType {
@@ -116,6 +113,9 @@ export type FormType = {
       fields: fields.map((field) => ({
         id: field.id || '',
         form_id: field.form_id || '',
+        name: field.name || '',
+        value: field.value || '',
+        rules: field.rules || '',
         attributes: field.attributes || {}
       }))
     };

@@ -12,6 +12,7 @@ import ListTable from '@components/Bootstrap/ListTable';
 import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
 import { isObject } from '@utils/isObject'
 import { isLaravelPaginationType } from '@src/types'
+import { Link } from 'react-router-dom'
 
 export default function Index() {  
   const context = useRegistrationListContext()
@@ -20,10 +21,26 @@ export default function Index() {
   const customCardProps = {
     data: {
       title:'Inscrições', 
-      shortDescription:'Lista de incrições'
+      shortDescription:
+      <>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
+        <small className="text-muted" >
+           {'> Cadastros > Inscrições'}
+        </small> 
+      </>
     },
     actions: {},
-    additionalComponents: []
+    additionalComponents: [
+      <Link to='/registration/form' className='btn btn-sm btn-outline-primary'>
+        <i className='fs-7 bi-plus-circle'></i>&nbsp;&nbsp;Cadastrar
+      </Link>
+    ],
+    styles: {
+      card: { borderTop: 'none' },
+      cardHeader: { border: "none", background: "#fff" },
+      cardBody: { minHeight: '60vh', overflowY: "auto" as const }
+    }
   }
 
   const searchBarProps = {
@@ -89,7 +106,7 @@ export default function Index() {
 
   return (
     <>
-      <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={customCardProps.additionalComponents}>
+      <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={customCardProps.additionalComponents} styles={customCardProps.styles}>
         <SearchBar data={searchBarProps.data} actions={searchBarProps.actions} additionalComponents={searchBarProps.additionalComponents} />
         <ListTable data={listTableProps.data} actions={listTableProps.actions} additionalComponents={listTableProps.additionalComponents} />  
         <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} additionalComponents={paginationBarProps.additionalComponents}/>

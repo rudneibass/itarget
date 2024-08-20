@@ -1,33 +1,58 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 //import styles from './styles.module.scss';
 
 type CustomCardPropsType = {
   data?: {
-    title?: string, 
-    shortDescription?: string,
+    title?: string | ReactNode, 
+    shortDescription?: string | ReactNode,
   },
   actions?: object,
   additionalComponents?: Array<ReactNode>
-  children?: ReactNode
+  children?: ReactNode,
+  styles?: {
+    card?: CSSProperties,
+    cardHeader?: CSSProperties,
+    cardBody?: CSSProperties
+  }
 }
 
-export default function Index({data, children } : CustomCardPropsType) {
+export default function Index({data, additionalComponents, children, styles } : CustomCardPropsType) {
   return (
-    <div className={`card`}>
-    <div className="card-header" style={{border: "none", background: "#fff"}}>
-      <div className="container border-bottom d-flex flex-column jstify-content-center pt-3 pb-1">
-        <h3 className="text-muted mb-0">
-          {data?.title || 'Envie um título através do atributo data={{title: string}}'}
-        </h3>
-        <p className="text-muted" style={{fontSize: "1.1rem"}}>
-          {data?.shortDescription || 'Envie uma descrição através do atributo data={{shortDescription: string}}'}
-        </p>
+    <div className={`card`} style={styles?.card ? styles.card : {}} >
+    
+    <div className="card-header" style={styles?.cardHeader ? styles.cardHeader : {}}>
+      
+      <div className="border-bottom d-flex justify-content-between align-items-end pt-3 pb-3">
+        <div className='d-flex'>
+          
+          <div style={{borderRight: "1px solid #dee2e6"}}>
+            &nbsp;&nbsp;
+            <span className="text-muted mb-0 border-right" style={{fontSize: "1.2rem"}}>
+              {data?.title || 'Envie um título através do atributo data={{title: string}}'}          
+            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+
+          <div className='d-flex align-items-end'>
+            {data?.shortDescription || 'Envie uma descrição através do atributo data={{shortDescription: string}}'}
+          </div>
+          
+        </div>
+        
+        <div className='d-flex'>
+          {additionalComponents &&  additionalComponents.map((item) => (
+            <div>
+              {item}
+            </div>
+          ))}
+        </div>
+
       </div>
+
     </div>
-    <div className={`card-body`} style={{minHeight: '60vh', overflowY: "auto" }}>
-      <div className="container">
-        {children}
-      </div>
+
+    <div className={`card-body`} style={styles?.cardBody ? styles.cardBody : {}} >
+      {children}
     </div>
   </div>
   )

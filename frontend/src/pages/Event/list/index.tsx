@@ -16,7 +16,19 @@ export default function Index() {
   const customCardProps = {
     data: {
       title: 'Eventos',
-      shortDescription:'Inscreva-se em um evento'
+      shortDescription:
+      <>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
+        <small className="text-muted" >
+           {'> Cadastros > Eventos'}
+        </small> 
+      </>
+    },
+    styles: {
+      card: { borderTop: 'none' },
+      cardHeader: { border: "none", background: "#fff" },
+      cardBody: { minHeight: '60vh', overflowY: "auto" as const }
     }
   }
 
@@ -36,7 +48,7 @@ export default function Index() {
 
   return (
     <div>
-      <CustomCard data={customCardProps.data}>
+      <CustomCard data={customCardProps.data} styles={customCardProps.styles}>
         <section>
           <div className="table-responsive">
             <table className="table table-striped table-hover table-bordered">

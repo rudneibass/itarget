@@ -31,7 +31,7 @@ class AbstractRepository implements RepositoryInterface {
     public function create(array $request = []): ?Model {
         return $this->model::query()->create($request);
     }
-
+    
     public function update(array $request, int $id): int {
         return $this->model::findOrFail($id)->update($request);
     }

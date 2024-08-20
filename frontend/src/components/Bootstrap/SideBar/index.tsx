@@ -24,13 +24,20 @@ export default function Index() {
         >
           <li>
             <Link to="/" className={`nav-link align-middle px-0 ${isLinkActive('/') ? 'active-route' : ''}`} >
+              <i className="fs-4 bi-house"></i>
+              <span className="ms-1 d-none d-sm-inline">Home</span>
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/event" className={`nav-link align-middle px-0 ${isLinkActive('/event') ? 'active-route' : ''}`} >
               <i className="fs-4 bi-grid"></i>
               <span className="ms-1 d-none d-sm-inline">Eventos</span>
             </Link>
           </li>
 
           <li>
-            <Link to="/registration" className={`nav-link align-middle px-0 ${isLinkActive('/inscricoes') ? 'active-route' : ''}`}>
+            <Link to="/registration" className={`nav-link align-middle px-0 ${isLinkActive('/registration') ? 'active-route' : ''}`}>
               <i className="fs-4 bi-people"></i>
               <span className="ms-1 d-none d-sm-inline">Inscrições</span>
             </Link>

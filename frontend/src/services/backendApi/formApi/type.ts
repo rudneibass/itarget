@@ -6,6 +6,9 @@ export type FormType = {
     fields: Array<{
       id: string;
       form_id: string;
+      name: string;
+      value?: string;
+      rules?: string;
       attributes: object;
     }>;
   };
@@ -70,6 +73,9 @@ export type FormType = {
       fields: fields.map((field) => ({
         id: field.id || '',
         form_id: field.form_id || '',
+        name: field.name || '',
+        value: field.value || '',
+        rules: field.rules || '',
         attributes: field.attributes || {}
       }))
     };

@@ -27,10 +27,29 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
     }
 
     const [inputs, setInputs] = useState<RegistrationFormInputsType>({} as RegistrationFormInputsType);
+    function setInputsContext(inputs: RegistrationFormInputsType){
+        sendFormDataToBackend(inputs)
+        setInputs(inputs)
+    }
+
+    const [form, setForm] = useState<FormType>()
+    function setFormContext(form: FormType){
+        setForm(form)
+    }
+    
     async function sendFormDataToBackend(inputs: RegistrationFormInputsType){
         try {
-            await registrationApi.create(registrationApi.endpoints.create, inputs)
-            successAlert('Inscrição efetuada com sucesso!')
+
+            if(!id){
+                await registrationApi.create(registrationApi.endpoints.create, inputs)
+                successAlert('Inscrição realizada com sucesso!')
+            }
+
+            if(id){
+                await registrationApi.update({ endpoint:registrationApi.endpoints.update , id: id, data: inputs })
+                successAlert('Inscrição atualizada com sucesso!')
+            }
+            
         } catch (error) {
             if (error instanceof Error) {
                 warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
@@ -38,16 +57,6 @@ export const RegistrationFormContextProvider = ({ children }:  { children: JSX.E
                 errorAlert("Caught unknown error.");
               }
         }
-    }
-
-    function setInputsContext(inputs: RegistrationFormInputsType){
-        sendFormDataToBackend(inputs)
-        setInputs(inputs)
-    }
-    
-    const [form, setForm] = useState<FormType>()
-    function setFormContext(form: FormType){
-        setForm(form)
     }
     
     useEffect(() => {

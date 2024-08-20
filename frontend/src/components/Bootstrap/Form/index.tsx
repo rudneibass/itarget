@@ -1,8 +1,17 @@
-import { ReactNode, FormEvent, useState } from "react";
+import { ReactNode, FormEvent, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import FormDocUsageExemples from "./FormDocUsageExemples";
 import InputText from './InputText/index'
+
+type FieldsType = {
+	id: string;
+  form_id: string;
+  name: string;
+  value?: string;
+  rules?: string;
+  attributes: Record<string, string>;
+}
 
 type FormPropsType = {
     data: {
@@ -12,13 +21,7 @@ type FormPropsType = {
             code?: string,
             attributes: object,
         },
-        fields?: Array<{
-          id: string,
-          form_id: string,
-          rules?: string,
-          value?: string,
-          attributes: Record<string, string>
-      }>
+        fields?: Array<FieldsType>
     },
     actions?: {
       handleSubmitAction?: (inputsValues: object) => void
@@ -30,8 +33,6 @@ export default function Index({data, actions}: FormPropsType) {
   const [inputsValues, setInputsValues] = useState({} as Record<string, string>)
 
   function handleSibmit(event: FormEvent<HTMLFormElement>){
-    console.log(inputsValues)
-
     if(actions?.handleSubmitAction){
         event.preventDefault();        
         actions.handleSubmitAction(inputsValues)
@@ -41,6 +42,22 @@ export default function Index({data, actions}: FormPropsType) {
   function handleChangeAction(input: Record<string, string >) {
     setInputsValues({...inputsValues, [input.name]: input.value})
   }
+
+  useEffect(() => {
+    let fieldValues = {}
+
+    if(data.fields){
+      data.fields.forEach((field) => {
+        fieldValues = {
+          ...fieldValues,
+          [field.name]: field.value
+        }
+      })
+    }
+
+    setInputsValues(fieldValues)
+
+  }, [data])
 
   return (
     <>
@@ -52,7 +69,6 @@ export default function Index({data, actions}: FormPropsType) {
         {data.fields
           && data.fields.length > 0
           && data.fields.map((field, index) => 
-            
             field.attributes?.type === 'text' && (              
                 <InputText 
                   data={{id: field.id, attributes: field.attributes, rules: field.rules, value: field.value}}  
@@ -60,12 +76,11 @@ export default function Index({data, actions}: FormPropsType) {
                   key={index}
                 />
             )
-          
           )
         }
       </div>
 
-      <div className="col-md-12 d-flex justify-content-end pt-4 mt-5 border-top">
+      <div className="col-md-12 d-flex justify-content-end pt-4 mt-5 border-top" >
         <Link to="/registration" className="btn btn-outline-secondary">
           <i className="fs-7 bi-back"></i> Voltar
         </Link>
