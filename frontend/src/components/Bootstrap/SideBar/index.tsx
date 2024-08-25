@@ -1,14 +1,18 @@
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import './styles.css'
 
-export default function Index() {
-  
-  const location = useLocation();
-  const isLinkActive = (pathname: string) => {
-    return location.pathname === pathname;
-  };
+import Home from '@pages/Home'
 
+import { RegistrationListContextProvider } from '@pages/Registration/list/context.tsx'
+import RegistrationList from '@pages/Registration/list'
+
+import EventList from '@pages/Event/list/'
+import { EventListContextProvider } from '@pages/Event/list/context.tsx'
+import { useMainTabsContext } from '../MainTabs/context'
+
+
+export default function Index() {
+  const mainTabsContext = useMainTabsContext()
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark light-border-bottom">
@@ -23,24 +27,33 @@ export default function Index() {
           className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
         >
           <li>
-            <Link to="/" className={`nav-link align-middle px-0 ${isLinkActive('/') ? 'active-route' : ''}`} >
+            <a 
+              className={`nav-link align-middle px-0 ${ mainTabsContext.activeTab ===  'tab-home' ? 'active-route' : ''}`}
+              onClick={() => mainTabsContext.handleAddTab({ eventKey: 'tab-home', title: 'Home', content: <Home /> })} 
+            >
               <i className="fs-4 bi-house"></i>
               <span className="ms-1 d-none d-sm-inline">Home</span>
-            </Link>
+            </a>
           </li>
 
           <li>
-            <Link to="/event" className={`nav-link align-middle px-0 ${isLinkActive('/event') ? 'active-route' : ''}`} >
+            <a 
+              className={`nav-link align-middle px-0 ${ mainTabsContext.activeTab ===  'tab-event-list' ? 'active-route' : ''}`}
+              onClick={() => mainTabsContext.handleAddTab({ eventKey: 'tab-event-list', title: 'Eventos', content: <EventListContextProvider><EventList /></EventListContextProvider> })}
+            >
               <i className="fs-4 bi-grid"></i>
               <span className="ms-1 d-none d-sm-inline">Eventos</span>
-            </Link>
+            </a>
           </li>
 
           <li>
-            <Link to="/registration" className={`nav-link align-middle px-0 ${isLinkActive('/registration') ? 'active-route' : ''}`}>
+            <a 
+              className={`nav-link align-middle px-0 ${ mainTabsContext.activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}
+              onClick={() => mainTabsContext.handleAddTab({ eventKey: 'tab-registration-list', title: 'Inscrições', content: <RegistrationListContextProvider><RegistrationList /></RegistrationListContextProvider> })} 
+            >
               <i className="fs-4 bi-people"></i>
               <span className="ms-1 d-none d-sm-inline">Inscrições</span>
-            </Link>
+            </a>
           </li>
         </ul>
       </nav>

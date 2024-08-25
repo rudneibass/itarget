@@ -50,8 +50,7 @@ export default function Index() {
         const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, searchParams)
         if(response && isObject(response) && response.data){
           if(isLaravelPaginationType(response.data)){
-            context.setDataContext({data: response.data.data, cache: true})
-            context.setPaginationLinksContext({paginationLinks: response.data.links})
+            context.setStateContext({data: response.data.data, paginationLinks: response.data.links})
           }
       }
       },   
@@ -67,7 +66,7 @@ export default function Index() {
         {name: 'email', displayName: 'Email'},
         {name: 'cpf', displayName: 'Cpf'}
       ],
-      tbody: context.data?.map((item) => { 
+      tbody: context.state.data?.map((item) => { 
         return {
           id: item.id.toString(),
           name: item.name.toString(),
@@ -94,11 +93,10 @@ export default function Index() {
   }
 
   const paginationBarProps = {
-    data: {paginationLinks: context.paginationLinks},
+    data: {paginationLinks: context.state.paginationLinks},
     actions: {
       handlePaginateAction: ({data, paginationLinks}: {data:[], paginationLinks: LaravelPaginationLinksType[]}) => {
-          context.setDataContext({data: data})
-          context.setPaginationLinksContext({paginationLinks:  paginationLinks})
+        context.setStateContext({data, paginationLinks})
       }   
     },
     additionalComponents: []

@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
+import App from '../App.tsx'
 import Error from '@pages/Error'
 
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { routes } from './routes.tsx'
+import { routes } from './routes/routes.tsx'
 import { RouterProvider } from 'react-router-dom'
 
 

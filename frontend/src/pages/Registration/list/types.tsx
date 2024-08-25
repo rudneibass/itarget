@@ -74,9 +74,7 @@ export function isPaginatedListType(data: unknown): data is PaginatedListType {
 }
 
 export interface RegistrationListContextType  {
-	data: RegistrationListType[] | undefined,
-	setDataContext: ({data, cache}:{data: [], cache?:boolean}) => void,
-  paginationLinks: Array<PaginatedListLinksType> | undefined,
-  setPaginationLinksContext: ({ paginationLinks }:{paginationLinks: Array<PaginatedListLinksType>}) => void
+  state: { data: RegistrationListType[] | undefined, paginationLinks: Array<PaginatedListLinksType> },
+  setStateContext: ({data, paginationLinks }: {data: [], paginationLinks: Array<PaginatedListLinksType>}) => void,
 }
 
