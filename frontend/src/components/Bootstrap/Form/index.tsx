@@ -1,5 +1,4 @@
 import { ReactNode, FormEvent, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import FormDocUsageExemples from "./FormDocUsageExemples";
 import InputText from './InputText/index'
@@ -26,10 +25,10 @@ type FormPropsType = {
     actions?: {
       handleSubmitAction?: (inputsValues: object) => void
     },
-    additionalComponents?: Array<ReactNode>
+    additionalComponents?: Array<{name: string, component: ReactNode}>
   }
 
-export default function Index({data, actions}: FormPropsType) {
+export default function Index({data, actions, additionalComponents}: FormPropsType) {
   const [inputsValues, setInputsValues] = useState({} as Record<string, string>)
 
   function handleSibmit(event: FormEvent<HTMLFormElement>){
@@ -81,9 +80,7 @@ export default function Index({data, actions}: FormPropsType) {
       </div>
 
       <div className="col-md-12 d-flex justify-content-end pt-4 mt-5 border-top" >
-        <Link to="/registration" className="btn btn-outline-secondary">
-          <i className="fs-7 bi-back"></i> Voltar
-        </Link>
+        { additionalComponents && additionalComponents.map((item) => item.component ) }
         &nbsp;
         <button type="submit" className="btn btn-secondary" style={{minWidth: '100px'}}>
           <i className="fs-7 bi-save"></i> Salvar

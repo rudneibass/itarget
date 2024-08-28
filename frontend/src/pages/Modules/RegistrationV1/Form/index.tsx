@@ -1,14 +1,16 @@
-import { useRegistrationFormContext } from './context'
-import Form from '@components/Bootstrap/Form'
-import { FormType, FieldsType } from '@pages/Form/types'
-
-import CustomCard from '@components/Bootstrap/CustomCard'
-
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
+import { useRegistrationFormContext } from './context'
+import { FormType, FieldsType } from '@pages/Form/types'
+
+import Form from '@components/Bootstrap/Form'
+import CustomCard from '@components/Bootstrap/CustomCard'
+import Loading from '@components/Bootstrap/Loading'
+
 export default function Index() {
   const context = useRegistrationFormContext()
+  const isLoading = context.isLoading
 
   const formProps = {
     data: {
@@ -21,9 +23,12 @@ export default function Index() {
       }
     },
     additionalComponents: [
-      // <ComponentA />,
-      // <ComponentB />,
-      // ...
+      { name: 'backButton', 
+        component: 
+        <button type="button" className="btn btn-outline-secondary" onClick={() => context.closeFormTab({tabId: context.activeTab })}>
+          <i className="fs-7 bi-back"></i> Voltar
+        </button> 
+      }
     ]
   }
 
@@ -36,7 +41,7 @@ export default function Index() {
         <i className="fs-7 bi-house"></i>
         &nbsp;&nbsp;
         <small className="text-muted" >
-           {'> Cadastros > Inscrições'}
+           {'> Cadastros > Inscrições > Novo'}
         </small> 
       </>
     },
@@ -45,7 +50,7 @@ export default function Index() {
     styles: {
       card: { borderTop: 'none' },
       cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '60vh', overflowY: "auto" as const }
+      cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
     }
   }
 
@@ -67,11 +72,14 @@ export default function Index() {
                 minHeight: '55vh'
               }}
           >
-            <Form  
-              data={formProps.data} 
-              actions={formProps.actions} 
-              additionalComponents={formProps.additionalComponents} 
-            />
+            { isLoading && (<Loading />) }
+            { !isLoading && ( 
+              <Form  
+                data={formProps.data} 
+                actions={formProps.actions} 
+                additionalComponents={formProps.additionalComponents} 
+              />
+            )}
           </Tab>
           <Tab 
             eventKey="tab-2" 

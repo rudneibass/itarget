@@ -1,25 +1,15 @@
+export interface RegistrationListContextType  {
+  state: { data: RegistrationListType[] | undefined, paginationLinks: Array<PaginatedListLinksType>, isLoading: boolean },
+  setStateContext: ({data, paginationLinks, isLoading }: {data: [], paginationLinks: Array<PaginatedListLinksType>,  isLoading?: boolean}) => void,
+  renderFormTab: ({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }) => void,
+}
+
 export type RegistrationListType = {
   id: number;
   name: string;
   email: string;
   cpf: string;
   event_id: number;
-};
-
-export function isRegistrationListType(data: unknown): data is RegistrationListType[] {
-  if (!Array.isArray(data)) {
-    return false;
-  }
-
-  return data.every(item =>
-    typeof item === 'object' &&
-        item !== null &&
-        'id' in item && typeof item.id === 'number' &&
-        'name' in item && typeof item.name === 'string' &&
-        'email' in item && typeof item.email === 'string' &&
-        'cpf' in item && typeof item.cpf === 'string' &&
-        'event_id' in item && typeof item.event_id === 'number'
-  );
 }
 
 export type PaginatedListLinksType = {
@@ -42,6 +32,22 @@ export type PaginatedListType = {
   prev_page_url: string | null;
   to: number;
   total: number;
+}
+
+export function isRegistrationListType(data: unknown): data is RegistrationListType[] {
+  if (!Array.isArray(data)) {
+    return false;
+  }
+
+  return data.every(item =>
+    typeof item === 'object' &&
+        item !== null &&
+        'id' in item && typeof item.id === 'number' &&
+        'name' in item && typeof item.name === 'string' &&
+        'email' in item && typeof item.email === 'string' &&
+        'cpf' in item && typeof item.cpf === 'string' &&
+        'event_id' in item && typeof item.event_id === 'number'
+  )
 }
 
 export function isPaginatedListType(data: unknown): data is PaginatedListType {
@@ -73,8 +79,5 @@ export function isPaginatedListType(data: unknown): data is PaginatedListType {
   );
 }
 
-export interface RegistrationListContextType  {
-  state: { data: RegistrationListType[] | undefined, paginationLinks: Array<PaginatedListLinksType> },
-  setStateContext: ({data, paginationLinks }: {data: [], paginationLinks: Array<PaginatedListLinksType>}) => void,
-}
+
 

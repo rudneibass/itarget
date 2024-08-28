@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom'
-
 import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { useRegistrationListContext } from './context'
@@ -7,16 +5,18 @@ import { useRegistrationListContext } from './context'
 import CustomCard from '@components/Bootstrap/CustomCard'
 import SearchBar from '@components//Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
-import ListTable from '@components/Bootstrap/ListTable';
+import ListTable from '@components/Bootstrap/ListTable'
+import Loading from '@components/Bootstrap/Loading'
 
 import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
 import { isObject } from '@utils/isObject'
 import { isLaravelPaginationType } from '@src/types'
-import { Link } from 'react-router-dom'
+
+import RegistrationForm from '@pages/Modules/Registration/Form'
 
 export default function Index() {  
   const context = useRegistrationListContext()
-  const navigate = useNavigate()
+  const isLoading = context.state.isLoading
 
   const customCardProps = {
     data: {
@@ -32,14 +32,22 @@ export default function Index() {
     },
     actions: {},
     additionalComponents: [
-      <Link to='/registration/form' className='btn btn-sm btn-outline-primary'>
+      <button 
+        type='button' 
+        className='btn btn-sm btn-outline-primary' 
+        onClick={() => context.renderFormTab({ 
+          title: 'Nova Inscrição', 
+          eventKey: 'tab-new-registration', 
+          content: <RegistrationForm />
+        })}
+      >
         <i className='fs-7 bi-plus-circle'></i>&nbsp;&nbsp;Cadastrar
-      </Link>
+      </button>
     ],
     styles: {
       card: { borderTop: 'none' },
       cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '60vh', overflowY: "auto" as const }
+      cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
     }
   }
 
@@ -77,7 +85,11 @@ export default function Index() {
     },
     actions: {
       handleEditAction: (itemId: string) => {
-        navigate(`../registration/form/${itemId}`)
+        context.renderFormTab({ 
+          title: 'Editar Inscrição', 
+          eventKey: 'tab-edit-registration', 
+          content: <RegistrationForm id={itemId} />
+        })
       },
       handleDeleteAction: (itemId: string) => {
         alert('Delete item '+itemId)
@@ -95,8 +107,8 @@ export default function Index() {
   const paginationBarProps = {
     data: {paginationLinks: context.state.paginationLinks},
     actions: {
-      handlePaginateAction: ({data, paginationLinks}: {data:[], paginationLinks: LaravelPaginationLinksType[]}) => {
-        context.setStateContext({data, paginationLinks})
+      handlePaginateAction: ({ data, paginationLinks }: {data:[], paginationLinks: LaravelPaginationLinksType[]}) => {
+        context.setStateContext({ data, paginationLinks })
       }   
     },
     additionalComponents: []
@@ -104,10 +116,34 @@ export default function Index() {
 
   return (
     <>
-      <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={customCardProps.additionalComponents} styles={customCardProps.styles}>
-        <SearchBar data={searchBarProps.data} actions={searchBarProps.actions} additionalComponents={searchBarProps.additionalComponents} />
-        <ListTable data={listTableProps.data} actions={listTableProps.actions} additionalComponents={listTableProps.additionalComponents} />  
-        <PaginationBar data={paginationBarProps.data} actions={paginationBarProps.actions} additionalComponents={paginationBarProps.additionalComponents}/>
+      <CustomCard 
+        data={customCardProps.data} 
+        actions={customCardProps.actions} 
+        additionalComponents={customCardProps.additionalComponents} 
+        styles={customCardProps.styles}
+      >
+        { isLoading && (<Loading />) }
+        { !isLoading && ( 
+          <>
+            <SearchBar 
+              data={searchBarProps.data} 
+              actions={searchBarProps.actions} 
+              additionalComponents={searchBarProps.additionalComponents} 
+            />
+
+            <ListTable 
+              data={listTableProps.data} 
+              actions={listTableProps.actions} 
+              additionalComponents={listTableProps.additionalComponents} 
+            />
+          </>
+        ) }
+          
+        <PaginationBar 
+          data={paginationBarProps.data} 
+          actions={paginationBarProps.actions} 
+          additionalComponents={paginationBarProps.additionalComponents}
+        />
       </CustomCard>
     </>
   )
