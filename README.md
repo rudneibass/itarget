@@ -27,5 +27,5 @@ Alguns testes foram implementados no backend. Se estiver no diretório principal
 
 ## Comandos Artisan Personalizados
 
- - `php artisan create:module YourModuleName`
- - `php artisan delete:module YourModuleName`
+ - `php artisan create:api YourModuleName`
+ - `php artisan delete:api YourModuleName`

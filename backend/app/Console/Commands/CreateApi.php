@@ -35,10 +35,13 @@ Route::prefix('$nameLowerCase')->group(function(){
     Route::controller({$name}Controller::class)->group(function(){
         # Default routes
         Route::get('/', 'list');
+        Route::get('/doc', 'doc');
         Route::get('/list', 'list');
         Route::get('/id/{id}', 'getById');
         Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/doc', 'doc');
+        Route::get('/form/{formName}', 'getFormWithFields');
+        Route::get('/edit/{formName}/{id}', 'getFormWithFieldsAndValues');
+        
         Route::put('/update/{id}', 'update');
         Route::post('/create', 'create');
         Route::delete('/delete/{id}', 'delete');
