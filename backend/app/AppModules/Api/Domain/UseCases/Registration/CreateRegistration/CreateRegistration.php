@@ -13,12 +13,7 @@ class CreateRegistration {
         $this->registrationRepository = $registrationRepository;
     }
 
-    public function execute(RegistrationDTO $dto): bool{
-   
-        $registration = new Registration($dto);
-
-        $this->registrationRepository->create($registration);
-
-        return true;
+    public function execute(RegistrationDTO $dto): ?array {
+        return $this->registrationRepository->create(new Registration($dto))->toArray();
     }
 }

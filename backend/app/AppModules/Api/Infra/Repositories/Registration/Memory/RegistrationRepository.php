@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\AppModules\Api\Infra\Repositories\Registration\Database;
+namespace App\AppModules\Api\Infra\Repositories\Registration\Memory;
 
 use App\AppModules\Api\Domain\Entities\Registration\Registration;
 use App\AppModules\Api\Domain\Entities\Registration\RegistrationDTO;
@@ -16,51 +16,47 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
     }
 
     public function get( string $id ) : Registration {
-        $registration = $this->model::find($id);
         return new Registration(
             new RegistrationDTO([
-                'id' => $registration->id,
-                'name' => $registration->name,
-                'email' => $registration->email,
-                'cpf' => $registration->cpf,
-                'event_id' => $registration->event_id,
+                'id' => '1',
+                'event_id' => '1', 
+                'name' => 'Joe Doe',
+                'email' => 'joe.doe@email.com',
+                'cpf' => '123.456.789-10' 
             ])
         );
     }
 
     public function list(): array {
         $registrations = [];
-        foreach( $this->model::all() as $item ) {
-            $dto = new RegistrationDTO([
-                'name' => $item->name,
-                'email' => $item->email,
-                'cpf' => $item->cpf,
-                'id' => $item->id,
-                'event_id' => $item->event_id
-            ]);
-            $registrations[] = new Registration($dto);
+        $count = 1;
+        while ($count < 11){
+            $registrations[] = 
+            new Registration(
+                new RegistrationDTO([
+                    'id' => $count,
+                    'event_id' => '1', 
+                    'name' => 'Joe Doe '.$count,
+                    'email' => 'joe'.$count.'.doe@email.com',
+                    'cpf' => $count.'23.456.789-10' 
+                ]
+            ));
+            $count++;
         }
 
         return $registrations;
     }
 
 
-    public function create(Registration $registration): ?Registration {
-        $registrationModel = $this->model::
-        create([
-            'event_id' => $registration->eventId,
-            'name' => $registration->name,
-            'email' => $registration->email,
-            'cpf' => $registration->cpf,
-        ]);
-
-        return new Registration(
+    public function create(Registration $registration): ?Registration{
+        return 
+        new Registration(
             new RegistrationDTO([
-                'id' => $registrationModel->id,
-                'event_id' => $registrationModel->event_id,
-                'name' => $registrationModel->name,
-                'email' => $registrationModel->email,
-                'cpf' => $registrationModel->cpf,
+                'id' => '1',
+                'event_id' => '1',
+                'name' => 'Joe Doe',
+                'email' => 'joe.doe@email.com',
+                'cpf' => '123.456.789-10' 
             ])
         );
     }
