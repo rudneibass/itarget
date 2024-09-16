@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormfieldTable extends Migration
+class CreateFormTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateFormfieldTable extends Migration
      */
     public function up()
     {
-        Schema::create('formfield', function (Blueprint $table) {
+        Schema::create('form', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('metadata');
+            $table->string('isActive');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateFormfieldTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('formfield');
+        Schema::dropIfExists('form');
     }
 }
