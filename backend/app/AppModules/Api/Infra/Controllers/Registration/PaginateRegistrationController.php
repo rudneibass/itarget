@@ -9,8 +9,7 @@ use App\AppModules\Api\Infra\Repositories\Registration\Database\RegistrationRepo
 class PaginateRegistrationController extends BaseController {
     public function index() {
         return $this->executeAction(function() {
-            $repository = new RegistrationRepository();
-            $useCase = new  PaginateRegistration($repository);
+            $useCase = new PaginateRegistration(new RegistrationRepository);
             return $useCase->execute();
         });
     }

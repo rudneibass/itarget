@@ -23,17 +23,16 @@ class CreateRegistrationController extends BaseController {
                 $this->createRequest->merge($request->all());
                 $this->createRequest->validate($this->createRequest->rules());
             }
-
-            $repository = new RegistrationRepository();
-            $useCase = new CreateRegistration($repository);
-            $dto = new RegistrationDTO([
-                'event_id' => $requestData['event_id'],
-                'name' =>$requestData['name'],
-                'email' => $requestData['email'],
-                'cpf' => $requestData['cpf']
-            ]);
-
-            return $useCase->execute($dto);
+            
+            $useCase = new CreateRegistration(new RegistrationRepository);
+            return $useCase->execute(
+                new RegistrationDTO([
+                    'event_id' => $requestData['event_id'],
+                    'name' =>$requestData['name'],
+                    'email' => $requestData['email'],
+                    'cpf' => $requestData['cpf']
+                ])
+            );
         });
     }
 }

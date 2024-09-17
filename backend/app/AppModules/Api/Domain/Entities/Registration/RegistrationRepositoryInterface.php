@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\AppModules\Api\Domain\entities\Registration;
+namespace App\AppModules\Api\Domain\Entities\Registration;
 
 use App\AppModules\Api\Domain\Entities\Registration\Registration;
 

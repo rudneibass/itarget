@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class DeleteModule extends Command
+class DeleteApi extends Command
 {
     
     protected $signature = 'delete:api {name}';

@@ -29,19 +29,15 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
     }
 
     public function list(): array {
-        $registrations = [];
-        foreach( $this->model::all() as $item ) {
-            $dto = new RegistrationDTO([
-                'name' => $item->name,
-                'email' => $item->email,
-                'cpf' => $item->cpf,
-                'id' => $item->id,
-                'event_id' => $item->event_id
+      return array_map(function($registration) {
+            return new RegistrationDTO([
+                'name' => $registration['name'],
+                'email' => $registration['email'],
+                'cpf' => $registration['cpf'],
+                'id' => $registration['id'],
+                'event_id' => $registration['event_id']
             ]);
-            $registrations[] = new Registration($dto);
-        }
-
-        return $registrations;
+        }, $this->model::all()->toArray());
     }
 
 
@@ -76,8 +72,8 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
             .(isset($params['limit']) && !empty($params['limit']) ? " LIMIT {$params['limit']}" : "" )
             .(isset($params['offset']) && !empty($params['offset']) ? " OFFSET {$params['offset']}" : "" );
 
-        foreach( DB::select($query) as $item ) {
-            $registrations[] = 
+        return array_map(function($item){
+            return 
             new Registration(
                 new RegistrationDTO([
                     'name' => $item->name,
@@ -87,9 +83,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
                     'event_id' => $item->event_id
                 ]
             ));
-        }
-
-        return $registrations;
+        }, DB::select($query));
     }
 
     public function update(Registration $registration, string $id): int {

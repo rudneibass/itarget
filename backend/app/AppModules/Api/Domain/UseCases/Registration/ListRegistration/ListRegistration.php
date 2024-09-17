@@ -12,21 +12,14 @@ class ListRegistration {
     }
 
     public function execute(): array {
-
-        $registrations = $this->registrationRepository->list();
-        $list = [];
-
-        foreach ($registrations as $item) {
-            $registration = [];
-            $registration['name'] = $item->name;
-            $registration['email'] = $item->email;
-            $registration['cpf'] = $item->cpf;
-            $registration['id'] = $item->id;
-            $registration['event_id'] = $item->eventId;
-            
-            $list[] = $registration;
-        }
-
-        return $list;
+        return array_map(function($registration){
+            return [
+                'name' => $registration->name,
+                'email' => $registration->email,
+                'cpf' => $registration->cpf,
+                'id' => $registration->id,
+                'event_id' => $registration->eventId
+            ];
+        }, $this->registrationRepository->list());
     }
 }

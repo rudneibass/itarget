@@ -9,8 +9,7 @@ use App\AppModules\Api\Infra\Repositories\Registration\Database\RegistrationRepo
 class ListRegistrationController extends BaseController {
     public function index() {
         return $this->executeAction(function() {
-            $repository = new RegistrationRepository();
-            $useCase = new ListRegistration($repository);
+            $useCase = new ListRegistration(new RegistrationRepository);
             return $useCase->execute();
         });
     }

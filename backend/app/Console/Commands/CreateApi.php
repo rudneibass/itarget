@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class CreateModule extends Command
+class CreateApi extends Command
 {
 
     protected $signature = 'create:api {name}';

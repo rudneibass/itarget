@@ -21,21 +21,19 @@ class PaginateRegistration {
         $offset = ($page - 1) * $perPage;
         $params['limit'] = $perPage;
         $params['offset'] = $offset;
-        $registrations = $this->repository->findAllByParams($params);
-        $list = [];
-
-        foreach ($registrations as $item) {
-            $registration = [];
-            $registration['name'] = $item->name;
-            $registration['email'] = $item->email;
-            $registration['cpf'] = $item->cpf;
-            $registration['id'] = $item->id;
-            $registration['event_id'] = $item->eventId;
-            $list[] = $registration;
-        }
+        $registrations = 
+        array_map(function($registration){
+            return [
+                'name' => $registration->name,
+                'email' => $registration->email,
+                'cpf' => $registration->cpf,
+                'id' => $registration->id,
+                'event_id' => $registration->eventId,
+            ];
+        }, $this->repository->findAllByParams($params));
 
         return 
-        new LengthAwarePaginator($list, $total, $perPage, $page, [
+        new LengthAwarePaginator($registrations, $total, $perPage, $page, [
             'path' => request()->url(),
             'query' => request()->query(),
         ]);

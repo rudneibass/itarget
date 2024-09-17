@@ -12,9 +12,7 @@ class GetRegistration {
     }
 
     public function execute(string $id): array {
-
         $registration = $this->registrationRepository->get($id);
-
         return [
             'id' => $registration->id,
             'name' => $registration->name,
