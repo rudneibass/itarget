@@ -59,10 +59,10 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
                 let form
                 setIsLoadingContext({isLoading: true})
                 if(!id){
-                    form = await registrationApi.getForm({ endpoint: registrationApi.endpoints.form });
+                    form = await registrationApi.getForm({ endpoint: `${registrationApi.endpoints.form}`});
                 }
                 if(id){ 
-                    form = await registrationApi.getFormWithValues({endpoint: `${registrationApi.endpoints.edit}`, id: id })
+                    form = await registrationApi.getFormWithFieldsAndValues({endpoint: `${registrationApi.endpoints.edit}`, formName: 'registration', id: id }) 
                 }
                 if(form){
                     if(isFormType(form)){

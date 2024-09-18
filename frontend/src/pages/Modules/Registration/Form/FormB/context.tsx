@@ -56,9 +56,14 @@ export const RegistrationFormBContextProvider = ({ id, children }:  { id?: strin
     useEffect(() => {
         async function getForm(){
             try {
-                const form = await registrationApi.getFormWithFields({ endpoint: `${registrationApi.endpoints.form}`, formName: 'file'});
+                let form
                 setIsLoadingContext({isLoading: true})
-         
+                if(!id){
+                    form = await registrationApi.getForm({ endpoint: registrationApi.endpoints.form });
+                }
+                if(id){ 
+                    form = await registrationApi.getFormWithValues({endpoint: `${registrationApi.endpoints.edit}`, id: id })
+                }
                 if(form){
                     if(isFormType(form)){
                         setFormContext(form)

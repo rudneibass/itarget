@@ -19,6 +19,10 @@ export const routes = createBrowserRouter([
         element: <Home/> 
       },
       {
+        path: "",
+        element: <Home/> 
+      },
+      {
         path: "/event",
         element: <EventList />
       },

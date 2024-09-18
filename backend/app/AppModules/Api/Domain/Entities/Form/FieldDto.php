@@ -9,6 +9,7 @@ class FieldDto
     public string $name;
     public ?string $rules;
     public string $isActive;
+    public ?string $value;
     public array $attributes;
 
     public function __construct(array $data) {
@@ -17,6 +18,7 @@ class FieldDto
         $this->name = $data['name'];
         $this->rules = $data['rules'];
         $this->isActive = $data['is_active'];
+        $this->value = $data['value'] ?? null;
         $this->attributes = $data['attributes'];
     }
 
@@ -27,6 +29,7 @@ class FieldDto
             'name' => $this->name,
             'rules' => $this->rules,
             'is_active' => $this->isActive,
+            'value' => $this->value,
             'attributes' => $this->attributes,
         ];
     }

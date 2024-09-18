@@ -1,17 +1,17 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { registrationApi } from '@services/backendApi/registrationApi'
 import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
-import { RegistrationFormAContextextType, RegistrationFormAInputsType, FormType, convertToFormType, isFormType } from "./types";
+import { RegistrationFormBContextextType, RegistrationFormBInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 
-export const RegistrationFormAContext = createContext({} as RegistrationFormAContextextType)
+export const RegistrationFormBContext = createContext({} as RegistrationFormBContextextType)
 
-export const useRegistrationFormAContext = () => {
-    const context = useContext( RegistrationFormAContext);
+export const useRegistrationFormBContext = () => {
+    const context = useContext( RegistrationFormBContext);
     return context
 }
 
-export const RegistrationFormAContextProvider = ({ id, children }:  { id?: string, children: JSX.Element }) => {
+export const RegistrationFormBContextProvider = ({ id, children }:  { id?: string, children: JSX.Element }) => {
     const mainTabsContext = useMainTabsContext()
     
     function closeFormTab({ tabId }: { tabId: string }){
@@ -23,8 +23,8 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
         setForm(form)
     }
 
-    const [inputs, setInputs] = useState<RegistrationFormAInputsType>({} as RegistrationFormAInputsType);
-    function setInputsContext(inputs: RegistrationFormAInputsType){
+    const [inputs, setInputs] = useState<RegistrationFormBInputsType>({} as RegistrationFormBInputsType);
+    function setInputsContext(inputs: RegistrationFormBInputsType){
         saveForm(inputs)
         setInputs(inputs)
     }
@@ -34,7 +34,7 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
         setIsLoading(isLoading)
     }
 
-    async function saveForm(inputs: RegistrationFormAInputsType){
+    async function saveForm(inputs: RegistrationFormBInputsType){
         try {
             if(!id){
                 await registrationApi.create(registrationApi.endpoints.create, inputs)
@@ -59,10 +59,10 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
                 let form
                 setIsLoadingContext({isLoading: true})
                 if(!id){
-                    form = await registrationApi.getForm({ endpoint: registrationApi.endpoints.form });
+                    form = await registrationApi.getForm({ endpoint: `${registrationApi.endpoints.form}`});
                 }
                 if(id){ 
-                    form = await registrationApi.getFormWithValues({endpoint: `${registrationApi.endpoints.edit}`, id: id })
+                    form = await registrationApi.getFormWithFieldsAndValues({endpoint: `${registrationApi.endpoints.edit}`, formName: 'registration', id: id }) 
                 }
                 if(form){
                     if(isFormType(form)){
@@ -85,7 +85,7 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
         getForm()
     },[])
     return (
-        <RegistrationFormAContext.Provider 
+        <RegistrationFormBContext.Provider 
             value={{
                 form,
                 setFormContext,
@@ -99,6 +99,6 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
         >
             {children}
             {toastContainer}
-        </RegistrationFormAContext.Provider>
+        </RegistrationFormBContext.Provider>
     )
 }
