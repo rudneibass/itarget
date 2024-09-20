@@ -29,6 +29,7 @@ class Form extends EntityBase {
             'id' => $this->id ?? null,
             'name' => $this->name,
             'metadata' => $this->metadata,
+            'attributes' => $this->attributes,
             'is_active' => $this->isActive
         ];
     }

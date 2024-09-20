@@ -7,9 +7,11 @@ class FieldDto
     public string $id;
     public string $form_id;
     public string $name;
-    public ?string $rules;
     public string $isActive;
+    public ?string $rules;
     public ?string $value;
+    public ?array $options;
+    public ?string $dataSource;
     public array $attributes;
 
     public function __construct(array $data) {
@@ -19,6 +21,8 @@ class FieldDto
         $this->rules = $data['rules'];
         $this->isActive = $data['is_active'];
         $this->value = $data['value'] ?? null;
+        $this->options = $data['options'] ?? null;
+        $this->dataSource = $data['data_source'] ?? '';
         $this->attributes = $data['attributes'];
     }
 
@@ -30,6 +34,8 @@ class FieldDto
             'rules' => $this->rules,
             'is_active' => $this->isActive,
             'value' => $this->value,
+            'options' => $this->options,
+            'data_source' => $this->dataSource,
             'attributes' => $this->attributes,
         ];
     }
