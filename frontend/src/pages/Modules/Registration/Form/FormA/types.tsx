@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface RegistrationFormAContextextType {
   form: FormType | undefined;
   setFormContext?: (form: FormType) => void;
@@ -6,7 +8,11 @@ export interface RegistrationFormAContextextType {
   activeTab: string;
   closeFormTab: ({ tabId }: { tabId: string }) => void;
   isLoading: boolean,
-  setIsLoadingContext: ({ isLoading } : { isLoading: boolean }) => void
+  setIsLoadingContext: ({ isLoading } : { isLoading: boolean }) => void,
+  successAlert?: (message: string) => void;
+  warningAlert?: (message: string) => void;
+  errorAlert?: (message: string) => void;
+  warningAlertWithHtmlContent?: (content: ReactNode) => void;
 }
 
 export type RegistrationFormAInputsType = {

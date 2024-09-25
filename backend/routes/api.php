@@ -1,90 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-use App\Http\Controllers\Api\RegistrationController;
-Route::prefix('registration')->group(function(){
-    Route::controller(RegistrationController::class)->group(function(){
-        # Default routes
-        Route::get('/', 'list');
-        Route::get('/doc', 'doc');
-        Route::get('/list', 'list');
-        Route::get('/id/{id}', 'getById');
-        Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/form/{formName}', 'getFormWithFields');
-        Route::get('/edit/{formName}/{id}', 'getFormWithFieldsAndValues');
-        
-        Route::put('/update/{id}', 'update');
-        Route::post('/create', 'create');
-        Route::delete('/delete/{id}', 'delete');
-        
-        # Custom routes
-        Route::get('/search', 'search');
-    });
-});
+$registrationPath = '/registration';
+Route::get($registrationPath.'/list', 'App\AppModules\Api\Infra\Controllers\$registrationPath\List$registrationPathController@index');
+Route::get($registrationPath.'/get/{id}', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Get$registrationPathController@index');
+Route::post($registrationPath.'/create', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Create$registrationPathController@index');
+Route::post($registrationPath.'/paginate', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Paginate$registrationPathController@index');
+Route::get($registrationPath.'/search', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Paginate$registrationPathController@index');
+Route::get($registrationPath.'/form', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Get$registrationPathFormController@index');
+Route::get($registrationPath.'/form/edit/{id}', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Get$registrationPathFormEditController@index');
 
-use App\Http\Controllers\Api\EventController;
-Route::prefix('event')->group(function(){
-    Route::controller(EventController::class)->group(function(){
-        # Default routes
-        Route::get('/', 'list');
-        Route::get('/list', 'list');
-        Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/id/{id}', 'getById');
-        Route::get('/doc', 'doc');
-        Route::get('/metadata/{id}', 'getMetadata');
-        Route::put('/update/{id}', 'update');
-        Route::post('/create', 'create');
-        Route::delete('/delete/{id}', 'delete');
-
-         # Custom routes
-         Route::get('/search', 'search');
-    });
-});
-
-
-use App\Http\Controllers\Api\FormController;
-Route::prefix('form')->group(function(){
-    Route::controller(FormController::class)->group(function(){
-        # Default routes
-        Route::get('/', 'list');
-        Route::get('/list', 'list');
-        Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/id/{id}', 'getById');
-        Route::get('/doc', 'doc');
-        Route::get('/metadata/{id}', 'getMetadata');
-        Route::put('/update/{id}', 'update');
-        Route::post('/create', 'create');
-        Route::delete('/delete/{id}', 'delete');
-
-        # Custom routes
-        Route::get('/name/{name}', 'getByName');
-    });
-});
-
-
-
-use App\Http\Controllers\Api\FormFieldController;
-Route::prefix('form-field')->group(function(){
-    Route::controller(FormFieldController::class)->group(function(){
-        # Default routes
-        Route::get('/', 'list');
-        Route::get('/list', 'list');
-        Route::get('/paginate/{itemsPerPage}', 'paginate');
-        Route::get('/{id}', 'get');
-        Route::get('/doc', 'doc');
-        Route::put('/update/{id}', 'update');
-        Route::post('/create', 'create');
-        Route::delete('/delete/{id}', 'delete');
-
-        # Custom routes
-        Route::get('/form/{id}', 'findAllByFormId');
-    });
-});
-
-
-
+$formPath = '/form';
+Route::get($formPath.'/name/{name}', 'App\AppModules\Api\Infra\Controllers\Form\GetFormController@index');

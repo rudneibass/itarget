@@ -66,7 +66,6 @@ async function remove(endpoint: string, pk_data: string){
   })
 }
 
-
 async function getFormWithFields({ endpoint, formName } : { endpoint: string, formName: string }){
   return await executeRequest(async () => {
     const response = await api.get(`${endpoint}${formName}`)
@@ -81,6 +80,21 @@ async function getFormWithFieldsAndValues({ endpoint, formName, id } : { endpoin
   })
 }
 
+async function getForm({ endpoint, formName } : { endpoint: string, formName?: string }){
+  return await executeRequest(async () => {
+    const formIdentifyer = formName || ''
+    const response = await api.get(`${endpoint}${formIdentifyer}`)
+    return response.data
+  })
+}
+
+async function getFormWithValues({ endpoint, id } : { endpoint: string, id: string }){
+  return await executeRequest(async () => {
+    const response = await api.get(`${endpoint}${id}`)
+    return response.data
+  })
+}
+
 const defaultActions = {
   list: "list/",
   get: "get/",
@@ -90,7 +104,7 @@ const defaultActions = {
   search: "search/",
   paginate: "paginate/",
   form: "form/",
-  edit: "edit/"
+  edit: "form/edit/"
 }
 
 export const baseApi = {
@@ -107,4 +121,6 @@ export const baseApi = {
   remove,
   getFormWithFields,
   getFormWithFieldsAndValues
+  ,getForm
+  ,getFormWithValues
 }

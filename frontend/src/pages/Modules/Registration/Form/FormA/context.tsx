@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
+import { toastContainer, errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { RegistrationFormAContextextType, RegistrationFormAInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 
@@ -59,10 +59,10 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
                 let form
                 setIsLoadingContext({isLoading: true})
                 if(!id){
-                    form = await registrationApi.getFormWithFields({ endpoint: `${registrationApi.endpoints.form}`, formName: 'registration'});
+                    form = await registrationApi.getForm({ endpoint: registrationApi.endpoints.form });
                 }
                 if(id){ 
-                    form = await registrationApi.getFormWithFieldsAndValues({endpoint: `${registrationApi.endpoints.edit}`, formName: 'registration', id: id }) 
+                    form = await registrationApi.getFormWithValues({endpoint: `${registrationApi.endpoints.edit}`, id: id })
                 }
                 if(form){
                     if(isFormType(form)){
@@ -94,7 +94,10 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
                 activeTab: mainTabsContext.activeTab,
                 closeFormTab,
                 isLoading,
-                setIsLoadingContext
+                setIsLoadingContext,
+                successAlert,
+                warningAlert,
+                errorAlert
             }}
         >
             {children}

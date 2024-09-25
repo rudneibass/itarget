@@ -12,11 +12,23 @@ export default function Index() {
   const formProps = {
     data: {
       form: context.form || {} as FormType,
-      fields: context.form?.fields || new Array<FieldsType> // new Array<FieldsType> or [{} as FieldsType]
+      fields: context.form?.fields || new Array<FieldsType> 
+      // new Array<FieldsType> or [{} as FieldsType]
     },
     actions: {
       handleSubmitAction: (inputsValues: object) => {
         context.setInputsContext(inputsValues); 
+      },
+      handleAlertRequiredsFieldAction: (message: string) => {
+        if(context.warningAlert){
+          context.warningAlert(message)
+          return
+        }
+        if(context.errorAlert){
+          context.errorAlert(message)
+          return
+        }
+        alert(message)
       }
     },
     additionalComponents: [

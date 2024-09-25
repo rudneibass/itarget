@@ -10,7 +10,7 @@ import Home from '@pages/Home'
 
 export const routes = createBrowserRouter([
   {
-    path: "/",
+    path: "",
     element: <App />,
     errorElement: <Error />,
     children: [
