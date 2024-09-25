@@ -1,8 +1,8 @@
 <?php
 
-namespace App\AppModules\Api\Domain\Entities\Form;
+namespace App\AppModules\Api\Domain\Entities\Form\FormField;
 
-class FieldDto
+class FormFieldDto
 {
     public string $id;
     public string $form_id;
@@ -24,19 +24,5 @@ class FieldDto
         $this->options = $data['options'] ?? null;
         $this->dataSource = $data['data_source'] ?? '';
         $this->attributes = $data['attributes'];
-    }
-
-    public function toArray(): array {
-        return [
-            'id' => $this->id,
-            'form_id' => $this->form_id,
-            'name' => $this->name,
-            'rules' => $this->rules,
-            'is_active' => $this->isActive,
-            'value' => $this->value,
-            'options' => $this->options,
-            'data_source' => $this->dataSource,
-            'attributes' => $this->attributes,
-        ];
     }
 }

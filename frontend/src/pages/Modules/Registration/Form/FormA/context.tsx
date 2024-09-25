@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { toastContainer, errorAlert, successAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
+import { toastContainer, errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { RegistrationFormAContextextType, RegistrationFormAInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 
@@ -94,7 +94,10 @@ export const RegistrationFormAContextProvider = ({ id, children }:  { id?: strin
                 activeTab: mainTabsContext.activeTab,
                 closeFormTab,
                 isLoading,
-                setIsLoadingContext
+                setIsLoadingContext,
+                successAlert,
+                warningAlert,
+                errorAlert
             }}
         >
             {children}

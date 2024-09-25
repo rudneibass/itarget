@@ -23,6 +23,17 @@ export const errorAlert = (message: string) =>
     progress: undefined,
   });
 
+  export const warningAlert = (message: string) =>
+    toast.warning(message, {
+      position: "top-right",
+      autoClose: false,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+  });
+
 export const warningAlertWithHtmlContent = (jsxContent: JSX.Element) =>
   toast.warning(jsxContent, {
     position: "top-right",

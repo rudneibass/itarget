@@ -2,7 +2,6 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationForm;
 
-use App\AppModules\Api\Domain\Entities\Form\FieldOptionDto;
 use App\AppModules\Api\Domain\Entities\Form\Form;
 use App\AppModules\Api\Domain\Entities\Form\FormFieldDataSource;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;

@@ -6,4 +6,5 @@ use App\AppModules\Api\Domain\Entities\Form\Form;
 
 interface FormRepositoryInterface {
     public function get(string $id): Form;
+    public function getFormFieldOptions(string $formFieldId): array;
 }
