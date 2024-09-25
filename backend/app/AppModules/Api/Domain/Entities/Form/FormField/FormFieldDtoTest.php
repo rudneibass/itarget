@@ -1,6 +1,7 @@
 <?php
 namespace App\AppModules\Api\Domain\Entities\Form\FormField;
 
+use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
 use PHPUnit\Framework\TestCase;
 
 class FormFieldDtoTeste extends TestCase {
@@ -15,9 +16,15 @@ class FormFieldDtoTeste extends TestCase {
 			"is_active" => "1",
 			"value" => "Value",
 			"options" => [
-				new FormFieldOptionDto(["value" => "Value", "label" => "Label","selected" => "selected"]),
-				new FormFieldOptionDto(["value" => "Value","label" => "Label"]),
-				new FormFieldOptionDto(["value" => "Value","label" => "Label"]),
+				new FormFieldOptionDto([
+					'id' => '1',
+					'is_active' => '1',
+					'form_field_id' => '1',
+					'name' => 'Option 1',
+					'selected' => 'selected',
+					'value' => '1',
+					'order' => '1',
+				])
 			],
 			"attributes" => [
 				"grid" => "12",
@@ -45,9 +52,15 @@ class FormFieldDtoTeste extends TestCase {
 			"metadata" => "{\"grid\": 12, \"label\": \"Nome\", \"type\": \"text\",\"name\": \"name\",\"id\": \"name\",\"class\": \"form-control\", \"required\": \"required\", \"toggle\":\"tooltip\",\"placement\":\"bottom\",\"title\":\"Full name.\"}",
 			"is_active" => "1",
 			"options" => [
-				new FormFieldOptionDto(["value" => "Value", "label" => "Label","selected" => "selected"]),
-				new FormFieldOptionDto(["value" => "Value","label" => "Label"]),
-				new FormFieldOptionDto(["value" => "Value","label" => "Label"]),
+				new FormFieldOptionDto([
+					'id' => '1',
+					'is_active' => '1',
+					'form_field_id' => '1',
+					'name' => 'Option 1',
+					'selected' => 'selected',
+					'value' => '1',
+					'order' => '1',
+				])
 			],
 			"attributes" => [
 				"grid" => "12",

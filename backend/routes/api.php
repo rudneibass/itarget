@@ -2,14 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-$registrationPath = '/registration';
-Route::get($registrationPath.'/list', 'App\AppModules\Api\Infra\Controllers\$registrationPath\List$registrationPathController@index');
-Route::get($registrationPath.'/get/{id}', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Get$registrationPathController@index');
-Route::post($registrationPath.'/create', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Create$registrationPathController@index');
-Route::post($registrationPath.'/paginate', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Paginate$registrationPathController@index');
-Route::get($registrationPath.'/search', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Paginate$registrationPathController@index');
-Route::get($registrationPath.'/form', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Get$registrationPathFormController@index');
-Route::get($registrationPath.'/form/edit/{id}', 'App\AppModules\Api\Infra\Controllers\$registrationPath\Get$registrationPathFormEditController@index');
+$registration = '/registration';
+Route::get($registration.'/list', 'App\AppModules\Api\Infra\Controllers\Registration\ListRegistrationController@index');
+Route::get($registration.'/get/{id}', 'App\AppModules\Api\Infra\Controllers\Registration\GetRegistrationController@index');
+Route::post($registration.'/create', 'App\AppModules\Api\Infra\Controllers\Registration\CreateRegistrationController@index');
+Route::post($registration.'/paginate', 'App\AppModules\Api\Infra\Controllers\Registration\PaginateRegistrationController@index');
+Route::get($registration.'/search', 'App\AppModules\Api\Infra\Controllers\Registration\PaginateRegistrationController@index');
+Route::get($registration.'/form', 'App\AppModules\Api\Infra\Controllers\Registration\GetRegistrationFormController@index');
+Route::get($registration.'/form/edit/{id}', 'App\AppModules\Api\Infra\Controllers\Registration\GetRegistrationFormEditController@index');
 
-$formPath = '/form';
-Route::get($formPath.'/name/{name}', 'App\AppModules\Api\Infra\Controllers\Form\GetFormController@index');
+$form = '/form';
+Route::get($form.'/name/{name}', 'App\AppModules\Api\Infra\Controllers\Form\GetFormController@index');

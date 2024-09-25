@@ -38,6 +38,7 @@ class FormRepository implements FormRepositoryInterface {
                 'name' => $field['name'],
                 'rules' => $field['rules'],
                 'is_active' => $field['is_active'],
+                'data_source' => $field['data_source'],
                 'attributes' => json_decode($field['attributes'], true)
             ]);
         }, $fields);

@@ -5,7 +5,7 @@ type InputSelectPropsType = {
   data: {
     id: string,
     attributes: Record<string, string>,
-    options: Array<{ value: string, label: string }>,
+    options?: Array<{ value: string, name: string }>,
     rules?: string,
     value?: string
   },
@@ -90,9 +90,9 @@ export default function Index({ data, actions }: InputSelectPropsType) {
           onBlur={handleBlur}
         >
           <option value="">Selecione uma opção</option>
-          {data.options.map(option => (
+          {data.options && data.options.map(option => (
             <option key={option.value} value={option.value}>
-              {option.label}
+              {option.name}
             </option>
           ))}
         </select>

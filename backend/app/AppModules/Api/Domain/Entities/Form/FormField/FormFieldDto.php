@@ -5,7 +5,7 @@ namespace App\AppModules\Api\Domain\Entities\Form\FormField;
 class FormFieldDto
 {
     public string $id;
-    public string $form_id;
+    public string $formId;
     public string $name;
     public string $isActive;
     public ?string $rules;
@@ -16,7 +16,7 @@ class FormFieldDto
 
     public function __construct(array $data) {
         $this->id = $data['id'] ?? '';
-        $this->form_id = $data['form_id'];
+        $this->formId = $data['form_id'];
         $this->name = $data['name'];
         $this->rules = $data['rules'];
         $this->isActive = $data['is_active'];

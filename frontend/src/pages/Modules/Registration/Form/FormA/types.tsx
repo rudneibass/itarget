@@ -22,12 +22,19 @@ export type RegistrationFormAInputsType = {
   event_id?: string;
 };
 
+export type OptionsType = {
+  label: string;
+  value: string;
+  selected?: string;
+};
+
 export type FieldsType = {
   id: string;
   form_id: string;
   name: string;
   value?: string;
   rules?: string;
+  options?: Array<OptionsType>;
   attributes: Record<string, string>;
 };
 
@@ -113,6 +120,7 @@ export function convertToFormType(data: unknown): FormType {
       name: field.name || "",
       value: field.value || "",
       rules: field.rules || "",
+      options: field.options || [],
       attributes: field.attributes || {},
     })),
   };
