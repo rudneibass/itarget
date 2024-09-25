@@ -89,9 +89,7 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
         }
       })
     }
-
-    console.table(fieldsRequired)
-    
+        
     setInputsValues(fieldValues)
     setInputsRequired(fieldsRequired)
 

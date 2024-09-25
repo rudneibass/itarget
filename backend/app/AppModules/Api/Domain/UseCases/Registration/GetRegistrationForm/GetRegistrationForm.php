@@ -4,6 +4,7 @@ namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationForm;
 
 use App\AppModules\Api\Domain\Entities\Form\Form;
 use App\AppModules\Api\Domain\Entities\Form\FormFieldDataSource;
+use App\AppModules\Api\Infra\Repositories\Form\Database\FormFieldDataSourceRepository;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
 
 class GetRegistrationForm {
@@ -17,9 +18,10 @@ class GetRegistrationForm {
         $form = $this->repository->get(Form::NAME_FORM_REGISTRATION);
         $fields = array_map(function($field) {
             if (isset($field->attributes['type']) && $field->attributes['type'] === 'select') {
-                $methodDataSource = $field->name;
-                if (method_exists(FormFieldDataSource::class, $methodDataSource)) {
-                    $field->options = FormFieldDataSource::$methodDataSource();
+                
+                $methodDataSource = $field->dataSource;
+                if (method_exists(FormFieldDataSourceRepository::class, $methodDataSource)) {
+                    $field->options = FormFieldDataSourceRepository::$methodDataSource($field->id);
                 }
             }
             return $field;
