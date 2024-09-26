@@ -60,7 +60,7 @@ export default function Index({ id }: { id?: string }) {
             <RegistrationFormBContextProvider id={id}>
               <RegistrationFormB />
             </RegistrationFormBContextProvider>
-
+            
           </Tab>
         </Tabs>
       </CustomCard>
