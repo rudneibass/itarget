@@ -1,6 +1,7 @@
-import React, { ReactNode, useState } from 'react';
+import React, { FocusEvent, ReactNode, useState } from 'react';
 import ReactLoading from 'react-loading';
 import iconSearch from './assets/icon-search.svg'
+import { rules } from './rules'
 import './styles.css'
 
 type InputSelectSearchablePropsType = {
@@ -22,23 +23,17 @@ type InputSelectSearchablePropsType = {
 }
 
 export default function Index({ data }: InputSelectSearchablePropsType){
-  const [options, setOptions] = useState<Array<Record<string, string>>>([
-    { id: '1', displayName: 'Opção 1' },
-    { id: '2', displayName: 'Opção com descrição muito grande para ver se cabe no input.' },
-    { id: '3', displayName: 'Opção 3' },
-    { id: '4', displayName: 'Opção 4' },
-    { id: '5', displayName: 'Opção 5' },
-  ])
+  const [options, setOptions] = useState<Array<Record<string, string>>>()
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
   const [selectedOptionId, setSelectedOptionId] = useState('')
   const [showOptions, setShowOptions] = useState(false)
-  const [ dataSource ] = useState(data.dataSource)
-  
+
   function handleOpenOptions(){
     if(!showOptions){
       setShowOptions(true)
+      handleSearch('')
     } 
   }
   function handleCloseOptions(){
@@ -47,10 +42,11 @@ export default function Index({ data }: InputSelectSearchablePropsType){
       setSearchTerm('')
     }
   }
-  function handleSelectOption({ displayName, id } : { displayName: string, id: string }){
-    setSelectedOption(`${id} - ${displayName}`)
+  function handleSelectOption({ name, id } : { name: string, id: string }){
+    setSelectedOption(`${id} - ${name}`)
     setSelectedOptionId(id)
     handleCloseOptions()
+    setIsValidValue(true);
   }
   function handleClearSelection(){
     setSelectedOption('')
@@ -65,14 +61,37 @@ export default function Index({ data }: InputSelectSearchablePropsType){
   }
   async function handleSearch(searchTerm: string){
     setLoading(true)
-    const response = await fetch(`${dataSource}?name=${searchTerm}`);
+    const response = await fetch(`${data.dataSource}?name=${searchTerm}`);
     const options = await response.json();
+   
     setOptions(options)
     setLoading(false)
   }
 
+  const [isValidValue, setIsValidValue] = useState(true);
+  const [isNotValidValueMessage, setIsNotValidValueMessage] = useState('');
+
+  function handleBlur(event: FocusEvent<HTMLInputElement>) {
+    const inputValue = event.target.value;
+    const inputRules = event.target.dataset.rules;
+    let validationMessage = '';
+
+    if (inputRules) {
+      const arrayOfRules = JSON.parse(inputRules);
+      arrayOfRules.map((item: Record<string, string>) => {
+        if (rules[item['rule']](inputValue)) {
+          setIsValidValue(true);
+        } else {
+          setIsValidValue(false);
+          validationMessage += `${item['message'] || 'Verifique este campo.'} | `;
+        }
+      });
+      setIsNotValidValueMessage(validationMessage.replace(/\|([^|]*)$/, '$1'));
+    }
+  }
+
   return (
-    <div style={{position:'relative'}} className={`${data.attributes?.grid} pt-2 pb-2 form-group`} onMouseLeave={() => handleCloseOptions()}>
+    <div style={{position:'relative'}} className={`col-md-${data.attributes?.grid} pt-2 pb-2 form-group`} onMouseLeave={() => handleCloseOptions()}>
         
         {/* Label */} 
         <div>
@@ -83,25 +102,34 @@ export default function Index({ data }: InputSelectSearchablePropsType){
           </label> 
         </div>
 
-        <div className='form-control p-0' style={{position: "relative"}}>
+        <div style={{position: "relative"}}>
 
            {/* Input de pesquisa */}    
           {!selectedOption && (
             <input
-              className='form-control'
+              id={data.attributes?.id}
+              name={data.attributes?.name} 
+              className={`form-control ${!isValidValue ? 'is-invalid' : ''}`}
               type="text"
-              placeholder={data.attributes?.placeholder || 'Digite um termo para pesquisa.'}
               onClick={handleOpenOptions}
               onFocus={handleOpenOptions}
               onChange={handleInputChange}
-              value={searchTerm}
-              style={{border:'none', borderColor: 'transparent', borderWidth: 'thin', outline: 'none'}}
+              onBlur={handleBlur}
+              value={searchTerm || selectedOptionId}
+              placeholder={data.attributes?.placeholder || 'Digite um termo para pesquisa.'}
+              title={data.attributes?.title || ''}
+              required={data.attributes?.required ? true : false}
+              readOnly={data.attributes?.readOnly ? true : false}
+              disabled={data.attributes?.disabled ? true : false}
+              data-rules={data.rules || ''}
+              data-toggle={data.attributes?.toggle || ''} 
+              data-placement={data.attributes?.placement || ''}
             />
           )}
 
           {/* Opção selecionada  */}
           {selectedOption && (  
-            <div className="selected-option">
+            <div className="form-control selected-option">
               {selectedOption && (
                 <>
                   <span> { selectedOption } </span>
@@ -130,19 +158,24 @@ export default function Index({ data }: InputSelectSearchablePropsType){
                 </div>
               )}
               {options && options.length > 0 && options.map((item, index) => (
-                <div key={index} className="option mb-2" onClick={() => handleSelectOption({displayName: item.displayName, id: item.id})} >
+                <div key={index} className="option mb-2" onClick={() => handleSelectOption({name: item.name, id: item.id})} >
                     <div><b>Cód: </b>{item.id}</div>
-                    <div><b>Descrição: </b>{item.displayName}</div>
+                    <div><b>Descrição: </b>{item.name}</div>
                 </div>
               ))}
             </div>
           )}
 
           {/* Icone da lupa  */}
-          <img src={iconSearch} alt="" style={{position: 'absolute', top: '50%', right: '10px',transform: 'translateY(-50%)'}} />
-          
-          {/* Input associado para armazenar o valor selecionado */}
-          <input type="hidden" name={data.attributes?.name || data.attributes?.id} value={selectedOptionId || ''} /> 
+          {isValidValue && (
+            <img src={iconSearch} alt="" style={{position: 'absolute', top: '50%', right: '10px',transform: 'translateY(-50%)'}} />
+          )}
+
+          {!isValidValue && (
+            <div className="invalid-feedback">
+              { isNotValidValueMessage }
+            </div>
+          )}
         </div>
 
     </div>

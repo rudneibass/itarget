@@ -3,7 +3,6 @@
 namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationForm;
 
 use App\AppModules\Api\Domain\Entities\Form\Form;
-use App\AppModules\Api\Domain\Entities\Form\FormFieldDataSource;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormFieldDataSourceRepository;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
 
@@ -31,7 +30,6 @@ class GetRegistrationForm {
             'id' => $form->id,
             'name' => $form->name,
             'metadata' => $form->metadata,
-            'is_active' => $form->isActive,
             'fields' =>  $fields
         ];
     }

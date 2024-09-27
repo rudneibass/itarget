@@ -6,11 +6,13 @@ use App\AppModules\Api\Infra\Controllers\BaseController;
 use App\AppModules\Api\Domain\UseCases\Registration\ListRegistration\ListRegistration;
 use App\AppModules\Api\Infra\Repositories\Registration\Database\RegistrationRepository;
 
+use Illuminate\Http\Request;
+
 class ListRegistrationController extends BaseController {
-    public function index() {
-        return $this->executeAction(function() {
+    public function index(Request $request) {
+        return $this->executeAction(function() use ($request) {
             $useCase = new ListRegistration(new RegistrationRepository);
-            return $useCase->execute();
+            return $useCase->execute($request->all());
         });
     }
 }

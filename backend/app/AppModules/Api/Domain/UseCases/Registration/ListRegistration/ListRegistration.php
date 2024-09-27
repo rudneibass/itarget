@@ -11,7 +11,7 @@ class ListRegistration {
         $this->registrationRepository = $registrationRepository;
     }
 
-    public function execute(): array {
+    public function execute(array $params = []): array {
         return array_map(function($registration){
             return [
                 'name' => $registration->name,
@@ -20,6 +20,6 @@ class ListRegistration {
                 'id' => $registration->id,
                 'event_id' => $registration->eventId
             ];
-        }, $this->registrationRepository->list());
+        }, $this->registrationRepository->findAllByParams($params));
     }
 }

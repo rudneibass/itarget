@@ -75,7 +75,7 @@ export default function Index({ data, actions }: InputSelectPropsType) {
   }, [data.value]);
 
   return (
-    <div className={data.attributes?.grid || 'col-md-4'}>
+    <div className={`col-md-${data.attributes?.grid}`}>
       <div className="form-group mb-3">
         <label className="text-muted" htmlFor={data.attributes?.name || data.attributes?.id || ''}>
           &nbsp;{data.attributes?.label || data.attributes?.name || ''}
@@ -88,6 +88,11 @@ export default function Index({ data, actions }: InputSelectPropsType) {
           value={value}
           onChange={handleChange}
           onBlur={handleBlur}
+          title={data.attributes?.title || ''}
+          required={data.attributes?.required ? true : false}
+          disabled={data.attributes?.disabled ? true : false}
+          data-toggle={data.attributes?.toggle || ''} 
+          data-placement={data.attributes?.placement || ''}
         >
           <option value="">Selecione uma opção</option>
           {data.options && data.options.map(option => (
