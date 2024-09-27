@@ -1,8 +1,10 @@
-import { ReactNode, FormEvent, useState, useEffect } from "react";
+import { ReactNode, FormEvent, useState, useEffect } from "react"
 
-import FormDocUsageExemples from "./FormDocUsageExemples";
+import FormDocUsageExemples from "./FormDocUsageExemples"
 import InputText from './InputText/index'
 import InputSelect from './InputSelect/index'
+import InputSelectSearchable from './InputSelectSearchable/index'
+import InputCheckbox from './InputCheckbox/index'
 
 type FieldsType = {
 	id: string;
@@ -10,7 +12,8 @@ type FieldsType = {
   name: string;
   value?: string;
   rules?: string;
-  options?: Array<{ value: string, label: string }>,
+  dataSource?: string;
+  options?: Array<{ value: string, name: string }>;
   attributes: Record<string, string>;
 }
 
@@ -117,19 +120,23 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'select':
                   return (
                     <InputSelect 
-                      data={{ id: field.id, attributes: field.attributes, options: field.options || [], value: field.value }}
+                      data={{ id: field.id, attributes: field.attributes, options: field.options, rules: field.rules, value: field.value }}
                       actions={{ handleChangeAction }}
                       key={index}
                     />
                   );
+                case 'searchable':
+                    return (
+                      <InputSelectSearchable 
+                        data={{ id: field.id, dataSource: field.dataSource, attributes: field.attributes, rules: field.rules, value: field.value }}
+                        key={index}
+                      />
+                    );  
                 case 'checkbox':
                   return (
-                    <input 
-                      type="checkbox" 
-                      name={field.name} 
-                      checked={!!field.value} 
-                      onChange={(e) => handleChangeAction({name: field.name, value: e.target.checked ? 'true' : 'false'})} 
-                      key={index}
+                    <InputCheckbox
+                        data={{ id: field.id, attributes: field.attributes, value: field.value ? true : false }}
+                        key={index}
                     />
                   );
                 default:

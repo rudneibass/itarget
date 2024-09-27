@@ -4,15 +4,33 @@ namespace App\AppModules\Api\Domain\Entities;
 
 use Exception;
 
-class EntityBase {
+abstract class EntityBase {
     protected ?string $id;
+    protected ?string $tenatId;
+    protected ?string $isActive;
 
     public function setId(string $id) {
-        if(isset($id) || !empty($id)){ $this->id = (string) $id; }
+        $this->id = (string) $id; 
     }
 
     public function getId(): string {
        return $this->id;
+    }
+
+    public function setTenatId(string $tenatId) {
+         $this->tenatId = (string) $tenatId; 
+    }
+
+    public function getTenatId(): string {
+       return $this->tenatId;
+    }
+
+    public function activate(){
+        $this->isActive = '1';
+    }
+    
+    public function deactivate(){
+        $this->isActive = '0';
     }
 
     public function __get($property) {

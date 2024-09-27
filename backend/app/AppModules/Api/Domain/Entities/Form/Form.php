@@ -10,7 +10,6 @@ class Form extends EntityBase {
     const NAME_FORM_REGISTRATION = 'registration';
     
     private string $name;
-    private string $isActive;
     private ?string $metadata;
     private ?string $attributes;
     private ?array $fields;
@@ -21,7 +20,6 @@ class Form extends EntityBase {
         $this->setName($dto->name);
         $this->setMetadata($dto->metadata);
         $this->setAttributes($dto->attributes);
-        $this->setIsActive($dto->isActive);
     }
 
     public function toArray(){
@@ -29,8 +27,7 @@ class Form extends EntityBase {
             'id' => $this->id ?? null,
             'name' => $this->name,
             'metadata' => $this->metadata,
-            'attributes' => $this->attributes,
-            'is_active' => $this->isActive
+            'attributes' => $this->attributes
         ];
     }
 
@@ -57,14 +54,6 @@ class Form extends EntityBase {
 
     public function getAttributes(): string {
         return $this->attributes;
-    }
-
-    public function setIsActive(string $isActive) {
-        $this->isActive = $isActive;
-    }
-
-    public function getIsActive(): string {
-        return $this->isActive;
     }
 
     public function setId(string $id) {

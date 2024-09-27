@@ -42,6 +42,7 @@ export type FormType = {
   id: string;
   name: string;
   code?: string;
+  dataSource?: string;
   attributes: object;
   fields?: Array<FieldsType>;
 };
@@ -55,6 +56,7 @@ export function isFormType(data: unknown): data is FormType {
     id?: unknown;
     name?: unknown;
     code?: unknown;
+    dataSource?: unknown;
     attributes?: unknown;
     fields?: unknown;
   };
@@ -121,6 +123,7 @@ export function convertToFormType(data: unknown): FormType {
       value: field.value || "",
       rules: field.rules || "",
       options: field.options || [],
+      dataSource: field.dataSource || "",
       attributes: field.attributes || {},
     })),
   };
