@@ -15,10 +15,13 @@ class ListRegistration {
         return array_map(function($registration){
             return [
                 'name' => $registration->name,
+                'display_name' => $registration->displayName,
                 'email' => $registration->email,
                 'cpf' => $registration->cpf,
                 'id' => $registration->id,
-                'event_id' => $registration->eventId
+                'event_id' => $registration->eventId,
+                'registration_id' => $registration->registrationId,
+                'published' => $registration->published
             ];
         }, $this->registrationRepository->findAllByParams($params));
     }

@@ -1,31 +1,23 @@
 import { ReactNode, FormEvent, useState, useEffect } from "react"
 
-import FormDocUsageExemples from "./FormDocUsageExemples"
 import InputText from './InputText/index'
+import InputTextarea from './InputTextarea/index'
 import InputSelect from './InputSelect/index'
 import InputSelectSearchable from './InputSelectSearchable/index'
 import InputCheckbox from './InputCheckbox/index'
 
-type FieldsType = {
-	id: string;
-  form_id: string;
-  name: string;
-  value?: string;
-  rules?: string;
-  dataSource?: string;
-  options?: Array<{ value: string, name: string }>;
-  attributes: Record<string, string>;
-}
-
 type FormPropsType = {
     data: {
         form: {
-            id: string,
-            name: string,
-            code?: string,
-            attributes: object,
+          id: string,
+          name: string,
+          attributes: object,
         },
-        fields?: Array<FieldsType>
+        fields?:[{
+          rules?: string;
+          options?: Array<{ value: string, name: string }>;
+          attributes: Record<string, string>;
+        }]
     },
     actions?: {
       handleSubmitAction?: (inputsValues: object) => void
@@ -53,13 +45,13 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
 
       return;
     }
-
+    
     if(actions?.handleSubmitAction){        
-        actions.handleSubmitAction(inputsValues)
+      actions.handleSubmitAction(inputsValues)
     }
   }
 
-  function handleChangeAction(input: Record<string, string >) {
+  function handleChangeAction(input: Record<string, string>) {
     setInputsValues({...inputsValues, [input.name]: input.value})
   }
 
@@ -79,17 +71,20 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
     if(data.fields){
       data.fields.forEach((field) => {
         
-        fieldValues = {
-          ...fieldValues,
-          [field.name]: field.value
+        if(field.attributes?.value){
+          fieldValues = {
+            ...fieldValues,
+            [field.attributes.name]: field.attributes.value
+          }
         }
 
         if(field.attributes?.required){
           fieldsRequired = {
             ...fieldsRequired,
-            [field.name]: true
+            [field.attributes.name]: true
           }
         }
+
       })
     }
         
@@ -100,9 +95,6 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
 
   return (
     <>
-      {!data.fields && (
-        <FormDocUsageExemples />
-      )}
       <form name={data.form.name} onSubmit={handleSibmit} >
         <div className="row">
           {data.fields
@@ -112,7 +104,21 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'text':
                   return (
                     <InputText 
-                      data={{ id: field.id, attributes: field.attributes, rules: field.rules, value: field.value }}  
+                      data={{
+                        attributes: field.attributes, 
+                        rules: field.rules,  
+                      }}  
+                      actions={{ handleChangeAction }} 
+                      key={index}
+                    />
+                  );
+                case 'textarea':
+                  return (
+                    <InputTextarea 
+                      data={{
+                        attributes: field.attributes, 
+                        rules: field.rules,  
+                      }}  
                       actions={{ handleChangeAction }} 
                       key={index}
                     />
@@ -120,7 +126,11 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'select':
                   return (
                     <InputSelect 
-                      data={{ id: field.id, attributes: field.attributes, options: field.options, rules: field.rules, value: field.value }}
+                      data={{
+                        attributes: field.attributes, 
+                        options: field.options, 
+                        rules: field.rules
+                      }}
                       actions={{ handleChangeAction }}
                       key={index}
                     />
@@ -128,19 +138,27 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'searchable':
                     return (
                       <InputSelectSearchable 
-                        data={{ id: field.id, dataSource: field.dataSource, attributes: field.attributes, rules: field.rules, value: field.value }}
+                        data={{ 
+                          attributes: field.attributes, 
+                          rules: field.rules,  
+                        }}
+                        actions={{ handleChangeAction }}
                         key={index}
                       />
                     );  
                 case 'checkbox':
                   return (
                     <InputCheckbox
-                        data={{ id: field.id, attributes: field.attributes, value: field.value ? true : false }}
+                        data={{ 
+                          attributes: field.attributes, 
+                          value: field.attributes.value ? true : false 
+                        }}
+                        actions={{ handleChangeAction }}
                         key={index}
                     />
                   );
                 default:
-                  return null;
+                return null;
               }
             })
           }

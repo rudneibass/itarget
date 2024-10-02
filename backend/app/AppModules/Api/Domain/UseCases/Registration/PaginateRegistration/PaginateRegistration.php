@@ -25,10 +25,12 @@ class PaginateRegistration {
         array_map(function($registration){
             return [
                 'name' => $registration->name,
+                'display_name' => $registration->displayName,
                 'email' => $registration->email,
                 'cpf' => $registration->cpf,
                 'id' => $registration->id,
                 'event_id' => $registration->eventId,
+                'published' => $registration->published
             ];
         }, $this->repository->findAllByParams($params));
 

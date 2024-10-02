@@ -16,9 +16,12 @@ class GetRegistration {
         return [
             'id' => $registration->id,
             'name' => $registration->name,
+            'display_name' => $registration->displayName,
             'email' => $registration->email,
             'cpf' => $registration->cpf,
             'event_id' => $registration->eventId,
+            'registration_id' => $registration->registrationId,
+            'published' => $registration->published
         ];
     }
 }

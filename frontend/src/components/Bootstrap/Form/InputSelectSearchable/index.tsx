@@ -1,4 +1,4 @@
-import React, { FocusEvent, ReactNode, useState } from 'react';
+import React, { FocusEvent, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 import iconSearch from './assets/icon-search.svg'
 import { rules } from './rules'
@@ -6,11 +6,9 @@ import './styles.css'
 
 type InputSelectSearchablePropsType = {
   data: {
-      id: string,
-      attributes: Record<string, string>
-      dataSource?: string,
-      rules?: string,
-      value?: string
+    attributes: Record<string, string>
+    rules?: string,
+    value?: string
   },
   actions?: {
     handleChangeAction?: (input: Record<string, string>) => void,
@@ -18,17 +16,18 @@ type InputSelectSearchablePropsType = {
     handleBlurAction?: (input: Record<string, string>) => void,
     handleFocusInAction?: (input: Record<string, string>) => void,
     handleFocusOutAction?: (input: Record<string, string>) => void,
-  },
-  additionalComponents?: Array<ReactNode>
+  }
 }
 
-export default function Index({ data }: InputSelectSearchablePropsType){
+export default function Index({ data, actions }: InputSelectSearchablePropsType){
   const [options, setOptions] = useState<Array<Record<string, string>>>()
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
   const [selectedOptionId, setSelectedOptionId] = useState('')
   const [showOptions, setShowOptions] = useState(false)
+  const [isValidValue, setIsValidValue] = useState(true)
+  const [isNotValidValueMessage, setIsNotValidValueMessage] = useState('')
 
   function handleOpenOptions(){
     if(!showOptions){
@@ -42,9 +41,12 @@ export default function Index({ data }: InputSelectSearchablePropsType){
       setSearchTerm('')
     }
   }
-  function handleSelectOption({ name, id } : { name: string, id: string }){
-    setSelectedOption(`${id} - ${name}`)
-    setSelectedOptionId(id)
+  function handleSelectOption({ displayName, value } : { displayName: string, value: string }){
+    if(actions?.handleChangeAction){ 
+      actions.handleChangeAction({name: data.attributes?.name, value: value })
+    }
+    setSelectedOption(`${value} - ${displayName}`)
+    setSelectedOptionId(value)
     handleCloseOptions()
     setIsValidValue(true);
   }
@@ -61,15 +63,12 @@ export default function Index({ data }: InputSelectSearchablePropsType){
   }
   async function handleSearch(searchTerm: string){
     setLoading(true)
-    const response = await fetch(`${data.dataSource}?name=${searchTerm}`);
-    const options = await response.json();
-   
+    const response = await fetch(`${data.attributes.data_source}?name=${searchTerm}`)
+    const options = await response.json()
+
     setOptions(options)
     setLoading(false)
   }
-
-  const [isValidValue, setIsValidValue] = useState(true);
-  const [isNotValidValueMessage, setIsNotValidValueMessage] = useState('');
 
   function handleBlur(event: FocusEvent<HTMLInputElement>) {
     const inputValue = event.target.value;
@@ -90,6 +89,14 @@ export default function Index({ data }: InputSelectSearchablePropsType){
     }
   }
 
+  useEffect(() => {
+    if(data.attributes.value && data.attributes.data_value_description){
+      handleSelectOption({ 
+        displayName: data.attributes.data_value_description,
+        value: data.attributes.value 
+      })
+    }
+  }, [])
   return (
     <div style={{position:'relative'}} className={`col-md-${data.attributes?.grid} pt-2 pb-2 form-group`} onMouseLeave={() => handleCloseOptions()}>
         
@@ -158,9 +165,9 @@ export default function Index({ data }: InputSelectSearchablePropsType){
                 </div>
               )}
               {options && options.length > 0 && options.map((item, index) => (
-                <div key={index} className="option mb-2" onClick={() => handleSelectOption({name: item.name, id: item.id})} >
-                    <div><b>Cód: </b>{item.id}</div>
-                    <div><b>Descrição: </b>{item.name}</div>
+                <div key={index} className="option mb-2" onClick={() => handleSelectOption({ displayName: item.display_name, value: item.id})} >
+                    <div><b>Cód: </b>{ item.id }</div>
+                    <div><b>Descrição: </b>{ item.display_name }</div>
                 </div>
               ))}
             </div>

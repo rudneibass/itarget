@@ -8,6 +8,7 @@ abstract class EntityBase {
     protected ?string $id;
     protected ?string $tenatId;
     protected ?string $isActive;
+    protected ?string $displayName;
 
     public function setId(string $id) {
         $this->id = (string) $id; 
@@ -33,10 +34,18 @@ abstract class EntityBase {
         $this->isActive = '0';
     }
 
+    public function setDisplayName(string $displayName) {
+        $this->displayName = $displayName;
+    }
+
+    public function getDisplayName(): string {
+      return $this->displayName;
+    }  
+
     public function __get($property) {
         $method = 'get' . ucfirst($property);
         if (method_exists($this, $method)) { return $this->$method(); }
-        throw new Exception("Propriedade '$property' não existe.");
+        throw new Exception("Entidade não possui a propriedade '$property'.");
     }
 
     public function __set($property, $value) {
@@ -44,7 +53,7 @@ abstract class EntityBase {
         if (method_exists($this, $method)) {
             $this->$method($value);
         } else {
-            throw new Exception("Propriedade ou método '$property' não existe ou não pode ser definido.");
+            throw new Exception("Entidade não possui o método '$property' ou não pode ser acessado.");
         }
     }
 }

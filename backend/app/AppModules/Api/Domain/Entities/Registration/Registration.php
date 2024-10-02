@@ -2,31 +2,38 @@
 
 namespace App\AppModules\Api\Domain\Entities\Registration;
 
+use App\AppModules\Api\Domain\Entities\EntityBase;
 use Exception;
 
-class Registration {
+class Registration extends EntityBase {
     private string $eventId;
     private string $name;
     private string $email;
     private string $cpf;
-    private ?string $id;
+    private ?string $registrationId;
+    private string $publishd;
      
 
-    public function __construct(RegistrationDTO $dto) {
+    public function __construct(RegistrationDto $dto) {
         if(isset($dto->id)){ $this->setId($dto->id); }
         $this->setName($dto->name);
         $this->setEmail($dto->email);
         $this->setcpf($dto->cpf);
         $this->setEventId($dto->eventId);
+        $this->setRegistrationId($dto->registrationId);
+        $this->setPublished($dto->published);
     }
 
     public function toArray(){
         return [
             'id' => $this->id ?? null,
             'name' => $this->name,
+            'display_name' => $this->displayName,
             'email' => $this->email,
             'cpf' => $this->cpf,
-            'event_id' => $this->eventId
+            'event_id' => $this->eventId,
+            'registration_id' => $this->registrationId,
+            'published' => $this->published
         ];
     }
 
@@ -42,6 +49,7 @@ class Registration {
     public function setName(string $name) {
         if(!isset($name) || empty($name)){ throw new Exception('Nome é obrigatório.'); }
         $this->name = $name;
+        $this->displayName = $name;
     }
 
     public function getName(): string {
@@ -66,26 +74,25 @@ class Registration {
         return $this->cpf;
     }
 
-    public function setId(string $id) {
-        if(isset($id) || !empty($id)){ $this->id = (string) $id; }
+    public function setRegistrationId(string $registrationId) {
+        $this->registrationId = $registrationId;
     }
 
-    public function getId(): string {
-       return $this->id;
+    public function getRegistrationId(): string {
+        return $this->registrationId;
     }
 
-    public function __get($property) {
-        $method = 'get' . ucfirst($property);
-        if (method_exists($this, $method)) { return $this->$method(); }
-        throw new Exception("Propriedade '$property' não existe.");
-    }
-
-    public function __set($property, $value) {
-        $method = 'set' . ucfirst($property);
-        if (method_exists($this, $method)) {
-            $this->$method($value);
-        } else {
-            throw new Exception("Propriedade ou método '$property' não existe ou não pode ser definido.");
+    public function setPublished(string $published) {
+        if(isset($published)){
+            $this->published = '1';    
         }
+        
+        if(!isset($published)){
+            $this->published = '0';    
+        }
+    }
+
+    public function getPublished(): string {
+        return $this->published;
     }
 }
