@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 type InputCheckboxPropsType = {
   data: {
@@ -11,7 +11,7 @@ type InputCheckboxPropsType = {
   }
 }
 
-export default function Checkbox({ data, actions }: InputCheckboxPropsType) {
+export default function Index({ data, actions }: InputCheckboxPropsType) {
   const [checked, setChecked] = useState<boolean>(data.attributes.checked ? true : false)
   
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -19,19 +19,10 @@ export default function Checkbox({ data, actions }: InputCheckboxPropsType) {
     const isChecked = event.target.checked
 
     if (actions?.handleChangeAction) {
-      actions.handleChangeAction({ [inputName]: isChecked ? '1' : '0' })
+      actions.handleChangeAction({ name: inputName, value: isChecked ? 'true' : '' })
     }
 
     setChecked(isChecked)
-  }
-
-  function handleBlur(event: FocusEvent<HTMLInputElement>) {
-    const inputName = event.target.name
-    const isChecked = event.target.checked
-
-    if (actions?.handleBlurAction) {
-      actions.handleBlurAction({ [inputName]: isChecked ? '1' : '0' })
-    }
   }
 
   useEffect(() => {
@@ -55,7 +46,6 @@ export default function Checkbox({ data, actions }: InputCheckboxPropsType) {
             disabled={data.attributes?.disabled ? true : false}
             checked={checked}
             onChange={handleChange}
-            onBlur={handleBlur}
           />
         </div>
       </div>

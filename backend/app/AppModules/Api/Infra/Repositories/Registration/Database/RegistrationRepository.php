@@ -96,6 +96,30 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
         }, DB::select($query));
     }
 
+    public function findAllBySingleParam(string $param): ?array {
+        $query = "SELECT * 
+            FROM 'registrations' 
+            WHERE id = {$param}
+            OR name like '%{$param}%'
+            OR email like '%{$param}%' 
+            ORDER BY name";
+            
+        return array_map(function($item){
+            return 
+            new Registration(
+                new RegistrationDto([
+                    'name' => $item->name,
+                    'email' => $item->email,
+                    'cpf' => $item->cpf,
+                    'id' => $item->id,
+                    'event_id' => $item->event_id,
+                    'registration_id' => $item->registration_id,
+                    'published' => $item->published
+                ]
+            ));
+        }, DB::select($query));
+    }
+
     public function update(Registration $registration, string $id): int {
         return $this->model::findOrFail($id)->update($registration->toArray());
     }
