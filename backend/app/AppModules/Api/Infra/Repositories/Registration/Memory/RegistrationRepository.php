@@ -3,7 +3,7 @@
 namespace App\AppModules\Api\Infra\Repositories\Registration\Memory;
 
 use App\AppModules\Api\Domain\Entities\Registration\Registration;
-use App\AppModules\Api\Domain\Entities\Registration\RegistrationDTO;
+use App\AppModules\Api\Domain\Entities\Registration\RegistrationDto;
 use App\AppModules\Api\Infra\Models\EloquentORM\Registration as RegistrationModel;
 use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
 
     public function get( string $id ) : Registration {
         return new Registration(
-            new RegistrationDTO([
+            new RegistrationDto([
                 'id' => '1',
                 'event_id' => '1', 
                 'name' => 'Joe Doe',
@@ -33,7 +33,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
         while ($count < 11){
             $registrations[] = 
             new Registration(
-                new RegistrationDTO([
+                new RegistrationDto([
                     'id' => $count,
                     'event_id' => '1', 
                     'name' => 'Joe Doe '.$count,
@@ -51,7 +51,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
     public function create(Registration $registration): ?Registration{
         return 
         new Registration(
-            new RegistrationDTO([
+            new RegistrationDto([
                 'id' => '1',
                 'event_id' => '1',
                 'name' => 'Joe Doe',
@@ -75,7 +75,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
         foreach( DB::select($query) as $item ) {
             $registrations[] = 
             new Registration(
-                new RegistrationDTO([
+                new RegistrationDto([
                     'name' => $item->name,
                     'email' => $item->email,
                     'cpf' => $item->cpf,

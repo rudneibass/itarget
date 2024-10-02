@@ -1,18 +1,19 @@
 <?php
 namespace App\AppModules\Api\Domain\Entities\Registration;
 
-use App\AppModules\Api\Domain\Entities\Registration\RegistrationDTO;
+use App\AppModules\Api\Domain\Entities\Registration\RegistrationDto;
 use PHPUnit\Framework\TestCase;
 
-class RegistrationDTOTeste extends TestCase {
+class RegistrationDtoTeste extends TestCase {
 
     public function test_registration_dto_construct_a_correctly_object(){
-        $dto = new RegistrationDTO([
+        $dto = new RegistrationDto([
             'id' => '123',
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'cpf' => '123.456.789-10',
-            'event_id' => '456'
+            'event_id' => '1',
+            'registration_id' => '1'
         ]);
 
         $this->assertIsObject($dto);
@@ -20,15 +21,17 @@ class RegistrationDTOTeste extends TestCase {
         $this->assertEquals('John Doe', $dto->name);
         $this->assertEquals('john.doe@example.com', $dto->email);
         $this->assertEquals('123.456.789-10', $dto->cpf);
-        $this->assertEquals('456', $dto->eventId);
+        $this->assertEquals('1', $dto->eventId);
+        $this->assertEquals('1', $dto->registrationId);
     }
 
     public function test_registration_dto_construct_a_correctly_object_without_id(){
-        $dto = new RegistrationDTO([
+        $dto = new RegistrationDto([
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'cpf' => '123.456.789-10',
-            'event_id' => '456'
+            'event_id' => '1',
+            'registration_id' => '1'
         ]);
 
         $this->assertIsObject($dto);
@@ -36,6 +39,7 @@ class RegistrationDTOTeste extends TestCase {
         $this->assertEquals('John Doe', $dto->name);
         $this->assertEquals('john.doe@example.com', $dto->email);
         $this->assertEquals('123.456.789-10', $dto->cpf);
-        $this->assertEquals('456', $dto->eventId);
+        $this->assertEquals('1', $dto->eventId);
+        $this->assertEquals('1', $dto->registrationId);
     }
 }

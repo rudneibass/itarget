@@ -9,9 +9,9 @@ class Registration extends Model
 {
     use HasFactory;
     protected $table='registrations';
-    protected $fillable = ['name', 'email', 'cpf', 'event_id'];
+    protected $fillable = ['name', 'email', 'cpf', 'event_id', 'registration_id', 'published'];
     protected $hidden = [''];
-    protected $casts = [''];
+    protected $casts = ['id' => 'string'];
 
     public function events() {
         return $this->belongsToMany(Event::class);

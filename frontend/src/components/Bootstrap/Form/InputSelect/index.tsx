@@ -1,13 +1,11 @@
-import { ChangeEvent, FocusEvent, ReactNode, useEffect, useState } from 'react';
+import { ChangeEvent, FocusEvent, useEffect, useState } from 'react';
 import { rules } from './rules'
 
 type InputSelectPropsType = {
   data: {
-    id: string,
     attributes: Record<string, string>,
     options?: Array<{ value: string, name: string }>,
-    rules?: string,
-    value?: string
+    rules?: string
   },
   actions?: {
     handleChangeAction?: (input: Record<string, string>) => void,
@@ -15,12 +13,11 @@ type InputSelectPropsType = {
     handleBlurAction?: (input: Record<string, string>) => void,
     handleFocusInAction?: (input: Record<string, string>) => void,
     handleFocusOutAction?: (input: Record<string, string>) => void,
-  },
-  additionalComponents?: Array<ReactNode>
+  }
 }
 
 export default function Index({ data, actions }: InputSelectPropsType) {
-  const [value, setValue] = useState<string>(data.value || '');
+  const [value, setValue] = useState<string>(data.attributes.value || '');
   const [isValidValue, setIsValidValue] = useState(true);
   const [isNotValidValueMessage, setIsNotValidValueMessage] = useState('');
 
@@ -69,10 +66,10 @@ export default function Index({ data, actions }: InputSelectPropsType) {
   }
 
   useEffect(() => {
-    if (data.value) {
-      setValue(data.value);
+    if (data.attributes.value) {
+      setValue(data.attributes.value);
     }
-  }, [data.value]);
+  }, [data.attributes]);
 
   return (
     <div className={`col-md-${data.attributes?.grid}`}>

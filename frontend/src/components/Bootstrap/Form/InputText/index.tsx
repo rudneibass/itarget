@@ -1,10 +1,9 @@
-import { ChangeEvent, FocusEvent, ReactNode, useEffect, useState } from 'react'
+import { ChangeEvent, FocusEvent, useEffect, useState } from 'react'
 import { masks } from './masks'
 import { rules } from './rules'
 
 type InputTextPropsType = {
     data: {
-        id: string,
         attributes: Record<string, string>
         rules?: string,
         value?: string
@@ -15,8 +14,7 @@ type InputTextPropsType = {
       handleBlurAction?: (input: Record<string, string>) => void,
       handleFocusInAction?: (input: Record<string, string>) => void,
       handleFocusOutAction?: (input: Record<string, string>) => void,
-    },
-    additionalComponents?: Array<ReactNode>
+    }
   }
 
 export default function Index({data, actions}: InputTextPropsType) {
@@ -77,12 +75,11 @@ export default function Index({data, actions}: InputTextPropsType) {
           }  
         })
       }
-
     }
 
     useEffect(() => {
-      if(data.value){
-        setValue(data.value)
+      if(data.attributes.value){
+        setValue(data.attributes.value)
       }
     }, [])
     return (

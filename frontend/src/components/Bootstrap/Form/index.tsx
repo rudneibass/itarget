@@ -7,12 +7,7 @@ import InputSelectSearchable from './InputSelectSearchable/index'
 import InputCheckbox from './InputCheckbox/index'
 
 type FieldsType = {
-	id: string;
-  form_id: string;
-  name: string;
-  value?: string;
   rules?: string;
-  dataSource?: string;
   options?: Array<{ value: string, name: string }>;
   attributes: Record<string, string>;
 }
@@ -20,10 +15,9 @@ type FieldsType = {
 type FormPropsType = {
     data: {
         form: {
-            id: string,
-            name: string,
-            code?: string,
-            attributes: object,
+          id: string,
+          name: string,
+          attributes: object,
         },
         fields?: Array<FieldsType>
     },
@@ -59,7 +53,8 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
     }
   }
 
-  function handleChangeAction(input: Record<string, string >) {
+  function handleChangeAction(input: Record<string, string>) {
+    console.log(input)
     setInputsValues({...inputsValues, [input.name]: input.value})
   }
 
@@ -79,17 +74,20 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
     if(data.fields){
       data.fields.forEach((field) => {
         
-        fieldValues = {
-          ...fieldValues,
-          [field.name]: field.value
+        if(field.attributes?.value){
+          fieldValues = {
+            ...fieldValues,
+            [field.attributes.name]: field.attributes.value
+          }
         }
 
         if(field.attributes?.required){
           fieldsRequired = {
             ...fieldsRequired,
-            [field.name]: true
+            [field.attributes.name]: true
           }
         }
+
       })
     }
         
@@ -112,7 +110,10 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'text':
                   return (
                     <InputText 
-                      data={{ id: field.id, attributes: field.attributes, rules: field.rules, value: field.value }}  
+                      data={{
+                        attributes: field.attributes, 
+                        rules: field.rules,  
+                      }}  
                       actions={{ handleChangeAction }} 
                       key={index}
                     />
@@ -120,7 +121,11 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'select':
                   return (
                     <InputSelect 
-                      data={{ id: field.id, attributes: field.attributes, options: field.options, rules: field.rules, value: field.value }}
+                      data={{
+                        attributes: field.attributes, 
+                        options: field.options, 
+                        rules: field.rules
+                      }}
                       actions={{ handleChangeAction }}
                       key={index}
                     />
@@ -128,14 +133,21 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
                 case 'searchable':
                     return (
                       <InputSelectSearchable 
-                        data={{ id: field.id, dataSource: field.dataSource, attributes: field.attributes, rules: field.rules, value: field.value }}
+                        data={{ 
+                          attributes: field.attributes, 
+                          rules: field.rules,  
+                        }}
+                        actions={{ handleChangeAction }}
                         key={index}
                       />
                     );  
                 case 'checkbox':
                   return (
                     <InputCheckbox
-                        data={{ id: field.id, attributes: field.attributes, value: field.value ? true : false }}
+                        data={{ 
+                          attributes: field.attributes, 
+                          value: field.attributes.value ? true : false 
+                        }}
                         key={index}
                     />
                   );

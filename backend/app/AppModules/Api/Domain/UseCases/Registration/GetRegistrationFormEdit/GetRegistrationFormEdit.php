@@ -23,15 +23,33 @@ class GetRegistrationFormEdit {
         $registration = $registrationUseCase->execute($id);
 
         $form['fields'] = array_map(function($field)  use ($registration) {
-            if (isset($registration[$field->name])) {
-                $field->value = $registration[$field->name];
+            
+            if (isset($field->attributes['type']) && $field->attributes['type'] === 'text'){
+                $field->attributes['value'] = $registration[$field->attributes['name']];
             }
-            if (isset($field->attributes['type']) && $field->attributes['type'] === 'select') {
-                $methodDataSource = $field->name;
-                if (method_exists(FormFieldDataSource::class, $methodDataSource)) {
-                    $field->options = FormFieldDataSource::$methodDataSource();
+
+            if (isset($field->attributes['type']) && $field->attributes['type'] === 'checkbox'){
+                if(isset($registration[$field->attributes['name']]) && $registration[$field->attributes['name']] === '1'){
+                    $field->attributes['checked'] = 'checked';
                 }
             }
+
+            if (isset($field->attributes['type']) && $field->attributes['type'] === 'searchable') {
+                if(isset($registration[$field->attributes['name']])){
+                    $field->attributes['value'] = $registration[$field->attributes['name']];
+                    $field->attributes['data_value_description'] = $registration['display_name'];
+                }
+            }
+
+            if (isset($field->attributes['type']) && $field->attributes['type'] === 'select') {
+                $field->attributes['value'] = $registration[$field->attributes['name']];
+                $dataSource = $field->attributes['data_source'];
+
+                if (method_exists(FormFieldDataSource::class, $dataSource)) {
+                    $field->options = FormFieldDataSource::$dataSource();
+                }
+            }
+
             return $field;
         }, $form['fields']);
 

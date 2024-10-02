@@ -3,7 +3,7 @@
 namespace App\AppModules\Api\Domain\UseCases\Registration\CreateRegistration;
 
 use App\AppModules\Api\Domain\Entities\Registration\Registration;
-use App\AppModules\Api\Domain\Entities\Registration\RegistrationDTO;
+use App\AppModules\Api\Domain\Entities\Registration\RegistrationDto;
 use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
 
 class CreateRegistration {
@@ -13,7 +13,7 @@ class CreateRegistration {
         $this->registrationRepository = $registrationRepository;
     }
 
-    public function execute(RegistrationDTO $dto): ?array {
+    public function execute(RegistrationDto $dto): ?array {
         return $this->registrationRepository->create(new Registration($dto))->toArray();
     }
 }
