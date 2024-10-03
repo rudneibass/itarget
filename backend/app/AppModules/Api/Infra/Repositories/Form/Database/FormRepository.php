@@ -28,17 +28,20 @@ class FormRepository implements FormRepositoryInterface {
     public function get(string $name) : Form {
         
         $form = $this->formModel::where('name', $name)->first();
-        if (!$form) { throw new Exception("Form not found"); }
-        $fields = $this->formFieldModel::where('form_id', $form->id)->get()->toArray();
+        if (!$form) { 
+            throw new Exception("Form not found"); 
+        }
+
+        $form->attributes = json_decode($form->attributes, true);
         
+        $fields = $this->formFieldModel::where('form_id', $form->id)->get()->toArray();
+
         $fieldsDto = array_map(function ($field) {
             return new FormFieldDto([
                 'id' => $field['id'],
                 'form_id' => $field['form_id'],
                 'name' => $field['name'],
                 'rules' => $field['rules'],
-                'is_active' => $field['is_active'],
-                'data_source' => $field['data_source'],
                 'attributes' => json_decode($field['attributes'], true)
             ]);
         }, $fields);
@@ -49,7 +52,6 @@ class FormRepository implements FormRepositoryInterface {
                 'name' => $form->name,
                 'metadata' => $form->metadata,
                 'attributes' => $form->attributes,
-                'is_active' => $form->isActive,
                 'fields' => $fieldsDto,
             ])
         );
@@ -63,8 +65,7 @@ class FormRepository implements FormRepositoryInterface {
                 'name' => $option['name'],
                 'value' => $option['value'],
                 'order' => $option['order'],
-                'selected' => $option['selected'],
-                'is_active' => $option['is_active']
+                'selected' => $option['selected']
             ]);
         }, $this->formFieldOptionModel::where('form_field_id', $formFieldId)->get()->toArray());
     }

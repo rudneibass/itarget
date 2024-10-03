@@ -9,7 +9,6 @@ class FormFieldOptionDtoTest extends TestCase {
     public function test_field_options_dto_construct_a_correctly_object(){
         $dto = new FormFieldOptionDto([
             'id' => '1',
-            'is_active' => '1',
             'form_field_id' => '1',
             'name' => 'Option 1',
             'value' => '1',

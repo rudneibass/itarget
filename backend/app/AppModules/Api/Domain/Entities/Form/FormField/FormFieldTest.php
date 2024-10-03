@@ -1,53 +1,37 @@
 <?php
 
-namespace Tests\Unit\Domain\Entities\Form\FormField;
+namespace Tests\Unit\Domain\Entities\FormField\FormField;
 
-use PHPUnit\Framework\TestCase;
 use App\AppModules\Api\Domain\Entities\Form\FormField\FormField;
 use App\AppModules\Api\Domain\Entities\Form\FormField\FormFieldDto;
-use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
+
+use PHPUnit\Framework\TestCase;
 
 class FormFieldTest extends TestCase
 {
-    public function testFormFieldConstructor()
+    public function test_form_field_constructor()
     {
-        $dto = new FormFieldDto([
-            "form_id" => "1",
-            "name" => "name",
-            "rules" => "[{\"rule\": \"required\", \"message\": \"Required Field\"}, {\"rule\": \"email\", \"message\": \"Invalid email address.\"}]",
-            "metadata" => "{\"grid\": 12, \"label\": \"Nome\", \"type\": \"text\",\"name\": \"name\",\"id\": \"name\",\"class\": \"form-control\", \"required\": \"required\", \"toggle\":\"tooltip\",\"placement\":\"bottom\",\"title\":\"Full name.\"}",
-            "is_active" => "1",
-            "value" => "Value",
-            "options" => [
-                new FormFieldOptionDto([
-                    'id' => '1',
-                    'is_active' => '1',
-                    'form_field_id' => '1',
-                    'name' => 'Option 1',
-                    'selected' => 'selected',
-                    'value' => '1',
-                    'order' => '1',
-                ])
-            ],
-            "attributes" => [
-                "grid" => "12",
-                "label" => "Nome",
-                "type" => "text",
+        $formField = 
+        new FormField(
+            new FormFieldDto([
+                "id" => "1",
+                "form_id" => "1",
                 "name" => "name",
-                "id" => "name",
-                "value" => "Value",
-                "class" => "form-control",
-                "required" => "required",
-                "toggle" => "tooltip",
-                "placement" => "bottom",
-                "title" => "Full name."
-            ]
-        ]);
-
-        var_dump($dto);
-
-        $formField = new FormField($dto);
-
+                "rules" => "[{\"rule\": \"required\", \"message\": \"Required Field\"}, {\"rule\": \"email\", \"message\": \"Invalid email address.\"}]",
+                "attributes" => [
+                    "grid" => "12", 
+                    "label" => "Nome", 
+                    "type" => "text",
+                    "name" => "name",
+                    "id" => "name",
+                    "class" => "form-control", 
+                    "required" => "required", 
+                    "toggle" =>"tooltip",
+                    "placement" =>"bottom",
+                    "title" => "Full name."
+                ]
+            ])
+        );
         $this->assertIsObject($formField);
 
         /*

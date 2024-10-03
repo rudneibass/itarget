@@ -10,15 +10,13 @@ class Form extends EntityBase {
     const NAME_FORM_REGISTRATION = 'registration';
     
     private string $name;
-    private ?string $metadata;
-    private ?string $attributes;
+    private ?array $attributes;
     private ?array $fields;
 
     public function __construct(FormDto $dto) {
         if(isset($dto->id)){ $this->setId($dto->id); }
         if($dto->fields){ $this->setFields($dto->fields); }
         $this->setName($dto->name);
-        $this->setMetadata($dto->metadata);
         $this->setAttributes($dto->attributes);
     }
 
@@ -26,7 +24,6 @@ class Form extends EntityBase {
         return [
             'id' => $this->id ?? null,
             'name' => $this->name,
-            'metadata' => $this->metadata,
             'attributes' => $this->attributes
         ];
     }
@@ -40,19 +37,11 @@ class Form extends EntityBase {
         return $this->name;
     }
 
-    public function setMetadata(string $metadata) {
-        $this->metadata = $metadata ?? '';
+    public function setAttributes(array $attributes) {
+        $this->attributes = $attributes;
     }
 
-    public function getMetadata(): string {
-        return $this->metadata;
-    }
-
-    public function setAttributes(string $attributes) {
-        $this->attributes = $attributes  ?? '';
-    }
-
-    public function getAttributes(): string {
+    public function getAttributes(): array {
         return $this->attributes;
     }
 

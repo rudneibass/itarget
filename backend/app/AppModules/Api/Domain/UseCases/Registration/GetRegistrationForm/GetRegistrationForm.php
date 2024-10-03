@@ -18,7 +18,7 @@ class GetRegistrationForm {
         $fields = array_map(function($field) {
             if (isset($field->attributes['type']) && $field->attributes['type'] === 'select') {
                 
-                $methodDataSource = $field->dataSource;
+                $methodDataSource = $field->attributes['data_source'];
                 if (method_exists(FormFieldDataSourceRepository::class, $methodDataSource)) {
                     $field->options = FormFieldDataSourceRepository::$methodDataSource($field->id);
                 }
@@ -29,7 +29,7 @@ class GetRegistrationForm {
         return [
             'id' => $form->id,
             'name' => $form->name,
-            'metadata' => $form->metadata,
+            'attributes' => $form->attributes,
             'fields' =>  $fields
         ];
     }
