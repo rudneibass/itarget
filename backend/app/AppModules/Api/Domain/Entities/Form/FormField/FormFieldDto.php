@@ -1,20 +1,13 @@
 <?php
 
 namespace App\AppModules\Api\Domain\Entities\Form\FormField;
+use App\AppModules\Api\Domain\Entities\DtoBase;
 
-class FormFieldDto
+class FormFieldDto extends DtoBase
 {
-    public string $formId;
-    public string $name;
-    public array $attributes;
-    public ?string $id;
-    public ?string $rules;
-
-    public function __construct(array $data) {
-        $this->id = $data['id'] ?? '';
-        $this->formId = $data['form_id'];
-        $this->name = $data['name'];
-        $this->rules = $data['rules'];
-        $this->attributes = $data['attributes'];
-    }
+    public ?int $id = null;
+    public ?int $formId = null;
+    public ?string $name = null;
+    public ?array $attributes = null;
+    public ?string $rules = null;
 }

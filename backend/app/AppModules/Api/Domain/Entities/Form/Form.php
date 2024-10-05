@@ -44,14 +44,7 @@ class Form extends EntityBase {
     public function getAttributes(): array {
         return $this->attributes;
     }
-
-    public function setId(string $id) {
-        if(isset($id) || !empty($id)){ $this->id = (string) $id; }
-    }
-
-    public function getId(): string {
-       return $this->id;
-    }
+    
 
     public function setFields(array $fields) {
         $this->fields = $fields;

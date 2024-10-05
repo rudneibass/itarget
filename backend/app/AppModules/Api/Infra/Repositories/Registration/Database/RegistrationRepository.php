@@ -84,12 +84,12 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
             return 
             new Registration(
                 new RegistrationDto([
+                    'id' => (string) $item->id,
+                    'event_id' => (string) $item->event_id,
+                    'registration_id' => (string) $item->registration_id,
                     'name' => $item->name,
                     'email' => $item->email,
                     'cpf' => $item->cpf,
-                    'id' => $item->id,
-                    'event_id' => $item->event_id,
-                    'registration_id' => $item->registration_id,
                     'published' => $item->published
                 ]
             ));
@@ -108,12 +108,12 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
             return 
             new Registration(
                 new RegistrationDto([
+                    'id' => (string) $item->id,
+                    'event_id' => (string) $item->event_id,
+                    'registration_id' => (string) $item->registration_id,
                     'name' => $item->name,
                     'email' => $item->email,
                     'cpf' => $item->cpf,
-                    'id' => $item->id,
-                    'event_id' => $item->event_id,
-                    'registration_id' => $item->registration_id,
                     'published' => $item->published
                 ]
             ));

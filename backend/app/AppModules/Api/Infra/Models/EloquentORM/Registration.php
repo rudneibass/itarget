@@ -11,9 +11,9 @@ class Registration extends Model
     protected $table='registrations';
     protected $fillable = ['name', 'email', 'cpf', 'event_id', 'registration_id', 'published'];
     protected $hidden = [''];
-    protected $casts = ['id' => 'string'];
-
-    public function events() {
-        return $this->belongsToMany(Event::class);
-    }
+    protected $casts = [
+        'id' => 'string',
+        'event_id' => 'string',
+        'registration_id' => 'string'
+    ];
 }

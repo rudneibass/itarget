@@ -7,8 +7,8 @@ class FormFieldDtoTest extends TestCase {
 
     public function test_field_dto_construct_a_correctly_object(){
         $dto = new FormFieldDto([
-			"id" => "1",
-			"form_id" => "1",
+			"id" => 1,
+			"form_id" => 1,
 			"name" => "name",
 			"rules" => "[{\"rule\": \"required\", \"message\": \"Required Field\"}, {\"rule\": \"email\", \"message\": \"Invalid email address.\"}]",
 			"attributes" => [
@@ -26,6 +26,6 @@ class FormFieldDtoTest extends TestCase {
 		]);
 
         $this->assertIsObject($dto);
-		$this->assertEquals('1', $dto->id);
+		$this->assertEquals(1, $dto->id);
     }
 }

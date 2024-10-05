@@ -76,7 +76,7 @@ export const RegistrationFormBContextProvider = ({ id, children }:  { id?: strin
             } catch (error) {
                 setIsLoadingContext({isLoading: false})
                 if (error instanceof Error) { 
-                    errorAlert(error.message) 
+                    warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
                 } else {
                     errorAlert("Caught unknown error.")
                 }    

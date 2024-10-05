@@ -11,7 +11,7 @@ abstract class EntityBase {
     protected ?string $displayName;
 
     public function setId(string $id) {
-        $this->id = (string) $id; 
+        $this->id = (string) $id;
     }
 
     public function getId(): string {

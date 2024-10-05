@@ -14,8 +14,8 @@ class FormFieldTest extends TestCase
         $formField = 
         new FormField(
             new FormFieldDto([
-                "id" => "1",
-                "form_id" => "1",
+                "id" => 1,
+                "form_id" => 1,
                 "name" => "name",
                 "rules" => "[{\"rule\": \"required\", \"message\": \"Required Field\"}, {\"rule\": \"email\", \"message\": \"Invalid email address.\"}]",
                 "attributes" => [

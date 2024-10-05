@@ -11,7 +11,7 @@ class Registration extends EntityBase {
     private string $email;
     private string $cpf;
     private ?string $registrationId;
-    private string $publishd;
+    private ?string $published = '1';
      
 
     public function __construct(RegistrationDto $dto) {
@@ -20,8 +20,7 @@ class Registration extends EntityBase {
         $this->setEmail($dto->email);
         $this->setcpf($dto->cpf);
         $this->setEventId($dto->eventId);
-        $this->setRegistrationId($dto->registrationId);
-        $this->setPublished($dto->published);
+        $this->setRegistrationId($dto->registrationId ?? '0');
     }
 
     public function toArray(){
@@ -39,7 +38,7 @@ class Registration extends EntityBase {
 
     public function setEventId(string $eventId) {
         if(!isset($eventId) || empty($eventId)){ throw new Exception('Id do evento é obrigatório.'); }
-        $this->eventId = $eventId;
+        $this->eventId = (int) $eventId;
     }
 
     public function getEventId(): string {
@@ -75,21 +74,19 @@ class Registration extends EntityBase {
     }
 
     public function setRegistrationId(string $registrationId) {
-        $this->registrationId = $registrationId;
+        $this->registrationId = (string) $registrationId;
     }
 
     public function getRegistrationId(): string {
         return $this->registrationId;
     }
 
-    public function setPublished(string $published) {
-        if(isset($published)){
-            $this->published = '1';    
-        }
-        
-        if(!isset($published)){
-            $this->published = '0';    
-        }
+    public function published() {
+        $this->published = '1';    
+    }
+
+    public function unpublished() {
+        $this->published = '0';    
     }
 
     public function getPublished(): string {

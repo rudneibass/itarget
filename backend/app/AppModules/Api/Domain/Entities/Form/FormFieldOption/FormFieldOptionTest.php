@@ -12,10 +12,10 @@ class FormFieldOptionTest extends TestCase {
         $formFieldOption = 
         new FormFieldOption( 
             new FormFieldOptionDto([
-                'id' => '1',
-                'form_field_id' => '1',
+                'id' => 1,
+                'form_field_id' => 1,
                 'name' => 'Option 1',
-                'value' => '1',
+                'value' => 1,
                 'order' => '1'
             ])
         );

@@ -38,6 +38,13 @@ class GetRegistrationFormEdit {
                 if(isset($registration[$field->attributes['name']])){
                     $field->attributes['value'] = $registration[$field->attributes['name']];
                     $field->attributes['data_value_description'] = $registration['display_name'];
+                    
+                    /*
+                    $url = $field->attributes['data_source'] . '?id=' . $registration[$field->attributes['name']];
+                    $response = file_get_contents($url);
+                    $data = json_decode($response, true);
+                    $field->attributes['data_value_description'] = $data[0]['display_name'];
+                    */
                 }
             }
 
