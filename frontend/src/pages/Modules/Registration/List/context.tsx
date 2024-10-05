@@ -3,6 +3,7 @@ import { registrationApi } from "@services/backendApi/registrationApi"
 import { isPaginatedListType, PaginatedListLinksType, RegistrationListContextType } from "./types"
 import { utils } from "@utils/index"
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
+import { errorAlert, HtmlContent, toastContainer, warningAlertWithHtmlContent } from "@components/Toastify"
 
 
 export const RegistrationListContext = createContext<RegistrationListContextType>({} as RegistrationListContextType)
@@ -39,20 +40,31 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
                 isLoading: true 
             })
 
-            const response = await registrationApi.search(`${registrationApi.endpoints.search}`, {})
-
-            if(response && utils.isObject(response) && response.data){
-                if(isPaginatedListType(response.data)){
-                    
-                    if(JSON.stringify(response.data.data) !== JSON.stringify(state.data)){
-                        setState({
-                            data: response.data.data,
-                            paginationLinks: response.data.links,
-                            isLoading: false
-                        })   
+            try{
+                const response = await registrationApi.search(`${registrationApi.endpoints.search}`, {})
+                if(response && utils.isObject(response) && response.data){
+                    if(isPaginatedListType(response.data)){ 
+                        if(JSON.stringify(response.data.data) !== JSON.stringify(state.data)){
+                            setState({
+                                data: response.data.data,
+                                paginationLinks: response.data.links,
+                                isLoading: false
+                            })   
+                        }
                     }
                 }
-            }
+            } catch (error) {
+                setStateContext({ 
+                    ...state,
+                    isLoading: false
+                })
+                if (error instanceof Error) { 
+                    warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
+                } else {
+                    errorAlert("Caught unknown error.")
+                }    
+            } 
+
         }
         getListDataAndSetOnStateData()
     }, [])
@@ -65,6 +77,7 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
                     renderFormTab
                 }}
         >
+            { toastContainer }
             {children}
         </RegistrationListContext.Provider>
     )

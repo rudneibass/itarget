@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\Entities\Form;
 
-use App\AppModules\Api\Domain\Entities\EntityBase;
+use App\AppModules\Api\Domain\EntityBase;
 use App\AppModules\Api\Domain\Entities\Form\FormDto;
 use Exception;
 

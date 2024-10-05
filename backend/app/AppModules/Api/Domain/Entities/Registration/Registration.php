@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\Entities\Registration;
 
-use App\AppModules\Api\Domain\Entities\EntityBase;
+use App\AppModules\Api\Domain\EntityBase;
 use Exception;
 
 class Registration extends EntityBase {
@@ -11,7 +11,7 @@ class Registration extends EntityBase {
     private string $email;
     private string $cpf;
     private ?string $registrationId;
-    private ?string $published = '1';
+    private ?bool $published = true;
      
 
     public function __construct(RegistrationDto $dto) {
@@ -21,6 +21,13 @@ class Registration extends EntityBase {
         $this->setcpf($dto->cpf);
         $this->setEventId($dto->eventId);
         $this->setRegistrationId($dto->registrationId ?? '0');
+        
+        if(isset($dto->published) && $dto->published){
+            $this->published(); 
+        }
+        if(isset($dto->published) && !$dto->published){
+            $this->unpublished(); 
+        }
     }
 
     public function toArray(){
@@ -82,11 +89,11 @@ class Registration extends EntityBase {
     }
 
     public function published() {
-        $this->published = '1';    
+        $this->published = true;   
     }
 
     public function unpublished() {
-        $this->published = '0';    
+        $this->published = false;    
     }
 
     public function getPublished(): string {

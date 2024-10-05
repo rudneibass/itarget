@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\Entities\Form;
 
-use App\AppModules\Api\Domain\Entities\DtoBase;
+use App\AppModules\Api\Domain\DtoBase;
 
 class FormDto extends DtoBase {
     public ?int $id = null;

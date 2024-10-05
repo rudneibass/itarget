@@ -1,7 +1,7 @@
 <?php
 
 namespace App\AppModules\Api\Domain\Entities\Form\FormField;
-use App\AppModules\Api\Domain\Entities\DtoBase;
+use App\AppModules\Api\Domain\DtoBase;
 
 class FormFieldDto extends DtoBase
 {

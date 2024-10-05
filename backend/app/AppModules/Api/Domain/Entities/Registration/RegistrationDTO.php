@@ -1,7 +1,7 @@
 <?php
 
 namespace App\AppModules\Api\Domain\Entities\Registration;
-use App\AppModules\Api\Domain\Entities\DtoBase;
+use App\AppModules\Api\Domain\DtoBase;
 
 class RegistrationDto extends DtoBase {
     public ?string $id = null;
@@ -10,5 +10,5 @@ class RegistrationDto extends DtoBase {
     public ?string $name = null;
     public ?string $email = null;
     public ?string $cpf = null;
-    public ?string $published = null;
+    public ?bool $published = null;
 }

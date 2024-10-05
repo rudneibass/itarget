@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\AppModules\Api\Domain\Entities;
+namespace App\AppModules\Api\Domain;
 
 use Exception;
 use ReflectionClass;
 
-abstract class DtoBase 
+abstract class DtoBase
 {
     public function __construct(array $data)
     {
@@ -17,7 +17,7 @@ abstract class DtoBase
             }
 
             if (!$reflection->hasProperty($key)) {
-                throw new Exception('Propriedade $' . $key . ' não existe no Dto.' . get_class($this));
+                throw new Exception('Propriedade $' . $key . ' não existe. \n' . get_class($this));
             }
 
             $property = $reflection->getProperty($key);
@@ -28,11 +28,11 @@ abstract class DtoBase
                 $allowsNull = $type->allowsNull();
 
                 if ($value === null && !$allowsNull) {
-                    throw new Exception("A propriedade '{$key}' não permite valores nulos.");
+                    throw new Exception("A propriedade '{$key}' não permite valores nulos. ".get_class($this));
                 }
 
                 if ($value !== null && !$this->isValueOfType($value, $typeName)) {
-                    throw new Exception("Tipo inválido para a propriedade '{$key}'. Esperado: {$typeName}, recebido: " . gettype($value));
+                    throw new Exception("Tipo inválido para a propriedade '{$key}'. Esperado: {$typeName}, recebido: " . gettype($value). " \n". get_class($this));
                 }
             }
 

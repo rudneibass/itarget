@@ -39,7 +39,7 @@ class RegistrationTest extends TestCase
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'cpf' => '123.456.789-10',
-            'published' => '1'
+            'published' => true
         ]);
 
         $registration = new Registration($dto);
@@ -52,7 +52,7 @@ class RegistrationTest extends TestCase
         $this->assertEquals('123.456.789-10', $array['cpf']);
         $this->assertEquals('1', $array['event_id']);
         $this->assertEquals('1', $array['registration_id']);
-        $this->assertEquals('1', $array['published']);
+        $this->assertEquals(true, $array['published']);
     }
 
     public function test_toArray_method_returns_correct_structure_without_id()
@@ -63,7 +63,7 @@ class RegistrationTest extends TestCase
             'cpf' => '123.456.789-10',
             'event_id' => '1',
             'registration_id' => '1',
-            'published' => '1'
+            'published' => false
         ]);
 
         $registration = new Registration($dto);
@@ -76,6 +76,6 @@ class RegistrationTest extends TestCase
         $this->assertEquals('123.456.789-10', $array['cpf']);
         $this->assertEquals('1', $array['event_id']);
         $this->assertEquals('1', $array['registration_id']);
-        $this->assertEquals('1', $array['published']);
+        $this->assertEquals(false, $array['published']);
     }
 }

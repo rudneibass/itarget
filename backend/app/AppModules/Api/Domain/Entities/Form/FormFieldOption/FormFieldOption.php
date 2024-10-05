@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\Entities\Form\FormFieldOption;
 
-use App\AppModules\Api\Domain\Entities\EntityBase;
+use App\AppModules\Api\Domain\EntityBase;
 use Exception;
 
 class FormFieldOption extends EntityBase {

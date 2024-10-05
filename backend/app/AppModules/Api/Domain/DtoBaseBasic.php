@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\AppModules\Api\Domain\Entities;
+namespace App\AppModules\Api\Domain;
 
 use Exception;
 
-abstract class DtoBase 
+abstract class DtoBaseBasic 
 {
     public function __construct(array $data)
     {
@@ -14,7 +14,7 @@ abstract class DtoBase
             }
 
             if (!property_exists($this, $key)) {
-                throw new Exception('Proproedade $'.$key. ' não existe no Dto.'. get_class($this));
+                throw new Exception('Proproedade $'.$key. ' não existe em '. get_class($this));
             }
 
             $this->{$key} = $value;
