@@ -3,8 +3,9 @@
 namespace App\AppModules\Api\Domain\Entities\Registration;
 
 use App\AppModules\Api\Domain\Entities\Registration\Registration;
+use App\AppModules\Api\Domain\Interfaces\Repository;
 
-interface RegistrationRepositoryInterface {
+interface RegistrationRepositoryInterface extends Repository {
     public function create(Registration $registration): ?Registration;
     public function list(): array;
     public function get(string $id): Registration;
