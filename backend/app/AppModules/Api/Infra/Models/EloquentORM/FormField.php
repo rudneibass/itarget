@@ -11,5 +11,8 @@ class FormField extends Model
     protected $table='form_field';
     protected $fillable = ['*'];
     protected $hidden = [''];
-    protected $casts = [''];
+    protected $casts = [
+        'id' => 'int',
+        'form_id' => 'int'
+    ];
 }

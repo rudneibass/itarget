@@ -34,8 +34,7 @@ class FormFieldDataSourceRepository {
                 return 
                 new FormFieldOptionDto([
                     'id' => $event['id'],
-                    'is_active' => '1',
-                    'form_field_id' => '0',
+                    'form_field_id' => 0,
                     'name' => $event['name'],
                     'value' => $event['id'],
                 ]);

@@ -25,7 +25,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
                 'cpf' => $registration->cpf,
                 'event_id' => $registration->event_id,
                 'registration_id' => $registration->registration_id,
-                'published' => $registration->published
+                'published' => $registration->published ? true : false
             ])
         );
     }
@@ -39,7 +39,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
                 'id' => $registration['id'],
                 'event_id' => $registration['event_id'],
                 'registration_id' => $registration['registration_id'],
-                'published' => $registration['published']
+                'published' => $registration['published'] ? true : false
             ]);
         }, $this->model::all()->toArray());
     }
@@ -53,7 +53,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
             'email' => $registration->email,
             'cpf' => $registration->cpf,
             'registration_id' => $registration->registrationId,
-            'published' => $registration->published
+            'published' => $registration->published ? true : false
         ]);
 
         return new Registration(
@@ -64,7 +64,7 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
                 'email' => $registrationModel->email,
                 'cpf' => $registrationModel->cpf,
                 'registration_id' => $registrationModel->registrationId,
-                'published' => $registration->published
+                'published' => $registration->published ? true : false
             ])
         );
     }
@@ -84,13 +84,13 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
             return 
             new Registration(
                 new RegistrationDto([
+                    'id' => (string) $item->id,
+                    'event_id' => (string) $item->event_id,
+                    'registration_id' => (string) $item->registration_id,
                     'name' => $item->name,
                     'email' => $item->email,
                     'cpf' => $item->cpf,
-                    'id' => $item->id,
-                    'event_id' => $item->event_id,
-                    'registration_id' => $item->registration_id,
-                    'published' => $item->published
+                    'published' => $item->published ? true : false
                 ]
             ));
         }, DB::select($query));
@@ -108,13 +108,13 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
             return 
             new Registration(
                 new RegistrationDto([
+                    'id' => (string) $item->id,
+                    'event_id' => (string) $item->event_id,
+                    'registration_id' => (string) $item->registration_id,
                     'name' => $item->name,
                     'email' => $item->email,
                     'cpf' => $item->cpf,
-                    'id' => $item->id,
-                    'event_id' => $item->event_id,
-                    'registration_id' => $item->registration_id,
-                    'published' => $item->published
+                    'published' => $item->published ? true : false
                 ]
             ));
         }, DB::select($query));

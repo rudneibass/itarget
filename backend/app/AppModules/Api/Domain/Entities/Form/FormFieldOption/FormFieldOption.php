@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\Entities\Form\FormFieldOption;
 
-use App\AppModules\Api\Domain\Entities\EntityBase;
+use App\AppModules\Api\Domain\EntityBase;
 use Exception;
 
 class FormFieldOption extends EntityBase {
@@ -11,7 +11,6 @@ class FormFieldOption extends EntityBase {
     private string $name;
     private string $value;
     private ?string $order;
-    private ?string $isActive;
     private ?string $selected;
 
     public function __construct(FormFieldOptionDto $dto)
@@ -23,7 +22,6 @@ class FormFieldOption extends EntityBase {
 
         if(isset($dto->id)){ $this->setId($dto->id); }
         if(isset($dto->selected)){ $this->setSelected($dto->selected); }
-        if(isset($dto->isActive)){ $this->setIsActive($dto->isActive); }
     }
 
     public function setName(string $name) {
@@ -66,13 +64,5 @@ class FormFieldOption extends EntityBase {
     }
     public function getSelected(): string {
         return $this->selected;
-    }
-
-
-    public function setIsActive(string $isActive) {
-        $this->isActive = $isActive;
-    }
-    public function getIsActive(): string {
-        return $this->isActive;
     }
 }

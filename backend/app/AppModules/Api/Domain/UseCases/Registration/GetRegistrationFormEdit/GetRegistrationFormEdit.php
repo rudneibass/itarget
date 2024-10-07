@@ -4,15 +4,19 @@ namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationFormEdi
 
 use App\AppModules\Api\Domain\Entities\Form\FormFieldDataSource;
 use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
+use App\AppModules\Api\Domain\Interfaces\RepositoryFactory;
 use App\AppModules\Api\Domain\UseCases\Registration\GetRegistration\GetRegistration;
 use App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationForm\GetRegistrationForm;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
 
+
 class GetRegistrationFormEdit {
     private $repository;
-    
-    public function __construct(RegistrationRepositoryInterface $repository){
+    private $repositoryFactory;
+
+    public function __construct(RegistrationRepositoryInterface $repository, RepositoryFactory $repositoryFactory){
         $this->repository = $repository;
+        $this->repositoryFactory = $repositoryFactory;
     }
 
     public function execute(string $id){
@@ -35,9 +39,17 @@ class GetRegistrationFormEdit {
             }
 
             if (isset($field->attributes['type']) && $field->attributes['type'] === 'searchable') {
-                if(isset($registration[$field->attributes['name']])){
+                if(isset($registration[$field->attributes['name']]) && !empty($registration[$field->attributes['name']])){
                     $field->attributes['value'] = $registration[$field->attributes['name']];
-                    $field->attributes['data_value_description'] = $registration['display_name'];
+                    $field->attributes['data_value_description'] = '';
+                    
+                    if(filter_var($field->attributes['data_source'], FILTER_VALIDATE_URL)){
+                        $parsedUrl = parse_url($field->attributes['data_source']);
+                        $repository = $this->repositoryFactory->getRepository($parsedUrl['path']);
+                        $entity = $repository->get($registration[$field->attributes['name']]);
+                        $field->attributes['data_value_description'] = $entity->displayName;
+                    }
+                    
                 }
             }
 

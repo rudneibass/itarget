@@ -11,5 +11,7 @@ class Form extends Model
     protected $table='form';
     protected $fillable = ['*'];
     protected $hidden = [''];
-    protected $casts = [''];
+    protected $casts = [
+        'id' => 'int',
+    ];
 }

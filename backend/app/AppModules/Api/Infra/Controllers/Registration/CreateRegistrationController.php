@@ -16,25 +16,14 @@ class CreateRegistrationController extends BaseController {
     public function index(Request $request) {
        
         return $this->executeAction(function() use ($request) {
-            
-            $requestData = $request->all();
-            
+     
             if(isset($this->createRequest)){
                 $this->createRequest->merge($request->all());
                 $this->createRequest->validate($this->createRequest->rules());
             }
             
             $useCase = new CreateRegistration(new RegistrationRepository);
-            return $useCase->execute(
-                new RegistrationDto([
-                    'name' =>$requestData['name'],
-                    'email' => $requestData['email'],
-                    'cpf' => $requestData['cpf'],
-                    'event_id' => $requestData['event_id'],
-                    'registration_id' => $requestData['registration_id'],
-                    'published' => $requestData['published'],
-                ])
-            );
+            return $useCase->execute(new RegistrationDto($request->all()));
         });
     }
 }

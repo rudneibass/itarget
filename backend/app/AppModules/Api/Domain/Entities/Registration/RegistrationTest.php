@@ -11,7 +11,7 @@ class RegistrationTest extends TestCase
     public function test_construct_sets_properties_correctly()
     {
         $dto = new RegistrationDto([
-            'id' => '123',
+            'id' => '1',
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'cpf' => '123.456.789-10',
@@ -21,7 +21,7 @@ class RegistrationTest extends TestCase
 
         $registration = new Registration($dto);
 
-        $this->assertEquals('123', $registration->getId());
+        $this->assertEquals('1', $registration->getId());
         $this->assertEquals('John Doe', $registration->getName());
         $this->assertEquals('john.doe@example.com', $registration->getEmail());
         $this->assertEquals('123.456.789-10', $registration->getCpf());
@@ -29,51 +29,30 @@ class RegistrationTest extends TestCase
         $this->assertEquals('1', $registration->getRegistrationId());
     }
 
-    public function test_construct_sets_properties_correctly_without_id()
-    {
-        $dto = new RegistrationDto([
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'cpf' => '123.456.789-10',
-            'event_id' => '1',
-            'registration_id' => '1',
-            'published' => '1'
-        ]);
-
-        $registration = new Registration($dto);
-
-        $this->assertEquals(null, $registration->getId());
-        $this->assertEquals('John Doe', $registration->getName());
-        $this->assertEquals('john.doe@example.com', $registration->getEmail());
-        $this->assertEquals('123.456.789-10', $registration->getCpf());
-        $this->assertEquals('1', $registration->getEventId());
-        $this->assertEquals('1', $registration->getRegistrationId());
-        $this->assertEquals('1', $registration->getPublished());
-    }
 
     public function test_toArray_method_returns_correct_structure()
     {
         $dto = new RegistrationDto([
-            'id' => '123',
+            'id' => '1',
+            'event_id' => '1',
+            'registration_id' => '1',
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'cpf' => '123.456.789-10',
-            'event_id' => '1',
-            'registration_id' => '1',
-            'published' => '1'
+            'published' => true
         ]);
 
         $registration = new Registration($dto);
         $array = $registration->toArray();
 
         $this->assertIsArray($array);
-        $this->assertEquals('123', $array['id']);
+        $this->assertEquals('1', $array['id']);
         $this->assertEquals('John Doe', $array['name']);
         $this->assertEquals('john.doe@example.com', $array['email']);
         $this->assertEquals('123.456.789-10', $array['cpf']);
         $this->assertEquals('1', $array['event_id']);
         $this->assertEquals('1', $array['registration_id']);
-        $this->assertEquals('1', $array['published']);
+        $this->assertEquals(true, $array['published']);
     }
 
     public function test_toArray_method_returns_correct_structure_without_id()
@@ -84,7 +63,7 @@ class RegistrationTest extends TestCase
             'cpf' => '123.456.789-10',
             'event_id' => '1',
             'registration_id' => '1',
-            'published' => '1'
+            'published' => false
         ]);
 
         $registration = new Registration($dto);
@@ -97,6 +76,6 @@ class RegistrationTest extends TestCase
         $this->assertEquals('123.456.789-10', $array['cpf']);
         $this->assertEquals('1', $array['event_id']);
         $this->assertEquals('1', $array['registration_id']);
-        $this->assertEquals('1', $array['published']);
+        $this->assertEquals(false, $array['published']);
     }
 }

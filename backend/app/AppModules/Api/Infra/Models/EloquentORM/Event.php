@@ -11,5 +11,5 @@ class Event extends Model
     protected $table='events';
     protected $fillable = [''];
     protected $hidden = [''];
-    protected $casts = [''];
+    protected $casts = ['id' => 'int'];
 }
