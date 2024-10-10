@@ -3,11 +3,11 @@ import Tabs from 'react-bootstrap/Tabs';
 
 import CustomCard from '@components/Bootstrap/CustomCard'
 
-import { RegistrationFormAContextProvider } from './FormA/context'
-import RegistrationFormA from './FormA/index'
+import { FormContextProvider as FormAContext } from './FormA/context'
+import FormA from './FormA/index'
 
-import { RegistrationFormBContextProvider } from './FormB/context'
-import RegistrationFormB from './FormB/index'
+import { FormContextProvider as FormBContext } from './FormB/context'
+import FormB from './FormB/index'
 
 export default function Index({ id }: { id?: string }) {
 
@@ -47,9 +47,9 @@ export default function Index({ id }: { id?: string }) {
             title={<><i className="fs-6 bi-grid"></i> Cadastro</>} 
             style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
           >
-            <RegistrationFormAContextProvider id={id}>
-              <RegistrationFormA />
-            </RegistrationFormAContextProvider>
+            <FormAContext id={id}>
+              <FormA />
+            </FormAContext>
 
           </Tab>
           <Tab 
@@ -57,9 +57,9 @@ export default function Index({ id }: { id?: string }) {
             title={ <><i className="fs-6 bi-files"></i> Anexos </> }
             style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
            >
-            <RegistrationFormBContextProvider id={id}>
-              <RegistrationFormB />
-            </RegistrationFormBContextProvider>
+            <FormBContext id={id}>
+              <FormB />
+            </FormBContext>
             
           </Tab>
         </Tabs>

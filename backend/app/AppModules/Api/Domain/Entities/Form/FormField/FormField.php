@@ -19,7 +19,17 @@ class FormField extends EntityBase {
 
         if(isset($dto->id)){ $this->id = $dto->id; }
     }
-
+    
+    public function toArray() {
+        return [
+            'id' => $this->Id,
+            'form_id' => $this->formId,
+            'name' => $this->name,
+            'display_name' => $this->displayName,
+            'attributes' => $this->attributes,
+            'rules' => $this->rules
+        ];
+    }
 
     public function getFormId(): string {
         return $this->formId;

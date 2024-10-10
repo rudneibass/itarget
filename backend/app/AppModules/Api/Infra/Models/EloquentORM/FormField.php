@@ -12,7 +12,7 @@ class FormField extends Model
     protected $fillable = ['*'];
     protected $hidden = [''];
     protected $casts = [
-        'id' => 'int',
-        'form_id' => 'int'
+        'id' => 'string',
+        'form_id' => 'string'
     ];
 }

@@ -13,11 +13,11 @@ type FormPropsType = {
           name: string,
           attributes: object,
         },
-        fields?:[{
+        fields?:Array<{
           rules?: string;
           options?: Array<{ value: string, name: string }>;
           attributes: Record<string, string>;
-        }]
+        }>
     },
     actions?: {
       handleSubmitAction?: (inputsValues: object) => void

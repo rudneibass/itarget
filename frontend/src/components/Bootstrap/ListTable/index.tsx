@@ -56,7 +56,7 @@ export default function ListTable({ data, actions } : ListTableType) {
                 {data.thead.map((item, index) => (
                   <th key={index}
                     onClick={() => handleSort(item.name)}
-                    style={{cursor: 'pointer'}}
+                    style={{cursor: 'pointer', width: item.name === 'id'? '10%' : 'auto'}}
                   >
                     <span>{item.displayName}</span>
                     <i
@@ -70,7 +70,7 @@ export default function ListTable({ data, actions } : ListTableType) {
                   </th>
                 ))}  
                 {actions && (
-                  <th style={{textAlign: 'center'}}>Ações</th>
+                  <th style={{textAlign: 'center', width: '15%'}}>Ações</th>
                 )}
               </tr>
             </thead>
