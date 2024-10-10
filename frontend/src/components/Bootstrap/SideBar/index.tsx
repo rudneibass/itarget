@@ -1,14 +1,14 @@
+import { useMainTabsContext } from '../MainTabs/context'
+
 import './styles.css'
 
 import Home from '@pages/Home'
 
-import { RegistrationListContextProvider } from '@pages/Modules/Registration/List/context.tsx'
 import RegistrationList from '@pages/Modules/Registration/List'
+import { ListContextProvider as RegistrationListContext } from '@pages/Modules/Registration/List/context.tsx'
 
-import EventList from '@pages/Modules/Event/List'
-import { EventListContextProvider } from '@pages/Modules/Event/List/context.tsx'
-
-import { useMainTabsContext } from '../MainTabs/context'
+import FormList from '@pages/Modules/Form/List'
+import { ListContextProvider as FormListContextProvider } from '@pages/Modules/Form/List/context.tsx'
 
 
 export default function Index() {
@@ -42,24 +42,39 @@ export default function Index() {
               <span className="ms-1 d-none d-sm-inline">Home</span>
             </a>
           </li>
-
-          <li>
-            <a 
-              className={`nav-link align-middle px-0 ${ activeTab ===  'tab-event-list' ? 'active-route' : ''}`}
-              onClick={() => handleAddTab({ eventKey: 'tab-event-list', title: 'Eventos', content: <EventListContextProvider><EventList /></EventListContextProvider> })}
-            >
-              <i className="fs-4 bi-grid"></i>
-              <span className="ms-1 d-none d-sm-inline">Eventos</span>
-            </a>
-          </li>
-
           <li>
             <a 
               className={`nav-link align-middle px-0 ${ activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}
-              onClick={() => handleAddTab({ eventKey: 'tab-registration-list', title: 'Inscrições', content: <RegistrationListContextProvider><RegistrationList /></RegistrationListContextProvider> })} 
+              onClick={() => handleAddTab({ 
+                eventKey: 'tab-registration-list', 
+                title: 'Inscrições', 
+                content: 
+                  <RegistrationListContext>
+                    <RegistrationList />
+                  </RegistrationListContext> 
+                  }
+                )
+              } 
             >
               <i className="fs-4 bi-people"></i>
               <span className="ms-1 d-none d-sm-inline">Inscrições</span>
+            </a>
+          </li>
+          <li>
+            <a 
+              className={`nav-link align-middle px-0 ${ activeTab ===  'tab-form-list' ? 'active-route' : ''}`}
+              onClick={() => handleAddTab({ 
+                eventKey: 'tab-form-list', 
+                title: 'Formulários', 
+                content: 
+                  <FormListContextProvider>
+                    <FormList />
+                  </FormListContextProvider> 
+                })
+              }
+            >
+              <i className="fs-4 bi-grid"></i>
+              <span className="ms-1 d-none d-sm-inline">Formulários</span>
             </a>
           </li>
         </ul>

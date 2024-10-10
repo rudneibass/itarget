@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 
-export interface RegistrationFormAContextextType {
+export interface FormContextextType {
   form: FormType | undefined;
   setFormContext?: (form: FormType) => void;
-  inputs: RegistrationFormAInputsType;
-  setInputsContext: (inputs: RegistrationFormAInputsType) => void;
+  inputs: FormInputsType;
+  setInputsContext: (inputs: FormInputsType) => void;
   activeTab: string;
   closeFormTab: ({ tabId }: { tabId: string }) => void;
   isLoading: boolean,
@@ -15,7 +15,7 @@ export interface RegistrationFormAContextextType {
   warningAlertWithHtmlContent?: (content: ReactNode) => void;
 }
 
-export type RegistrationFormAInputsType = {
+export type FormInputsType = {
   name?: string;
   email?: string;
   cpf?: string;
@@ -29,20 +29,14 @@ export type OptionsType = {
 };
 
 export type FieldsType = {
-  id: string;
-  form_id: string;
-  name: string;
-  value?: string;
   rules?: string;
-  options?: Array<OptionsType>;
+  options?: Array<{ value: string, name: string }>;
   attributes: Record<string, string>;
 };
 
 export type FormType = {
   id: string;
   name: string;
-  code?: string;
-  dataSource?: string;
   attributes: object;
   fields?: Array<FieldsType>;
 };
@@ -108,13 +102,11 @@ export function convertToFormType(data: unknown): FormType {
 
   const id = data.id as string;
   const name = data.name as string;
-  const code = data.code as string;
   const fields = Array.isArray(data.fields) ? data.fields : [];
 
   return {
     id: id,
     name: name,
-    code: code,
     attributes: data.attributes || {},
     fields: fields.map((field) => ({
       id: field.id || "",

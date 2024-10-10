@@ -1,34 +1,42 @@
-export interface RegistrationFormBContextextType {
+import { ReactNode } from "react";
+
+export interface FormContextextType {
   form: FormType | undefined;
   setFormContext?: (form: FormType) => void;
-  inputs: RegistrationFormBInputsType;
-  setInputsContext: (inputs: RegistrationFormBInputsType) => void;
+  inputs: FormInputsType;
+  setInputsContext: (inputs: FormInputsType) => void;
   activeTab: string;
   closeFormTab: ({ tabId }: { tabId: string }) => void;
   isLoading: boolean,
-  setIsLoadingContext: ({ isLoading } : { isLoading: boolean }) => void
+  setIsLoadingContext: ({ isLoading } : { isLoading: boolean }) => void,
+  successAlert?: (message: string) => void;
+  warningAlert?: (message: string) => void;
+  errorAlert?: (message: string) => void;
+  warningAlertWithHtmlContent?: (content: ReactNode) => void;
 }
 
-export type RegistrationFormBInputsType = {
+export type FormInputsType = {
   name?: string;
   email?: string;
   cpf?: string;
   event_id?: string;
 };
 
+export type OptionsType = {
+  label: string;
+  value: string;
+  selected?: string;
+};
+
 export type FieldsType = {
-  id: string;
-  form_id: string;
-  name: string;
-  value?: string;
   rules?: string;
+  options?: Array<{ value: string, name: string }>;
   attributes: Record<string, string>;
 };
 
 export type FormType = {
   id: string;
   name: string;
-  code?: string;
   attributes: object;
   fields?: Array<FieldsType>;
 };
@@ -42,6 +50,7 @@ export function isFormType(data: unknown): data is FormType {
     id?: unknown;
     name?: unknown;
     code?: unknown;
+    dataSource?: unknown;
     attributes?: unknown;
     fields?: unknown;
   };
@@ -93,13 +102,11 @@ export function convertToFormType(data: unknown): FormType {
 
   const id = data.id as string;
   const name = data.name as string;
-  const code = data.code as string;
   const fields = Array.isArray(data.fields) ? data.fields : [];
 
   return {
     id: id,
     name: name,
-    code: code,
     attributes: data.attributes || {},
     fields: fields.map((field) => ({
       id: field.id || "",
@@ -107,6 +114,8 @@ export function convertToFormType(data: unknown): FormType {
       name: field.name || "",
       value: field.value || "",
       rules: field.rules || "",
+      options: field.options || [],
+      dataSource: field.dataSource || "",
       attributes: field.attributes || {},
     })),
   };

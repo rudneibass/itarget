@@ -1,12 +1,12 @@
 
-import { useRegistrationFormBContext } from './context'
-import { FormType, FieldsType } from '@pages/Form/types'
+import { useFormContext } from './context'
+import { FormType, FieldsType } from './types'
 
 import Form from '@components/Bootstrap/Form'
 import Loading from '@components/Bootstrap/Loading'
 
 export default function Index() {
-  const context = useRegistrationFormBContext()
+  const context = useFormContext()
   const isLoading = context.isLoading
 
   const formProps = {

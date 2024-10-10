@@ -1,19 +1,18 @@
 import { createContext, useState,useContext, useEffect } from  "react"
 import { registrationApi } from "@services/backendApi/registrationApi"
-import { isPaginatedListType, PaginatedListLinksType, RegistrationListContextType } from "./types"
 import { utils } from "@utils/index"
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
 import { errorAlert, HtmlContent, toastContainer, warningAlertWithHtmlContent } from "@components/Toastify"
+import { isPaginatedListType, PaginatedListLinksType, ListContextType } from "./types"
 
+export const ListContext = createContext<ListContextType>({} as ListContextType)
 
-export const RegistrationListContext = createContext<RegistrationListContextType>({} as RegistrationListContextType)
-
-export const useRegistrationListContext = () => {
-  const context = useContext(RegistrationListContext)
+export const useListContext = () => {
+  const context = useContext(ListContext)
   return context;
 }
 
-export const RegistrationListContextProvider = ({ children }:{ children: JSX.Element }) => {
+export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
     const mainTabsContext = useMainTabsContext()
     function renderFormTab({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }){
         mainTabsContext.handleAddTab({ title, eventKey, content })
@@ -70,7 +69,7 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
     }, [])
     
     return (
-        <RegistrationListContext.Provider 
+        <ListContext.Provider 
             value={{
                     state,
                     setStateContext,
@@ -79,7 +78,7 @@ export const RegistrationListContextProvider = ({ children }:{ children: JSX.Ele
         >
             { toastContainer }
             {children}
-        </RegistrationListContext.Provider>
+        </ListContext.Provider>
     )
 }
 

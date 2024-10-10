@@ -8,6 +8,7 @@ use Exception;
 
 class Form extends EntityBase {
     const NAME_FORM_REGISTRATION = 'registration';
+    const NAME_FORM_FORM = 'form';
     
     private string $name;
     private ?array $attributes;
@@ -15,7 +16,7 @@ class Form extends EntityBase {
 
     public function __construct(FormDto $dto) {
         if(isset($dto->id)){ $this->setId($dto->id); }
-        if($dto->fields){ $this->setFields($dto->fields); }
+        $this->setFields($dto->fields ?? []);
         $this->setName($dto->name);
         $this->setAttributes($dto->attributes);
     }

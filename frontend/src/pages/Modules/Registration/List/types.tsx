@@ -1,10 +1,10 @@
-export interface RegistrationListContextType  {
-  state: { data: RegistrationListType[] | undefined, paginationLinks: Array<PaginatedListLinksType>, isLoading: boolean },
+export interface ListContextType  {
+  state: { data: ListType[] | undefined, paginationLinks: Array<PaginatedListLinksType>, isLoading: boolean },
   setStateContext: ({data, paginationLinks, isLoading }: {data: [], paginationLinks: Array<PaginatedListLinksType>,  isLoading?: boolean}) => void,
   renderFormTab: ({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }) => void,
 }
 
-export type RegistrationListType = {
+export type ListType = {
   id: number;
   name: string;
   email: string;
@@ -34,7 +34,7 @@ export type PaginatedListType = {
   total: number;
 }
 
-export function isRegistrationListType(data: unknown): data is RegistrationListType[] {
+export function isListType(data: unknown): data is ListType[] {
   if (!Array.isArray(data)) {
     return false;
   }
@@ -49,6 +49,7 @@ export function isRegistrationListType(data: unknown): data is RegistrationListT
         'event_id' in item && typeof item.event_id === 'number'
   )
 }
+
 
 export function isPaginatedListType(data: unknown): data is PaginatedListType {
   if (typeof data !== 'object' || data === null) {
@@ -77,7 +78,4 @@ export function isPaginatedListType(data: unknown): data is PaginatedListType {
       typeof paginationObj.to === 'number' &&
       typeof paginationObj.total === 'number'
   );
-}
-
-
-
+} 

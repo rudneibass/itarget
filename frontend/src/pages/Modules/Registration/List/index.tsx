@@ -1,6 +1,6 @@
 import { endpoints } from '@utils/endpoints'
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { useRegistrationListContext } from './context'
+import { useListContext } from './context'
 
 import CustomCard from '@components/Bootstrap/CustomCard'
 import SearchBar from '@components//Bootstrap/SearchBar'
@@ -8,14 +8,13 @@ import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 
-import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
 import { isObject } from '@utils/isObject'
-import { isLaravelPaginationType } from '@src/types'
-
 import RegistrationForm from '@pages/Modules/Registration/Form'
 
+import { isPaginatedListType, PaginatedListLinksType } from "./types"
+
 export default function Index() {  
-  const context = useRegistrationListContext()
+  const context = useListContext()
   const isLoading = context.state.isLoading
 
   const customCardProps = {
@@ -44,7 +43,7 @@ export default function Index() {
         <i className='fs-7 bi-plus-circle'></i>&nbsp;&nbsp;Cadastrar
       </button>
     ],
-    styles: {
+    styles: { 
       card: { borderTop: 'none' },
       cardHeader: { border: "none", background: "#fff" },
       cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
@@ -57,7 +56,7 @@ export default function Index() {
       handleSearchAction: async (searchParams: object) => {
         const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, searchParams)
         if(response && isObject(response) && response.data){
-          if(isLaravelPaginationType(response.data)){
+          if(isPaginatedListType(response.data)){
             context.setStateContext({data: response.data.data, paginationLinks: response.data.links})
           }
       }
@@ -107,7 +106,7 @@ export default function Index() {
   const paginationBarProps = {
     data: {paginationLinks: context.state.paginationLinks},
     actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: LaravelPaginationLinksType[] }) => {
+      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: PaginatedListLinksType[] }) => {
         context.setStateContext({ data, paginationLinks })
       }   
     },

@@ -3,8 +3,11 @@
 namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationFormEdit;
 
 use App\AppModules\Api\Domain\Entities\Form\FormFieldDataSource;
+use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
 use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
+use App\AppModules\Api\Domain\Interfaces\Repository;
 use App\AppModules\Api\Domain\Interfaces\RepositoryFactory;
+use App\AppModules\Api\Domain\UseCases\Form\GetFormEdit\GetFormEdit;
 use App\AppModules\Api\Domain\UseCases\Registration\GetRegistration\GetRegistration;
 use App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationForm\GetRegistrationForm;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
@@ -12,14 +15,27 @@ use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
 
 class GetRegistrationFormEdit {
     private $repository;
+    private $formRepository;
     private $repositoryFactory;
 
-    public function __construct(RegistrationRepositoryInterface $repository, RepositoryFactory $repositoryFactory){
-        $this->repository = $repository;
+    public function __construct (
+        Repository $repository,
+        FormRepositoryInterface $formRepository, 
+        RepositoryFactory $repositoryFactory
+    )
+    {
+        $this->formRepository = $formRepository;
         $this->repositoryFactory = $repositoryFactory;
+        $this->repository = $repository;
     }
 
-    public function execute(string $id){
+    public function execute(array $request){
+        
+        $useCase = new GetFormEdit($this->formRepository, $this->repositoryFactory, $this->repository);
+        $form = $useCase->execute($request);
+        return $form;
+
+        /*
         $formUseCase = new GetRegistrationForm(new FormRepository);
         $form = $formUseCase->execute();
 
@@ -66,5 +82,7 @@ class GetRegistrationFormEdit {
         }, $form['fields']);
 
         return  $form;
+
+        */
     }
 }

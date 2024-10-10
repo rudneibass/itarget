@@ -80,6 +80,7 @@ async function getFormWithFieldsAndValues({ endpoint, formName, id } : { endpoin
   })
 }
 
+/*
 async function getForm({ endpoint, formName } : { endpoint: string, formName?: string }){
   return await executeRequest(async () => {
     const formIdentifyer = formName || ''
@@ -93,18 +94,35 @@ async function getFormWithValues({ endpoint, id } : { endpoint: string, id: stri
     const response = await api.get(`${endpoint}${id}`)
     return response.data
   })
+}*/
+
+
+async function getForm({ endpoint, formName } : { endpoint: string, formName?:string }) {
+  return await executeRequest(async () => {
+    const form_name = formName || ''
+    const response = await api.get(endpoint, { params: { form_name } })
+    return response.data
+  })
+}
+
+async function getFormWithValues({ endpoint, formName, id } : { endpoint: string, formName: string, id: string }) {
+  return await executeRequest(async () => {
+    const response = await api.get(endpoint, { params: { form_name: formName, id: id }})
+    return response.data
+  })
 }
 
 const defaultActions = {
   list: "list/",
   get: "get/",
   create: "create/",
+  edit: "edit/",
   update: "update/",
   delete: "delete/",
   search: "search/",
   paginate: "paginate/",
-  form: "form/",
-  edit: "form/edit/"
+  formCreate: "form/create/",
+  formEdit: "form/edit/"
 }
 
 export const baseApi = {

@@ -17,8 +17,7 @@ class GetForm {
         return [
             'id' => $form->id,
             'name' => $form->name,
-            'metadata' => $form->metadata,
-            'is_active' => $form->isActive,
+            'attributtes' => $form->attributes,
             'fields' => array_map(function($field){
                 return $field;
             }, $form->fields)
