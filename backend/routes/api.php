@@ -6,10 +6,8 @@ $form = '/form';
 Route::get($form.'/name/{name}', 'App\AppModules\Api\Infra\Controllers\Form\GetFormController@index');
 Route::get($form.'/list', 'App\AppModules\Api\Infra\Controllers\Form\ListFormController@index');
 Route::get($form.'/search', 'App\AppModules\Api\Infra\Controllers\Form\PaginateFormController@index');
-Route::get($form.'/create', 'App\AppModules\Api\Infra\Controllers\Form\GetFormCreateController@index');
-Route::get($form.'/edit', 'App\AppModules\Api\Infra\Controllers\Form\GetFormEditController@index');
-Route::get($form.'form/create', 'App\AppModules\Api\Infra\Controllers\Form\GetFormCreateController@index');
-Route::get($form.'form/edit', 'App\AppModules\Api\Infra\Controllers\Form\GetFormEditController@index');
+Route::get($form.'/form/create', 'App\AppModules\Api\Infra\Controllers\Form\GetFormCreateController@index');
+Route::get($form.'/form/edit', 'App\AppModules\Api\Infra\Controllers\Form\GetFormEditController@index');
 
 $formField = '/formField';
 Route::get($formField.'/list', 'App\AppModules\Api\Infra\Controllers\FormField\ListFormFieldController@index');
@@ -19,6 +17,7 @@ Route::post($formField.'/paginate', 'App\AppModules\Api\Infra\Controllers\FormFi
 Route::get($formField.'/search', 'App\AppModules\Api\Infra\Controllers\FormField\PaginateFormFieldController@index');
 Route::get($formField.'/form/create', 'App\AppModules\Api\Infra\Controllers\FormField\GetFormFieldFormController@index');
 Route::get($formField.'/form/edit', 'App\AppModules\Api\Infra\Controllers\FormField\GetFormFieldFormEditController@index');
+
 
 $registration = '/registration';
 Route::get($registration.'/list', 'App\AppModules\Api\Infra\Controllers\Registration\ListRegistrationController@index');

@@ -4,8 +4,12 @@ import { FormType, FieldsType } from './types'
 
 import Form from '@components/Bootstrap/Form'
 import Loading from '@components/Bootstrap/Loading'
+import Modal from '@components/Bootstrap/Modal'
 
-export default function Index() {
+import { ListContextProvider } from '../List/context';
+import List from '../List'
+
+export default function Index({ id }: { id?: string }) {
   const context = useFormContext()
   const isLoading = context.isLoading
 
@@ -41,16 +45,35 @@ export default function Index() {
     ]
   }
 
+  const modalProps = {
+    data: {
+      show: context.showModalForm, 
+      title: 'Adicionar Campo'
+    },
+    actions: {
+      handleCloseAction: () => {
+        context.setShowModalFormContext(false)
+      }   
+    },
+    additionalComponents: []
+  }
+
   return (
     <>
-      { isLoading && (<Loading />) }
-      { !isLoading && ( 
-        <Form  
-          data={formProps.data} 
-          actions={formProps.actions} 
-          additionalComponents={formProps.additionalComponents} 
-        />
-      )}
+      <Modal data={modalProps.data} actions={modalProps.actions} >
+        { isLoading && (<Loading />) }
+        { !isLoading && ( 
+          <Form  
+              data={formProps.data} 
+              actions={formProps.actions} 
+              additionalComponents={formProps.additionalComponents} 
+          />
+        )}
+      </Modal>
+
+      <ListContextProvider formId={id}>
+        <List />
+      </ListContextProvider>
     </>
   )
 }

@@ -4,7 +4,6 @@ import { FormContextextType, FormInputsType, FormType, convertToFormType, isForm
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 import { formFieldApi } from "@services/backendApi/formFieldApi";
 
-
 export const FormContext = createContext({} as FormContextextType)
 
 export const useFormContext = () => {
@@ -30,11 +29,17 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         setInputs(inputs)
     }
 
+    const [showModalForm, setShowModalForm] = useState(false);
+    function setShowModalFormContext(show: boolean){
+        setShowModalForm(show)
+    }
+
     const [isLoading, setIsLoading] = useState(false)
     function setIsLoadingContext({ isLoading } : { isLoading: boolean }){
         setIsLoading(isLoading)
     }
 
+   
     async function saveForm(inputs: FormInputsType){
         try {
             if(!id){
@@ -53,38 +58,47 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             }
         }
     }
-    
-    useEffect(() => {
-        async function getForm(){
-            try {
-                let form
-                setIsLoadingContext({isLoading: true})
-                if(!id){
-                    form = await formFieldApi.getForm({ endpoint: formFieldApi.endpoints.create, formName: 'formField' });
-                }
-                if(id){ 
-                    form = await formFieldApi.getFormWithValues({endpoint: formFieldApi.endpoints.edit, id: id, formName: 'formField' })
-                }
-                if(form){
-                    if(isFormType(form)){
+
+    async function getFormContext( id?: string ){
+        try {
+            setIsLoadingContext({isLoading: true})
+            let form;
+            
+            if(id){
+                form = await formFieldApi.getFormWithValues({ endpoint: formFieldApi.endpoints.formEdit, formName: 'form-field', id: id });
+            }
+            if(!id){
+                form = await formFieldApi.getForm({ endpoint: formFieldApi.endpoints.formCreate, formName: 'form-field' });
+            } 
+            
+            if(form){
+                if(isFormType(form)){
+                    if(JSON.stringify(form) !== JSON.stringify(form)){
                         setFormContext(form)
                     }
-                    if(!isFormType(form)){
-                        setFormContext(convertToFormType(form))
+                }
+                if(!isFormType(form)){
+                    const convertedToFormType = convertToFormType(form)
+                    if(JSON.stringify(convertedToFormType) !== JSON.stringify(form)){
+                        setFormContext(convertedToFormType)
                     }
-                } 
-                setIsLoadingContext({isLoading: false})
-            } catch (error) {
-                setIsLoadingContext({isLoading: false})
-                if (error instanceof Error) { 
-                    warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
-                } else {
-                    errorAlert("Caught unknown error.")
-                }    
-            }   
-        }
-        getForm()
+                }
+            } 
+            setIsLoadingContext({isLoading: false})
+        } catch (error) {
+            setIsLoadingContext({isLoading: false})
+            if (error instanceof Error) { 
+                warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
+            } else {
+                errorAlert("Caught unknown error.")
+            }    
+        }   
+    }
+
+    useEffect(() => {
+        getFormContext()
     },[])
+
     return (
         <FormContext.Provider 
             value={{
@@ -95,7 +109,10 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
                 activeTab: mainTabsContext.activeTab,
                 closeFormTab,
                 isLoading,
+                setShowModalFormContext,
+                showModalForm,
                 setIsLoadingContext,
+                getFormContext,
                 successAlert,
                 warningAlert,
                 errorAlert

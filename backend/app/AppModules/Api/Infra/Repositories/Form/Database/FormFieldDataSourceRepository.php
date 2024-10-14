@@ -3,6 +3,7 @@
 namespace App\AppModules\Api\Infra\Repositories\Form\Database;
 use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
 use App\AppModules\Api\Infra\Models\EloquentORM\Event;
+use App\AppModules\Api\Infra\Models\EloquentORM\Form;
 use App\AppModules\Api\Infra\Models\EloquentORM\FormFieldOption as FormFieldOptionModel;
 
 class FormFieldDataSourceRepository {
@@ -39,6 +40,22 @@ class FormFieldDataSourceRepository {
                     'value' => $event['id'],
                 ]);
             }, Event::all()->toArray()
+        );
+    }
+
+    public static function getFormOptions()
+    {
+        return 
+        array_map(
+            function($event){
+                return 
+                new FormFieldOptionDto([
+                    'id' => $event['id'],
+                    'form_field_id' => 0,
+                    'name' => $event['name'],
+                    'value' => $event['id'],
+                ]);
+            }, Form::all()->toArray()
         );
     }
 }

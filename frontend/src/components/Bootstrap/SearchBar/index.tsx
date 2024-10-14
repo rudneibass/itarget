@@ -23,9 +23,9 @@ export default function Index({actions, additionalComponents} : SearchBarPropsTy
     <section>
       <div className="d-flex">
         
-        <div className="width-100 d-flex p-2" style={{justifyContent: additionalComponents && additionalComponents.length > 1 ? 'space-between' : 'end' }}>
+        <div className="width-100 d-flex" >
             {additionalComponents &&  additionalComponents.map((item) => (
-              <div className="d-flex pr-2">
+              <div className="d-flex mb-3">
                 {item}
               </div>
             ))}

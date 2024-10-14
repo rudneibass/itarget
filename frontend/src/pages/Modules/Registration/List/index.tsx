@@ -68,17 +68,17 @@ export default function Index() {
   const listTableProps = {
     data: {
       thead: [
-        {name: 'id', displayName: 'ID'},
-        {name: 'name', displayName: 'Nome'},
+        {name: 'id', displayName: 'ID', style: {width: '10%'}},
+        {name: 'name', displayName: 'Nome', style: {width: '20%'}},
         {name: 'email', displayName: 'Email'},
         {name: 'cpf', displayName: 'Cpf'}
       ],
       tbody: context.state.data?.map((item) => { 
         return {
-          id: item.id.toString(),
-          name: item.name.toString(),
-          email: item.email.toString(),
-          cpf: item.cpf.toString()
+          id: { value: item.id.toString(), node: <span className='text-muted'>{item.id.toString()}</span>, render: true },
+          name: { value: item.name.toString(), node: item.name.toString(), render: true },
+          email: { value: item.email.toString(), node: <span className='text-muted'>{item.email.toString()}</span>, render: true },
+          cpf: { value: item.cpf.toString(), node: <span className='text-muted'>{item.cpf.toString()}</span>, render: true },
         }
       })
     },

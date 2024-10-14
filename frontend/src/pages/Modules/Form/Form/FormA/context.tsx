@@ -59,10 +59,10 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
                 let form
                 setIsLoadingContext({isLoading: true})
                 if(!id){
-                    form = await formApi.getForm({ endpoint: formApi.endpoints.create, formName: 'form' });
+                    form = await formApi.getForm({ endpoint: formApi.endpoints.formCreate, formName: 'form' });
                 }
                 if(id){ 
-                    form = await formApi.getFormWithValues({endpoint: formApi.endpoints.edit, id: id, formName: 'form' })
+                    form = await formApi.getFormWithValues({endpoint: formApi.endpoints.formEdit, id: id, formName: 'form' })
                 }
                 if(form){
                     if(isFormType(form)){
