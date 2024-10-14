@@ -6,8 +6,8 @@ import CustomCard from '@components/Bootstrap/CustomCard'
 import { FormContextProvider as FormAContextProvider } from './FormA/context'
 import FormA from './FormA/index'
 
-import { FormContextProvider as FormBContextProvider} from './FormB/context'
-import FormB from './FormB/index'
+import { FormContextProvider as FormBContextProvider } from './FormB/Form/context'
+import FormB from './FormB/Form/index'
 
 export default function Index({ id }: { id?: string }) {
   const customCardProps = {
@@ -57,10 +57,11 @@ export default function Index({ id }: { id?: string }) {
             title={<><i className="fs-6 bi-grid"></i> Campos</>} 
             style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
           >
+
             <FormBContextProvider id={id}>
-              <FormB />
+              <FormB id={id}/>
             </FormBContextProvider>
-            
+
           </Tab>
 
         </Tabs>

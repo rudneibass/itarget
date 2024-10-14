@@ -6,9 +6,6 @@ import CustomCard from '@components/Bootstrap/CustomCard'
 import { FormContextProvider as FormAContext } from './FormA/context'
 import FormA from './FormA/index'
 
-import { FormContextProvider as FormBContext } from './FormB/context'
-import FormB from './FormB/index'
-
 export default function Index({ id }: { id?: string }) {
 
   const customCardProps = {
@@ -51,16 +48,6 @@ export default function Index({ id }: { id?: string }) {
               <FormA />
             </FormAContext>
 
-          </Tab>
-          <Tab 
-            eventKey="tab-b" 
-            title={ <><i className="fs-6 bi-files"></i> Anexos </> }
-            style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
-           >
-            <FormBContext id={id}>
-              <FormB />
-            </FormBContext>
-            
           </Tab>
         </Tabs>
       </CustomCard>

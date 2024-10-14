@@ -1,5 +1,4 @@
 import CustomCard from '@components/Bootstrap/CustomCard'
-import InputSelectSearchable from '@components/Bootstrap/Form/InputSelectSearchable'
 
 export default function index() {
     const customCardProps = {
@@ -20,21 +19,9 @@ export default function index() {
         }
       }
     
-    const InputSelectSearchableProps = {
-      data: {
-        id: '1',
-        dataSource: 'http://127.0.0.1:8000/api/registration/search',
-        attributes: {
-          name: 'input-name',
-          id: 'input_id',
-          label: 'Label'
-        }
-      },
-    }
   return (
     <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={customCardProps.additionalComponents} styles={customCardProps.styles}>
         <span className='text-muted'>Seja bem vindo.</span>
-        <InputSelectSearchable data={InputSelectSearchableProps.data} />
     </CustomCard>
   )
 }

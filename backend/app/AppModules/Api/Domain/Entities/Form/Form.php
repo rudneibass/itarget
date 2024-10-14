@@ -9,6 +9,7 @@ use Exception;
 class Form extends EntityBase {
     const NAME_FORM_REGISTRATION = 'registration';
     const NAME_FORM_FORM = 'form';
+    const NAME_FORM_FIELD = 'form-field';
     
     private string $name;
     private ?array $attributes;

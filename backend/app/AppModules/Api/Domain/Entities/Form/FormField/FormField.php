@@ -9,6 +9,7 @@ class FormField extends EntityBase {
     private string $formId;
     private string $name;
     private array $attributes;
+    private ?string $order = 'Não ordenado';
     private ?string $rules;
 
     public function __construct(FormFieldDto $dto) {
@@ -18,6 +19,7 @@ class FormField extends EntityBase {
         $this->rules = $dto->rules ?? null;
 
         if(isset($dto->id)){ $this->id = $dto->id; }
+        if(isset($dto->order)){ $this->order = $dto->order; }
     }
     
     public function toArray() {
@@ -44,6 +46,14 @@ class FormField extends EntityBase {
     }
     public function setName(string $name) {
         $this->name = $name;
+    }
+
+
+    public function getOrder(): string {
+        return $this->order;
+    }
+    public function setOrder(string $order) {
+        $this->name = $order;
     }
 
 

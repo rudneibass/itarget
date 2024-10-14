@@ -30,10 +30,15 @@ class FormRepository implements FormRepositoryInterface {
         
         $form = $this->formModel::where('id', $id)->first();
         if (!$form) { $form = $this->formModel::where('name', $id)->first(); }
-        if (!$form) { throw new Exception("Form not found"); }
+        if (!$form) { throw new Exception("Não foi possivel localizar formulário com id ou nome = '".$id."'"); }
 
         $form->attributes = json_decode($form->attributes, true);
-        $fields = $this->formFieldModel::where('form_id', $form->id)->get()->toArray();
+        $fields = $this->formFieldModel::where('form_id', $form->id)
+        ->orderBy('order', 'asc')
+        ->orderBy('name', 'asc')
+        ->orderBy('id', 'asc')
+        ->get()
+        ->toArray();
         $fieldsDto = array_map(function ($field) {
             return new FormFieldDto([
                 'id' => (string) $field['id'],

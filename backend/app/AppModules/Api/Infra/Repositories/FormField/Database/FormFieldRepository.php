@@ -22,7 +22,8 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
             WHERE 1 = 1"
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
             .(isset($params['name']) && !empty($params['name']) ? " AND name like '%{$params['name']}%'" : "" )
-            .(isset($params['order']) && !empty($params['order']) ? " ORDER BY {$params['order']}" : " ORDER BY id" )
+            .(isset($params['form_id']) && !empty($params['form_id']) ? " AND form_id = {$params['form_id']}" : "" )
+            .(isset($params['order']) && !empty($params['order']) ? " ORDER BY {$params['order']}" : " ORDER BY 'order'" )
             .(isset($params['limit']) && !empty($params['limit']) ? " LIMIT {$params['limit']}" : "" )
             .(isset($params['offset']) && !empty($params['offset']) ? " OFFSET {$params['offset']}" : "" );
 
@@ -33,6 +34,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                     'id' => $item->id,
                     'formId' => $item->form_id,
                     'name' => $item->name,
+                    'order' => $item->order,
 		            'rules' => $item->rules,
                     'attributes' => json_decode($item->attributes, true)
                 ]

@@ -1,9 +1,16 @@
 import { ReactNode, useState } from "react";
 
+
 type ListTableType = {
   data:{ 
-    tbody: Array<Record<string, string>> | undefined,
-    thead?: Array<{ name: string; displayName: string }>;
+    thead?: Array<{ name: string; displayName: string, style?: Record<string, string>}>;
+    tbody: Array<{
+      [key: string]: {
+        value: string ;
+        node: ReactNode;
+        render: boolean;
+      };
+    }> | undefined,
   },
   actions?: {
     handleEditAction?: (itemId: string) => void,
@@ -56,7 +63,7 @@ export default function ListTable({ data, actions } : ListTableType) {
                 {data.thead.map((item, index) => (
                   <th key={index}
                     onClick={() => handleSort(item.name)}
-                    style={{cursor: 'pointer', width: item.name === 'id'? '10%' : 'auto'}}
+                    style={{ ...item.style, cursor: 'pointer' }}
                   >
                     <span>{item.displayName}</span>
                     <i
@@ -80,45 +87,51 @@ export default function ListTable({ data, actions } : ListTableType) {
             {data.tbody && data.tbody.length > 0 &&
               data.tbody.map((item, index) => (
               <tr key={index}>
-                {Object.keys(item).map((objectKeys, index) => (
-                  <td key={index}>{item[objectKeys]}</td>
+                
+                {Object.keys(item).map((key, index) => (
+                  item[key].render && ( 
+                    <td key={index}>{item[key].node || item[key].value}</td>
+                  )
                 ))}
+
                 {actions && (
                     <td style={{textAlign: 'center', maxWidth: '6vw'}}>
-                      {actions.handleDeleteAction && (
-                        <>
-                          <button
-                            type="button"
-                            className="btn btn-danger btn-sm mr-2"
-                            onClick={() => handleDelete(item.id)}
-                          >
-                            <i className="bi bi-trash" />
-                          </button>&emsp;
-                        </>
-                      )}
-                      {actions.handleActiveAction && (
-                        <>
-                          <button
-                            type="button"
-                            className="btn btn-primary btn-sm mr-2"
-                            onClick={() => handleActive(item.id)}
-                          >
-                            <i className="bi bi-check" />
-                          </button>
-                          &emsp;
-                        </>
-                      )}
-                      {actions.handleEditAction && (
-                        <>
-                          <button
-                            type="button"
-                            className="btn btn-warning btn-sm"
-                            onClick={() => handleEdit(item.id)}
-                          >
-                            <i className="bi bi-pencil" />
-                          </button>&emsp;
-                        </>
-                      )}
+                      <center>
+                        {actions.handleDeleteAction && (
+                          <>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-sm mr-2"
+                              onClick={() => handleDelete(item.id.value)}
+                            >
+                              <i className="bi bi-trash" />
+                            </button>&emsp;
+                          </>
+                        )}
+                        {actions.handleActiveAction && (
+                          <>
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-sm mr-2"
+                              onClick={() => handleActive(item.id.value)}
+                            >
+                              <i className="bi bi-check" />
+                            </button>
+                            &emsp;
+                          </>
+                        )}
+                        {actions.handleEditAction && (
+                          <>
+                            <button
+                              type="button"
+                              className="btn btn-warning btn-sm"
+                              onClick={() => handleEdit(item.id.value)}
+                            >
+                              <i className="bi bi-pencil" />
+                            </button>
+                          </>
+                        )}
+                      </center>
                     </td>
                   )}
               </tr>
