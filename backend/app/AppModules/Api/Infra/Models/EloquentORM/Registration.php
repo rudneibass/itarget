@@ -14,6 +14,7 @@ class Registration extends Model
     protected $casts = [
         'id' => 'string',
         'event_id' => 'string',
-        'registration_id' => 'string'
+        'registration_id' => 'string',
+        'cpf' => 'string'
     ];
 }

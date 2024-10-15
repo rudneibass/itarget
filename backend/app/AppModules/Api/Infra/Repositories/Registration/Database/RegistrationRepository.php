@@ -87,9 +87,9 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
                     'id' => (string) $item->id,
                     'event_id' => (string) $item->event_id,
                     'registration_id' => (string) $item->registration_id,
+                    'cpf' => (string) $item->cpf,
                     'name' => $item->name,
                     'email' => $item->email,
-                    'cpf' => $item->cpf,
                     'published' => $item->published ? true : false
                 ]
             ));
@@ -111,9 +111,9 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
                     'id' => (string) $item->id,
                     'event_id' => (string) $item->event_id,
                     'registration_id' => (string) $item->registration_id,
+                    'cpf' => (string) $item->cpf,
                     'name' => $item->name,
                     'email' => $item->email,
-                    'cpf' => $item->cpf,
                     'published' => $item->published ? true : false
                 ]
             ));

@@ -31,8 +31,8 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
             return 
             new FormField(
                 new FormFieldDto([
-                    'id' => $item->id,
-                    'formId' => $item->form_id,
+                    'id' => (string) $item->id,
+                    'formId' => (string) $item->form_id,
                     'name' => $item->name,
                     'order' => $item->order,
 		            'rules' => $item->rules,
@@ -47,8 +47,8 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
         if(!$formField){ throw new Exception('Não foi possivel localizar campo com id = '.$id); }
         return new FormField(
             new FormFieldDto([
-                'id' => $formField['id'],
-                'form_Id' => $formField['form_id'],
+                'id' => (string) $formField['id'],
+                'form_Id' => (string) $formField['form_id'],
                 'name' => $formField['name'],
                 'attributes' => json_decode($formField['attributes'], true)
             ])

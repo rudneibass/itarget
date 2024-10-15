@@ -2,13 +2,15 @@ import axios from 'axios'
 import { utils } from '../utils';
 
 const api = axios.create({
-  //baseURL: import.meta.env.VITE_APP_BASE_URL
-  baseURL: 'http://127.0.0.1:8000/api/' 
+  baseURL: import.meta.env.VITE_APP_BASE_URL
 })
-
 
 function resolvePath(urlPath: string){
   return urlPath.split('/')[1]
+}
+
+function removeSlashFromEndOfUrl(url: string){
+  return url.endsWith('/') ? url.slice(0, -1) : url;
 }
 
 async function executeRequest(requestFunction: () => Promise<unknown>): Promise<unknown> {
@@ -80,23 +82,6 @@ async function getFormWithFieldsAndValues({ endpoint, formName, id } : { endpoin
   })
 }
 
-/*
-async function getForm({ endpoint, formName } : { endpoint: string, formName?: string }){
-  return await executeRequest(async () => {
-    const formIdentifyer = formName || ''
-    const response = await api.get(`${endpoint}${formIdentifyer}`)
-    return response.data
-  })
-}
-
-async function getFormWithValues({ endpoint, id } : { endpoint: string, id: string }){
-  return await executeRequest(async () => {
-    const response = await api.get(`${endpoint}${id}`)
-    return response.data
-  })
-}*/
-
-
 async function getForm({ endpoint, formName } : { endpoint: string, formName?:string }) {
   return await executeRequest(async () => {
     const form_name = formName || ''
@@ -113,16 +98,16 @@ async function getFormWithValues({ endpoint, formName, id } : { endpoint: string
 }
 
 const defaultActions = {
-  list: "list/",
-  get: "get/",
-  create: "create/",
-  edit: "edit/",
-  update: "update/",
-  delete: "delete/",
-  search: "search/",
-  paginate: "paginate/",
-  formCreate: "form/create/",
-  formEdit: "form/edit/"
+  list: "list",
+  get: "get",
+  create: "create",
+  edit: "edit",
+  update: "update",
+  delete: "delete",
+  search: "search",
+  paginate: "paginate",
+  formCreate: "form/create",
+  formEdit: "form/edit"
 }
 
 export const baseApi = {
