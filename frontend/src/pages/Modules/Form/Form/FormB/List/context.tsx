@@ -1,5 +1,5 @@
 import { createContext, useState,useContext, useEffect } from  "react"
-import { isPaginatedListType, PaginatedListLinksType, ListContextType } from "./types"
+import { isPaginatedListType, PaginatedListLinksType, ListContextType, isObject } from "./types"
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
 import { errorAlert, HtmlContent, toastContainer, warningAlertWithHtmlContent } from "@components/Toastify"
 import { formFieldApi } from "@services/backendApi/formFieldApi"
@@ -16,10 +16,6 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
     const mainTabsContext = useMainTabsContext()
     function renderFormTab({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }){
         mainTabsContext.handleAddTab({ title, eventKey, content })
-    }
-    
-    function isObject(value: unknown): value is Record<string, unknown> {
-        return value !== null && typeof value === 'object' && !Array.isArray(value);
     }
 
     const [state, setState] = useState({
