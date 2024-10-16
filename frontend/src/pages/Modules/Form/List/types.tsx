@@ -1,7 +1,11 @@
 export interface ListContextType  {
-  state: { data: ListType[] | undefined, paginationLinks: Array<PaginatedListLinksType>, isLoading: boolean },
-  setStateContext: ({data, paginationLinks, isLoading }: {data: [], paginationLinks: Array<PaginatedListLinksType>,  isLoading?: boolean}) => void,
-  renderFormTab: ({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }) => void,
+  state: { data: ListType[] | undefined, paginationLinks: Array<PaginatedListLinksType>, isLoading: boolean }
+  setStateContext: ({data, paginationLinks, isLoading }: {data: [], paginationLinks: Array<PaginatedListLinksType>,  isLoading?: boolean}) => void
+  renderFormTab: ({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }) => void
+  handleSearchContext: (searchParams?: object) => void
+  handleDeleteContext: (itemId: string) => void
+  handleActiveContext: (itemId: string) => void
+  handleSortContext: (sortBy: string, sortDirection: string) => void
 }
 
 export type ListType = {
@@ -79,5 +83,6 @@ export function isPaginatedListType(data: unknown): data is PaginatedListType {
   );
 }
 
-
-
+export function isObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}

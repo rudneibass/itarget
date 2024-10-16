@@ -1,5 +1,4 @@
-import { endpoints } from '@utils/endpoints'
-import { registrationApi } from '@services/backendApi/registrationApi'
+import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
 import { useListContext } from './context'
 
 import CustomCard from '@components/Bootstrap/CustomCard'
@@ -8,10 +7,8 @@ import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 
-import { isObject } from '@utils/isObject'
 import RegistrationForm from '@pages/Modules/Registration/Form'
 
-import { isPaginatedListType, PaginatedListLinksType } from "./types"
 
 export default function Index() {  
   const context = useListContext()
@@ -54,12 +51,7 @@ export default function Index() {
     data: {},
     actions: {
       handleSearchAction: async (searchParams: object) => {
-        const response = await registrationApi.search(`${endpoints.registration.endpoint}${endpoints.registration.actions.search}`, searchParams)
-        if(response && isObject(response) && response.data){
-          if(isPaginatedListType(response.data)){
-            context.setStateContext({data: response.data.data, paginationLinks: response.data.links})
-          }
-      }
+        context.handleSearchContext(searchParams)
       },   
     },
     additionalComponents: []
@@ -68,17 +60,33 @@ export default function Index() {
   const listTableProps = {
     data: {
       thead: [
-        {name: 'id', displayName: 'ID', style: {width: '10%'}},
-        {name: 'name', displayName: 'Nome', style: {width: '20%'}},
-        {name: 'email', displayName: 'Email'},
-        {name: 'cpf', displayName: 'Cpf'}
+        { name: 'id', displayName: 'ID', style: {width: '10%'} },
+        { name: 'name', displayName: 'Nome', style: {width: '20%'} },
+        { name: 'email', displayName: 'Email' },
+        { name: 'cpf', displayName: 'Cpf' }
       ],
       tbody: context.state.data?.map((item) => { 
         return {
-          id: { value: item.id.toString(), node: <span className='text-muted'>{item.id.toString()}</span>, render: true },
-          name: { value: item.name.toString(), node: item.name.toString(), render: true },
-          email: { value: item.email.toString(), node: <span className='text-muted'>{item.email.toString()}</span>, render: true },
-          cpf: { value: item.cpf.toString(), node: <span className='text-muted'>{item.cpf.toString()}</span>, render: true },
+          id: { 
+            value: item.id.toString(), 
+            node: <span className='text-muted'>{item.id.toString()}</span>, 
+            render: true 
+          },
+          name: { 
+            value: item.name.toString(), 
+            node: item.name.toString(), 
+            render: true 
+          },
+          email: { 
+            value: item.email.toString(), 
+            node: <span className='text-muted'>{item.email.toString()}</span>, 
+            render: true 
+          },
+          cpf: { 
+            value: item.cpf.toString(), 
+            node: <span className='text-muted'>{item.cpf.toString()}</span>, 
+            render: true 
+          },
         }
       })
     },
@@ -91,14 +99,14 @@ export default function Index() {
         })
       },
       handleDeleteAction: (itemId: string) => {
-        alert('Delete item '+itemId)
+        context.handleDeleteContext(itemId)
       },
       handleActiveAction: (itemId: string) => {
-        alert('Active item '+itemId)
+        context.handleActiveContext(itemId)
       },
       handleSortAction: (sortBy: string, sortDirection: string) => {
-        alert('Sort by '+sortBy+' '+sortDirection)
-      }  
+        context.handleSortContext(sortBy, sortDirection)
+      }   
     },
     additionalComponents: []
   }
@@ -106,7 +114,7 @@ export default function Index() {
   const paginationBarProps = {
     data: {paginationLinks: context.state.paginationLinks},
     actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: PaginatedListLinksType[] }) => {
+      handlePaginateAction: ({ data, paginationLinks } : { data:[], paginationLinks: LaravelPaginationLinksType[] }) => {
         context.setStateContext({ data, paginationLinks })
       }   
     },
@@ -121,28 +129,26 @@ export default function Index() {
         additionalComponents={customCardProps.additionalComponents} 
         styles={customCardProps.styles}
       >
+        <SearchBar 
+          data={searchBarProps.data} 
+          actions={searchBarProps.actions} 
+          additionalComponents={searchBarProps.additionalComponents} 
+        />
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>
-            <SearchBar 
-              data={searchBarProps.data} 
-              actions={searchBarProps.actions} 
-              additionalComponents={searchBarProps.additionalComponents} 
-            />
-
             <ListTable 
               data={listTableProps.data} 
               actions={listTableProps.actions} 
               additionalComponents={listTableProps.additionalComponents} 
             />
+            <PaginationBar 
+              data={paginationBarProps.data} 
+              actions={paginationBarProps.actions} 
+              additionalComponents={paginationBarProps.additionalComponents}
+            />
           </>
-        ) }
-          
-        <PaginationBar 
-          data={paginationBarProps.data} 
-          actions={paginationBarProps.actions} 
-          additionalComponents={paginationBarProps.additionalComponents}
-        />
+        )}
       </CustomCard>
     </>
   )

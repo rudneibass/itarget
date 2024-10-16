@@ -14,6 +14,10 @@ export interface ListContextType  {
     showModalForm
   } : { data?: [], formId?: string, paginationLinks?: Array<PaginatedListLinksType>,  isLoading?: boolean, showModalForm?: boolean }) => void,
   renderFormTab: ({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }) => void,
+  handleSearchContext: (searchParams?: object) => void
+  handleDeleteContext: (itemId: string) => void
+  handleActiveContext: (itemId: string) => void
+  handleSortContext: (sortBy: string, sortDirection: string) => void
 }
 
 export type ListType = {

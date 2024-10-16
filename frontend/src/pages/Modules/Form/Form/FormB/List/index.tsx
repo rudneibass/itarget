@@ -1,17 +1,12 @@
-import { registrationApi } from '@services/backendApi/registrationApi'
-import { useListContext } from './context'
 
+import { useListContext } from './context'
 import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
-import { isObject } from '@utils/isObject'
-import { isPaginatedListType } from './types'
+import { useFormContext } from '../Form/context'
 
 import SearchBar from '@components//Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
-import { formFieldApi } from '@services/backendApi/formFieldApi'
-
-import { useFormContext } from '../Form/context'
 
 export default function Index() {  
   const formContext = useFormContext()
@@ -23,13 +18,7 @@ export default function Index() {
     actions: {
       handleSearchAction: async (searchParams: object) => {
         if(context.state.formId){
-          const params = {...searchParams, form_id: context.state.formId }
-          const response = await registrationApi.search(formFieldApi.endpoints.search, params)
-          if(response && isObject(response) && response.data){
-            if(isPaginatedListType(response.data)){
-              context.setStateContext({data: response.data.data, paginationLinks: response.data.links})
-            }
-          }
+          context.handleSearchContext(searchParams)
         }
       },   
     },
@@ -69,13 +58,13 @@ export default function Index() {
         formContext.setShowModalFormContext(true)
       },
       handleDeleteAction: (itemId: string) => {
-        alert('Delete item '+itemId)
+        context.handleDeleteContext(itemId)
       },
       handleActiveAction: (itemId: string) => {
-        alert('Active item '+itemId)
+        context.handleActiveContext(itemId)
       },
       handleSortAction: (sortBy: string, sortDirection: string) => {
-        alert('Sort by '+sortBy+' '+sortDirection)
+        context.handleSortContext(sortBy, sortDirection)
       }
     },
     additionalComponents: []
@@ -94,27 +83,26 @@ export default function Index() {
 
   return (
     <>
+      <SearchBar 
+        data={searchBarProps.data} 
+        actions={searchBarProps.actions} 
+        additionalComponents={searchBarProps.additionalComponents} 
+      />
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>
-            <SearchBar 
-              data={searchBarProps.data} 
-              actions={searchBarProps.actions} 
-              additionalComponents={searchBarProps.additionalComponents} 
-            />
             <ListTable 
               data={listTableProps.data} 
               actions={listTableProps.actions} 
               additionalComponents={listTableProps.additionalComponents} 
             />
+            <PaginationBar 
+              data={paginationBarProps.data} 
+              actions={paginationBarProps.actions} 
+              additionalComponents={paginationBarProps.additionalComponents}
+            />
           </>
-        ) }
-          
-        <PaginationBar 
-          data={paginationBarProps.data} 
-          actions={paginationBarProps.actions} 
-          additionalComponents={paginationBarProps.additionalComponents}
-        />
+        )}
     </>
   )
 }

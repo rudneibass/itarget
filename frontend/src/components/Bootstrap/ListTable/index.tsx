@@ -95,43 +95,41 @@ export default function ListTable({ data, actions } : ListTableType) {
                 ))}
 
                 {actions && (
-                    <td style={{textAlign: 'center', maxWidth: '6vw'}}>
-                      <center>
-                        {actions.handleDeleteAction && (
-                          <>
-                            <button
-                              type="button"
-                              className="btn btn-danger btn-sm mr-2"
-                              onClick={() => handleDelete(item.id.value)}
-                            >
-                              <i className="bi bi-trash" />
-                            </button>&emsp;
-                          </>
-                        )}
-                        {actions.handleActiveAction && (
-                          <>
-                            <button
-                              type="button"
-                              className="btn btn-primary btn-sm mr-2"
-                              onClick={() => handleActive(item.id.value)}
-                            >
-                              <i className="bi bi-check" />
-                            </button>
-                            &emsp;
-                          </>
-                        )}
-                        {actions.handleEditAction && (
-                          <>
-                            <button
-                              type="button"
-                              className="btn btn-warning btn-sm"
-                              onClick={() => handleEdit(item.id.value)}
-                            >
-                              <i className="bi bi-pencil" />
-                            </button>
-                          </>
-                        )}
-                      </center>
+                    <td style={{ textAlign: 'center', maxWidth: '6vw', verticalAlign: 'middle'}}>
+                      {actions.handleDeleteAction && (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm mr-2"
+                            onClick={() => handleDelete(item.id.value)}
+                          >
+                            <i className="bi bi-trash" />
+                          </button>&emsp;
+                        </>
+                      )}
+                      {actions.handleActiveAction && (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm mr-2"
+                            onClick={() => handleActive(item.id.value)}
+                          >
+                            <i className="bi bi-check" />
+                          </button>
+                          &emsp;
+                        </>
+                      )}
+                      {actions.handleEditAction && (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-warning btn-sm"
+                            onClick={() => handleEdit(item.id.value)}
+                          >
+                            <i className="bi bi-pencil" />
+                          </button>
+                        </>
+                      )}
                     </td>
                   )}
               </tr>

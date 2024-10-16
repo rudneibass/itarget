@@ -44,9 +44,7 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         try {
             if(formId){
                 setStateContext({ ...state, isLoading: true })
-
                 const response = await formFieldApi.search(`${formFieldApi.endpoints.search}`, { form_id: formId })                
-
                 if(response && isObject(response) && response.data){
                     if(isPaginatedListType(response.data)){ 
                         if(JSON.stringify(response.data.data) !== JSON.stringify(state.data)){
@@ -59,11 +57,8 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
                     }
                 }
             }
-
         } catch (error) {
-            
             setStateContext({ ...state, isLoading: false})
-
             if (error instanceof Error) { 
                 warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
             } else {
@@ -71,6 +66,46 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
             }    
         }   
     }
+
+    async function handleSearchContext(searchParams?: object){
+        try {
+            if(formId){
+                setStateContext({ ...state, isLoading: true })
+                const response = await formFieldApi.search(`${formFieldApi.endpoints.search}`, { ...searchParams, form_id: formId })
+                if(response && isObject(response) && response.data){
+                    if(isPaginatedListType(response.data)){ 
+                        if(JSON.stringify(response.data.data) !== JSON.stringify(state.data)){
+                            setStateContext({
+                                data: response.data.data,
+                                paginationLinks: response.data.links,
+                                isLoading: false
+                            })
+                        }
+                    }
+                }
+            }
+            setStateContext({ isLoading: false })
+        } catch (error) {
+            setStateContext({ isLoading: false})
+            if (error instanceof Error) { 
+                warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
+            } else {
+                errorAlert("Caught unknown error.")
+            }    
+        } 
+    }
+
+    function handleDeleteContext(itemId: string){
+        alert('Delete item '+itemId)
+    }
+
+    function handleActiveContext(itemId: string){
+        alert('Active item '+itemId)
+    }
+
+    function handleSortContext(sortBy: string, sortDirection: string){
+        alert('Sort by '+sortBy+' '+sortDirection)
+    } 
 
     useEffect(() => {
         getList()
@@ -81,7 +116,11 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
             value={{
                     state,
                     setStateContext,
-                    renderFormTab
+                    renderFormTab,
+                    handleSearchContext,
+                    handleActiveContext,
+                    handleDeleteContext,
+                    handleSortContext
                 }}
         >
             { toastContainer }

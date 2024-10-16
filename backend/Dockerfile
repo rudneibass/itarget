@@ -29,3 +29,6 @@ EXPOSE 8080
 
 # Definir o diretório de trabalho
 WORKDIR /var/www
+
+# Definir permissões para as pastas storage e bootstrap
+RUN chmod -R 777 storage bootstrap public
