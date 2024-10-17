@@ -82,14 +82,14 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
     return (
         <ListContext.Provider 
             value={{
-                    state,
-                    setStateContext,
-                    renderFormTab,
-                    handleSearchContext,
-                    handleActiveContext,
-                    handleDeleteContext,
-                    handleSortContext
-                }}
+                state,
+                setStateContext,
+                renderFormTab,
+                handleSearchContext,
+                handleActiveContext,
+                handleDeleteContext,
+                handleSortContext
+            }}
         >
             { toastContainer }
             { children }

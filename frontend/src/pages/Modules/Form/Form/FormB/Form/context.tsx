@@ -39,15 +39,19 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         setIsLoading(isLoading)
     }
 
-   
+    const [recordId, setRecordId] = useState(id)
+    function setRecordIdContext(recordId: string){
+        setRecordId(recordId)
+    }
+
     async function saveForm(inputs: FormInputsType){
         try {
-            if(!id){
+            if(!recordId){
                 await formFieldApi.create(formFieldApi.endpoints.create, inputs)
                 successAlert('Inscrição realizada com sucesso!')
             }
-            if(id){
-                await formFieldApi.update({ endpoint: formFieldApi.endpoints.update , id: id, data: inputs })
+            if(recordId){
+                await formFieldApi.update({ endpoint: formFieldApi.endpoints.update , id: recordId, data: inputs })
                 successAlert('Inscrição atualizada com sucesso!')
             }
         } catch (error) {
@@ -66,9 +70,12 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             
             if(id){
                 form = await formFieldApi.getFormWithValues({ endpoint: formFieldApi.endpoints.formEdit, formName: 'form-field', id: id });
+                setRecordIdContext(id)
             }
+
             if(!id){
                 form = await formFieldApi.getForm({ endpoint: formFieldApi.endpoints.formCreate, formName: 'form-field' });
+                setRecordIdContext('')
             } 
             
             if(form){
