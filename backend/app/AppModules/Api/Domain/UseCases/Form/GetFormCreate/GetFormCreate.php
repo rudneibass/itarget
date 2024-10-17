@@ -18,10 +18,11 @@ class GetFormCreate {
         $fields = 
         array_map(
             function($field) {
-                if (isset($field->attributes['type']) && $field->attributes['type'] === 'select') {
-                    $methodDataSource = $field->attributes['data_source'];
+                $field['attributes'] = json_decode($field['attributes'], true);
+                if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
+                    $methodDataSource = $field['attributes']['data_source'];
                     if (method_exists(FormFieldDataSourceRepository::class, $methodDataSource)) {
-                        $field->options = FormFieldDataSourceRepository::$methodDataSource($field->id);
+                        $field['options'] = FormFieldDataSourceRepository::$methodDataSource($field['id']);
                     }
                 }
                 return $field;
@@ -32,7 +33,7 @@ class GetFormCreate {
         return [
             'id' => $form->id,
             'name' => $form->name,
-            'attributes' => $form->attributes,
+            'attributes' => json_decode($form->attributes, true),
             'fields' =>  $fields
         ];
     }

@@ -13,6 +13,7 @@ $formField = '/formField';
 Route::get($formField.'/list', 'App\AppModules\Api\Infra\Controllers\FormField\ListFormFieldController@index');
 Route::get($formField.'/get/{id}', 'App\AppModules\Api\Infra\Controllers\FormField\GetFormFieldController@index');
 Route::post($formField.'/create', 'App\AppModules\Api\Infra\Controllers\FormField\CreateFormFieldController@index');
+Route::put($formField.'/update/{id}', 'App\AppModules\Api\Infra\Controllers\FormField\UpdateFormFieldController@index');
 Route::post($formField.'/paginate', 'App\AppModules\Api\Infra\Controllers\FormField\PaginateFormFieldController@index');
 Route::get($formField.'/search', 'App\AppModules\Api\Infra\Controllers\FormField\PaginateFormFieldController@index');
 Route::get($formField.'/form/create', 'App\AppModules\Api\Infra\Controllers\FormField\GetFormFieldFormController@index');

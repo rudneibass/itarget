@@ -10,6 +10,6 @@ interface FormFieldRepository extends Repository {
     public function list(): array;
     public function get(string $id): FormField;
     public function delete(string $id): int;
-    public function update(FormField $formField, string $id): int;
+    public function update(FormField $formField, string $id): bool;
     public function findAllByParams(array $params = []): ?array;
 }

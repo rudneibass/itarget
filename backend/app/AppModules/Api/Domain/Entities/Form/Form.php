@@ -12,7 +12,7 @@ class Form extends EntityBase {
     const NAME_FORM_FIELD = 'form-field';
     
     private string $name;
-    private ?array $attributes;
+    private ?string $attributes;
     private ?array $fields;
 
     public function __construct(FormDto $dto) {
@@ -39,11 +39,11 @@ class Form extends EntityBase {
         return $this->name;
     }
 
-    public function setAttributes(array $attributes) {
+    public function setAttributes(string $attributes) {
         $this->attributes = $attributes;
     }
 
-    public function getAttributes(): array {
+    public function getAttributes(): string {
         return $this->attributes;
     }
     

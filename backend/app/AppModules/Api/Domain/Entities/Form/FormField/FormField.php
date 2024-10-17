@@ -8,7 +8,7 @@ class FormField extends EntityBase {
 
     private string $formId;
     private string $name;
-    private array $attributes;
+    private string $attributes;
     private ?string $order = 'Não ordenado';
     private ?string $rules;
 
@@ -24,7 +24,7 @@ class FormField extends EntityBase {
     
     public function toArray() {
         return [
-            'id' => $this->Id,
+            //'id' => $this->id ?? null,
             'form_id' => $this->formId,
             'name' => $this->name,
             'display_name' => $this->displayName,
@@ -57,10 +57,10 @@ class FormField extends EntityBase {
     }
 
 
-    public function getAttributes(): array {
+    public function getAttributes(): string {
         return $this->attributes;
     }
-    public function setAttributes(array $attributes) {
+    public function setAttributes(string $attributes) {
         $this->attributes = $attributes;
     }
 

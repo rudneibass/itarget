@@ -15,21 +15,25 @@ class GetRegistrationForm {
 
     public function execute(){
         $form = $this->repository->get(Form::NAME_FORM_REGISTRATION);
-        $fields = array_map(function($field) {
-            if (isset($field->attributes['type']) && $field->attributes['type'] === 'select') {
-                
-                $methodDataSource = $field->attributes['data_source'];
-                if (method_exists(FormFieldDataSourceRepository::class, $methodDataSource)) {
-                    $field->options = FormFieldDataSourceRepository::$methodDataSource($field->id);
+        $fields = 
+        array_map(
+            function($field) {
+                $field['attributes'] = json_decode($field['attributes'], true);
+                if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
+                    $methodDataSource = $field['attributes']['data_source'];
+                    if (method_exists(FormFieldDataSourceRepository::class, $methodDataSource)) {
+                        $field['options'] = FormFieldDataSourceRepository::$methodDataSource($field['id']);
+                    }
                 }
-            }
-            return $field;
-        }, $form->fields);
+                return $field;
+            }, 
+            $form->fields
+        );
         
         return [
             'id' => $form->id,
             'name' => $form->name,
-            'attributes' => $form->attributes,
+            'attributes' => json_decode($form->attributes, true),
             'fields' =>  $fields
         ];
     }

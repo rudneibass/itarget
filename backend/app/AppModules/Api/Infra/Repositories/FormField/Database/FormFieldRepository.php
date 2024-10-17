@@ -36,7 +36,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                     'name' => $item->name,
                     'order' => $item->order,
 		            'rules' => $item->rules,
-                    'attributes' => json_decode($item->attributes, true)
+                    'attributes' => $item->attributes
                 ]
             ));
         }, DB::select($query));
@@ -50,7 +50,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                 'id' => (string) $formField['id'],
                 'form_Id' => (string) $formField['form_id'],
                 'name' => $formField['name'],
-                'attributes' => json_decode($formField['attributes'], true)
+                'attributes' => $formField['attributes']
             ])
         );
     }
@@ -61,7 +61,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                 'id' => $formField['id'],
                 'form_Id' => $formField['form_field_id'],
                 'name' => $formField['name'],
-                'attributes' => json_decode($formField['attributes'], true)
+                'attributes' => $formField['attributes']
             ]);
         }, $this->model::all()->toArray());
     }
@@ -70,8 +70,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
     public function create(FormField $formField): ?FormField {
         $formFieldModel = $this->model::
         create([
-            'id' => $formField->id,
-            'form_Id' => $formField->form_Id,
+            'form_Id' => $formField->formId,
             'name' => $formField->name,
 		    'attributes' => $formField->attributes,
 		    'rules' => $formField->rules
@@ -83,7 +82,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                 'form_Id' => $formFieldModel->form_Id,
                 'name' => $formFieldModel->name,
 		        'rules' => $formFieldModel->rules,
-                'attributes' => json_decode($formFieldModel->attributes, true)
+                'attributes' => $formFieldModel->attributes
             ])
         );
     }
@@ -103,13 +102,13 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                     'form_Id' => $item->form_Id,
                     'name' => $item->name,
 		            'rules' => $item->rules,
-                    'attributes' => json_decode($item->attributes, true)
+                    'attributes' => $item->attributes
                 ]
             ));
         }, DB::select($query));
     }
 
-    public function update(FormField $formField, string $id): int {
+    public function update(FormField $formField, string $id): bool {
         return $this->model::findOrFail($id)->update($formField->toArray());
     }
 

@@ -48,11 +48,11 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         try {
             if(!recordId){
                 await formFieldApi.create(formFieldApi.endpoints.create, inputs)
-                successAlert('Inscrição realizada com sucesso!')
+                successAlert('Operação realizada com sucesso!')
             }
             if(recordId){
                 await formFieldApi.update({ endpoint: formFieldApi.endpoints.update , id: recordId, data: inputs })
-                successAlert('Inscrição atualizada com sucesso!')
+                successAlert('Operação realizada com sucesso!')
             }
         } catch (error) {
             if (error instanceof Error) {

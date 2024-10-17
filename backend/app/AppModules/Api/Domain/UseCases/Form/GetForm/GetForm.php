@@ -17,7 +17,7 @@ class GetForm {
         return [
             'id' => $form->id,
             'name' => $form->name,
-            'attributtes' => $form->attributes,
+            'attributtes' => json_decode($form->attributes, true),
             'fields' => array_map(function($field){
                 return $field;
             }, $form->fields)
