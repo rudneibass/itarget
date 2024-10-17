@@ -3,8 +3,7 @@ import { isPaginatedListType, PaginatedListLinksType, ListContextType, isObject 
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
 import { errorAlert, HtmlContent, toastContainer, warningAlertWithHtmlContent } from "@components/Toastify"
 import { formFieldApi } from "@services/backendApi/formFieldApi"
-
-
+  
 export const ListContext = createContext<ListContextType>({} as ListContextType)
 
 export const useListContext = () => {
@@ -36,37 +35,10 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         }));
     }
 
-    async function getList(){
-        try {
-            if(formId){
-                setStateContext({ ...state, isLoading: true })
-                const response = await formFieldApi.search(`${formFieldApi.endpoints.search}`, { form_id: formId })                
-                if(response && isObject(response) && response.data){
-                    if(isPaginatedListType(response.data)){ 
-                        if(JSON.stringify(response.data.data) !== JSON.stringify(state.data)){
-                            setStateContext({
-                                data: response.data.data,
-                                paginationLinks: response.data.links,
-                                isLoading: false
-                            })
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            setStateContext({ ...state, isLoading: false})
-            if (error instanceof Error) { 
-                warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
-            } else {
-                errorAlert("Caught unknown error.")
-            }    
-        }   
-    }
-
     async function handleSearchContext(searchParams?: object){
         try {
             if(formId){
-                setStateContext({ ...state, isLoading: true })
+                setStateContext({ isLoading: true })
                 const response = await formFieldApi.search(`${formFieldApi.endpoints.search}`, { ...searchParams, form_id: formId })
                 if(response && isObject(response) && response.data){
                     if(isPaginatedListType(response.data)){ 
@@ -104,7 +76,7 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
     } 
 
     useEffect(() => {
-        getList()
+        handleSearchContext()
     }, [])
     
     return (
@@ -120,7 +92,7 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
                 }}
         >
             { toastContainer }
-            {children}
+            { children }
         </ListContext.Provider>
     )
 }
