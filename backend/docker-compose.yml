@@ -1,18 +1,5 @@
 version: '3'
 
-#services:
-#  backend:
-#    build:
-#      context: ./backend
-#    ports:
-#      - "8000:8000" 
-
-# frontend:
- #   build:
- #     context: ./frontend
- #   ports:
- #     - "5173:5173"
-
 services:
   backend:
     build:
@@ -26,11 +13,11 @@ services:
       - '6006:6006'
     volumes:
       - ./public:/var/www/html
-      - ./:/var/www
+      - ./:/var/www:rw
     environment:
       APP_ENV: development
     depends_on:
-#      - pgsql
+      #- pgsql
       - redis
     networks:
       - laravel

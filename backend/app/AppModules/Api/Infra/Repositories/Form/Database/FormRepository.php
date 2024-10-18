@@ -4,7 +4,6 @@ namespace App\AppModules\Api\Infra\Repositories\Form\Database;
 
 use App\AppModules\Api\Domain\Entities\Form\Form;
 use App\AppModules\Api\Domain\Entities\Form\FormDto;
-use App\AppModules\Api\Domain\Entities\Form\FormField\FormFieldDto;
 use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
 use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
 
@@ -31,46 +30,6 @@ class FormRepository implements FormRepositoryInterface {
         $form = $this->formModel::where('id', $id)->first();
         if (!$form) { $form = $this->formModel::where('name', $id)->first(); }
         if (!$form) { throw new Exception("Não foi possivel localizar formulário com id ou nome = '".$id."'"); }
-
-        /*
-        $fields = 
-        array_map(
-            function ($field) {
-                return new FormFieldDto([
-                    'id' => (string) $field['id'],
-                    'form_id' => (string) $field['form_id'],
-                    'name' => $field['name'],
-                    'rules' => $field['rules'],
-                    'attributes' => $field['attributes']
-                ]);
-            }, 
-            $this->formFieldModel::where('form_id', $form->id)
-            ->orderBy('order', 'asc')
-            ->orderBy('name', 'asc')
-            ->orderBy('id', 'asc')
-            ->get()
-            ->toArray()
-        );*/
-
-        /*
-        $fields = 
-        array_map(
-            function ($field) {
-                return [
-                    'id' => (string) $field['id'],
-                    'form_id' => (string) $field['form_id'],
-                    'name' => $field['name'],
-                    'rules' => $field['rules'],
-                    'attributes' => $field['attributes']
-                ];
-            }, 
-            $this->formFieldModel::where('form_id', $form->id)
-            ->orderBy('order', 'asc')
-            ->orderBy('name', 'asc')
-            ->orderBy('id', 'asc')
-            ->get()
-            ->toArray()
-        );*/
 
         return new Form(
             new FormDto([

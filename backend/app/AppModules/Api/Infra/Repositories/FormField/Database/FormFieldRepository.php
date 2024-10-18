@@ -70,16 +70,21 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
     public function create(FormField $formField): ?FormField {
         $formFieldModel = $this->model::
         create([
-            'form_Id' => $formField->formId,
+            'form_id' => $formField->formId,
             'name' => $formField->name,
 		    'attributes' => $formField->attributes,
 		    'rules' => $formField->rules
         ]);
 
+        echo '<pre>';
+        print_r($formFieldModel->name);
+        echo '</pre>';
+        
+
         return new FormField(
             new FormFieldDto([
-                'id' => $formFieldModel->id,
-                'form_Id' => $formFieldModel->form_Id,
+                'id' => (string) $formFieldModel->id,
+                'form_id' => (string) $formFieldModel->form_Id,
                 'name' => $formFieldModel->name,
 		        'rules' => $formFieldModel->rules,
                 'attributes' => $formFieldModel->attributes

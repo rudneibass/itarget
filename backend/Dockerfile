@@ -30,5 +30,14 @@ EXPOSE 8080
 # Definir o diretório de trabalho
 WORKDIR /var/www
 
+# Copiar o código-fonte do projeto para dentro do container
+COPY . /var/www
+
 # Definir permissões para as pastas storage e bootstrap
-RUN chmod -R 777 storage bootstrap public
+RUN chmod -R 777 /var/www /var/www/storage /var/www/bootstrap /var/www/public /var/www/database
+
+# Atualiza pacotes do projeto
+RUN composer update
+
+# Gera APP_KEY do projeto
+RUN php artisan key:generate
