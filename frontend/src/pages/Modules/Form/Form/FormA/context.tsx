@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { toastContainer, errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
+import { errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { FormContextextType, FormInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 import { formApi } from "@services/backendApi/formApi";
@@ -101,7 +101,6 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             }}
         >
             {children}
-            {toastContainer}
         </FormContext.Provider>
     )
 }

@@ -24,7 +24,8 @@ class FormField extends EntityBase {
     
     public function toArray() {
         return [
-            //'id' => $this->id ?? null,
+            'id' => isset($this->id) ? $this->id : null,
+            'order' => isset($this->order) ? $this->order : null,
             'form_id' => $this->formId,
             'name' => $this->name,
             'display_name' => $this->displayName,
@@ -48,12 +49,18 @@ class FormField extends EntityBase {
         $this->name = $name;
     }
 
+    public function getDisplayName(): string {
+        return $this->displayName;
+    }
+    public function setDisplayName(string $name) {
+        $this->displayName = ucfirst($name);
+    }
 
     public function getOrder(): string {
         return $this->order;
     }
     public function setOrder(string $order) {
-        $this->name = $order;
+        $this->order = $order;
     }
 
 

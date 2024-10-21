@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { registrationApi } from '@services/backendApi/registrationApi'
-import { toastContainer, errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
+import { errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { FormContextextType, FormInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 
@@ -100,8 +100,7 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
                 errorAlert
             }}
         >
-            {children}
-            {toastContainer}
+            { children }
         </FormContext.Provider>
     )
 }

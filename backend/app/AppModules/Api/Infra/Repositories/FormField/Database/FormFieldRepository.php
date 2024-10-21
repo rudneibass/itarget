@@ -6,9 +6,8 @@ use App\AppModules\Api\Domain\Entities\Form\FormField\FormField;
 use App\AppModules\Api\Domain\Entities\Form\FormField\FormFieldDto;
 use App\AppModules\Api\Domain\Entities\Form\FormField\FormFieldRepository as FormFieldRepositoryInterface;
 use App\AppModules\Api\Infra\Models\EloquentORM\FormField as FormFieldModel;
-use Exception;
 use Illuminate\Support\Facades\DB;
-
+use Exception;
 class FormFieldRepository implements FormFieldRepositoryInterface {
     private $model;
 
@@ -48,7 +47,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
         return new FormField(
             new FormFieldDto([
                 'id' => (string) $formField['id'],
-                'form_Id' => (string) $formField['form_id'],
+                'form_id' => (string) $formField['form_id'],
                 'name' => $formField['name'],
                 'attributes' => $formField['attributes']
             ])
@@ -59,7 +58,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
       return array_map(function($formField) {
             return new FormFieldDto([
                 'id' => $formField['id'],
-                'form_Id' => $formField['form_field_id'],
+                'form_id' => $formField['form_field_id'],
                 'name' => $formField['name'],
                 'attributes' => $formField['attributes']
             ]);
@@ -70,21 +69,16 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
     public function create(FormField $formField): ?FormField {
         $formFieldModel = $this->model::
         create([
-            'form_id' => $formField->formId,
-            'name' => $formField->name,
-		    'attributes' => $formField->attributes,
-		    'rules' => $formField->rules
+            'form_id' => (string) $formField->formId,
+            'name' => (string) $formField->name,
+		    'attributes' => (string) $formField->attributes,
+		    'rules' => (string) $formField->rules
         ]);
-
-        echo '<pre>';
-        print_r($formFieldModel->name);
-        echo '</pre>';
-        
 
         return new FormField(
             new FormFieldDto([
                 'id' => (string) $formFieldModel->id,
-                'form_id' => (string) $formFieldModel->form_Id,
+                'form_id' => (string) $formFieldModel->form_id,
                 'name' => $formFieldModel->name,
 		        'rules' => $formFieldModel->rules,
                 'attributes' => $formFieldModel->attributes
@@ -104,7 +98,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
             new FormField(
                 new FormFieldDto([
                     'id' => $item->id,
-                    'form_Id' => $item->form_Id,
+                    'form_id' => $item->form_id,
                     'name' => $item->name,
 		            'rules' => $item->rules,
                     'attributes' => $item->attributes
@@ -113,8 +107,13 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
         }, DB::select($query));
     }
 
-    public function update(FormField $formField, string $id): bool {
-        return $this->model::findOrFail($id)->update($formField->toArray());
+    public function update(FormField $formField): bool {
+         $formFieldModel = FormFieldModel::find($formField->id);
+         $formFieldModel->name = $formField->name;
+         $formFieldModel->attributes = $formField->attributes;
+         $formFieldModel->rules = $formField->rules;
+         $formFieldModel->order = $formField->order;
+         return $formFieldModel->save();
     }
 
     public function delete(string $id): int {

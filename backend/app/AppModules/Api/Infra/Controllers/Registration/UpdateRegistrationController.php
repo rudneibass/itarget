@@ -1,13 +1,13 @@
 <?php
 
-namespace App\AppModules\Api\Infra\Controllers\FormField;
+namespace App\AppModules\Api\Infra\Controllers\Registration;
 
 use App\AppModules\Api\Infra\Controllers\BaseController;
-use App\AppModules\Api\Domain\UseCases\FormField\UpdateFormField\UpdateFormField;
-use App\AppModules\Api\Infra\Repositories\FormField\Database\FormFieldRepository;
+use App\AppModules\Api\Domain\UseCases\Registration\UpdateRegistration\UpdateRegistration;
+use App\AppModules\Api\Infra\Repositories\Registration\Database\RegistrationRepository;
 use Illuminate\Http\Request;
 
-class UpdateFormFieldController extends BaseController {
+class UpdateRegistrationController extends BaseController {
     
     protected $updateRequest;
 
@@ -20,7 +20,7 @@ class UpdateFormFieldController extends BaseController {
                 $this->updateRequest->validate($this->updateRequest->rules());
             }
             
-            $useCase = new UpdateFormField(new FormFieldRepository);
+            $useCase = new UpdateRegistration(new RegistrationRepository);
             return $useCase->execute($request->all(), $id);
         });
     }

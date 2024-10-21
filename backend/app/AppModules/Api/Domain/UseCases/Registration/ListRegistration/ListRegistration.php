@@ -2,13 +2,13 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Registration\ListRegistration;
 
-use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepository;
 
 class ListRegistration {
-    private $registrationRepository;
+    private $repository;
 
-    public function __construct(RegistrationRepositoryInterface $registrationRepository){
-        $this->registrationRepository = $registrationRepository;
+    public function __construct(RegistrationRepository $repository){
+        $this->repository = $repository;
     }
 
     public function execute(array $params = []): array {
@@ -23,6 +23,6 @@ class ListRegistration {
                 'registration_id' => $registration->registrationId,
                 'published' => $registration->published
             ];
-        }, $this->registrationRepository->findAllByParams($params));
+        }, $this->repository->findAllByParams($params));
     }
 }

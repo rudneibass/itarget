@@ -39,6 +39,13 @@ class Form extends EntityBase {
         return $this->name;
     }
 
+    public function getDisplayName(): string {
+        return $this->displayName;
+    }
+    public function setDisplayName(string $name) {
+        $this->displayName = ucfirst($name);
+    }
+    
     public function setAttributes(string $attributes) {
         $this->attributes = $attributes;
     }
