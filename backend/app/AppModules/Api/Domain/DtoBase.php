@@ -55,7 +55,6 @@ abstract class DtoBase
                 return is_array($value);
             case 'object':
                 return is_object($value);
-            // Adicione mais tipos conforme necessário
             default:
                 return $value instanceof $type;
         }

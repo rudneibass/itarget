@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { toastContainer, errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
+import { errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { FormContextextType, FormInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
 import { formFieldApi } from "@services/backendApi/formFieldApi";
@@ -48,11 +48,11 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         try {
             if(!recordId){
                 await formFieldApi.create(formFieldApi.endpoints.create, inputs)
-                successAlert('Inscrição realizada com sucesso!')
+                successAlert('Operação realizada com sucesso!')
             }
             if(recordId){
                 await formFieldApi.update({ endpoint: formFieldApi.endpoints.update , id: recordId, data: inputs })
-                successAlert('Inscrição atualizada com sucesso!')
+                successAlert('Operação realizada com sucesso!')
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -126,7 +126,6 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             }}
         >
             {children}
-            {toastContainer}
         </FormContext.Provider>
     )
 }

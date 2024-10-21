@@ -4,7 +4,6 @@ namespace App\AppModules\Api\Infra\Repositories\Form\Database;
 
 use App\AppModules\Api\Domain\Entities\Form\Form;
 use App\AppModules\Api\Domain\Entities\Form\FormDto;
-use App\AppModules\Api\Domain\Entities\Form\FormField\FormFieldDto;
 use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
 use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
 
@@ -32,32 +31,29 @@ class FormRepository implements FormRepositoryInterface {
         if (!$form) { $form = $this->formModel::where('name', $id)->first(); }
         if (!$form) { throw new Exception("Não foi possivel localizar formulário com id ou nome = '".$id."'"); }
 
-        $form->attributes = json_decode($form->attributes, true);
-        $fields = 
-        array_map(
-            function ($field) {
-                return new FormFieldDto([
-                    'id' => (string) $field['id'],
-                    'form_id' => (string) $field['form_id'],
-                    'name' => $field['name'],
-                    'rules' => $field['rules'],
-                    'attributes' => json_decode($field['attributes'], true)
-                ]);
-            }, 
-            $this->formFieldModel::where('form_id', $form->id)
-            ->orderBy('order', 'asc')
-            ->orderBy('name', 'asc')
-            ->orderBy('id', 'asc')
-            ->get()
-            ->toArray()
-        );
-
         return new Form(
             new FormDto([
                 'id' => $form->id,
                 'name' => $form->name,
                 'attributes' => $form->attributes,
-                'fields' => $fields,
+                'fields' => 
+                    array_map(
+                        function ($field) {
+                            return [
+                                'id' => (string) $field['id'],
+                                'form_id' => (string) $field['form_id'],
+                                'name' => $field['name'],
+                                'rules' => $field['rules'],
+                                'attributes' => $field['attributes']
+                            ];
+                        }, 
+                        $this->formFieldModel::where('form_id', $form->id)
+                        ->orderBy('order', 'asc')
+                        ->orderBy('name', 'asc')
+                        ->orderBy('id', 'asc')
+                        ->get()
+                        ->toArray()
+                    )
             ])
         );
     }
@@ -91,7 +87,7 @@ class FormRepository implements FormRepositoryInterface {
                 new FormDto([
                     'id' => (int) $item->id,
                     'name' => $item->name,
-                    'attributes' => json_decode($item->attributes, true)
+                    'attributes' => $item->attributes
                 ])
             );
         }, DB::select($query));

@@ -1,7 +1,7 @@
 import { createContext, useState,useContext, useEffect } from  "react"
 import { isPaginatedListType, PaginatedListLinksType, ListContextType, isObject } from "./types"
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
-import { errorAlert, HtmlContent, toastContainer, warningAlertWithHtmlContent } from "@components/Toastify"
+import { errorAlert, HtmlContent, warningAlertWithHtmlContent } from "@components/Toastify"
 import { formFieldApi } from "@services/backendApi/formFieldApi"
   
 export const ListContext = createContext<ListContextType>({} as ListContextType)
@@ -91,7 +91,6 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
                 handleSortContext
             }}
         >
-            { toastContainer }
             { children }
         </ListContext.Provider>
     )

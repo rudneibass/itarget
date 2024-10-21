@@ -4,11 +4,11 @@ namespace App\AppModules\Api\Infra\Repositories\Registration\Database;
 
 use App\AppModules\Api\Domain\Entities\Registration\Registration;
 use App\AppModules\Api\Domain\Entities\Registration\RegistrationDto;
+use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepository as IRegistrationRegistration;
 use App\AppModules\Api\Infra\Models\EloquentORM\Registration as RegistrationModel;
-use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
-class RegistrationRepository implements RegistrationRepositoryInterface {
+class RegistrationRepository implements IRegistrationRegistration {
     private $model;
 
     public function __construct() {
@@ -120,10 +120,17 @@ class RegistrationRepository implements RegistrationRepositoryInterface {
         }, DB::select($query));
     }
 
-    public function update(Registration $registration, string $id): int {
-        return $this->model::findOrFail($id)->update($registration->toArray());
-    }
-
+    public function update(Registration $registration): bool {
+        $registrationModel = RegistrationModel::find($registration->id);        
+        $registrationModel->name = $registration->name;
+        $registrationModel->email = $registration->email;
+        $registrationModel->cpf = $registration->cpf;
+        $registrationModel->event_id = $registration->eventId;
+        $registrationModel->registration_id = $registration->registrationId;
+   
+        return $registrationModel->save();
+   }
+   
     public function delete(string $id): int {
         return $this->model::findOrFail($id)->delete();
     }

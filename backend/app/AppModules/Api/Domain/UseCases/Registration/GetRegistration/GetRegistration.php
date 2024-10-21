@@ -2,17 +2,17 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistration;
 
-use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Registration\RegistrationRepository;
 
 class GetRegistration {
-    private $registrationRepository;
+    private $repository;
 
-    public function __construct(RegistrationRepositoryInterface $registrationRepository){
-        $this->registrationRepository = $registrationRepository;
+    public function __construct(RegistrationRepository $repository){
+        $this->repository = $repository;
     }
 
     public function execute(string $id): array {
-        $registration = $this->registrationRepository->get($id);
+        $registration = $this->repository->get($id);
         return [
             'id' => $registration->id,
             'name' => $registration->name,

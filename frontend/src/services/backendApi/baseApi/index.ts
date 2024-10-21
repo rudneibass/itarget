@@ -58,13 +58,13 @@ async function get(endpoint: string, pk_data: string){
 
 async function update({ endpoint, id, data } : { endpoint: string, id: string, data: object}){
   return await executeRequest(async () => {
-    return await api.put(`${endpoint}${id}`, data)
+    return await api.put(`${endpoint}/${id}`, data)
   })
 }
 
 async function remove(endpoint: string, pk_data: string){
   return await executeRequest(async () => {
-    return await api.delete(`${endpoint}${pk_data}`)
+    return await api.delete(`${endpoint}/${pk_data}`)
   })
 }
 

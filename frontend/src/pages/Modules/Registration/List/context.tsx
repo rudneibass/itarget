@@ -1,7 +1,7 @@
 import { createContext, useState,useContext, useEffect } from  "react"
 import { registrationApi } from "@services/backendApi/registrationApi"
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
-import { errorAlert, HtmlContent, toastContainer, warningAlertWithHtmlContent } from "@components/Toastify"
+import { errorAlert, HtmlContent, warningAlertWithHtmlContent } from "@components/Toastify"
 import { isPaginatedListType, PaginatedListLinksType, ListContextType, isObject } from "./types"
 
 export const ListContext = createContext<ListContextType>({} as ListContextType)
@@ -87,7 +87,6 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
                 handleSortContext
             }}
         >
-            { toastContainer }
             { children }
         </ListContext.Provider>
     )
