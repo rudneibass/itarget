@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 $form = '/form';
+Route::put($form.'/update/{id}', 'App\AppModules\Api\Infra\Controllers\Form\UpdateFormController@index');
 Route::get($form.'/name/{name}', 'App\AppModules\Api\Infra\Controllers\Form\GetFormController@index');
 Route::get($form.'/list', 'App\AppModules\Api\Infra\Controllers\Form\ListFormController@index');
 Route::get($form.'/search', 'App\AppModules\Api\Infra\Controllers\Form\PaginateFormController@index');

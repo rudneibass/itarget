@@ -42,7 +42,7 @@ export default function Index() {
     styles: {
       card: { borderTop: 'none' },
       cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
+      cardBody: { minHeight: '50vh', overflowY: "auto" as const, position: "relative" as const }
     }
   }
 

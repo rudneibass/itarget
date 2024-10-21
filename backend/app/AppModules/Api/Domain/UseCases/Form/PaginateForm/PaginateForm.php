@@ -2,14 +2,14 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Form\PaginateForm;
 
-use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class PaginateForm {
 
     private $repository;
 
-    public function __construct(FormRepositoryInterface $formRepository){
+    public function __construct(FormRepository $formRepository){
         $this->repository = $formRepository;
     }
 

@@ -49,6 +49,7 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
                 'id' => (string) $formField['id'],
                 'form_id' => (string) $formField['form_id'],
                 'name' => $formField['name'],
+                'order' => $formField['order'],
                 'attributes' => $formField['attributes']
             ])
         );
@@ -108,12 +109,12 @@ class FormFieldRepository implements FormFieldRepositoryInterface {
     }
 
     public function update(FormField $formField): bool {
-         $formFieldModel = FormFieldModel::find($formField->id);
-         $formFieldModel->name = $formField->name;
-         $formFieldModel->attributes = $formField->attributes;
-         $formFieldModel->rules = $formField->rules;
-         $formFieldModel->order = $formField->order;
-         return $formFieldModel->save();
+        $formFieldModel = FormFieldModel::find($formField->id);
+        $formFieldModel->name = $formField->name;
+        $formFieldModel->attributes = $formField->attributes;
+        $formFieldModel->rules = $formField->rules;
+        $formFieldModel->order = $formField->order;
+        return $formFieldModel->save();
     }
 
     public function delete(string $id): int {

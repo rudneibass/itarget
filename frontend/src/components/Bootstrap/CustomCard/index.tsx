@@ -1,5 +1,4 @@
 import { CSSProperties, ReactNode } from 'react';
-//import styles from './styles.module.scss';
 
 type CustomCardPropsType = {
   data?: {
@@ -18,7 +17,7 @@ type CustomCardPropsType = {
 
 export default function Index({data, additionalComponents, children, styles } : CustomCardPropsType) {
   return (
-    <div className={`card`} style={styles?.card ? styles.card : {}} >
+  <div className={`card` } style={styles?.card ? styles.card : {}} >
     
     <div className="card-header" style={styles?.cardHeader ? styles.cardHeader : {}}>
       

@@ -106,11 +106,13 @@ export default function Index({data, actions}: InputTextPropsType) {
             onBlur={handleBlur}
             value={value}
           />
+          
           {!isValidValue && (
             <div className="invalid-feedback">
                 {isNotValidValueMessage}
             </div>
           )}
+
         </div>
       </div>
     )

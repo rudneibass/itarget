@@ -3,7 +3,7 @@
 namespace App\AppModules\Api\Domain\UseCases\Form\GetFormEdit;
 
 use App\AppModules\Api\Domain\Entities\Form\FormFieldDataSource;
-use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository;
 use App\AppModules\Api\Domain\Interfaces\Repository;
 use App\AppModules\Api\Domain\Interfaces\RepositoryFactory;
 use App\AppModules\Api\Domain\UseCases\Form\GetFormCreate\GetFormCreate;
@@ -14,7 +14,7 @@ class GetFormEdit {
     private $repositoryFactory;
 
     public function __construct(
-        FormRepositoryInterface $formRepository, 
+        FormRepository $formRepository, 
         RepositoryFactory $repositoryFactory,
         Repository $repository
     ){

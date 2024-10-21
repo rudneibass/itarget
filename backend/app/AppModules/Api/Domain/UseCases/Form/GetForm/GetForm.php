@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Form\GetForm;
 
-use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository;
 
 class GetForm {
     private $repository;

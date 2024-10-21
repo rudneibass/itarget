@@ -26,7 +26,7 @@ export default function Index({ id }: { id?: string }) {
     styles: {
       card: { borderTop: 'none' },
       cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
+      cardBody: { minHeight: '55vh', overflowY: "auto" as const, position: "relative" as const }
     }
   }
 

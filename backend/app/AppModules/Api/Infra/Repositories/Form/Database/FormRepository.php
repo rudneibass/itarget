@@ -5,7 +5,7 @@ namespace App\AppModules\Api\Infra\Repositories\Form\Database;
 use App\AppModules\Api\Domain\Entities\Form\Form;
 use App\AppModules\Api\Domain\Entities\Form\FormDto;
 use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
-use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository as IFormRepository;
 
 use App\AppModules\Api\Infra\Models\EloquentORM\Form as FormModel;
 use App\AppModules\Api\Infra\Models\EloquentORM\FormField as FormFieldModel;
@@ -14,7 +14,7 @@ use App\AppModules\Api\Infra\Models\EloquentORM\FormFieldOption as FormFieldOpti
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class FormRepository implements FormRepositoryInterface {
+class FormRepository implements IFormRepository {
     private $formModel;
     private $formFieldModel;
     private $formFieldOptionModel;
@@ -108,6 +108,13 @@ class FormRepository implements FormRepositoryInterface {
                 'attributes' => $formModel->attributes
             ])
         );
+    }
+
+    public function update(Form $form): bool {
+        $formModel = FormModel::find($form->id);
+        $formModel->name = $form->name;
+        $formModel->attributes = $form->attributes;
+        return $formModel->save();
     }
 
     public function list(): array {

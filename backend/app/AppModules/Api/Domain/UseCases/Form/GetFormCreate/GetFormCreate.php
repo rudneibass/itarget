@@ -2,10 +2,8 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Form\GetFormCreate;
 
-use App\AppModules\Api\Domain\Entities\Form\Form;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository;
 use App\AppModules\Api\Infra\Repositories\Form\Database\FormFieldDataSourceRepository;
-use App\AppModules\Api\Infra\Repositories\Form\Database\FormRepository;
-
 class GetFormCreate {
     private $repository;
     

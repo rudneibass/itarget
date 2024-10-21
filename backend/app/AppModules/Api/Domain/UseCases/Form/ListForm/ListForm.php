@@ -1,12 +1,12 @@
 <?php
 
 namespace App\AppModules\Api\Domain\UseCases\Form\ListForm;
-use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository;
 
 class ListForm {
     private $repository;
 
-    public function __construct(FormRepositoryInterface $formRepository){
+    public function __construct(FormRepository $formRepository){
         $this->repository = $formRepository;
     }
 

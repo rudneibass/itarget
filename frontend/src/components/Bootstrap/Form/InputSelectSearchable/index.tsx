@@ -98,7 +98,7 @@ export default function Index({ data, actions }: InputSelectSearchablePropsType)
     }
   }, [])
   return (
-    <div style={{position:'relative'}} className={`col-md-${data.attributes?.grid} pt-2 pb-2 form-group`} onMouseLeave={() => handleCloseOptions()}>
+    <div style={{position:'relative'}} className={`col-md-${data.attributes?.grid} form-group`} onMouseLeave={() => handleCloseOptions()}>
         
         {/* Label */} 
         <div>

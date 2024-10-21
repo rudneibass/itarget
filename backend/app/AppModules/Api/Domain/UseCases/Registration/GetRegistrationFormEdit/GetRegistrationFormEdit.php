@@ -2,7 +2,7 @@
 
 namespace App\AppModules\Api\Domain\UseCases\Registration\GetRegistrationFormEdit;
 
-use App\AppModules\Api\Domain\Entities\Form\FormRepositoryInterface;
+use App\AppModules\Api\Domain\Entities\Form\FormRepository;
 use App\AppModules\Api\Domain\Interfaces\Repository;
 use App\AppModules\Api\Domain\Interfaces\RepositoryFactory;
 use App\AppModules\Api\Domain\UseCases\Form\GetFormEdit\GetFormEdit;
@@ -15,7 +15,7 @@ class GetRegistrationFormEdit {
 
     public function __construct (
         Repository $repository,
-        FormRepositoryInterface $formRepository, 
+        FormRepository $formRepository, 
         RepositoryFactory $repositoryFactory
     )
     {

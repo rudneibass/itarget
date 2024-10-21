@@ -9,7 +9,7 @@ class Form extends Model
 {
     use HasFactory;
     protected $table='form';
-    protected $fillable = ['*'];
+    protected $fillable = ['name', 'attributes'];
     protected $hidden = [''];
     protected $casts = [
         'id' => 'int',

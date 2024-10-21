@@ -1,13 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\AppModules\Api\Infra\Repositories\Form\Database;
+namespace App\AppModules\Api\Infra\Repositories\FormFieldOption\Database;
 
 use App\AppModules\Api\Domain\Entities\Form\FormFieldOption\FormFieldOptionDto;
 use App\AppModules\Api\Infra\Models\EloquentORM\Event;
 use App\AppModules\Api\Infra\Models\EloquentORM\Form;
 use App\AppModules\Api\Infra\Models\EloquentORM\FormFieldOption as FormFieldOptionModel;
 
-class FormFieldDataSourceRepository {
+class FormFieldOptionRepository  {
 
     public static function getOptions(string $formFieldId)
     {
