@@ -1,4 +1,3 @@
-import React from 'react'
 import formJpg from '../assets/form.jpg'
 
 export default function Index() {

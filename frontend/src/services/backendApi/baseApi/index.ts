@@ -9,10 +9,6 @@ function resolvePath(urlPath: string){
   return urlPath.split('/')[1]
 }
 
-function removeSlashFromEndOfUrl(url: string){
-  return url.endsWith('/') ? url.slice(0, -1) : url;
-}
-
 async function executeRequest(requestFunction: () => Promise<unknown>): Promise<unknown> {
   try {
     return await requestFunction();
