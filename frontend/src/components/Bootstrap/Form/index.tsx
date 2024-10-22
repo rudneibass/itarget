@@ -94,8 +94,8 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
 
   return (
     <>
-      <form name={data.form.name} onSubmit={handleSibmit} >
-        <div className="row">
+      <form name={data.form.name} onSubmit={handleSibmit}>
+        <div className="row" style={{ height: '36vh', overflowY:"auto" }}>
           {data.fields
             && data.fields.length > 0
             && data.fields.map((field, index) => {
@@ -162,7 +162,7 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
             })
           }
         </div>
-        <div className="col-md-12 d-flex justify-content-end pt-4 mt-5 border-top" >
+        <div className="col-md-12 d-flex justify-content-end pt-4 border-top" >
           { additionalComponents && additionalComponents.map((item) => item.component ) }
           &nbsp;
           <button type="submit" className="btn btn-secondary" style={{minWidth: '100px'}}>

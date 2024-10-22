@@ -31,9 +31,9 @@ export default function index({data, actions} : PaginationBarType) {
 
   return (
     <section className="mt-3">
-      <div className="d-flex justify-content-between p-1">
-        <small>Registros por página: 10</small>
-        <nav aria-label="Page navigation example">
+      <div className="d-flex justify-content-between align-items-end">
+        <small className='pb-3'>Registros por página: 10</small>
+        <nav aria-label="Page navigation">
           <ul className="pagination">
             {data.paginationLinks &&
               data.paginationLinks.length > 0 &&

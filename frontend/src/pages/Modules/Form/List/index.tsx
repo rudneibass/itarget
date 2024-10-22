@@ -47,7 +47,11 @@ export default function Index() {
   }
 
   const searchBarProps = {
-    data: {},
+    data: {
+      searchBy: [
+        {value: 'name', label: 'Nome'}
+      ]
+    },
     actions: {
       handleSearchAction: async (searchParams: object) => {
         context.handleSearchContext(searchParams)

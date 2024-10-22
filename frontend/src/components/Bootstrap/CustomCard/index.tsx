@@ -50,7 +50,7 @@ export default function Index({data, additionalComponents, children, styles } : 
 
     </div>
 
-    <div className={`card-body`} style={styles?.cardBody ? styles.cardBody : {}} >
+    <div className={`card-body`} style={{ minHeight: '60vh', maxHeight: '60vh', padding: '10px 20px', overflowY: "auto" as const }} >
       {children}
     </div>
   </div>

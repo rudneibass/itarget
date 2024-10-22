@@ -15,7 +15,7 @@ export default function index() {
         styles: {
           card: { borderTop: 'none' },
           cardHeader: { border: "none", background: "#fff" },
-          cardBody: { minHeight: '60vh', overflowY: "auto" as const }
+          cardBody: { minHeight: '60vh', maxHeight: '60vh', overflowY: "auto" as const }
         }
       }
     

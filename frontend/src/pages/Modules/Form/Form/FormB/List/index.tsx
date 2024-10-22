@@ -14,7 +14,11 @@ export default function Index() {
   const isLoading = context.state.isLoading
 
   const searchBarProps = {
-    data: {},
+    data: {
+      searchBy: [
+        {value: 'name', label: 'Nome'}
+      ]
+    },
     actions: {
       handleSearchAction: async (searchParams: object) => {
         if(context.state.formId){

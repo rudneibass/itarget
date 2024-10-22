@@ -1,5 +1,3 @@
-import './styles.css'
-
 export default function Index() {
   return (
     <footer className="border-top">

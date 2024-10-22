@@ -42,7 +42,7 @@ export default function Index({ id }: { id?: string }) {
           <Tab 
             eventKey="tab-a" 
             title={<><i className="fs-6 bi-grid"></i> Cadastro</>} 
-            style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
+            style={{ backgroundColor: 'white', padding: '15px 5px', minHeight: '38.5vh' }}
           >
             <FormAContext id={id}>
               <FormA />
