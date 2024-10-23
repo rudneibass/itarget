@@ -42,17 +42,17 @@ export default function Index() {
   const listTableProps = {
     data: {
       thead: [
-        { name: 'id', displayName: 'ID', style: { width:  '10%' } },
+        //{ name: 'id', displayName: 'ID', style: { width:  '10%' } },
         { name: 'order', displayName: 'Ordem', style: { width:  '10%' } },
         { name: 'name', displayName: 'Nome', style: { width:  '10%' } },
         { name: 'attributes', displayName: 'Atributos'  },
       ],
       tbody: context.state.data?.map((item) => { 
         return {
-          id: { value: item.id.toString(), node: item.id.toString(), render: true },
+          id: { value: item.id.toString(), node: item.id.toString(), render: false },
           order: { value: item.order.toString(), node: item.order.toString()+'º', render: true },
           name: { value: item.name.toString(), node: item.name.toString(), render: true },
-          attributes: { value: JSON.stringify(item.attributes), node: <i className='text-muted'>{JSON.stringify(item.attributes)}</i>, render: true },
+          attributes: { value: item.attributes.toString(), node: <i className='text-muted'>{item.attributes.toString()}</i>, render: true },
         }
       })
     },

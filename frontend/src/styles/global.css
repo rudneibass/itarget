@@ -83,7 +83,7 @@ footer {
 }
 
 ::-webkit-scrollbar {
-  width: 5px; 
+  width: 3px; 
   height: 12px; 
 }
 
@@ -107,8 +107,7 @@ footer {
   }
 
 main {
-  padding: 15px 15px 0px 15px;
-  padding-bottom: 10vh;
+  padding: 13px 13px 5vh 13px;  
   max-height: 90vh;
   overflow: scroll;
   
@@ -129,12 +128,13 @@ main {
 }
 
 .nav-item {
-  max-width: 170px;
+  max-width: 155px;
 }
 
 .nav-item button {
-  padding: 10px;
+  padding: 6px 5px;
   width: 100%;
+  font-size: 14px;
 }
 
 ul.nav-tabs {

@@ -5,9 +5,7 @@ export default function index() {
     <div 
         className="alert alert-secondary text-center" 
         style={{ 
-            position: 'absolute', 
-            height: '90%', 
-            width: '97%', 
+            height: '50vh',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'

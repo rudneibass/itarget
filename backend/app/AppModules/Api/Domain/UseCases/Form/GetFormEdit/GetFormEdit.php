@@ -42,7 +42,6 @@ class GetFormEdit {
                 }
             }
 
-
             if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'textarea'){
                 if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
                     $field['attributes']['value'] = $entityData[$field['name']];

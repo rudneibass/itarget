@@ -19,6 +19,7 @@ class GetFormField {
             'form_id' => $formField->formId,
             'name' => $formField->name,
             'display_name' => $formField->displayName,
+            'rules' => $formField->rules,
             'attributes' => json_encode($formField->attributes)
         ];
     }

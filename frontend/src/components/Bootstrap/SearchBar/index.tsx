@@ -33,6 +33,7 @@ export default function Index({data, actions, additionalComponents} : SearchBarP
             </div>
           ))}
 
+          {/*}
           <div className="d-flex align-items-end">
             <div className="form-check mb-3">
               <input className="form-check-input" type="checkbox" />
@@ -41,7 +42,9 @@ export default function Index({data, actions, additionalComponents} : SearchBarP
               </label>
             </div>
           </div>  
-        </div>
+          */}
+          
+        </div> 
         
         <div className="width-100">
           <form onSubmit={handleSubmit}>
