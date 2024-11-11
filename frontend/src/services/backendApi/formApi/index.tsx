@@ -8,7 +8,7 @@ const endpoints = {
 
 // This module extends methos from baseApi/index.tsx. 
 // You can create custom methods here and add 
-// into const registrationApi to expose it.
+// into const formApi to expose it.
 
 export const formApi = {
   ...baseApi,

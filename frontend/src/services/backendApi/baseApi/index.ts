@@ -107,19 +107,19 @@ const defaultActions = {
 }
 
 export const baseApi = {
-  api,
-  defaultActions,
-  executeRequest,
-  resolvePath,
-  list,
-  get,
-  paginate,
-  update,
-  create,
-  search,
-  remove,
-  getFormWithFields,
-  getFormWithFieldsAndValues
+  api
+  ,defaultActions
+  ,executeRequest
+  ,resolvePath
+  ,list
+  ,get
+  ,paginate
+  ,update
+  ,create
+  ,search
+  ,remove
+  ,getFormWithFields
+  ,getFormWithFieldsAndValues
   ,getForm
   ,getFormWithValues
 }

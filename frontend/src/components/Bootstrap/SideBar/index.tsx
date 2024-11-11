@@ -4,11 +4,11 @@ import './styles.css'
 
 import Home from '@pages/Home'
 
-import RegistrationList from '@pages/Modules/Registration/List'
-import { ListContextProvider as RegistrationListContext } from '@pages/Modules/Registration/List/context.tsx'
+import RegistrationList from '@pages/Registration/List'
+import { ListContextProvider as RegistrationListContext } from '@pages/Registration/List/context.tsx'
 
-import FormList from '@pages/Modules/Form/List'
-import { ListContextProvider as FormListContextProvider } from '@pages/Modules/Form/List/context.tsx'
+import FormList from '@pages/Form/List'
+import { ListContextProvider as FormListContextProvider } from '@pages/Form/List/context.tsx'
 
 
 export default function Index() {
