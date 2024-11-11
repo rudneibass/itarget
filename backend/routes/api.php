@@ -30,7 +30,6 @@ Route::get($registration.'/search', 'App\AppModules\Api\Infra\Controllers\Regist
 Route::get($registration.'/form/create', 'App\AppModules\Api\Infra\Controllers\Registration\GetRegistrationFormController@index');
 Route::get($registration.'/form/edit', 'App\AppModules\Api\Infra\Controllers\Registration\GetRegistrationFormEditController@index');
 
-
-
+require_once app_path('AppModules/Acl/Routes/routes.php');
 
 
