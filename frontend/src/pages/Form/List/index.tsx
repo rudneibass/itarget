@@ -1,5 +1,8 @@
-import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
+
 import { useListContext } from './context'
+import { PaginatedListLinksType } from './types'
+
+import Form from '@pages/Form/Form'
 
 import CustomCard from '@components/Bootstrap/CustomCard'
 import SearchBar from '@components//Bootstrap/SearchBar'
@@ -7,7 +10,7 @@ import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 
-import RegistrationForm from '@pages/Modules/Registration/Form'
+
 
 
 export default function Index() {  
@@ -16,13 +19,13 @@ export default function Index() {
 
   const customCardProps = {
     data: {
-      title:'Inscrições', 
+      title:'Formulários',
       shortDescription:
       <>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
         <small className="text-muted" >
-           {'> Cadastros > Inscrições'}
+           {'> Cadastros > Formulários'}
         </small> 
       </>
     },
@@ -32,26 +35,25 @@ export default function Index() {
         type='button' 
         className='btn btn-sm btn-outline-primary' 
         onClick={() => context.renderFormTab({ 
-          title: 'Nova Inscrição', 
-          eventKey: 'tab-new-registration', 
-          content: <RegistrationForm />
+          title: 'Novo Formulário', 
+          eventKey: 'tab-new-form', 
+          content: <Form />
         })}
       >
         <i className='fs-7 bi-plus-circle'></i>&nbsp;&nbsp;Cadastrar
       </button>
     ],
-    styles: { 
+    styles: {
       card: { borderTop: 'none' },
       cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
+      cardBody: { minHeight: '50vh', overflowY: "auto" as const, position: "relative" as const }
     }
   }
 
   const searchBarProps = {
     data: {
       searchBy: [
-        {value: 'name', label: 'Nome'},
-        {value: 'email', label: 'Email'},
+        {value: 'name', label: 'Nome'}
       ]
     },
     actions: {
@@ -65,42 +67,22 @@ export default function Index() {
   const listTableProps = {
     data: {
       thead: [
-        { name: 'id', displayName: 'ID', style: {width: '10%'} },
-        { name: 'name', displayName: 'Nome', style: {width: '20%'} },
-        { name: 'email', displayName: 'Email' },
-        { name: 'cpf', displayName: 'Cpf' }
+        {name: 'id', displayName: 'ID', style: { width:  '10%' }},
+        {name: 'name', displayName: 'Nome'},
       ],
       tbody: context.state.data?.map((item) => { 
         return {
-          id: { 
-            value: item.id.toString(), 
-            node: <span className='text-muted'>{item.id.toString()}</span>, 
-            render: true 
-          },
-          name: { 
-            value: item.name.toString(), 
-            node: item.name.toString(), 
-            render: true 
-          },
-          email: { 
-            value: item.email.toString(), 
-            node: <span className='text-muted'>{item.email.toString()}</span>, 
-            render: true 
-          },
-          cpf: { 
-            value: item.cpf.toString(), 
-            node: <span className='text-muted'>{item.cpf.toString()}</span>, 
-            render: true 
-          },
+          id: { value: item.id.toString(), node: item.id.toString(), render: true },
+          name: { value: item.name.toString(), node: item.name.toString(), render: true },
         }
-      })
+      })  
     },
     actions: {
       handleEditAction: (itemId: string) => {
         context.renderFormTab({ 
-          title: 'Editar Inscrição', 
-          eventKey: 'tab-edit-registration', 
-          content: <RegistrationForm id={itemId} />
+          title: 'Editar Formulário', 
+          eventKey: 'tab-edit-form', 
+          content: <Form id={itemId} />
         })
       },
       handleDeleteAction: (itemId: string) => {
@@ -111,7 +93,7 @@ export default function Index() {
       },
       handleSortAction: (sortBy: string, sortDirection: string) => {
         context.handleSortContext(sortBy, sortDirection)
-      }   
+      } 
     },
     additionalComponents: []
   }
@@ -119,7 +101,7 @@ export default function Index() {
   const paginationBarProps = {
     data: {paginationLinks: context.state.paginationLinks},
     actions: {
-      handlePaginateAction: ({ data, paginationLinks } : { data:[], paginationLinks: LaravelPaginationLinksType[] }) => {
+      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
         context.setStateContext({ data, paginationLinks })
       }   
     },
@@ -138,7 +120,7 @@ export default function Index() {
           data={searchBarProps.data} 
           actions={searchBarProps.actions} 
           additionalComponents={searchBarProps.additionalComponents} 
-        />
+        /> 
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>

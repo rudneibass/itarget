@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { ReactNode } from "react";
 
-export type LaravelPaginationLinksType = {
+export type PaginatedListLinksType = {
   url: string | null;
   label: string;
   active: boolean;
 }
 
+
 type PaginationBarType = {
-  data: { paginationLinks: LaravelPaginationLinksType[] | undefined },
-  actions?: { handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: LaravelPaginationLinksType[] }) => void },
+  data: { paginationLinks: Array<PaginatedListLinksType> | undefined },
+  actions?: { handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => void },
   additionalComponents?: Array<ReactNode>
 }
 

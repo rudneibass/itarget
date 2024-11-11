@@ -1,7 +1,7 @@
 
 import { useListContext } from './context'
-import { LaravelPaginationLinksType } from '@services/backendApi/baseApi/types'
 import { useFormContext } from '../Form/context'
+import { PaginatedListLinksType } from './types'
 
 import SearchBar from '@components//Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
@@ -42,7 +42,6 @@ export default function Index() {
   const listTableProps = {
     data: {
       thead: [
-        //{ name: 'id', displayName: 'ID', style: { width:  '10%' } },
         { name: 'order', displayName: 'Ordem', style: { width:  '10%' } },
         { name: 'name', displayName: 'Nome', style: { width:  '10%' } },
         { name: 'attributes', displayName: 'Atributos'  },
@@ -77,13 +76,12 @@ export default function Index() {
   const paginationBarProps = {
     data: {paginationLinks: context.state.paginationLinks},
     actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: LaravelPaginationLinksType[] }) => {
+      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
         context.setStateContext({ data, paginationLinks })
       }   
     },
     additionalComponents: []
   }
-
 
   return (
     <>
