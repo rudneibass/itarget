@@ -25,11 +25,6 @@ export default function Index({ id }: { id?: string }) {
     },
     actions: {},
     additionalComponents: [],
-    styles: {
-      card: { borderTop: 'none' },
-      cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '60vh', overflowY: "auto" as const, position: "relative" as const }
-    }
   }
 
   return (
@@ -38,7 +33,6 @@ export default function Index({ id }: { id?: string }) {
         data={customCardProps.data} 
         actions={customCardProps.actions} 
         additionalComponents={customCardProps.additionalComponents}
-        styles={customCardProps.styles}
       >
         <Tabs defaultActiveKey="tab-a" >
           <Tab 

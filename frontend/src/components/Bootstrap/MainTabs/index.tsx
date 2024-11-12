@@ -30,6 +30,5 @@ export default function Index() {
             </Tab>
           ))}
         </Tabs>
-      
     )
 }

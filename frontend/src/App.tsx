@@ -20,13 +20,15 @@ export default function App() {
 
           <div className="row">
             
-            <aside className="col-2 bg-dark" style={{ minHeight: "100vh" }}>
+            <div className="col-2 bg-dark" style={{ minHeight: "100vh" }}>
               <SideBar />
-            </aside>
+            </div>
 
-            <div className="main-container col-10">
-              <nav><NavBar /></nav>
-              <main><MainTabs /></main>
+            <div className="col-10 main-container">
+              <NavBar />
+              <main>
+                <MainTabs />
+              </main>
               <Footer />
             </div>
 

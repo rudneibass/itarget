@@ -11,4 +11,5 @@ export default defineConfig({
       ViteSassPlugin({ modules: true }),
       tsconfigPaths()
     ], 
+  //css: { preprocessorOptions: { scss: { modules: true } } }   
 })

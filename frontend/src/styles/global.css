@@ -40,15 +40,6 @@ button, a{
   border-radius: 2px !important; 
 }
 
-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 15px 20px;
-  text-align: end;
-  background-color: #F4F3EF;  
-}
-
 .gap-1{
   gap: 1rem;
 }
@@ -104,13 +95,12 @@ footer {
   background-color: #F4F3EF;  
   min-height: 100vh;
   position: relative;
-  }
+}
 
 main {
   padding: 13px 13px 5vh 13px;  
   max-height: 90vh;
   overflow: scroll;
-  
 }
 
 /* react-bootstrap CloseButton */

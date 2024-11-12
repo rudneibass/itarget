@@ -12,15 +12,14 @@ export default function index() {
         },
         actions: {},
         additionalComponents: [],
-        styles: {
-          card: { borderTop: 'none' },
-          cardHeader: { border: "none", background: "#fff" },
-          cardBody: { minHeight: '60vh', maxHeight: '60vh', overflowY: "auto" as const }
-        }
       }
     
   return (
-    <CustomCard data={customCardProps.data} actions={customCardProps.actions} additionalComponents={customCardProps.additionalComponents} styles={customCardProps.styles}>
+    <CustomCard 
+      data={customCardProps.data} 
+      actions={customCardProps.actions} 
+      additionalComponents={customCardProps.additionalComponents}
+    >
         <span className='text-muted'>Seja bem vindo.</span>
     </CustomCard>
   )

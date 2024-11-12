@@ -1,4 +1,5 @@
-import { CSSProperties, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import styles from './styles.module.css'
 
 type CustomCardPropsType = {
   data?: {
@@ -8,23 +9,18 @@ type CustomCardPropsType = {
   actions?: object,
   additionalComponents?: Array<ReactNode>
   children?: ReactNode,
-  styles?: {
-    card?: CSSProperties,
-    cardHeader?: CSSProperties,
-    cardBody?: CSSProperties
-  }
 }
 
-export default function Index({data, additionalComponents, children, styles } : CustomCardPropsType) {
+export default function Index({data, additionalComponents, children } : CustomCardPropsType) {
   return (
-  <div className={`card` } style={styles?.card ? styles.card : {}} >
-    
-    <div className="card-header" style={{ border: "none", background: "#fff", paddingTop: "0", paddingBottom: "0"}}>
+  <div className="card" >
+
+    <div className={`card-header ${styles.cardHeader}`}>
       
       <div className="border-bottom d-flex justify-content-between align-items-end pt-3 pb-3">
         <div className='d-flex'>
           
-          <div style={{borderRight: "1px solid #dee2e6"}}>
+          <div className={styles.borderRight}>
             &nbsp;&nbsp;
             <span className="text-muted mb-0 border-right" style={{fontSize: "1.2rem"}}>
               {data?.title || 'Envie um título através do atributo data={{title: string}}'}          
@@ -50,7 +46,7 @@ export default function Index({data, additionalComponents, children, styles } : 
 
     </div>
 
-    <div className={`card-body`} style={{ minHeight: '65vh', maxHeight: '65vh', padding: '15px 20px 0px 20px', overflowY: "auto" as const }} >
+    <div className={`card-body ${styles.cardBody}`} >
       {children}
     </div>
   </div>

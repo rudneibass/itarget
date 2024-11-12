@@ -1,0 +1,17 @@
+.cardBody{
+  min-height: 65vh;
+  max-height: 65vh; 
+  padding: 15px 20px 0px 20px;
+  overflow-y: auto
+}
+
+.cardHeader {
+  border: none; 
+  background: #fff; 
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.borderRight{
+  border-right: 1px solid #dee2e6
+}

@@ -21,7 +21,7 @@ export default function Index() {
   }
 
   return (
-    <>
+    <aside>
       <nav className="navbar navbar-expand-lg navbar-dark light-border-bottom">
         <a className="navbar-brand d-flex align-items-center">
           <b>Admin</b>
@@ -79,6 +79,6 @@ export default function Index() {
           </li>
         </ul>
       </nav>
-    </>
+    </aside>
   );
 }

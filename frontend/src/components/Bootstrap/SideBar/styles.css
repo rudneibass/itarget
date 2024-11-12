@@ -1,7 +1,8 @@
-.light-border-bottom {
+  .light-border-bottom {
     border-bottom: 1px solid #a0a0a0b6;
     margin-bottom: 15px;
    }
+   
    li{ 
       position: relative;
       width: 100%;

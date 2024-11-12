@@ -43,11 +43,6 @@ export default function Index() {
         <i className='fs-7 bi-plus-circle'></i>&nbsp;&nbsp;Cadastrar
       </button>
     ],
-    styles: {
-      card: { borderTop: 'none' },
-      cardHeader: { border: "none", background: "#fff" },
-      cardBody: { minHeight: '50vh', overflowY: "auto" as const, position: "relative" as const }
-    }
   }
 
   const searchBarProps = {
@@ -114,7 +109,6 @@ export default function Index() {
         data={customCardProps.data} 
         actions={customCardProps.actions} 
         additionalComponents={customCardProps.additionalComponents} 
-        styles={customCardProps.styles}
       >
         <SearchBar 
           data={searchBarProps.data} 
