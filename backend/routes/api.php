@@ -31,5 +31,7 @@ Route::get($registration.'/form/create', 'App\AppModules\Api\Infra\Controllers\R
 Route::get($registration.'/form/edit', 'App\AppModules\Api\Infra\Controllers\Registration\GetRegistrationFormEditController@index');
 
 require_once app_path('AppModules/Acl/Routes/routes.php');
+require_once app_path('AppModules/Form/Infra/Routes/routes.php');
+require_once app_path('AppModules/Event/Infra/Routes/routes.php');
 
 

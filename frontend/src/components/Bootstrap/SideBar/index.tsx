@@ -9,6 +9,7 @@ import { ListContextProvider as RegistrationListContext } from '@pages/Registrat
 
 import FormList from '@pages/Form/List'
 import { ListContextProvider as FormListContextProvider } from '@pages/Form/List/context.tsx'
+import brand from './brand-exemple.png'
 
 
 export default function Index() {
@@ -22,26 +23,37 @@ export default function Index() {
 
   return (
     <aside>
-      <nav className="navbar navbar-expand-lg navbar-dark light-border-bottom">
-        <a className="navbar-brand d-flex align-items-center">
-          <b>Admin</b>
-        </a>
-      </nav>
 
-      <nav>
+
+      <nav className='navbar-dark width-80 m-auto'>
+        
+        <div 
+          className='navbar-brand' 
+          style={{
+            height: '100px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          >
+          <img src={brand} loading='lazy' width={150}/>
+        </div>
+
         <ul
-          id="sidebar-menu"
-          className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+          id='sidebar-menu'
+          className='nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start'
         >
           <li>
             <a 
               className={`nav-link align-middle px-0 ${ activeTab ===  'tab-home' ? 'active-route' : ''}`}
               onClick={() => handleAddTab({ eventKey: 'tab-home', title: 'Home', content: <Home /> })} 
             >
-              <i className="fs-4 bi-house"></i>
-              <span className="ms-1 d-none d-sm-inline">Home</span>
+              <i className='bi-house'></i>
+              <small>Home</small>
             </a>
           </li>
+          <li className='light-border-bottom-offset'></li>
           <li>
             <a 
               className={`nav-link align-middle px-0 ${ activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}
@@ -56,8 +68,8 @@ export default function Index() {
                 )
               } 
             >
-              <i className="fs-4 bi-people"></i>
-              <span className="ms-1 d-none d-sm-inline">Inscrições</span>
+              <i className='bi-people'></i>
+              <small>Inscrições</small>
             </a>
           </li>
           <li>
@@ -73,10 +85,11 @@ export default function Index() {
                 })
               }
             >
-              <i className="fs-4 bi-grid"></i>
-              <span className="ms-1 d-none d-sm-inline">Formulários</span>
+              <i className='bi-grid'></i>
+              <small>Formulários</small>
             </a>
           </li>
+          <li className='light-border-bottom-offset'></li>
         </ul>
       </nav>
     </aside>

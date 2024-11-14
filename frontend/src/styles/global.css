@@ -95,6 +95,7 @@ button, a{
   background-color: #F4F3EF;  
   min-height: 100vh;
   position: relative;
+  width: calc(100% - 210px);
 }
 
 main {

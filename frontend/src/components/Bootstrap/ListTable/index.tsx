@@ -55,7 +55,7 @@ export default function ListTable({ data, actions } : ListTableType) {
 
   return (
     <section>
-      <div className="table-responsive" style={{height: '44vh', overflowY: "auto" }}>
+      <div className="table-responsive" style={{height: '49vh', overflowY: "auto" }}>
         <table className="table table-striped table-hover">
           {data.thead && (
             <thead>

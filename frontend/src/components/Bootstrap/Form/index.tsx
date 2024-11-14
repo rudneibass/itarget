@@ -95,7 +95,7 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
   return (
     <>
       <form name={data.form.name} onSubmit={handleSibmit}>
-        <div className="row" style={{ height: '43vh', overflowY:"auto" }}>
+        <div className="row" style={{ height: '48vh', overflowY:"auto" }}>
           {data.fields
             && data.fields.length > 0
             && data.fields.map((field, index) => {
