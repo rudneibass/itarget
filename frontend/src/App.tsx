@@ -15,16 +15,13 @@ export default function App() {
     <GlobalContextProvider>
       <MainTabsContextProvider>
         
-        <div className="container-fluid">
-          {toastContainer}
-
-          <div className="row">
-            
-            <div className="col-2 bg-dark" style={{ minHeight: "100vh" }}>
+          <div className="d-flex">
+            {toastContainer}
+            <div className="bg-dark" style={{ minHeight: "100vh", width: "210px" }}>
               <SideBar />
             </div>
 
-            <div className="col-10 main-container">
+            <div className="main-container">
               <NavBar />
               <main>
                 <MainTabs />
@@ -33,7 +30,7 @@ export default function App() {
             </div>
 
           </div>
-        </div>
+    
       </MainTabsContextProvider>
     </GlobalContextProvider>
   )
