@@ -13,7 +13,7 @@ type CustomCardPropsType = {
 
 export default function Index({data, additionalComponents, children } : CustomCardPropsType) {
   return (
-  <div className="card" >
+  <div className={`card ${styles.card}`} >
 
     <div className={`card-header ${styles.cardHeader}`}>
       

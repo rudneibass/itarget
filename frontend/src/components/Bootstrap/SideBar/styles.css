@@ -30,12 +30,14 @@
   }
 
   #sidebar-menu li a i{
-    margin-right: 1vw;
+    font-size: 16px;
+    margin-right: 14px;
     transition: all .3s ease;
   }
 
   #sidebar-menu li a span, 
   #sidebar-menu li a small{
+    font-size: 14px;
     text-decoration: none;
     color: #f1f1f1;
     transition: all .3s ease;

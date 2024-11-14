@@ -49,8 +49,8 @@ export default function Index() {
               className={`nav-link align-middle px-0 ${ activeTab ===  'tab-home' ? 'active-route' : ''}`}
               onClick={() => handleAddTab({ eventKey: 'tab-home', title: 'Home', content: <Home /> })} 
             >
-              <i className='fs-6 bi-house'></i>
-              <small className='d-none d-sm-inline'>Home</small>
+              <i className='bi-house'></i>
+              <small>Home</small>
             </a>
           </li>
           <li className='light-border-bottom-offset'></li>
@@ -68,8 +68,8 @@ export default function Index() {
                 )
               } 
             >
-              <i className='fs-6 bi-people'></i>
-              <small className='d-none d-sm-inline'>Inscrições</small>
+              <i className='bi-people'></i>
+              <small>Inscrições</small>
             </a>
           </li>
           <li>
@@ -85,8 +85,8 @@ export default function Index() {
                 })
               }
             >
-              <i className='fs-6 bi-grid'></i>
-              <small className='d-none d-sm-inline'>Formulários</small>
+              <i className='bi-grid'></i>
+              <small>Formulários</small>
             </a>
           </li>
           <li className='light-border-bottom-offset'></li>
