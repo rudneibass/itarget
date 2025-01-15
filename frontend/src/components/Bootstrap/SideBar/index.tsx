@@ -10,6 +10,7 @@ import { ListContextProvider as RegistrationListContext } from '@pages/Registrat
 import FormList from '@pages/Form/List'
 import { ListContextProvider as FormListContextProvider } from '@pages/Form/List/context.tsx'
 import brand from './brand-exemple.png'
+import { Button } from 'react-bootstrap'
 
 
 export default function Index() {
@@ -44,19 +45,25 @@ export default function Index() {
           id='sidebar-menu'
           className='nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start'
         >
-          <li>
-            <a 
-              className={`nav-link align-middle px-0 ${ activeTab ===  'tab-home' ? 'active-route' : ''}`}
+          <li> 
+            <Button 
+              variant="dark w-100 text-left" 
               onClick={() => handleAddTab({ eventKey: 'tab-home', title: 'Home', content: <Home /> })} 
             >
-              <i className='bi-house'></i>
-              <small>Home</small>
-            </a>
+              <div className={`${ activeTab ===  'tab-home' ? 'active-route' : ''}`}>
+                <i className='sidebar-small bi-house' ></i>
+                <small className='sidebar-small sidebar-small-label mx-2'>
+                  Home
+                </small>
+              </div>
+            </Button>
           </li>
+
           <li className='light-border-bottom-offset'></li>
-          <li>
-            <a 
-              className={`nav-link align-middle px-0 ${ activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}
+
+          <li> 
+            <Button 
+              variant="dark w-100 text-left" 
               onClick={() => handleAddTab({ 
                 eventKey: 'tab-registration-list', 
                 title: 'Inscrições', 
@@ -68,13 +75,16 @@ export default function Index() {
                 )
               } 
             >
-              <i className='bi-people'></i>
-              <small>Inscrições</small>
-            </a>
+              <div className={`${ activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}>
+                <i className='bi-people sidebar-small'></i>
+                <small className='sidebar-small sidebar-small-label mx-2'>Inscrições</small>
+              </div>
+            </Button>
           </li>
-          <li>
-            <a 
-              className={`nav-link align-middle px-0 ${ activeTab ===  'tab-form-list' ? 'active-route' : ''}`}
+
+          <li> 
+            <Button 
+              variant="dark w-100 text-left" 
               onClick={() => handleAddTab({ 
                 eventKey: 'tab-form-list', 
                 title: 'Formulários', 
@@ -85,10 +95,15 @@ export default function Index() {
                 })
               }
             >
-              <i className='bi-grid'></i>
-              <small>Formulários</small>
-            </a>
+              <div className={`${ activeTab ===  'tab-form-list' ? 'active-route' : ''}`}>
+                <i className='bi-grid sidebar-small'></i>
+                <small className='sidebar-small sidebar-small-label mx-2'>
+                  Formulários
+                </small>
+              </div>
+            </Button>
           </li>
+
           <li className='light-border-bottom-offset'></li>
         </ul>
       </nav>
