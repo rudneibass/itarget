@@ -17,7 +17,7 @@ export default function App() {
         
           <div className="d-flex">
             {toastContainer}
-            <div className="bg-dark" style={{ minHeight: "100vh", width: "210px" }}>
+            <div className="bg-dark sidebar-container">
               <SideBar />
             </div>
 
