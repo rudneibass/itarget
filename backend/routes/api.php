@@ -2,33 +2,36 @@
 
 use Illuminate\Support\Facades\Route;
 
-$form = '/form';
-Route::put($form.'/update/{id}', 'App\Modules\Api\Infra\Controllers\Form\UpdateFormController@index');
-Route::get($form.'/name/{name}', 'App\Modules\Api\Infra\Controllers\Form\GetFormController@index');
-Route::get($form.'/list', 'App\Modules\Api\Infra\Controllers\Form\ListFormController@index');
-Route::get($form.'/search', 'App\Modules\Api\Infra\Controllers\Form\PaginateFormController@index');
-Route::get($form.'/form/create', 'App\Modules\Api\Infra\Controllers\Form\GetFormCreateController@index');
-Route::get($form.'/form/edit', 'App\Modules\Api\Infra\Controllers\Form\GetFormEditController@index');
+$formRoutePath = '/form';
+$formModulePath = 'Api';
+Route::put($formRoutePath.'/update/{id}', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\UpdateFormController@index');
+Route::get($formRoutePath.'/name/{name}', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\GetFormController@index');
+Route::get($formRoutePath.'/list', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\ListFormController@index');
+Route::get($formRoutePath.'/search', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\PaginateFormController@index');
+Route::get($formRoutePath.'/form/create', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\GetFormCreateController@index');
+Route::get($formRoutePath.'/form/edit', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\GetFormEditController@index');
 
-$formField = '/formField';
-Route::post($formField.'/create', 'App\Modules\Api\Infra\Controllers\FormField\CreateFormFieldController@index');
-Route::put($formField.'/update/{id}', 'App\Modules\Api\Infra\Controllers\FormField\UpdateFormFieldController@index');
-Route::get($formField.'/paginate', 'App\Modules\Api\Infra\Controllers\FormField\PaginateFormFieldController@index');
-Route::get($formField.'/list', 'App\Modules\Api\Infra\Controllers\FormField\ListFormFieldController@index');
-Route::get($formField.'/get/{id}', 'App\Modules\Api\Infra\Controllers\FormField\GetFormFieldController@index');
-Route::get($formField.'/search', 'App\Modules\Api\Infra\Controllers\FormField\PaginateFormFieldController@index');
-Route::get($formField.'/form/create', 'App\Modules\Api\Infra\Controllers\FormField\GetFormFieldFormController@index');
-Route::get($formField.'/form/edit', 'App\Modules\Api\Infra\Controllers\FormField\GetFormFieldFormEditController@index');
+$formFieldRoutePath = '/formField';
+$formFieldModulePath = 'Api';
+Route::post($formFieldRoutePath.'/create', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\CreateFormFieldController@index');
+Route::put($formFieldRoutePath.'/update/{id}', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\UpdateFormFieldController@index');
+Route::get($formFieldRoutePath.'/paginate', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\PaginateFormFieldController@index');
+Route::get($formFieldRoutePath.'/list', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\ListFormFieldController@index');
+Route::get($formFieldRoutePath.'/get/{id}', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\GetFormFieldController@index');
+Route::get($formFieldRoutePath.'/search', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\PaginateFormFieldController@index');
+Route::get($formFieldRoutePath.'/form/create', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\GetFormFieldFormController@index');
+Route::get($formFieldRoutePath.'/form/edit', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\GetFormFieldFormEditController@index');
 
-$registration = '/registration';
-Route::post($registration.'/create', 'App\Modules\Api\Infra\Controllers\Registration\CreateRegistrationController@index');
-Route::put($registration.'/update/{id}', 'App\Modules\Api\Infra\Controllers\Registration\UpdateRegistrationController@index');
-Route::get($registration.'/paginate', 'App\Modules\Api\Infra\Controllers\Registration\PaginateRegistrationController@index');
-Route::get($registration.'/list', 'App\Modules\Api\Infra\Controllers\Registration\ListRegistrationController@index');
-Route::get($registration.'/get/{id}', 'App\Modules\Api\Infra\Controllers\Registration\GetRegistrationController@index');
-Route::get($registration.'/search', 'App\Modules\Api\Infra\Controllers\Registration\PaginateRegistrationController@index');
-Route::get($registration.'/form/create', 'App\Modules\Api\Infra\Controllers\Registration\GetRegistrationFormController@index');
-Route::get($registration.'/form/edit', 'App\Modules\Api\Infra\Controllers\Registration\GetRegistrationFormEditController@index');
+$registrationRoutePath = '/registration';
+$registrationModulePath = 'Api';
+Route::post($registrationRoutePath.'/create', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\CreateRegistrationController@index');
+Route::put($registrationRoutePath.'/update/{id}', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\UpdateRegistrationController@index');
+Route::get($registrationRoutePath.'/paginate', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\PaginateRegistrationController@index');
+Route::get($registrationRoutePath.'/list', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\ListRegistrationController@index');
+Route::get($registrationRoutePath.'/get/{id}', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\GetRegistrationController@index');
+Route::get($registrationRoutePath.'/search', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\PaginateRegistrationController@index');
+Route::get($registrationRoutePath.'/form/create', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\GetRegistrationFormController@index');
+Route::get($registrationRoutePath.'/form/edit', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\GetRegistrationFormEditController@index');
 
 require_once app_path('Modules/Form/Infra/Routes/routes.php');
 require_once app_path('Modules/Event/Infra/Routes/routes.php');
