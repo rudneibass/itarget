@@ -12,6 +12,8 @@ class Kernel extends ConsoleKernel
         // Registre o seu comando aqui
         \App\Console\Commands\CreateModule::class,
         \App\Console\Commands\DeleteModule::class,
+
+        \App\Console\Commands\CreateModuleLayersEntity::class,
     ];
 
 

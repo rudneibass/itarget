@@ -16,12 +16,15 @@ ARTISAN = docker exec -it $(CONTAINER_NAME) php artisan
 artisan:
 	@$(ARTISAN) $(filter-out $@,$(MAKECMDGOALS))
 
-# docker exec -it php-prototipo-laravel php artisan config:clear
+
 config-clear:
 	docker exec -it php-prototipo-laravel php artisan config:clear
 
+cache-clear:
+	docker exec -it php-prototipo-laravel php artisan cache:clear
 
-
+clear-compiled:
+	docker exec -it php-prototipo-laravel php artisan clear-compiled
 
 # COMANDOS PERSONALIZADOS
 
@@ -35,3 +38,8 @@ create-module-entity:
 remove-module-entity:
 	@$(ARTISAN) remove:module-entity $(module) $(entity)
 
+create-module:
+	@$(ARTISAN) make:module $(module) $(entity)
+
+create-module-layers-entity:
+	@$(ARTISAN) make:module-layers-entity $(module) $(entity)	

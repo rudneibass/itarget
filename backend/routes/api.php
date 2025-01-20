@@ -37,6 +37,6 @@ require_once app_path('AppModules/Event/Infra/Routes/routes.php');
 //require_once app_path('AppModules/Acl/Routes/routes.php');
 
 # Criado com o comando CreateModuleEntity
-require_once app_path('Modules/Acl/User/Routes/routes.php');
+# require_once app_path('Modules/Acl/User/Routes/routes.php');
 
 
