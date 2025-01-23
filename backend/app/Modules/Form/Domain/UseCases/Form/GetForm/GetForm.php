@@ -2,9 +2,9 @@
 
 namespace App\Modules\Form\Domain\UseCases\Form\GetForm;
 
+use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
-use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 
 class GetForm {
     private $repository;
@@ -14,7 +14,7 @@ class GetForm {
     }
 
     public function execute(string $name){
-        $form = $this->repository->get($name);
+        $form = $this->repository->getByName($name);
 
         return [
             'id' => $form->id,

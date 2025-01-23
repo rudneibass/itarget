@@ -2,25 +2,27 @@
 
 namespace App\Modules\Form\Domain\UseCases\Form\UpdateForm;
 
-use App\Modules\Form\Domain\Entities\Form\FormRepository;
+use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\Model;
+use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 use Exception;
 
 class UpdateForm {
     private $repository;
 
-    public function __construct(FormRepository $repository){
-        $this->repository = $repository;
+    public function __construct(Model $modelAdapter, Database $databaseAdapter){
+        $this->repository = new FormRepository($modelAdapter, $databaseAdapter);
     }
 
     public function execute(array $requestData, $id): int {
         
-        $formField = $this->repository->get($id);
+        $form = $this->repository->getById($id);
 
-        if (!$formField) { throw new Exception("Não foi possivel localizar campo com id ".$id."");}
+        if (!$form) { throw new Exception("Não foi possivel localizar fomulário com id ".$id."");}
 
-        $formField->name = $requestData['name'] ?? $formField->name;
-        $formField->attributes = $requestData['attributes'] ?? $formField->attributes;
+        $form->name = $requestData['name'] ?? $form->name;
+        $form->attributes = $requestData['attributes'] ?? $form->attributes;
 
-        return $this->repository->update($formField);
+        return $this->repository->update($form);
     }
 }

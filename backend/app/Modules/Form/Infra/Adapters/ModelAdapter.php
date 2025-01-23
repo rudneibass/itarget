@@ -55,9 +55,4 @@ class ModelAdapter implements ModelInterface
         return $query->get()->toArray();
       
     }
-
-    public function rawQuery(string $query, array $bindings = []): array
-    {
-        return DB::select($query, $bindings);
-    }
 }

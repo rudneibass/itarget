@@ -10,14 +10,54 @@ use App\Modules\Form\Domain\Interfaces\Database;
 use Exception;
 
 class FormRepository {
-    
+    const FORM_NAME = 'form';
+
     public function __construct(private Model $formModelAdapter, private Database $databaseAdapter){}
 
-    public function get(string $id) : Form {
+    public function getByName(string $name) : Form {
+        $form = $this->formModelAdapter->where(['name' => $name]);
+                
+        if (!count($form)) { 
+            throw new Exception("Não foi possivel localizar formulário com nome = '".$name."'"); 
+        }  
+
+        return new Form(
+            new FormDto([
+                'id' => $form[0]['id'],
+                'name' => $form[0]['name'],
+                'attributes' => $form[0]['attributes'],
+                'fields' => 
+                array_map(
+                    function ($field) {
+                        return [
+                            'id' => (string) $field['id'],
+                            'form_id' => (string) $field['form_id'],
+                            'name' => $field['name'],
+                            'rules' => $field['rules'],
+                            'attributes' => $field['attributes']
+                        ];
+                    }, 
+                    $this->databaseAdapter
+                    ->rawQuery(
+                        "SELECT * 
+                        FROM 'form_field' 
+                        WHERE form_id = {$form[0]['id']} 
+                        ORDER BY 
+                        'order' asc, 
+                        'name' asc, 
+                        id asc"
+                    )
+                )
+            ])
+        );
+    }
+
+    public function getById(string $id) : Form {
         $form = $this->formModelAdapter->where(['id' => $id]);
-        
-        if (!count($form)) { $form = $this->formModelAdapter->where(['name' => $id]); }
-        if (!$form) { throw new Exception("Não foi possivel localizar formulário com id ou nome = '".$id."'"); }  
+
+        if (!count($form)) { 
+            throw new Exception("Não foi possivel localizar formulário com id = '".$id."'");
+        }
 
         return new Form(
             new FormDto([
@@ -79,9 +119,9 @@ class FormRepository {
             return 
             new Form(
                 new FormDto([
-                    'id' => (int) $item->id,
-                    'name' => $item->name,
-                    'attributes' => $item->attributes
+                    'id' => (int) $item['id'],
+                    'name' => $item['name'],
+                    'attributes' => $item['attributes']
                 ])
             );
         }, $this->databaseAdapter->rawQuery($query));
@@ -106,10 +146,10 @@ class FormRepository {
     }
 
     public function update(Form $form): bool {
-        $formModel = $this->formModelAdapter->find($form->id);
-        $formModel['name'] = $form['name'];
-        $formModel['attributes'] = $form['attributes'];
-        return $this->formModelAdapter->update($formModel['id'],  $formModel);
+        $form = $this->formModelAdapter->find((int)$form->id);
+        $form['name'] = $form['name'];
+        $form['attributes'] = $form['attributes'];
+        return $this->formModelAdapter->update($form['id'], $form);
     }
 
     public function list(): array {

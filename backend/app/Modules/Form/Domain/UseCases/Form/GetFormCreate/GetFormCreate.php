@@ -2,10 +2,11 @@
 
 namespace App\Modules\Form\Domain\UseCases\Form\GetFormCreate;
 
-use App\Modules\Form\Domain\Entities\Form\FormRepository;
 use App\Modules\Form\Infra\Repositories\Form\Database\FormFieldDataSourceRepository;
+use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
+
 class GetFormCreate {
     private $repository;
     
@@ -13,8 +14,9 @@ class GetFormCreate {
         $this->repository = new FormRepository($modelAdapter, $databaseAdapter);
     }
 
-    public function execute(string $formName){
-        $form = $this->repository->get($formName);
+    public function execute(){
+        $form = $this->repository->getByName(FormRepository::FORM_NAME);
+
         $fields = 
         array_map(
             function($field) {
@@ -26,10 +28,9 @@ class GetFormCreate {
                     }
                 }
                 return $field;
-            }, 
-            $form->fields
+            }, $form->fields
         );
-        
+
         return [
             'id' => $form->id,
             'name' => $form->name,

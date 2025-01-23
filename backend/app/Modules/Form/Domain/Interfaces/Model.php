@@ -10,5 +10,4 @@ interface Model
     public function delete(int $id): bool;
     public function all(): array;
     public function where(array $conditions): array;
-    public function rawQuery(string $query, array $bindings = []): array;
 }
