@@ -2,7 +2,7 @@
 
 namespace App\Modules\Form\Domain\Entities\FormField;
 
-use App\Modules\Form\Domain\EntityBase;
+use App\Modules\Form\Domain\Base\EntityBase;
 
 class FormField extends EntityBase {
 

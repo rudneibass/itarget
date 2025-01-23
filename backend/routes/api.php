@@ -2,6 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+# Criado na mão
+//require_once app_path('Modules/Acl/Routes/routes.php');
+
+# Criado com o comando CreateModuleEntity
+# require_once app_path('Modules/Acl/User/Routes/routes.php');
+
+/*
 $formRoutePath = '/form';
 $formModulePath = 'Api';
 Route::put($formRoutePath.'/update/{id}', 'App\Modules\\'.$formModulePath.'\Infra\Controllers\Form\UpdateFormController@index');
@@ -21,6 +29,11 @@ Route::get($formFieldRoutePath.'/get/{id}', 'App\Modules\\'.$formFieldModulePath
 Route::get($formFieldRoutePath.'/search', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\PaginateFormFieldController@index');
 Route::get($formFieldRoutePath.'/form/create', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\GetFormFieldFormController@index');
 Route::get($formFieldRoutePath.'/form/edit', 'App\Modules\\'.$formFieldModulePath.'\Infra\Controllers\FormField\GetFormFieldFormEditController@index');
+*/
+
+
+require_once app_path('Modules/Form/Infra/Routes/routes.php');
+require_once app_path('Modules/Event/Infra/Routes/routes.php');
 
 $registrationRoutePath = '/registration';
 $registrationModulePath = 'Api';
@@ -33,13 +46,7 @@ Route::get($registrationRoutePath.'/search', 'App\Modules\\'.$registrationModule
 Route::get($registrationRoutePath.'/form/create', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\GetRegistrationFormController@index');
 Route::get($registrationRoutePath.'/form/edit', 'App\Modules\\'.$registrationModulePath.'\Infra\Controllers\Registration\GetRegistrationFormEditController@index');
 
-require_once app_path('Modules/Form/Infra/Routes/routes.php');
-require_once app_path('Modules/Event/Infra/Routes/routes.php');
 
-# Criado na mão
-//require_once app_path('Modules/Acl/Routes/routes.php');
 
-# Criado com o comando CreateModuleEntity
-# require_once app_path('Modules/Acl/User/Routes/routes.php');
 
 

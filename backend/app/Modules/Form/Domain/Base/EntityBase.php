@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Form\Domain;
+namespace App\Modules\Form\Domain\Base;
 
 use Exception;
 

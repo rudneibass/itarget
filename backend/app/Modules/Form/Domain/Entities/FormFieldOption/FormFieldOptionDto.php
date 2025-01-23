@@ -2,7 +2,7 @@
 
 namespace App\Modules\Form\Domain\Entities\FormFieldOption;
 
-use App\Modules\Api\Domain\DtoBase;
+use App\Modules\Form\Domain\Base\DtoBase;
 
 class FormFieldOptionDto extends DtoBase {
     public ?int $id = null;

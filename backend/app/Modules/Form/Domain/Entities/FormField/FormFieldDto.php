@@ -2,7 +2,7 @@
 
 namespace App\Modules\Form\Domain\Entities\FormField;
 
-use App\Modules\Form\Domain\DtoBase;
+use App\Modules\Form\Domain\Base\DtoBase;
 
 class FormFieldDto extends DtoBase
 {

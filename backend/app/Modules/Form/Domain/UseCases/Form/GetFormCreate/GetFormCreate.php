@@ -4,12 +4,13 @@ namespace App\Modules\Form\Domain\UseCases\Form\GetFormCreate;
 
 use App\Modules\Form\Domain\Entities\Form\FormRepository;
 use App\Modules\Form\Infra\Repositories\Form\Database\FormFieldDataSourceRepository;
-
+use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\Model;
 class GetFormCreate {
     private $repository;
     
-    public function __construct(FormRepository $repository){
-        $this->repository = $repository;
+    public function __construct(Model $modelAdapter, Database $databaseAdapter){
+        $this->repository = new FormRepository($modelAdapter, $databaseAdapter);
     }
 
     public function execute(string $formName){
