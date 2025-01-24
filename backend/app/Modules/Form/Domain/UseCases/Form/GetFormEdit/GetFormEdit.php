@@ -3,35 +3,32 @@
 namespace App\Modules\Form\Domain\UseCases\Form\GetFormEdit;
 
 use App\Modules\Form\Domain\Entities\Form\FormFieldDataSource;
-use App\Modules\Form\Domain\Entities\Form\FormRepository;
-use App\Modules\Form\Domain\Interfaces\Repository;
-use App\Modules\Form\Domain\Interfaces\RepositoryFactory;
 use App\Modules\Form\Domain\UseCases\Form\GetFormCreate\GetFormCreate;
+use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
+use App\Modules\Form\Domain\Repositories\Factory\RepositoryFactory;
+use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\Model;
+
 
 class GetFormEdit {
     private $repository;
-    private $formRepository;
     private $repositoryFactory;
-
-    public function __construct(
-        FormRepository $formRepository, 
-        RepositoryFactory $repositoryFactory,
-        Repository $repository
-    ){
-        $this->repository = $repository;
-        $this->formRepository = $formRepository;
-        $this->repositoryFactory = $repositoryFactory;
+  
+    public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
+        $this->repository = new FormRepository($this->modelAdapter, $this->databaseAdapter);
+        $this->repositoryFactory = new RepositoryFactory($this->modelAdapter, $this->databaseAdapter);
     }
 
     public function execute(array $request){
         
-        $useCase = new GetFormCreate($this->formRepository);
-        $form = $useCase->execute($request['form_name']);
+        $useCase = new GetFormCreate($this->modelAdapter, $this->databaseAdapter);
+        $form = $useCase->execute();
 
-        $entity = $this->repository->get($request['id']);
+        $entity = $this->repository->getById($request['id']);
         $entityData = $entity->toArray();
 
-        $form['fields'] = array_map(function($field)  use ($entityData) {
+        $form['fields'] = 
+        array_map(function($field)  use ($entityData) {
             if(isset($entityData[$field['name']]) && is_array($entityData[$field['name']])){
                 $entityData[$field['name']] = json_encode($entityData[$field['name']]);
             }
@@ -62,7 +59,7 @@ class GetFormEdit {
                     if(filter_var($field['attributes']['data_source'], FILTER_VALIDATE_URL)){
                         $parsedUrl = parse_url($field['attributes']['data_source']);
                         $repository = $this->repositoryFactory->getRepository($parsedUrl['path']);
-                        $entityDataSource = $repository->get($entityData[$field['name']]);
+                        $entityDataSource = $repository->getByName($entityData[$field['name']]);
                         $field['attributes']['data_value_description'] = $entityDataSource->displayName;
                     }
                     
@@ -80,72 +77,10 @@ class GetFormEdit {
                 }
             }
             return $field;
+
         }, $form['fields']);
         
-        return  $form;
+
+        return $form;
     }
-
-    /*
-    public function execute(array $request){
-        
-        $useCase = new GetFormCreate($this->formRepository);
-        $form = $useCase->execute($request['form_name']);
-
-        $entity = $this->repository->get($request['id']);
-        $entityData = $entity->toArray();
-
-        $form['fields'] = array_map(function($field)  use ($entityData) {
-            if(isset($entityData[$field['name']]) && is_array($entityData[$field['name']])){
-                $entityData[$field['name']] = json_encode($entityData[$field['name']]);
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'text'){
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                }
-            }
-
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'textarea'){
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'checkbox'){
-                if(isset($entityData[$field['name']]) && $entityData[$field['name']] === '1'){
-                    $field['attributes']['checked'] = 'checked';
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'searchable') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                    $field['attributes']['data_value_description'] = '';
-                    
-                    if(filter_var($field['attributes']['data_source'], FILTER_VALIDATE_URL)){
-                        $parsedUrl = parse_url($field['attributes']['data_source']);
-                        $repository = $this->repositoryFactory->getRepository($parsedUrl['path']);
-                        $entityDataSource = $repository->get($entityData[$field['name']]);
-                        $field['attributes']['data_value_description'] = $entityDataSource->displayName;
-                    }
-                    
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                    $entityDataSource = $field['attributes']['data_source'];
-
-                    if (method_exists(FormFieldDataSource::class, $entityDataSource)) {
-                        $field->options = FormFieldDataSource::$entityDataSource();
-                    }
-                }
-            }
-            return $field;
-        }, $form['fields']);
-        
-        return  $form;
-    }*/
 }
