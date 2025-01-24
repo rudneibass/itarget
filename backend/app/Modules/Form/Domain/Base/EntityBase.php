@@ -5,7 +5,7 @@ namespace App\Modules\Form\Domain\Base;
 use Exception;
 
 abstract class EntityBase {
-    protected ?string $id;
+    protected ?string $id = '';
     protected ?string $tenatId;
     protected ?string $isActive;
     protected ?string $displayName = '';
@@ -15,7 +15,7 @@ abstract class EntityBase {
     }
 
     public function getId(): string {
-       return $this->id;
+        return $this->id;
     }
 
     public function setTenatId(string $tenatId) {

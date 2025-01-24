@@ -129,18 +129,19 @@ class FormRepository {
 
 
     public function create(Form $form): ?Form {
-        $formModel = $this->formModelAdapter->
+        $newRecord = $this->formModelAdapter->
         create([
             'id' => $form->id,
             'name' => $form->name,
             'attributes' => $form->attributes
         ]);
 
-        return new Form(
+        return 
+        new Form(
             new FormDto([
-                'id' => $formModel['id'],
-                'name' => $formModel['name'],
-                'attributes' => $formModel['attributes']
+                'id' => $newRecord['id'],
+                'name' => $newRecord['name'],
+                'attributes' => $newRecord['attributes']
             ])
         );
     }

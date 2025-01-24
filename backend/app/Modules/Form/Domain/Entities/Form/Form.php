@@ -47,6 +47,7 @@ class Form extends EntityBase {
     }
     
     public function setAttributes(string $attributes) {
+        if(!isset($attributes) || empty($attributes)){ throw new Exception('Attributes é obrigatório.'); }
         $this->attributes = $attributes;
     }
 

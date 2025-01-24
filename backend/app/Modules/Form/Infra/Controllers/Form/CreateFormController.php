@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Modules\Form\Infra\Controllers\Form;
+
+use App\Modules\Form\Infra\Controllers\BaseController;
+use App\Modules\Api\Infra\Models\EloquentORM\Form;
+use App\Modules\Form\Domain\UseCases\Form\CreateForm\CreateForm;
+use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
+use App\Modules\Form\Infra\Adapters\ModelAdapter;
+use Illuminate\Http\Request;
+
+
+class CreateFormController extends BaseController {
+    
+    protected $createRequest;
+
+    public function handle(Request $request) {
+       
+        return $this->executeAction(function() use ($request) {
+     
+            if(isset($this->createRequest)){
+                $this->createRequest->merge($request->all());
+                $this->createRequest->validate($this->createRequest->rules());
+            }
+            
+            $useCase = new CreateForm(new ModelAdapter(new Form()), new DatabaseAdapter());
+            return $useCase->execute($request->all());
+        });
+    }
+}
