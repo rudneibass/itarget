@@ -2,10 +2,12 @@
 
 namespace App\Modules\Form\Domain\UseCases\Form\GetFormEdit;
 
-use App\Modules\Form\Domain\Entities\Form\FormFieldDataSource;
 use App\Modules\Form\Domain\UseCases\Form\GetFormCreate\GetFormCreate;
+
+use App\Modules\Form\Domain\Repositories\FormFieldDataSource\Database\FormFieldDataSourceRepository;
 use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 use App\Modules\Form\Domain\Repositories\Factory\RepositoryFactory;
+
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
 
@@ -71,8 +73,8 @@ class GetFormEdit {
                     $field['attributes']['value'] = $entityData[$field['name']];
                     $entityDataSource = $field['attributes']['data_source'];
 
-                    if (method_exists(FormFieldDataSource::class, $entityDataSource)) {
-                        $field->options = FormFieldDataSource::$entityDataSource();
+                    if (method_exists(FormFieldDataSourceRepository::class, $entityDataSource)) {
+                        $field->options = FormFieldDataSourceRepository::$entityDataSource();
                     }
                 }
             }

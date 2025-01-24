@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Form\Domain\Repositories\Form\Database;
+namespace App\Modules\Form\Domain\Repositories\FormFieldDataSource\Database;
 
 use App\Modules\Form\Domain\Entities\FormFieldOption\FormFieldOptionDto;
 use App\Modules\Form\Infra\Models\EloquentORM\Form;
