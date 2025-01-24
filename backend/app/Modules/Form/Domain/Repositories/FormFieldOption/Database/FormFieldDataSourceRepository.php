@@ -1,17 +1,12 @@
 <?php
 
-namespace App\Modules\Form\Domain\Repositories\FormFieldDataSource\Database;
+namespace App\Modules\Form\Domain\Repositories\FormFieldOption\Database;
 
 use App\Modules\Form\Domain\Entities\FormFieldOption\FormFieldOptionDto;
 use App\Modules\Form\Infra\Models\EloquentORM\Form;
-use App\Modules\Form\Infra\Models\EloquentORM\FormFieldOption as FormFieldOptionModel;
+use App\Modules\Form\Infra\Models\EloquentORM\FormFieldOption;
 
-class FormFieldDataSourceRepository {
-    private $formModel = null;
-
-    public function __construct(Form $formModel){
-        $this->formModel = $formModel;
-    }   
+class FormFieldOptionRepository {
 
     public static function getOptions(string $formFieldId)
     {
@@ -27,7 +22,7 @@ class FormFieldDataSourceRepository {
                     'value' => $option['value'],
                     'order' => $option['order']
                 ]);
-            }, FormFieldOptionModel::where('form_field_id', $formFieldId)->get()->toArray()
+            }, FormFieldOption::where('form_field_id', $formFieldId)->get()->toArray()
         );
     }
 
