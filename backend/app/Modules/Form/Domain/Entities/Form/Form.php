@@ -7,9 +7,8 @@ use App\Modules\Form\Domain\Entities\Form\FormDto;
 use Exception;
 
 class Form extends EntityBase {
-    const NAME_FORM_REGISTRATION = 'registration';
-    const NAME_FORM_FORM = 'form';
-    const NAME_FORM_FIELD = 'form-field';
+    
+    const FORM_NAME = 'form';
     
     private string $name;
     private ?string $attributes;

@@ -6,7 +6,7 @@ use App\Modules\Form\Domain\UseCases\Form\ListForm\ListForm;
 use App\Modules\Form\Infra\Controllers\BaseController;
 use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Form\Infra\Adapters\ModelAdapter;
-use App\Modules\Api\Infra\Models\EloquentORM\Form;
+use App\Modules\Form\Infra\Models\EloquentORM\Form;
 
 use Illuminate\Http\Request;
 

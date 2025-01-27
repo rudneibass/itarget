@@ -42,6 +42,14 @@ abstract class EntityBase {
       return $this->displayName;
     }
 
+    public function setIsActive(string $isActive) {
+        $this->isActive = $isActive;
+    }
+
+    public function getIsActive(): ?string {
+      return $this->isActive;
+    }
+
     public function __get($property) {
         $method = 'get' . ucfirst($property);
         if (method_exists($this, $method)) { return $this->$method(); }

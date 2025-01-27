@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Form\Domain\UseCases\Form\GetFormCreate;
+namespace App\Modules\Form\Domain\UseCases\FormField\GetFormCreate;
 
-use App\Modules\Form\Domain\Entities\Form\Form;
-use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
+use App\Modules\Form\Domain\Entities\FormField\FormField;
+use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
 use App\Modules\Form\Domain\Repositories\FormFieldOption\Database\FormFieldOptionRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
@@ -12,11 +12,11 @@ class GetFormCreate {
     private $repository;
     
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
-        $this->repository = new FormRepository($modelAdapter, $databaseAdapter);
+        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
     }
 
     public function execute(){
-        $form = $this->repository->getByName(Form::FORM_NAME);
+        $FormField = $this->repository->getByName(FormField::FORM_NAME);
 
         $fields = 
         array_map(
@@ -29,13 +29,13 @@ class GetFormCreate {
                     }
                 }
                 return $field;
-            }, $form->fields
+            }, $FormField->fields
         );
 
         return [
-            'id' => $form->id,
-            'name' => $form->name,
-            'attributes' => json_decode($form->attributes, true),
+            'id' => $FormField->id,
+            'name' => $FormField->name,
+            'attributes' => json_decode($FormField->attributes, true),
             'fields' =>  $fields
         ];
     }

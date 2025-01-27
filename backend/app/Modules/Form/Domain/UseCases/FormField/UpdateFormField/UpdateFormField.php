@@ -2,27 +2,27 @@
 
 namespace App\Modules\Form\Domain\UseCases\FormField\UpdateFormField;
 
-use App\Modules\Form\Domain\Entities\FormField\FormFieldRepository;
+use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\Model;
+use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
 use Exception;
 
 class UpdateFormField {
     private $repository;
 
-    public function __construct(FormFieldRepository $repository){
-        $this->repository = $repository;
+    public function __construct(Model $modelAdapter, Database $databaseAdapter){
+        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
     }
 
     public function execute(array $requestData, $id): int {
         
-        $formField = $this->repository->get($id);
+        $FormField = $this->repository->getById($id);
 
-        if (!$formField) { throw new Exception("Não foi possivel localizar campo com id ".$id."");}
+        if (!$FormField) { throw new Exception("Não foi possivel localizar fomulário com id ".$id."");}
 
-        $formField->name = $requestData['name'] ?? $formField->name;
-        $formField->attributes = $requestData['attributes'] ?? $formField->attributes;
-        $formField->rules = $requestData['rules'] ?? $formField->rules;
-        $formField->order = $requestData['order'] ?? $formField->order;
+        $FormField->name = $requestData['name'] ?? $FormField->name;
+        $FormField->attributes = $requestData['attributes'] ?? $FormField->attributes;
 
-        return $this->repository->update($formField);
+        return $this->repository->update($FormField);
     }
 }

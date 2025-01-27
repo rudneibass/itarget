@@ -2,24 +2,29 @@
 
 namespace App\Modules\Form\Domain\UseCases\FormField\ListFormField;
 
-use App\Modules\Form\Domain\Entities\FormField\FormFieldRepository;
+use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
+use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\Model;
 
 class ListFormField {
-    private $formFieldRepository;
+    private $repository;
 
-    public function __construct(FormFieldRepository $formFieldRepository){
-        $this->formFieldRepository = $formFieldRepository;
+    public function __construct(Model $modelAdapter, Database $databaseAdapter){
+        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
     }
 
     public function execute(array $params = []): array {
-        return array_map(function($formField){
+        return array_map(function($item){
             return [
-                'id' => $formField->id,
-                'form_id' => $formField->formId,
-                'name' => $formField->name,
-                'display_name' => $formField->displayName,
-                'attributes' => json_encode($formField->attributes)
+                'id' => $item->id,
+                'form_id' => $item->formId,
+                'name' => $item->name,
+                'rules' => $item->rules,
+                'is_active' => $item->isActive,
+                'attributes' => $item->attributes,
+                'data_source' => $item->dataSource,
+                'order' => $item->order,
             ];
-        }, $this->formFieldRepository->findAllByParams($params));
+        }, $this->repository->list($params));
     }
 }

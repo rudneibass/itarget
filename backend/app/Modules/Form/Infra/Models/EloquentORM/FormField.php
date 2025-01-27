@@ -12,6 +12,7 @@ class FormField extends Model
     protected $fillable = ['form_id', 'name', 'attributes','rules', 'order'];
     protected $casts = [
         'id' => 'string',
-        'form_id' => 'string'
+        'form_id' => 'string',
+        'is_active' => 'string'
     ];
 }

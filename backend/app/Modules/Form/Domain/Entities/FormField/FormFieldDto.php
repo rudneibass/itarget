@@ -11,16 +11,7 @@ class FormFieldDto extends DtoBase
     public ?string $name = null;
     public ?string $order = null;
     public ?string $attributes = null;
+    public ?string $dataSource = null;
     public ?string $rules = null;
-
-    public function toArray(){
-        return [
-            'id' => $this->id,
-            'form_id' => $this->formId = null,
-            'name' => $this->name = null,
-            'order' => $this->order = null,
-            'attributes' => $this->attributes = null,
-            'rules' => $this->rules = null
-        ];
-    }
+    public ?string $isActive = null;
 }

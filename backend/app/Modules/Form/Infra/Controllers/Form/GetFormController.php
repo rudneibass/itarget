@@ -2,7 +2,7 @@
 
 namespace App\Modules\Form\Infra\Controllers\Form;
 
-use App\Modules\Api\Infra\Models\EloquentORM\Form;
+use App\Modules\Form\Infra\Models\EloquentORM\Form;
 use App\Modules\Form\Domain\UseCases\Form\GetForm\GetForm;
 use App\Modules\Form\Infra\Controllers\BaseController;
 use App\Modules\Form\Infra\Adapters\DatabaseAdapter;

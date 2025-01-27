@@ -2,25 +2,27 @@
 
 namespace App\Modules\Form\Domain\UseCases\FormField\GetFormField;
 
-use App\Modules\Form\Domain\Entities\FormField\FormFieldRepository;
-
+use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
+use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\Model;
 
 class GetFormField {
-    private $formFieldRepository;
-
-    public function __construct(FormFieldRepository $formFieldRepository){
-        $this->formFieldRepository = $formFieldRepository;
+    private $repository;
+    
+    public function __construct(Model $modelAdapter, Database $databaseAdapter){
+        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
     }
 
-    public function execute(string $id): array {
-        $formField = $this->formFieldRepository->get($id);
+    public function execute(string $name){
+        $FormField = $this->repository->getByName($name);
+
         return [
-            'id' => $formField->id,
-            'form_id' => $formField->formId,
-            'name' => $formField->name,
-            'display_name' => $formField->displayName,
-            'rules' => $formField->rules,
-            'attributes' => json_encode($formField->attributes)
+            'id' => $FormField->id,
+            'name' => $FormField->name,
+            'attributtes' => json_decode($FormField->attributes, true),
+            'fields' => array_map(function($field){
+                return $field;
+            }, $FormField->fields)
         ];
     }
 }

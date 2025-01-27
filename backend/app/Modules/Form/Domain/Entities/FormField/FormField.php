@@ -5,12 +5,14 @@ namespace App\Modules\Form\Domain\Entities\FormField;
 use App\Modules\Form\Domain\Base\EntityBase;
 
 class FormField extends EntityBase {
-
+    const FORM_NAME = 'form-field';
+    
     private string $formId;
     private string $name;
     private string $attributes;
     private ?string $order = 'Não ordenado';
     private ?string $rules;
+    private ?string $dataSource = null;
 
     public function __construct(FormFieldDto $dto) {
         $this->formId = $dto->formId;
@@ -20,6 +22,8 @@ class FormField extends EntityBase {
 
         if(isset($dto->id)){ $this->id = $dto->id; }
         if(isset($dto->order)){ $this->order = $dto->order; }
+        if(isset($dto->isActive)){ $this->isActive = $dto->isActive; }
+        if(isset($dto->dataSource)){ $this->dataSource = $dto->dataSource; }
     }
     
     public function toArray() {
@@ -79,4 +83,11 @@ class FormField extends EntityBase {
         $this->rules = $rules;
     }
 
+
+    public function getDataSource(): ?string {
+        return $this->dataSource;
+    }
+    public function setDataSource(string $dataSource) {
+        $this->dataSource = $dataSource;
+    }
 }

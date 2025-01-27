@@ -1,28 +1,30 @@
 <?php
 
-namespace App\Modules\Form\Domain\UseCases\Form\GetFormEdit;
+namespace App\Modules\Form\Domain\UseCases\FormField\GetFormEdit;
 
-use App\Modules\Form\Domain\UseCases\Form\GetFormCreate\GetFormCreate;
+use App\Modules\Form\Domain\UseCases\FormField\GetFormCreate\GetFormCreate;
 
 use App\Modules\Form\Domain\Repositories\FormFieldOption\Database\FormFieldOptionRepository;
-use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
+use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
 use App\Modules\Form\Domain\Repositories\Factory\RepositoryFactory;
 
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
+
+
 
 class GetFormEdit {
     private $repository;
     private $repositoryFactory;
   
     public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
-        $this->repository = new FormRepository($this->modelAdapter, $this->databaseAdapter);
+        $this->repository = new FormFieldRepository($this->modelAdapter, $this->databaseAdapter);
         $this->repositoryFactory = new RepositoryFactory($this->modelAdapter, $this->databaseAdapter);
     }
 
     public function execute(array $request){
         
-        $useCase = new GetFormCreate($this->modelAdapter, $this->databaseAdapter);
+        $useCase = new GetFormCreate ($this->modelAdapter, $this->databaseAdapter);
         $form = $useCase->execute();
 
         $entity = $this->repository->getById($request['id']);
