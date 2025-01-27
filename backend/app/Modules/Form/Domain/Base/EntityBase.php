@@ -5,7 +5,7 @@ namespace App\Modules\Form\Domain\Base;
 use Exception;
 
 abstract class EntityBase {
-    protected ?string $id = '';
+    protected ?string $id;
     protected ?string $tenatId;
     protected ?string $isActive;
     protected ?string $displayName = '';
@@ -14,7 +14,7 @@ abstract class EntityBase {
         $this->id = (string) $id;
     }
 
-    public function getId(): string {
+    public function getId(): ?string {
         return $this->id;
     }
 
@@ -22,7 +22,7 @@ abstract class EntityBase {
          $this->tenatId = (string) $tenatId; 
     }
 
-    public function getTenatId(): string {
+    public function getTenatId(): ?string {
        return $this->tenatId;
     }
 
@@ -38,9 +38,9 @@ abstract class EntityBase {
         $this->displayName = $displayName;
     }
 
-    public function getDisplayName(): string {
+    public function getDisplayName(): ?string {
       return $this->displayName;
-    }  
+    }
 
     public function __get($property) {
         $method = 'get' . ucfirst($property);

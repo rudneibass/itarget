@@ -96,7 +96,6 @@ class FormRepository implements IFormRepository {
     public function create(Form $form): ?Form {
         $formModel = $this->formModel::
         create([
-            'id' => $form->id,
             'name' => $form->name,
             'attributes' => $form->attributes
         ]);

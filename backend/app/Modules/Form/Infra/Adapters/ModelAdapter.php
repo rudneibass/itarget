@@ -23,11 +23,6 @@ class ModelAdapter implements ModelInterface
 
     public function create(array $data): array
     {
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        die;
-        
         return $this->model->create($data)->toArray();
     }
 

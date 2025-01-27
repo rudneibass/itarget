@@ -131,7 +131,6 @@ class FormRepository {
     public function create(Form $form): ?Form {
         $newRecord = $this->formModelAdapter->
         create([
-            'id' => $form->id,
             'name' => $form->name,
             'attributes' => $form->attributes
         ]);
