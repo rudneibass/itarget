@@ -9,7 +9,7 @@ use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Form\Infra\Adapters\ModelAdapter;
 use Illuminate\Http\Request;
 
-class PaginateFormFieldController extends BaseController {
+class SearchFormFieldController extends BaseController {
     public function handle(Request $request) {
         return $this->executeAction(function() use ($request) {
             $useCase = new PaginateFormField(new ModelAdapter(new FormField()), new DatabaseAdapter());

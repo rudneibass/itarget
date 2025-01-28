@@ -12,11 +12,15 @@ class GetFormCreate {
     private $repository;
     
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
-        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
+        $this->repository = 
+        new FormFieldRepository(
+            formFieldModelAdapter: $modelAdapter, 
+            databaseAdapter: $databaseAdapter
+        );
     }
 
-    public function execute(){
-        $FormField = $this->repository->getByName(FormField::FORM_NAME);
+    public function execute(string $formName){
+        $formField = $this->repository->getFormCreateByName(FormField::FORM_NAME);
 
         $fields = 
         array_map(
@@ -29,13 +33,13 @@ class GetFormCreate {
                     }
                 }
                 return $field;
-            }, $FormField->fields
+            }, $formField->fields
         );
 
         return [
-            'id' => $FormField->id,
-            'name' => $FormField->name,
-            'attributes' => json_decode($FormField->attributes, true),
+            'id' => $formField->id,
+            'name' => $formField->name,
+            'attributes' => json_decode($formField->attributes, true),
             'fields' =>  $fields
         ];
     }

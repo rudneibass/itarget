@@ -18,8 +18,17 @@ class GetFormEdit {
     private $repositoryFactory;
   
     public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
-        $this->repository = new FormFieldRepository($this->modelAdapter, $this->databaseAdapter);
-        $this->repositoryFactory = new RepositoryFactory($this->modelAdapter, $this->databaseAdapter);
+        $this->repository = 
+        new FormFieldRepository(
+            formFieldModelAdapter: $modelAdapter, 
+            databaseAdapter: $databaseAdapter
+        );
+
+        $this->repositoryFactory = 
+        new RepositoryFactory(
+            modelAdapter: $modelAdapter, 
+            databaseAdapter: $databaseAdapter
+        );
     }
 
     public function execute(array $request){

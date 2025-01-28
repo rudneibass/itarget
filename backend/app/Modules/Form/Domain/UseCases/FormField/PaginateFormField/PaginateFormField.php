@@ -12,7 +12,11 @@ class PaginateFormField {
     private $repository;
 
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
-        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
+        $this->repository = 
+        new FormFieldRepository(
+            formFieldModelAdapter: $modelAdapter, 
+            databaseAdapter: $databaseAdapter
+        );
     }
 
 
@@ -23,18 +27,22 @@ class PaginateFormField {
         $offset = ($page - 1) * $perPage;
         $params['limit'] = $perPage;
         $params['offset'] = $offset;
-        $FormFields = 
-        array_map(function($FormField){
+        $formFields = 
+        array_map(function($formField){
             return [
-                'id' => $FormField->id,
-                'name' => $FormField->name,
-                'display_name' => $FormField->name,
-                'attributes' => $FormField->attributes,
+                'id' => $formField->id,
+                'form_id' => $formField->formId,
+                'name' => $formField->name,
+                'rules' => $formField->rules,
+                'is_active' => $formField->isActive,
+                'attributes' => $formField->attributes,
+                'data_source' => $formField->dataSource,
+                'order' => $formField->order,
             ];
         }, $this->repository->findAllByParams($params));
 
         return 
-        new LengthAwarePaginator($FormFields, $total, $perPage, $page, [
+        new LengthAwarePaginator($formFields, $total, $perPage, $page, [
             'path' => request()->url(),
             'query' => request()->query(),
         ]);

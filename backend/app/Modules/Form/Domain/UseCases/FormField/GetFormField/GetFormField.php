@@ -10,19 +10,25 @@ class GetFormField {
     private $repository;
     
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
-        $this->repository = new FormFieldRepository($modelAdapter, $databaseAdapter);
+        $this->repository = 
+        new FormFieldRepository(
+            formFieldModelAdapter: $modelAdapter, 
+            databaseAdapter: $databaseAdapter
+        );
     }
 
     public function execute(string $name){
-        $FormField = $this->repository->getByName($name);
+        $formField = $this->repository->getByName($name);
 
         return [
-            'id' => $FormField->id,
-            'name' => $FormField->name,
-            'attributtes' => json_decode($FormField->attributes, true),
-            'fields' => array_map(function($field){
-                return $field;
-            }, $FormField->fields)
+            'id' => $formField->id,
+            'form_id' => $formField->formId,
+            'name' => $formField->name,
+            'rules' => $formField->rules,
+            'is_active' => $formField->isActive,
+            'attributes' => $formField->attributes,
+            'data_source' => $formField->dataSource,
+            'order' => $formField->order,
         ];
     }
 }

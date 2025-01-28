@@ -5,7 +5,7 @@ namespace App\Modules\Form\Infra\Controllers\FormField;
 use App\Modules\Form\Domain\UseCases\FormField\UpdateFormField\UpdateFormField;
 
 use App\Modules\Form\Infra\Controllers\BaseController;
-use App\Modules\Form\Infra\Models\EloquentORM\Form;
+use App\Modules\Form\Infra\Models\EloquentORM\FormField;
 use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Form\Infra\Adapters\ModelAdapter;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class UpdateFormFieldController extends BaseController {
                 $this->updateRequest->validate($this->updateRequest->rules());
             }
             
-            $useCase = new UpdateFormField(new ModelAdapter(new Form ()), new DatabaseAdapter());
+            $useCase = new UpdateFormField(new ModelAdapter(new FormField()), new DatabaseAdapter());
             return $useCase->execute($request->all(), $id);
         });
     }

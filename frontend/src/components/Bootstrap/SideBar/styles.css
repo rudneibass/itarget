@@ -8,6 +8,10 @@
       margin: .75rem 0;
     }
    
+    .offset {
+      margin: .25rem 0;
+    }
+
    li{ 
       position: relative;
       width: 100%;

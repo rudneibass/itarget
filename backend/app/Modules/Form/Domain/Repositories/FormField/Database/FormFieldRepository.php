@@ -5,7 +5,8 @@ namespace App\Modules\Form\Domain\Repositories\FormField\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
 use App\Modules\Form\Domain\Entities\FormField\FormField;
 use App\Modules\Form\Domain\Entities\FormField\FormFieldDto;
-use App\Modules\Form\Domain\Entities\FormFieldOption\FormFieldOptionDto;
+use App\Modules\Form\Domain\Entities\Form\Form;
+use App\Modules\Form\Domain\Entities\Form\FormDto;
 use App\Modules\Form\Domain\Interfaces\Database;
 use Exception;
 
@@ -14,94 +15,43 @@ class FormFieldRepository {
     public function __construct(private Model $formFieldModelAdapter, private Database $databaseAdapter){}
 
     public function getByName(string $name) : FormField {
-        $formField = $this->formFieldModelAdapter->where(['name' => $name]);
-                
-        if (!count($formField)) { 
-            throw new Exception("Não foi possivel localizar FormFieldulário com nome = '".$name."'"); 
+        $formFields = $this->formFieldModelAdapter->where(['name' => $name]);
+        if (!count($formFields)) { 
+            throw new Exception("Não foi possivel localizar campo com nome = '".$name."'"); 
         }  
-
-        return new FormField(
+        return 
+        new FormField(
             new FormFieldDto([
-                'id' => $formField[0]['id'],
-                'name' => $formField[0]['name'],
-                'attributes' => $formField[0]['attributes'],
-                'fields' => 
-                array_map(
-                    function ($field) {
-                        return [
-                            'id' => (string) $field['id'],
-                            'FormField_id' => (string) $field['FormField_id'],
-                            'name' => $field['name'],
-                            'rules' => $field['rules'],
-                            'attributes' => $field['attributes']
-                        ];
-                    }, 
-                    $this->databaseAdapter
-                    ->rawQuery(
-                        "SELECT * 
-                        FROM 'field_field' 
-                        WHERE form_field_id = {$formField[0]['id']} 
-                        ORDER BY 
-                        'order' asc, 
-                        'name' asc, 
-                        id asc"
-                    )
-                )
+                'id' => $formFields[0]['id'],
+                'form_id' => $formFields[0]['form_id'],
+                'name' => $formFields[0]['name'],
+                'rules' => $formFields[0]['rules'],
+                'is_active' => $formFields[0]['is_active'],
+                'attributes' => $formFields[0]['attributes'],
+                'data_source' => $formFields[0]['data_source'],
+                'order' => $formFields[0]['order'],
             ])
         );
     }
 
     public function getById(string $id) : FormField {
         $formField = $this->formFieldModelAdapter->where(['id' => $id]);
-
         if (!count($formField)) { 
-            throw new Exception("Não foi possivel localizar FormFieldulário com id = '".$id."'");
+            throw new Exception("Não foi possivel localizar campo com id = '".$id."'");
         }
-
-        return new FormField(
+        return 
+        new FormField(
             new FormFieldDto([
-                'id' => $formField[0]['id'],
-                'name' => $formField[0]['name'],
-                'attributes' => $formField[0]['attributes'],
-                'fields' => 
-                array_map(
-                    function ($field) {
-                        return [
-                            'id' => (string) $field['id'],
-                            'form_field_id' => (string) $field['FormField_id'],
-                            'name' => $field['name'],
-                            'rules' => $field['rules'],
-                            'attributes' => $field['attributes']
-                        ];
-                    }, 
-                    $this->databaseAdapter
-                    ->rawQuery(
-                        "SELECT * 
-                        FROM 'form_field' 
-                        WHERE form_field_id = {$formField[0]['id']} 
-                        ORDER BY 
-                        'order' asc, 
-                        'name' asc, 
-                        id asc"
-                    )
-                )
+                'id' => $formField['id'],
+                'form_id' => $formField['form_id'],
+                'name' => $formField['name'],
+                'rules' => $formField['rules'],
+                'is_active' => $formField['is_active'],
+                'attributes' => $formField['attributes'],
+                'data_source' => $formField['data_source'],
+                'order' => $formField['order'],
             ])
         );
-    }
-
-    public function getFormFieldFieldOptions(string $formFieldId): array {
-        return array_map(function($option) {
-            return new FormFieldOptionDto([
-                'id' => $option['id'],
-                'form_field_id' => $option['form_field_id'],
-                'name' => $option['name'],
-                'value' => $option['value'],
-                'order' => $option['order'],
-                'selected' => $option['selected']
-            ]);
-        }, $this->databaseAdapter->rawQuery("SELECT * FROM 'form_field_id' WHERE form_field_id = {$formFieldId} ")
-    );
-
     }
 
     public function findAllByParams(array $params = []): ?array {
@@ -109,6 +59,7 @@ class FormFieldRepository {
             FROM 'form_field' 
             WHERE 1 = 1"
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
+            .(isset($params['form_id']) && !empty($params['form_id']) ? " AND form_id = {$params['form_id']}" : "" )
             .(isset($params['name']) && !empty($params['name']) ? " AND name like '%{$params['name']}%'" : "" )
             .(isset($params['order']) && !empty($params['order']) ? " ORDER BY {$params['order']}" : " ORDER BY id" )
             .(isset($params['limit']) && !empty($params['limit']) ? " LIMIT {$params['limit']}" : "" )
@@ -120,8 +71,12 @@ class FormFieldRepository {
                 new FormFieldDto([
                     'id' => (string)$item['id'],
                     'form_id' => (string)$item['form_id'],
+                    'is_active' => (string)$item['is_active'],
                     'name' => $item['name'],
-                    'attributes' => $item['attributes']
+                    'rules' => $item['rules'],
+                    'attributes' => $item['attributes'],
+                    'data_source' => $item['data_source'],
+                    'order' => $item['order'],
                 ])
             );
         }, $this->databaseAdapter->rawQuery($query));
@@ -129,18 +84,19 @@ class FormFieldRepository {
 
 
     public function create(FormField $formField): ?FormField {
-        $newRecord = $this->formFieldModelAdapter->
-        create([
-            'name' => $formField->name,
-            'attributes' => $formField->attributes
-        ]);
+        $newRecord = $this->formFieldModelAdapter->create($formField->toArray());
 
         return 
         new FormField(
             new FormFieldDto([
                 'id' => $newRecord['id'],
+                'form_id' => $newRecord['form_id'],
                 'name' => $newRecord['name'],
-                'attributes' => $newRecord['attributes']
+                'rules' => $newRecord['rules'],
+                'is_active' => $newRecord['is_active'],
+                'attributes' => $newRecord['attributes'],
+                'data_source' => $newRecord['data_source'],
+                'order' => $newRecord['order'],
             ])
         );
     }
@@ -170,6 +126,47 @@ class FormFieldRepository {
         }, $this->formFieldModelAdapter->all());
     }
 
+    public function getFormCreateByName(string $name) : Form {
+        //$form = $this->formModelAdapter->where(['name' => $name]);
+                
+        $form = $this->databaseAdapter->rawQuery("SELECT * FROM 'form' WHERE name = '{$name}' ");
+
+        if (!count($form)) { 
+            throw new Exception("Não foi possivel localizar formulário com nome = '".$name."'"); 
+        }  
+
+        return new Form(
+            new FormDto([
+                'id' => $form[0]['id'],
+                'name' => $form[0]['name'],
+                'attributes' => $form[0]['attributes'],
+                'fields' => 
+                array_map(
+                    function ($field) {
+                        return [
+                            'id' => (string) $field['id'],
+                            'form_id' => (string) $field['form_id'],
+                            'name' => $field['name'],
+                            'rules' => $field['rules'],
+                            'order' => $field['order'],
+                            'attributes' => $field['attributes'],
+                        ];
+                    }, 
+                    $this->databaseAdapter
+                    ->rawQuery(
+                        "SELECT * 
+                        FROM 'form_field' 
+                        WHERE form_id = {$form[0]['id']} 
+                        ORDER BY 
+                        'order' asc, 
+                        'name' asc, 
+                        id asc"
+                    )
+                )
+            ])
+        );
+    }
+    
     public function delete(string $id): int {
         return 1;
     }

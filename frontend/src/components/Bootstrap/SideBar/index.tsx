@@ -82,6 +82,8 @@ export default function Index() {
             </Button>
           </li>
 
+          <li className='offset'></li>
+          
           <li> 
             <Button 
               variant="dark w-100 text-left" 
