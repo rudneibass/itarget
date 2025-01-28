@@ -18,7 +18,7 @@ class UserDao extends BaseDao {
         
     public function findAllByParams(array $params = []): ?array {
         $query = "SELECT * 
-            FROM 'user' 
+            FROM 'users' 
             WHERE 1 = 1"
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
             .(isset($params['name']) && !empty($params['name']) ? " AND name like '%{$params['name']}%'" : "" )

@@ -8,6 +8,7 @@ Route::prefix('user')->group(function(){
         # Default routes
             Route::get('/', 'getAll');
             Route::get('/all', 'getAll');
+            Route::get('/list', 'getAll');
             Route::get('/doc', 'getDoc');
             Route::get('/id/{id}', 'getById');
             Route::get('/paginate/{itemsPerPage}', 'paginate');
