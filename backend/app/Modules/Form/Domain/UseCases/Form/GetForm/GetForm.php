@@ -15,12 +15,12 @@ class GetForm {
 
     public function execute(string $name){
         $form = $this->repository->getByName($name);
-
         return [
             'id' => $form->id,
             'name' => $form->name,
             'attributtes' => json_decode($form->attributes, true),
             'fields' => array_map(function($field){
+                $field['attributes'] = json_decode($field['attributes'], true);
                 return $field;
             }, $form->fields)
         ];

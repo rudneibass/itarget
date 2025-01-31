@@ -9,6 +9,8 @@ export default function Index() {
   const context = useFormContext()
   const isLoading = context.isLoading
 
+  console.log(context.form)
+  
   const formProps = {
     data: {
       form: context.form || {} as FormType,

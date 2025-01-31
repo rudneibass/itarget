@@ -2,13 +2,13 @@
 
 namespace App\Modules\Services\Form;
 
-use App\Modules\Form\Infra\Controllers\Form\GetFormCreateController;
+use App\Modules\Form\Infra\Controllers\Form\GetFormController;
 use Illuminate\Http\Request;
 
 class FormService {
 
-    public function getFormCreateByName(string $name){
-        $controller =  new GetFormCreateController();
-        return $controller->handle(new Request(['form_name' => $name]));
+    public function getByName(string $name){
+        $controller =  new GetFormController();
+        return $controller->handle($name);
     }
 }

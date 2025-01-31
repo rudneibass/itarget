@@ -15,11 +15,9 @@ class FormRepository {
 
     public function getByName(string $name) : Form {
         $form = $this->formModelAdapter->where(['name' => $name]);
-                
         if (!count($form)) { 
             throw new Exception("Não foi possivel localizar formulário com nome = '".$name."'"); 
-        }  
-
+        }
         return new Form(
             new FormDto([
                 'id' => $form[0]['id'],
