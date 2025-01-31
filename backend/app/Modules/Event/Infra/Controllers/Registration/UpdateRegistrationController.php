@@ -2,24 +2,18 @@
 
 namespace App\Modules\Event\Infra\Controllers\Registration;
 
+use App\Modules\Event\Infra\Base\BaseController;
 use App\Modules\Event\Domain\UseCases\Registration\UpdateRegistration\UpdateRegistration;
-use App\Modules\Event\Infra\Repositories\Registration\Database\RegistrationRepository;
+use App\Modules\Event\Infra\Adapters\DatabaseAdapter;
+use App\Modules\Event\Infra\Adapters\ModelAdapter;
+use App\Modules\Event\Infra\Models\EloquentORM\Registration;
 use Illuminate\Http\Request;
 
-class UpdateRegistrationController {
-    
-    protected $updateRequest;
+class UpdateRegistrationController extends BaseController {
 
-    public function index(Request $request, $id) {
-       
+    public function handle(Request $request, $id) {
         return $this->executeAction(function() use ($request, $id) {
-     
-            if(isset($this->updateRequest)){
-                $this->updateRequest->merge($request->all());
-                $this->updateRequest->validate($this->updateRequest->rules());
-            }
-            
-            $useCase = new UpdateRegistration(new RegistrationRepository);
+            $useCase = new UpdateRegistration(new ModelAdapter(new Registration), new DatabaseAdapter);
             return $useCase->execute($request->all(), $id);
         });
     }

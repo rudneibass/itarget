@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Event\Infra\Repositories\Registration\Database;
+namespace App\Modules\Event\Domain\Repositories\Registration\Database;
 
 use App\Modules\Event\Domain\Entities\Registration\Registration;
 use App\Modules\Event\Domain\Entities\Registration\RegistrationDto;
 use App\Modules\Event\Domain\Interfaces\Database;
 use App\Modules\Event\Domain\Interfaces\Model;
-use App\Modules\Event\Infra\Models\EloquentORM\Registration as RegistrationModel;
 use Illuminate\Support\Facades\DB;
 
 class RegistrationRepository  {
@@ -118,13 +117,14 @@ class RegistrationRepository  {
     }
 
     public function update(Registration $registration): bool {
-        $registrationModel = RegistrationModel::find($registration['id']);        
-        $registrationModel->name = $registration['name'];
-        $registrationModel->email = $registration['email'];
-        $registrationModel->cpf = $registration['cpf'];
-        $registrationModel->event_id = $registration['eventId'];
-        $registrationModel->registration_id = $registration['registrationId'];
+        $registrationModel = $this->modelAdapter->find($registration['id']);        
+        
+        $registrationModel['name'] = $registration['name'];
+        $registrationModel['email'] = $registration['email'];
+        $registrationModel['cpf'] = $registration['cpf'];
+        $registrationModel['event_id'] = $registration['eventId'];
+        $registrationModel['registration_id'] = $registration['registrationId'];
    
-        return $registrationModel->save();
+        return $this->modelAdapter->update($registration['id'], $registrationModel);
    }
 }

@@ -4,7 +4,7 @@ namespace App\Modules\Event\Domain\UseCases\Registration\GetRegistration;
 
 use App\Modules\Event\Domain\Interfaces\Database;
 use App\Modules\Event\Domain\Interfaces\Model;
-use App\Modules\Event\Infra\Repositories\Registration\Database\RegistrationRepository;
+use App\Modules\Event\Domain\Repositories\Registration\Database\RegistrationRepository;
 
 class GetRegistration {
     private $repository;
