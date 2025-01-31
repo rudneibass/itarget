@@ -1,16 +1,23 @@
-import { useMainTabsContext } from '../MainTabs/context'
 
 import './styles.css'
 
+import { useMainTabsContext } from '../MainTabs/context'
+
 import Home from '@pages/Home'
+
+import brand from './brand-exemple.png'
+import { Button } from 'react-bootstrap'
 
 import RegistrationList from '@pages/Registration/List'
 import { ListContextProvider as RegistrationListContext } from '@pages/Registration/List/context.tsx'
 
 import FormList from '@pages/Form/List'
 import { ListContextProvider as FormListContextProvider } from '@pages/Form/List/context.tsx'
-import brand from './brand-exemple.png'
-import { Button } from 'react-bootstrap'
+
+
+import UserList from '@pages/User/List'
+import { ListContextProvider as UserListContextProvider } from '@pages/User/List/context.tsx'
+
 
 
 export default function Index() {
@@ -82,7 +89,7 @@ export default function Index() {
             </Button>
           </li>
 
-          <li className='offset'></li>
+          <li className='sidebar-offset'></li>
           
           <li> 
             <Button 
@@ -106,7 +113,32 @@ export default function Index() {
             </Button>
           </li>
 
+          <li className='sidebar-offset'></li>
+          
+          <li> 
+            <Button 
+              variant="dark w-100 text-left" 
+              onClick={() => handleAddTab({ 
+                eventKey: 'tab-user-list', 
+                title: 'Usuários', 
+                content: 
+                  <UserListContextProvider>
+                    <UserList />
+                  </UserListContextProvider> 
+                })
+              }
+            >
+              <div className={`${ activeTab ===  'tab-user-list' ? 'active-route' : ''}`}>
+                <i className='bi-people sidebar-small'></i>
+                <small className='sidebar-small sidebar-small-label mx-2'>
+                  Usuários
+                </small>
+              </div>
+            </Button>
+          </li>
+
           <li className='light-border-bottom-offset'></li>
+
         </ul>
       </nav>
     </aside>
