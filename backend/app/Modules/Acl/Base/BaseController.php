@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Acl\Controllers;
+namespace App\Modules\Acl\Base;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;

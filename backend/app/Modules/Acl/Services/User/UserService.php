@@ -3,13 +3,15 @@
 namespace App\Modules\Acl\Services\User;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Modules\Acl\Services\BaseService;
+use App\Modules\Acl\Base\BaseService;
 use App\Modules\Acl\Daos\User\UserDao;
+use App\Modules\Acl\Daos\Form\FormDao;
 
 class UserService extends BaseService
 {
     public function __construct(){
         $this->dao = new UserDao;
+        $this->formDao = new FormDao;
     }
 
     public function findAllByParams(array $params){

@@ -1,24 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Acl\Daos\User;
+namespace App\Modules\Acl\Daos\Form;
 
 use App\Modules\Acl\Base\BaseDao;
-use App\Modules\Acl\Models\User as UserModel;
+use App\Modules\Acl\Models\Form as FormModel;
 use Illuminate\Support\Facades\DB;
 
-class UserDao extends BaseDao {
+class FormDao extends BaseDao {
     
     public function __construct() {
-        parent::__construct(new UserModel);
+        parent::__construct(new FormModel);
     }
 
-    public function findByEMail(string $email): ?array{
-        return $this->model::where(["email" => $email])->get()->toArray();
-    }
-        
     public function findAllByParams(array $params = []): ?array {
         $query = "SELECT * 
-            FROM 'users' 
+            FROM 'form' 
             WHERE 1 = 1"
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
             .(isset($params['name']) && !empty($params['name']) ? " AND name like '%{$params['name']}%'" : "" )

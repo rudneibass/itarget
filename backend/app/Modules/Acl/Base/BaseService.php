@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Acl\Services;
+namespace App\Modules\Acl\Base;
 
 abstract class BaseService {
 
@@ -37,10 +37,15 @@ abstract class BaseService {
     }
 
     public function getFormCreate(string $name){
+        
+        echo '<pre>';
+        print_r($this->formDao);
+        echo '</pre>';
+        die;
+
         $form_sdtClass = $this->formDao->findAllByParams(array('name' => $name));
         $form_array = get_object_vars($form_sdtClass[0]);
-        $form_array['attributes'] = json_decode($form_array['attributes'
-    ], true);
+        $form_array['attributes'] = json_decode($form_array['attributes'], true);
 
         $form_array['fields'] = $this->fieldDao->findAllByParams(array('form_id' => $form_array['id'], 'order' => 'order'));
         $fields_array = array_map(function($item){

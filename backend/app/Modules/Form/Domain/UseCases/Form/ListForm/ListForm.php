@@ -13,7 +13,7 @@ class ListForm {
         $this->repository = new FormRepository($modelAdapter, $databaseAdapter);
     }
 
-    public function execute(array $params = []): array {
+    public function execute(array $params = []): array {        
         return array_map(function($form){
             return [
                 'id' => $form->id,

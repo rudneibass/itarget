@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Acl\Daos;
+namespace App\Modules\Acl\Base;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;

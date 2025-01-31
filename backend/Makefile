@@ -11,8 +11,7 @@ ARTISAN = docker exec -it $(CONTAINER_NAME) php artisan
 # Declara que 'artisan' é um comando, não um arquivo
 .PHONY: artisan
 
-# Comando genérico para executar qualquer comando Artisan
-# make artisan config:clear
+# Comando genérico para executar qualquer comando Artisan, exemplo: make artisan config:clear
 artisan:
 	@$(ARTISAN) $(filter-out $@,$(MAKECMDGOALS))
 
@@ -25,6 +24,18 @@ cache-clear:
 
 clear-compiled:
 	docker exec -it php-prototipo-laravel php artisan clear-compiled
+
+test-all:
+	docker exec -it php-prototipo-laravel php artisan test
+
+test:
+	docker exec -it php-prototipo-laravel php artisan test --filter $(name)
+
+grep-curl:
+	docker exec -it php-prototipo-laravel php -m | grep curl
+
+# obter ip do container:  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' php-prototipo-laravel
+
 
 # COMANDOS PERSONALIZADOS
 
