@@ -57,6 +57,7 @@ class GetRegistrationEditForm {
                     }
                     
                 }
+                
             }
 
             if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
