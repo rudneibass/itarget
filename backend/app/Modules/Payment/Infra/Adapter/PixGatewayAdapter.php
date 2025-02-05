@@ -10,35 +10,32 @@ class PixGatewayAdapter implements PixGateway
     private $service;
     private array $availableServices = [
         'itau' => \App\Modules\Shared\Services\External\Itau\ItauPix::class,
-        'bradesco' => \App\Modules\Shared\Services\External\Bradesco\BradescoPix::class,
+        'bradesco' => \App\Modules\Shared\Services\External\Bradesco\PixBradesco::class,
     ];
     
-    public function __construct(
-        private string $paymentGateway
-    ){
+    public function __construct(private string $paymentGateway){
         $this->service = new $this->availableServices[$paymentGateway]();
     }
 
     public function generate(
         string $productId, 
-        float $valor, 
-        string $descricao,
-        string $baseUrl, 
+        float $value, 
+        string $description,
         string $clientId, 
         string $clientSecret): array
     {
-        $token = $this->authenticate($baseUrl, $clientId, $clientSecret);
-        return $this->service->generate($productId, $valor, $descricao, $token);
+        return 
+        $this->service->generate(
+            $productId, 
+            $value, 
+            $description,
+            $clientId, 
+            $clientSecret
+        );
     }
     
-    private function authenticate(string $baseUrl, string $clientId, string $clientSecret): string
+    public function search(string $txId, string $clientId, string $clientSecret): array
     {
-        return $this->service->authenticate($baseUrl, $clientId, $clientSecret);
-    }
-
-    public function checkPayment(string $txId, string $baseUrl, string $clientId, string $clientSecret): array
-    {
-        $token = $this->authenticate($baseUrl, $clientId, $clientSecret);
-        return $this->service->generate($txId, $token);
+        return $this->service->searchPayment($txId, $clientId, $clientSecret);
     }
 }

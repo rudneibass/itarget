@@ -37,18 +37,23 @@ class GeneratePix
             return ['message' => 'Já existe um pagamento efetuado via pix associado ao produto_id '.$pix->productId];
         }
 
-        $newQrCode = 
+        if ($pixFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PENDING])[0]) {
+            if($pixFoundOnGateway = $this->pixGatewayAdapter->search($pixFoundOnRepository->txId, '$clientId', '$clientSecet')){
+                $pixFoundOnRepository->status = $pixFoundOnGateway['data']['status'];
+                $this->repository->update($pixFoundOnRepository);
+            }
+        }
+
+        $newPix = 
         $this->pixGatewayAdapter
         ->generate(
             $pix->productId, 
             $pix->value, 
             $pix->description,
-            '',
-            '',
-            ''
+            '$clientId', 
+            '$clientSecet'
         );
 
-        $newPix =
         $this->repository
         ->create(
             new Pix(
@@ -56,18 +61,18 @@ class GeneratePix
                     'product_id' => $pix->productId, 
                     'user_id' => $pix->userId,
                     'status' => Pix::PENDING, 
-                    'qr_code' => $newQrCode['data']['qr_code'], 
-                    'tx_id' => $newQrCode['data']['txid'], 
-                    'api_response' => $newQrCode['data']
+                    'qr_code' => $newPix['data']['qr_code'], 
+                    'tx_id' => $newPix['data']['txid'], 
+                    'api_response' => $newPix['data']
                 ])
         ));
 
         $this->cacheAdapter->put(
             $key = $cacheKey, 
-            $value = ['qr_code' => $newPix->qrCode], 
+            $value = ['qr_code' => $newPix['data']['qr_code']], 
             $minutes = 5
         );
 
-        return ['qr_code' => $newPix->qrCode];
+        return ['qr_code' => $newPix['data']['qr_code']];
     }
 }

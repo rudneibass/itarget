@@ -4,10 +4,13 @@ namespace App\Modules\Shared\Services\External\Bradesco;
 use Illuminate\Support\Facades\Http;
 use Exception;
 
-class BradescoPix
+class PixBradesco
 {
-    
-    public function __construct(private string $baseUrl, private string $clientId, private string $clientSecret){}
+    private string $baseUrl;
+
+    public function __construct(private string $clientId, private string $clientSecret){
+        $this->baseUrl = config('services.itau.pix_url');
+    }
 
     private function authenticate(): string
     {
@@ -49,7 +52,7 @@ class BradescoPix
         }
     }
 
-    public function checkPayment(string $txId): array
+    public function searchPayment(string $txId): array
     {
         $token = $this->authenticate();
 

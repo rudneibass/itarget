@@ -6,8 +6,11 @@ use Exception;
 
 class ItauPix
 {
-    
-    public function __construct(private string $baseUrl, private string $clientId, private string $clientSecret){}
+    private string $baseUrl;
+
+    public function __construct(private string $clientId, private string $clientSecret){
+        $this->baseUrl = config('services.itau.pix_url');
+    }
 
     private function authenticate(): string
     {
@@ -49,7 +52,7 @@ class ItauPix
         }
     }
 
-    public function checkPayment(string $txId): array
+    public function searchPayment(string $txId): array
     {
         $token = $this->authenticate();
 

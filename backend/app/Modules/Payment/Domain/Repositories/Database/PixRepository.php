@@ -30,9 +30,7 @@ class PixRepository {
     }
 
     public function update(Pix $pix): bool {
-        $pixToUpdate = $this->modelAdapter->find((int)$pix->id);
-        $pixToUpdate['status'] = $pix['status'];
-        return $this->modelAdapter->update($pixToUpdate['id'], $pixToUpdate);
+        return $this->modelAdapter->update($pix['id'], $pix->toArray());
     }
 
     public function list(): array {
