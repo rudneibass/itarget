@@ -38,17 +38,19 @@ class GeneratePix
         }
 
         if ($pixFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PENDING])[0]) {
-            if($pixFoundOnGateway = $this->pixGatewayAdapter->search($pixFoundOnRepository->txId, '$clientId', '$clientSecet')){
+            if($pixFoundOnGateway = $this->pixGatewayAdapter->search(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => ''])){
                 $pixFoundOnRepository->status = $pixFoundOnGateway['data']['status'];
                 $this->repository->update($pixFoundOnRepository);
             }
         }
         
         # Verifique a doc do serviço instanciado para saber quais são as informações nescessárias 
-        # para o parameto do mátodo setCredentials(array $credentials): void
+        # para o parameto dos mátodos 
+        # setCredentials(array $credentials): void e
+        # generate(array $pix): array;
         $this->pixGatewayAdapter->setCredentials(['client' => '', 'secret' => '', 'key_pix' => '', 'number' => '']);
         
-        $newPix = $this->pixGatewayAdapter->generate($pix->value, $pix->description, $pix->productId);
+        $newPix = $this->pixGatewayAdapter->generate(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => '']);
 
         $this->repository
         ->create(

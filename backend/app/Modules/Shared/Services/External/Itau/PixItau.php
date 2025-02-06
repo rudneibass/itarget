@@ -41,9 +41,19 @@ class PixItau
         $this->accessToken = $this->generateClientToken()->access_token;
     }
 
-    public function create(array $product): array
+    public function create(array $pix): array
     {
-        $product = current($product);
+        if (!isset($pix['pessoa_cpf']) || empty($pix['pessoa_cpf'])) {
+            throw new Exception('$pix["pessoa_cpf"] obrigatório para gera pix.');
+        }
+        
+        if (!isset($pix['pessoa_nome']) || empty($pix['pessoa_nome'])) {
+            throw new Exception('$pix["pessoa_nome"] obrigatório para gera pix.');
+        }
+
+        if (!isset($pix['valor']) || empty($pix['valor'])) {
+            throw new Exception('$pix["valor"] obrigatório para gera pix.');
+        }
 
         try {
 
@@ -62,14 +72,14 @@ class PixItau
                     'expiracao' => "6000"
                 ],
                 'devedor' => [
-                    "cpf" => $product['pessoa_cpf'],
-                    'nome' => $product['pessoa_nome']
+                    "cpf" => $pix['pessoa_cpf'],
+                    'nome' => $pix['pessoa_nome']
                 ],
                 'chave' => $this->keyPix,
                 'valor' => [
-                    "original" => number_format($product['valor'], 2, '.',''),
+                    "original" => number_format($pix['valor'], 2, '.',''),
                 ],
-                'solicitacaoPagador' => $product['pessoa_nome']
+                'solicitacaoPagador' => $pix['pessoa_nome']
             ]);
 
             $response = $response->json();
@@ -90,11 +100,11 @@ class PixItau
         }
     }
 
-    public function capture(array $product): array
+    public function capture(array $pix): array
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->baseUrl . '/pix_recebimentos/v2/cob/' . $product['tid'],
+            CURLOPT_URL => $this->baseUrl . '/pix_recebimentos/v2/cob/' . $pix['tid'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -117,7 +127,7 @@ class PixItau
         return $response = json_decode($response);
     }
 
-    public function generateClientToken()
+    private function generateClientToken()
     {
         try {
             $curl = curl_init();

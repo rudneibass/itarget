@@ -20,20 +20,12 @@ class PixGatewayAdapter implements PixGateway
     public function setCredentials(array $credentials): void{
         $this->service->setCredentials($credentials);
     }
-
-    
-    public function generate(float $value, string $description, string $productId): array
-    {
-        return 
-        $this->service->generate(
-            $productId, 
-            $value, 
-            $description
-        );
+ 
+    public function generate(array $pix): array {
+        return $this->service->generate($pix);
     }
     
-    public function search(string $transactionId): array
-    {
-        return $this->service->searchPayment($transactionId);
+    public function search(array $pix): array {
+        return $this->service->searchPayment($pix);
     }
 }
