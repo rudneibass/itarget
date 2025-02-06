@@ -8,18 +8,19 @@ use App\Modules\Payment\Domain\Entities\PixDto;
 use App\Modules\Payment\Domain\Interfaces\Model;
 use App\Modules\Payment\Domain\Interfaces\Database;
 
-use Exception;
 
 class PixRepository {
 
     public function __construct(private Model $modelAdapter, private Database $databaseAdapter){}
 
-    public function create(Pix $pixTransaction): ?Pix {
-        $newRecord = $this->modelAdapter->create($pixTransaction->toArray());
+    public function create(Pix $pix): ?Pix {
+        $newRecord = $this->modelAdapter->create($pix->toArray());
         return 
         new Pix(
             new PixDto([
+                'description' => $newRecord['description'],
                 'product_id' => $newRecord['product_id'],
+                'value' => $newRecord['value'],
                 'user_id' => $newRecord['user_id'],
                 'status' => $newRecord['status'],
                 'qr_code' => $newRecord['qr_code'],
@@ -29,17 +30,49 @@ class PixRepository {
         );
     }
 
-    public function update(Pix $pix): bool {
-        return $this->modelAdapter->update($pix['id'], $pix->toArray());
+    public function update(Pix $pix): ?Pix {
+        $updated = $this->modelAdapter->update($pix->id, $pix->toArray());
+        
+        return
+        new Pix(
+            new PixDto([
+                'id' => $updated['id'],
+                'description' => $updated['description'],
+                'product_id' => $updated['product_id'],
+                'value' => $updated['value'],
+                'user_id' => $updated['user_id'],
+                'status' => $updated['status'],
+                'qr_code' => $updated['qr_code'],
+                'tx_id' => $updated['tx_id'],
+                'api_response' => $updated['api_response']
+            ])
+        );
     }
 
     public function list(): array {
-        return $this->modelAdapter->all();
+        return 
+        array_map(function($item){
+            return
+            new Pix(
+                new PixDto([
+                    'id' => $item['id'],
+                    'description' => $item['description'],
+                    'product_id' => $item['product_id'],
+                    'value' => $item['value'],
+                    'user_id' => $item['user_id'],
+                    'status' => $item['status'],
+                    'qr_code' => $item['qr_code'],
+                    'tx_id' => $item['tx_id'],
+                    'api_response' => $item['api_response']
+                ])
+            );
+        }, $this->modelAdapter->all());
+        
     }
 
     public function findAllByParams(array $params = []): ?array {
         $query = "SELECT * 
-            FROM 'pix_transaction' 
+            FROM 'pix' 
             WHERE TRUE "
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
             .(isset($params['value']) && !empty($params['value']) ? " AND 'value' = {$params['value']}" : "" )
@@ -53,6 +86,7 @@ class PixRepository {
             return 
             new Pix(
                 new PixDto([
+                    'description' => $item['description'],
                     'product_id' => $item['product_id'],
                     'user_id' => $item['user_id'],
                     'value' => $item['value'],

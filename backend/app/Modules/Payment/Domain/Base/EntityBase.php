@@ -5,9 +5,9 @@ namespace App\Modules\Payment\Domain\Base;
 use Exception;
 
 abstract class EntityBase {
-    protected ?string $id;
-    protected ?string $tenatId;
-    protected ?string $isActive;
+    protected ?string $id = null;
+    protected ?string $tenatId = null;
+    protected ?string $isActive = null;
     protected ?string $displayName = '';
 
     public function setId(string $id) {

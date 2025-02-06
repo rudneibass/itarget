@@ -9,8 +9,9 @@ class PixDto extends DtoBase
     public string $productId;
     public string $userId;
     public float $value;
+    public ?string $id = null;
     public ?string $status = null;
     public ?string $qrCode = null;
     public ?string $txId = null;
-    public ?array $apiResponse = null;
+    public ?string $apiResponse = null;
 }

@@ -14,7 +14,7 @@ class ModelAdapter implements ModelInterface
         $this->model = $model;
     }
 
-    public function find(int $id): ?array
+    public function find(string $id): ?array
     {
         $record = $this->model->find($id);
         return $record ? $record->toArray() : null;
@@ -25,13 +25,13 @@ class ModelAdapter implements ModelInterface
         return $this->model->create($data)->toArray();
     }
 
-    public function update(int $id, array $data): bool
+    public function update(string $id, array $data): array
     {
         $record = $this->model->find($id);
-        return $record ? $record->update($data) : false;
+        return $record->update($data) ? $this->model->find($id)->toArray() : [];
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $record = $this->model->find($id);
         return $record ? $record->delete() : false;

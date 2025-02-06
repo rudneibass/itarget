@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Pix extends Model
 {
     use HasFactory;
-    protected $table='pix_transaction';
-    protected $fillable = ['*'];
+    protected $table='pix';
+    protected $fillable = ['description', 'product_id', 'user_id','value', 'status','qr_code','tx_id', 'api_response'];
     protected $hidden = [''];
     protected $casts = [
         'id' => 'string',
