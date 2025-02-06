@@ -43,16 +43,12 @@ class GeneratePix
                 $this->repository->update($pixFoundOnRepository);
             }
         }
-
-        $newPix = 
-        $this->pixGatewayAdapter
-        ->generate(
-            $pix->productId, 
-            $pix->value, 
-            $pix->description,
-            '$clientId', 
-            '$clientSecet'
-        );
+        
+        # Verifique a doc do serviço instanciado para saber quais são as informações nescessárias 
+        # para o parameto do mátodo setCredentials(array $credentials): void
+        $this->pixGatewayAdapter->setCredentials(['client' => '', 'secret' => '', 'key_pix' => '', 'number' => '']);
+        
+        $newPix = $this->pixGatewayAdapter->generate($pix->value, $pix->description, $pix->productId);
 
         $this->repository
         ->create(
@@ -73,6 +69,6 @@ class GeneratePix
             $minutes = 5
         );
 
-        return ['qr_code' => $newPix['data']['qr_code']];
+        return $newPix;
     }
 }

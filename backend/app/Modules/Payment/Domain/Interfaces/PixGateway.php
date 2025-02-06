@@ -3,6 +3,7 @@ namespace App\Modules\Payment\Domain\Interfaces;
 
 interface PixGateway
 {
-    public function generate(string $contaReceberId, float $valor, string $descricao, string $clientId, string $clientSecret): array;
-    public function search(string $txId, string $clientId, string $clientSecret): array;
+    public function setCredentials(array $credentials): void;
+    public function generate(float $value, string $description, string $productId): array;
+    public function search(string $transactionId): array;
 }

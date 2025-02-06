@@ -6,37 +6,38 @@ use Exception;
 
 class PixItau 
 {
-    private $clientId;
-    private $clientSecret;
     private $baseUrl = 'https://secure.api.itau';
     private $baseUrlOAuth = 'https://sts.itau.com.br';
-    private $accessToken;
-    private $key;
-    private $crt_path;
-    private $key_path;
     
-    public function __construct(array $keys = [], string $environment = 'production')
+    private $clientSecret;
+    private $clientId;
+    
+    private $keyPix;
+    private $crtPath;
+    private $keyPath;
+
+    private $accessToken;
+    
+    public function setCredentials(array $credentials)
     {
-        if (empty($keys['number']) || empty($keys['secret'])) {
-            throw new Exception("Credenciais pix invalida");
-        }
-        if ($keys['environment'] != 'production') {
+        if (config('environment') != 'production') {
             $this->baseUrl = 'https://devportal.itau.com.br/sandboxapi/pix_recebimentos_ext_v2/v2';
             $this->baseUrlOAuth = 'https://devportal.itau.com.br/sandboxapi/pix_recebimentos_ext_v2/v2';
         }
 
-        if (
-            !is_dir(__DIR__ . '/Certificate/'. $keys['client'] . '/' . $keys['controle_layout_id']) ||
-            !file_exists(__DIR__ . '/Certificate/' . $keys['client'] . '/' . $keys['controle_layout_id'] . '/certificate.crt')
-        ) {
-            throw new Exception("Certificado não encontrado para o cliente " . $keys['client'] . " no controle layout " . $keys['controle_layout_id']);
+        if (empty($credentials['number']) || empty($credentials['secret'])) {
+            throw new Exception("Credenciais pix invalida");
         }
 
-        $this->crt_path = __DIR__ . '/Certificate' . '/' . $keys['client'] . '/' . $keys['controle_layout_id'] . '/certificate.crt';
-        $this->key_path = __DIR__ . '/Certificate' . '/' . $keys['client'] . '/' . $keys['controle_layout_id'] . '/privateKey.key';
-        $this->clientId = trim($keys['number']);
-        $this->clientSecret = trim($keys['secret']);
-        $this->key = $keys['key_pix'];
+        if (!file_exists(__DIR__ . '/Certificate/' . $credentials['client'] . '/certificate.crt')) {
+            throw new Exception("Certificado não encontrado para o cliente " . $credentials['client'] . " no controle layout " . $credentials['controle_layout_id']);
+        }
+
+        $this->crtPath = __DIR__ . '/Certificate' . '/' . $credentials['client'] . '/certificate.crt';
+        $this->keyPath = __DIR__ . '/Certificate' . '/' . $credentials['client'] . '/privateKey.key';
+        $this->clientId = trim($credentials['number']);
+        $this->clientSecret = trim($credentials['secret']);
+        $this->keyPix = $credentials['key_pix'];
         $this->accessToken = $this->generateClientToken()->access_token;
     }
 
@@ -48,8 +49,8 @@ class PixItau
 
             $response = Http::withOptions([
                 'verify' => false,
-                'cert' => $this->crt_path,
-                'ssl_key' => $this->key_path,
+                'cert' => $this->crtPath,
+                'ssl_key' => $this->keyPath,
                 'ssl_key_type' => 'PEM',
                 'ssl_cert_type' => 'PEM'
             ])->withHeaders([
@@ -64,7 +65,7 @@ class PixItau
                     "cpf" => $product['pessoa_cpf'],
                     'nome' => $product['pessoa_nome']
                 ],
-                'chave' => $this->key,
+                'chave' => $this->keyPix,
                 'valor' => [
                     "original" => number_format($product['valor'], 2, '.',''),
                 ],
@@ -97,9 +98,9 @@ class PixItau
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_SSLCERT => $this->crt_path,
-            CURLOPT_SSLKEY => $this->key_path,
-            CURLOPT_CAINFO => $this->crt_path,
+            CURLOPT_SSLCERT => $this->crtPath,
+            CURLOPT_SSLKEY => $this->keyPath,
+            CURLOPT_CAINFO => $this->crtPath,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
@@ -122,9 +123,9 @@ class PixItau
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $this->baseUrlOAuth . '/api/oauth/token',
-                CURLOPT_SSLCERT => $this->crt_path,
-                CURLOPT_SSLKEY => $this->key_path,
-                CURLOPT_CAINFO => $this->crt_path,
+                CURLOPT_SSLCERT => $this->crtPath,
+                CURLOPT_SSLKEY => $this->keyPath,
+                CURLOPT_CAINFO => $this->crtPath,
                 CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
