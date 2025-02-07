@@ -22,10 +22,10 @@ class PixGatewayAdapter implements PixGateway
     }
  
     public function generate(array $pix): array {
-        return $this->service->generate($pix);
+        return $this->service->create($pix);
     }
     
     public function search(array $pix): array {
-        return $this->service->searchPayment($pix);
+        return $this->service->capture($pix);
     }
 }
