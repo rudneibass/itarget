@@ -4,7 +4,7 @@ namespace App\Modules\Shared\Services\External\CardFlag;
 
 use Exception;
 
-trait CardFlag
+class CardFlag
 {
 
     public function get(int $number): string
