@@ -12,4 +12,16 @@ class DatabaseAdapter implements Database
             return (array) $item;
         }, DB::select($query, $bindings));
     }
+
+    public function beginTransaction(): void {
+        DB::beginTransaction();
+    }
+
+    public function commit(): void  {
+        DB::commit();
+    }
+
+    public function rollback(): void  {
+        DB::rollBack();
+    }
 }

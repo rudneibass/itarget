@@ -7,25 +7,25 @@ use App\Modules\Payment\Domain\Interfaces\PixGateway;
 class PixGatewayAdapter implements PixGateway
 {
     
-    private $service;
-    private array $availableServices = [
+    private $gateway;
+    private array $availableGateway = [
         'itau' => \App\Modules\Shared\Services\External\Itau\ItauPix::class,
         'bradesco' => \App\Modules\Shared\Services\External\Bradesco\PixBradesco::class,
     ];
     
-    public function __construct(private string $paymentGateway){
-        $this->service = new $this->availableServices[$paymentGateway]();
+    public function setGateway(string $gateway): void{
+        $this->gateway = new $this->availableGateway[$gateway]();
     }
 
     public function setCredentials(array $credentials): void{
-        $this->service->setCredentials($credentials);
+        $this->gateway->setCredentials($credentials);
     }
  
     public function generate(array $pix): array {
-        return $this->service->create($pix);
+        return $this->gateway->create($pix);
     }
     
     public function search(array $pix): array {
-        return $this->service->capture($pix);
+        return $this->gateway->capture($pix);
     }
 }

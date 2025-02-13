@@ -30,26 +30,27 @@ class GeneratePix
         $cacheKey = "qr_code_pix_product_id_{$pix->productId}_user_id_{$pix->useId}";
         
         if ($this->cacheAdapter->has($cacheKey)) { 
-            return $this->cacheAdapter->get($cacheKey); 
+            return $this->cacheAdapter->get($cacheKey);
         }
 
-        if ($this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PAID])[0]) {
-            return ['message' => 'Já existe um pagamento efetuado via pix associado ao produto_id '.$pix->productId];
+        if ($pixPaidFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PAID])[0]) {
+            return ['message' => 'Já existe um pagamento efetuado via pix pelo user_id '.$pix->userId.' associado ao produto_id '.$pix->productId];
         }
 
-        if ($pixFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PENDING])[0]) {
-            if($pixFoundOnGateway = $this->pixGatewayAdapter->search(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => ''])){
-                $pixFoundOnRepository->status = $pixFoundOnGateway['data']['status'];
-                $this->repository->update($pixFoundOnRepository);
+        if ($pixPendingFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PENDING])[0]) {
+            if($pixPendingFoundOnGateway = $this->pixGatewayAdapter->search(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => ''])){
+                $pixPendingFoundOnRepository->status = $pixPendingFoundOnGateway['data']['status'];
+                $this->repository->update($pixPendingFoundOnRepository);
             }
         }
         
-        # Verifique a doc do serviço instanciado para saber quais são as informações nescessárias 
-        # para o parameto dos mátodos 
+        # Verifique a doc do serviço instanciado para saber quais são  
+        # as informações nescessárias para os parametos dos mátodos 
+        # setGateway(string $gateway): void;
         # setCredentials(array $credentials): void e
         # generate(array $pix): array;
-        $this->pixGatewayAdapter->setCredentials(['client' => '', 'secret' => '', 'key_pix' => '', 'number' => '']);
-        
+        $this->pixGatewayAdapter->setGateway('itau');
+        $this->pixGatewayAdapter->setCredentials(['client' => '', 'secret' => '', 'key_pix' => '', 'number' => '']); 
         $newPix = $this->pixGatewayAdapter->generate(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => '']);
 
         $this->repository

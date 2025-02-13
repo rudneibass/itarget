@@ -31,7 +31,7 @@ class GeneratePixController extends BaseController {
                modelAdapter: new ModelAdapter(new Pix()), 
                databaseAdapter: new DatabaseAdapter,
                cacheAdapter: new CacheAdapter,
-               pixGatewayAdapter: new PixGatewayAdapter('itau')
+               pixGatewayAdapter: new PixGatewayAdapter()
             );
             return $useCase->execute($request->all());
         });
