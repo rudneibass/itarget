@@ -90,16 +90,15 @@ class FormRepository {
     public function getFormFieldOptions(string $formFieldId): array {
         return array_map(function($option) {
             return new FormFieldOptionDto([
-                'id' => $option['id'],
-                'form_field_id' => $option['form_field_id'],
-                'name' => $option['name'],
-                'value' => $option['value'],
-                'order' => $option['order'],
-                'selected' => $option['selected']
-            ]);
-        }, $this->databaseAdapter->rawQuery("SELECT * FROM 'form_field_id' WHERE form_id = {$formFieldId} ")
-    );
-
+                    'id' => $option['id'],
+                    'form_field_id' => $option['form_field_id'],
+                    'name' => $option['name'],
+                    'value' => $option['value'],
+                    'order' => $option['order'],
+                    'selected' => $option['selected']
+                ]);
+            }, $this->databaseAdapter->rawQuery("SELECT * FROM 'form_field_id' WHERE form_id = {$formFieldId} ")
+        );
     }
 
     public function findAllByParams(array $params = []): ?array {
@@ -138,18 +137,27 @@ class FormRepository {
         );
     }
 
+    /*
     public function update(Form $form): bool {
         $form = $this->formModelAdapter->find((int)$form->id);
         $form['name'] = $form['name'];
         $form['attributes'] = $form['attributes'];
         return $this->formModelAdapter->update($form['id'], $form);
+    }*/
+
+    public function update(Form $form): Form {
+        $updated = $this->formModelAdapter->update($form->id, $form->toArray());
+        return
+        new Form(
+            new FormDto([
+                'id' => $updated['id'],
+                'name' => $updated['name'],
+                'attributes' => $updated['attributes']
+            ])
+        );
     }
 
     public function list(): array {
         return $this->formModelAdapter->all();
-    }
-
-    public function delete(string $id): int {
-        return 1;
     }
 }
