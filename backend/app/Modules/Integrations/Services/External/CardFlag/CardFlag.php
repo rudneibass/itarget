@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shared\Services\External\CardFlag;
+namespace App\Modules\Integrations\Services\External\CardFlag;
 
 use Exception;
 

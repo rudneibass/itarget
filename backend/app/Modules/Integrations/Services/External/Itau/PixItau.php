@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shared\Services\External\Itau;
+namespace App\Modules\Integrations\Services\External\Itau;
 use Illuminate\Support\Facades\Http;
 use Exception;
 

@@ -34,6 +34,9 @@ test:
 grep-curl:
 	docker exec -it php-prototipo-laravel php -m | grep curl
 
+bash:
+	docker exec -it php-prototipo-laravel bash
+
 # obter ip do container:  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' php-prototipo-laravel
 
 

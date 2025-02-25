@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Bank;
 
-use App\Modules\Shared\Services\External\Itau\PixItau;
+use App\Modules\Integrations\Services\External\Itau\PixItau;
 use PHPUnit\Framework\TestCase;
 
 class PixItauTest extends TestCase

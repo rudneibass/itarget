@@ -8,13 +8,13 @@ class PixGatewayAdapter implements PixGateway
 {
     
     private $gateway;
-    private array $availableGateway = [
-        'itau' => \App\Modules\Shared\Services\External\Itau\ItauPix::class,
-        'bradesco' => \App\Modules\Shared\Services\External\Bradesco\PixBradesco::class,
+    private array $availableGateways = [
+        'itau' => \App\Modules\Integrations\Services\External\Itau\ItauPix::class,
+        'bradesco' => \App\Modules\Integrations\Services\External\Bradesco\PixBradesco::class,
     ];
     
     public function setGateway(string $gateway): void{
-        $this->gateway = new $this->availableGateway[$gateway]();
+        $this->gateway = new $this->availableGateways[$gateway]();
     }
 
     public function setCredentials(array $credentials): void{

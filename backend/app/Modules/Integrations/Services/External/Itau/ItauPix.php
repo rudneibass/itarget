@@ -1,10 +1,10 @@
 <?php
-namespace App\Modules\Shared\Services\External\Bradesco;
+namespace App\Modules\Integrations\Services\External\Itau;
 
 use Illuminate\Support\Facades\Http;
 use Exception;
 
-class PixBradesco
+class ItauPix
 {
     private string $baseUrl;
 

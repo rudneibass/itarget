@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shared\Services\Internal\Form;
+namespace App\Modules\Integrations\Services\Internal\Form;
 
 use App\Modules\Form\Infra\Controllers\Form\GetFormController;
 
