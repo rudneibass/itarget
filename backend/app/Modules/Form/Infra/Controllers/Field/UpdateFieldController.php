@@ -2,12 +2,12 @@
 
 namespace App\Modules\Form\Infra\Controllers\Field;
 
-use App\Modules\Form\Domain\UseCases\FormField\UpdateFormField\UpdateFormField;
 
 use App\Modules\Form\Infra\Base\BaseController;
 use App\Modules\Form\Infra\Models\EloquentORM\FormField;
 use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Form\Infra\Adapters\ModelAdapter;
+use App\Modules\Form\Domain\UseCases\Field\UpdateField\UpdateField;
 use Illuminate\Http\Request;
 
 class UpdateFieldController extends BaseController {
@@ -21,7 +21,7 @@ class UpdateFieldController extends BaseController {
                 $this->updateRequest->merge($request->all());
                 $this->updateRequest->validate($this->updateRequest->rules());
             }
-            $useCase = new UpdateFormField(new ModelAdapter(new FormField()), new DatabaseAdapter());
+            $useCase = new UpdateField(new ModelAdapter(new FormField()), new DatabaseAdapter());
             return $useCase->execute($request->all(), $id);
         });
     }
