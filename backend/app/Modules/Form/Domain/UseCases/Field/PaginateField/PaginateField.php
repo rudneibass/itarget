@@ -2,9 +2,9 @@
 
 namespace App\Modules\Form\Domain\UseCases\Field\PaginateField;
 
-use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
+use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class PaginateField {
@@ -13,7 +13,7 @@ class PaginateField {
 
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
         $this->repository = 
-        new FormFieldRepository(
+        new FieldRepository(
             formFieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );

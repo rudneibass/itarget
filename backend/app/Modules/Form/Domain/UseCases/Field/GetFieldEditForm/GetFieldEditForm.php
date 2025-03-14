@@ -2,18 +2,17 @@
 
 namespace App\Modules\Form\Domain\UseCases\Field\GetFieldEditForm;
 
-use App\Modules\Form\Domain\UseCases\FormField\GetFormCreate\GetFormCreate;
-use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
-
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
+use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
+use App\Modules\Form\Domain\UseCases\Field\GetFieldCreateForm\GetFieldCreateForm;
 
 class GetFieldEditForm {
     private $repository;
   
     public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
         $this->repository = 
-        new FormFieldRepository(
+        new FieldRepository(
             formFieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );
@@ -21,7 +20,7 @@ class GetFieldEditForm {
 
     public function execute(array $request){
         
-        $useCase = new GetFormCreate ($this->modelAdapter, $this->databaseAdapter);
+        $useCase = new GetFieldCreateForm($this->modelAdapter, $this->databaseAdapter);
         $form = $useCase->execute();
 
         $entity = $this->repository->getById($request['id']);

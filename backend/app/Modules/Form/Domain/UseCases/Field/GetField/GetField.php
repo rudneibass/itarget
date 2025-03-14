@@ -2,7 +2,7 @@
 
 namespace App\Modules\Form\Domain\UseCases\Field\GetField;
 
-use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
+use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
 
@@ -11,7 +11,7 @@ class GetField {
     
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
         $this->repository = 
-        new FormFieldRepository(
+        new FieldRepository(
             formFieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );

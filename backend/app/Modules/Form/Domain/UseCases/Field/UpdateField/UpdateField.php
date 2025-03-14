@@ -4,7 +4,7 @@ namespace App\Modules\Form\Domain\UseCases\Field\UpdateField;
 
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
-use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
+use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
 use Exception;
 
 class UpdateField {
@@ -12,19 +12,19 @@ class UpdateField {
 
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
         $this->repository = 
-        new FormFieldRepository(
+        new FieldRepository(
             formFieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );
     }
 
     public function execute(array $requestData, $id): int {
-        $FormField = $this->repository->getById($id);
-        if (!$FormField) { 
+        $formField = $this->repository->getById($id);
+        if (!$formField) { 
             throw new Exception("Não foi possivel localizar fomulário com id ".$id."");
         }
-        $FormField->name = $requestData['name'] ?? $FormField->name;
-        $FormField->attributes = $requestData['attributes'] ?? $FormField->attributes;
-        return $this->repository->update($FormField);
+        $formField->name = $requestData['name'] ?? $formField->name;
+        $formField->attributes = $requestData['attributes'] ?? $formField->attributes;
+        return $this->repository->update($formField);
     }
 }

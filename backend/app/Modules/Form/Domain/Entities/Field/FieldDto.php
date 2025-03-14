@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Form\Domain\Entities\FormField;
+namespace App\Modules\Form\Domain\Entities\Field;
 
 use App\Modules\Form\Domain\Base\DtoBase;
 
-class FormFieldDto extends DtoBase
+class FieldDto extends DtoBase
 {
     public ?string $id = null;
     public ?string $formId = null;

@@ -1,27 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\FormField\Database;
+namespace App\Modules\Form\Domain\Repositories\Field\Database;
 
-use App\Modules\Form\Domain\Interfaces\Model;
 use App\Modules\Form\Domain\Entities\FormField\FormField;
-use App\Modules\Form\Domain\Entities\FormField\FormFieldDto;
+use App\Modules\Form\Domain\Entities\Field\Field;
+use App\Modules\Form\Domain\Entities\Field\FieldDto;
 use App\Modules\Form\Domain\Entities\Form\Form;
 use App\Modules\Form\Domain\Entities\Form\FormDto;
+use App\Modules\Form\Domain\Interfaces\Model;
 use App\Modules\Form\Domain\Interfaces\Database;
 use Exception;
 
-class FormFieldRepository {
+class FieldRepository {
 
     public function __construct(private Model $formFieldModelAdapter, private Database $databaseAdapter){}
 
-    public function getByName(string $name) : FormField {
+    public function getByName(string $name) : Field {
         $formFields = $this->formFieldModelAdapter->where(['name' => $name]);
         if (!count($formFields)) { 
             throw new Exception("Não foi possivel localizar campo com nome = '".$name."'"); 
         }  
         return 
-        new FormField(
-            new FormFieldDto([
+        new Field(
+            new FieldDto([
                 'id' => $formFields[0]['id'],
                 'form_id' => $formFields[0]['form_id'],
                 'name' => $formFields[0]['name'],
@@ -34,15 +35,15 @@ class FormFieldRepository {
         );
     }
 
-    public function getById(string $id) : FormField {
+    public function getById(string $id) : Field {
         $formField = $this->formFieldModelAdapter->where(['id' => $id]);
         
         if (!count($formField)) { 
             throw new Exception("Não foi possivel localizar campo com id = '".$id."'");
         }
         return 
-        new FormField(
-            new FormFieldDto([
+        new Field(
+            new FieldDto([
                 'id' => $formField[0]['id'],
                 'form_id' => $formField[0]['form_id'],
                 'name' => $formField[0]['name'],
@@ -68,8 +69,8 @@ class FormFieldRepository {
 
         return array_map(function($item){
             return 
-            new FormField(
-                new FormFieldDto([
+            new Field(
+                new FieldDto([
                     'id' => (string)$item['id'],
                     'form_id' => (string)$item['form_id'],
                     'is_active' => (string)$item['is_active'],
@@ -84,12 +85,12 @@ class FormFieldRepository {
     }
 
 
-    public function create(FormField $formField): ?FormField {
+    public function create(Field $formField): ?Field {
         $newRecord = $this->formFieldModelAdapter->create($formField->toArray());
 
         return 
-        new FormField(
-            new FormFieldDto([
+        new Field(
+            new FieldDto([
                 'id' => $newRecord['id'],
                 'form_id' => $newRecord['form_id'],
                 'name' => $newRecord['name'],
@@ -102,7 +103,7 @@ class FormFieldRepository {
         );
     }
 
-    public function update(FormField $formField): bool {
+    public function update(Field $formField): bool {
         $formField = $this->formFieldModelAdapter->find((int)$formField->id);
         $formField['name'] = $formField['name'];
         $formField['attributes'] = $formField['attributes'];
@@ -112,8 +113,8 @@ class FormFieldRepository {
     public function list(): array {
         return array_map(function($item){
             return 
-            new FormField(
-                new FormFieldDto([
+            new Field(
+                new FieldDto([
                     'id' => $item['id'],
                     'form_id' => $item['form_id'],
                     'name' => $item['name'],

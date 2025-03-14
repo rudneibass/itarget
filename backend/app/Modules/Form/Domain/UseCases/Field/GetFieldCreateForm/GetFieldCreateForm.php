@@ -2,25 +2,25 @@
 
 namespace App\Modules\Form\Domain\UseCases\Field\GetFieldCreateForm;
 
-use App\Modules\Form\Domain\Entities\FormField\FormField;
-use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
+use App\Modules\Form\Domain\Entities\Field\Field;
 use App\Modules\Form\Domain\Repositories\FormFieldOption\Database\FormFieldOptionRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
+use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
 
 class GetFieldCreateForm {
     private $repository;
     
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
         $this->repository = 
-        new FormFieldRepository(
+        new FieldRepository(
             formFieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );
     }
 
     public function execute(){
-        $formField = $this->repository->getFormCreateByName(FormField::FORM_NAME);
+        $formField = $this->repository->getFormCreateByName(Field::FORM_NAME);
         $fields = 
         array_map(
             function($field) {

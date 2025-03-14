@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Form\Domain\Entities\FormField;
+namespace App\Modules\Form\Domain\Entities\Field;
 
 use App\Modules\Form\Domain\Base\EntityBase;
 
-class FormField extends EntityBase {
+class Field extends EntityBase {
     const FORM_NAME = 'form-field';
     
     private string $formId;
@@ -14,7 +14,7 @@ class FormField extends EntityBase {
     private ?string $rules;
     private ?string $dataSource = null;
 
-    public function __construct(FormFieldDto $dto) {
+    public function __construct(FieldDto $dto) {
         $this->formId = $dto->formId;
         $this->name = $dto->name;
         $this->attributes = $dto->attributes;

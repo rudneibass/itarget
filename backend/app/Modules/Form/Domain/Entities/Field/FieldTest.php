@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Modules\Form\Domain\Entities\FormField;
+namespace App\Modules\Form\Domain\Entities\Field;
 
-use App\Modules\Form\Domain\Entities\FormField\FormField;
-use App\Modules\Form\Domain\Entities\FormField\FormFieldDto;
-
+use App\Modules\Form\Domain\Entities\Field\Field;
+use App\Modules\Form\Domain\Entities\Field\FieldDto;
 use PHPUnit\Framework\TestCase;
 
-class FormFieldTest extends TestCase
+class FieldTest extends TestCase
 {
     public function test_form_field_constructor()
     {
         $formField = 
-        new FormField(
-            new FormFieldDto([
+        new Field(
+            new FieldDto([
                 "id" => 1,
                 "form_id" => 1,
                 "name" => "name",
