@@ -2,7 +2,7 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { errorAlert, successAlert, warningAlert, HtmlContent, warningAlertWithHtmlContent } from '@components/Toastify'
 import { FormContextextType, FormInputsType, FormType, convertToFormType, isFormType } from "./types";
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context";
-import { formFieldApi } from "@services/backendApi/formFieldApi";
+import { fieldApi } from "@services/backendApi/fieldApi";
 
 export const FormContext = createContext({} as FormContextextType)
 
@@ -47,11 +47,11 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
     async function saveForm(inputs: FormInputsType){
         try {
             if(!recordId){
-                await formFieldApi.create(formFieldApi.endpoints.create, inputs)
+                await fieldApi.create(fieldApi.endpoints.create, inputs)
                 successAlert('Operação realizada com sucesso!')
             }
             if(recordId){
-                await formFieldApi.update({ endpoint: formFieldApi.endpoints.update , id: recordId, data: inputs })
+                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: recordId, data: inputs })
                 successAlert('Operação realizada com sucesso!')
             }
         } catch (error) {
@@ -69,12 +69,12 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             let form;
             
             if(id){
-                form = await formFieldApi.getFormWithValues({ endpoint: formFieldApi.endpoints.formEdit, formName: 'form-field', id: id });
+                form = await fieldApi.getFormWithValues({ endpoint: fieldApi.endpoints.formEdit, formName: 'form-field', id: id });
                 setRecordIdContext(id)
             }
 
             if(!id){
-                form = await formFieldApi.getForm({ endpoint: formFieldApi.endpoints.formCreate, formName: 'form-field' });
+                form = await fieldApi.getForm({ endpoint: fieldApi.endpoints.formCreate, formName: 'form-field' });
                 setRecordIdContext('')
             } 
             

@@ -86,7 +86,9 @@ export default function Index({data, actions}: InputTextPropsType) {
       <div className={`col-md-${data.attributes?.grid}`}>
         <div className="form-group mb-3">
           <label className='text-muted' htmlFor={data.attributes?.name || data.attributes?.id || ''}>
-            &nbsp;{data.attributes?.label || data.attributes?.name || ''}
+            <small>
+              &nbsp;{data.attributes?.label || data.attributes?.name || ''}
+            </small>
           </label>
           <input
             type={data.attributes?.type || 'text'}

@@ -2,47 +2,30 @@
 import { useListContext } from './context'
 import { PaginatedListLinksType } from './types'
 
-import Form from '@pages/Form/Form'
-
-import CustomCard from '@components/Bootstrap/CustomCard'
-import SearchBar from '@components//Bootstrap/SearchBar'
+import { PageContainer } from '@components/Bootstrap/PageContainer'
+import { QuickSearch } from '@components/Bootstrap/QuickSearch'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
+import Button from '@components/Bootstrap/Button'
 
-
-
+import Form from '@pages/Form/Form'
+import Icon from '@components/Bootstrap/Icon'
+import ListCards from '@components/Bootstrap/ListCards'
 
 export default function Index() {  
   const context = useListContext()
   const isLoading = context.state.isLoading
 
-  const customCardProps = {
-    data: {
-      title:'Formulários',
-      shortDescription:
-      <>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
-        <small className="text-muted" >
-           {'> Cadastros > Formulários'}
-        </small> 
-      </>
-    },
-    actions: {},
-    additionalComponents: [
-      <button 
-        type='button' 
-        className='btn btn-sm btn-outline-primary' 
-        onClick={() => context.renderFormTab({ 
-          title: 'Novo Formulário', 
-          eventKey: 'tab-new-form', 
-          content: <Form />
-        })}
-      >
-        <i className='fs-7 bi-plus-circle'></i>&nbsp;&nbsp;Cadastrar
-      </button>
-    ],
+  const pageContainerHeadProps = {
+    title:'Formulários',
+    shortDescription:
+    <>
+      <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
+      <small className="text-muted" >
+         {'> Cadastros > Formulários'}
+      </small> 
+    </>
   }
 
   const searchBarProps = {
@@ -105,32 +88,46 @@ export default function Index() {
 
   return (
     <>
-      <CustomCard 
-        data={customCardProps.data} 
-        actions={customCardProps.actions} 
-        additionalComponents={customCardProps.additionalComponents} 
-      >
-        <SearchBar 
-          data={searchBarProps.data} 
-          actions={searchBarProps.actions} 
-          additionalComponents={searchBarProps.additionalComponents} 
-        /> 
-        { isLoading && (<Loading />) }
-        { !isLoading && ( 
-          <>
-            <ListTable 
-              data={listTableProps.data} 
-              actions={listTableProps.actions} 
-              additionalComponents={listTableProps.additionalComponents} 
-            />
-            <PaginationBar 
-              data={paginationBarProps.data} 
-              actions={paginationBarProps.actions} 
-              additionalComponents={paginationBarProps.additionalComponents}
-            />
-          </>
-        )}
-      </CustomCard>
+      <PageContainer.Root>
+        <PageContainer.Head title={pageContainerHeadProps.title} shortDescription={pageContainerHeadProps.shortDescription}>
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() =>
+              context.renderFormTab({
+                title: "Novo Formulário",
+                eventKey: "tab-new-form",
+                content: <Form />,
+              })
+            }
+          >
+            <Icon name="plus-circle" size={16} />
+            &nbsp;&nbsp;
+            Cadastrar
+          </Button>
+        </PageContainer.Head>
+
+        <PageContainer.Boddy>
+          <QuickSearch.Root data={searchBarProps.data} actions={searchBarProps.actions}>
+            <QuickSearch.ShowInactive />
+          </QuickSearch.Root>
+          { isLoading && (<Loading />) }
+          { !isLoading && ( 
+            <>
+              <ListTable 
+                data={listTableProps.data} 
+                actions={listTableProps.actions} 
+                additionalComponents={listTableProps.additionalComponents} 
+              />
+              <PaginationBar 
+                data={paginationBarProps.data} 
+                actions={paginationBarProps.actions} 
+                additionalComponents={paginationBarProps.additionalComponents}
+              />
+            </>
+          )}
+        </PageContainer.Boddy>
+      </PageContainer.Root>
     </>
   )
 }

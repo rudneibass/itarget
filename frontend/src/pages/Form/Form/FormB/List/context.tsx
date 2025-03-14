@@ -2,7 +2,7 @@ import { createContext, useState,useContext, useEffect } from  "react"
 import { isPaginatedListType, PaginatedListLinksType, ListContextType, isObject } from "./types"
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
 import { errorAlert, HtmlContent, warningAlertWithHtmlContent } from "@components/Toastify"
-import { formFieldApi } from "@services/backendApi/formFieldApi"
+import { fieldApi } from "@services/backendApi/fieldApi"
   
 export const ListContext = createContext<ListContextType>({} as ListContextType)
 
@@ -39,7 +39,7 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         try {
             if(formId){
                 setStateContext({ isLoading: true })
-                const response = await formFieldApi.search(`${formFieldApi.endpoints.search}`, { ...searchParams, form_id: formId })
+                const response = await fieldApi.search(`${fieldApi.endpoints.search}`, { ...searchParams, form_id: formId })
                 if(response && isObject(response) && response.data){
                     if(isPaginatedListType(response.data)){ 
                         if(JSON.stringify(response.data.data) !== JSON.stringify(state.data)){

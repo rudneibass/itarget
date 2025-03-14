@@ -33,7 +33,9 @@ export default function Index({ data, actions }: InputCheckboxPropsType) {
     <div className={`col-md-${data.attributes?.grid || 12}`}>
       <div className="form-group mb-3 pt-3">
           <label className="form-check-label" htmlFor={data.attributes?.id}>
-            {data.attributes?.label || data.attributes?.name || ''}
+            <small>
+              {data.attributes?.label || data.attributes?.name || ''}
+            </small>
           </label><br/>
         <div className="form-check">
           <input

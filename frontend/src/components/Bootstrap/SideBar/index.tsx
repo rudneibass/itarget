@@ -25,10 +25,7 @@ export default function Index() {
 
   return (
     <aside>
-
-
       <nav className='navbar-dark width-80 m-auto'>
-        
         <div 
           className='navbar-brand' 
           style={{
@@ -66,29 +63,6 @@ export default function Index() {
             <Button 
               variant="dark w-100 text-left" 
               onClick={() => handleAddTab({ 
-                eventKey: 'tab-registration-list', 
-                title: 'Inscrições', 
-                content: 
-                  <RegistrationListContext>
-                    <RegistrationList />
-                  </RegistrationListContext> 
-                  }
-                )
-              } 
-            >
-              <div className={`${ activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}>
-                <i className='bi-people sidebar-small'></i>
-                <small className='sidebar-small sidebar-small-label mx-2'>Inscrições</small>
-              </div>
-            </Button>
-          </li>
-
-          <li className='sidebar-offset'></li>
-          
-          <li> 
-            <Button 
-              variant="dark w-100 text-left" 
-              onClick={() => handleAddTab({ 
                 eventKey: 'tab-form-list', 
                 title: 'Formulários', 
                 content: 
@@ -103,6 +77,29 @@ export default function Index() {
                 <small className='sidebar-small sidebar-small-label mx-2'>
                   Formulários
                 </small>
+              </div>
+            </Button>
+          </li>
+          
+          <li className='sidebar-offset'></li>
+
+          <li> 
+            <Button 
+              variant="dark w-100 text-left" 
+              onClick={() => handleAddTab({ 
+                eventKey: 'tab-registration-list', 
+                title: 'Inscrições', 
+                content: 
+                  <RegistrationListContext>
+                    <RegistrationList />
+                  </RegistrationListContext> 
+                  }
+                )
+              } 
+            >
+              <div className={`${ activeTab ===  'tab-registration-list' ? 'active-route' : ''}`}>
+                <i className='bi-people sidebar-small'></i>
+                <small className='sidebar-small sidebar-small-label mx-2'>Inscrições</small>
               </div>
             </Button>
           </li>

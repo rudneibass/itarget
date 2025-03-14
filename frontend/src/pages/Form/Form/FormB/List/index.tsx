@@ -5,8 +5,8 @@ import { PaginatedListLinksType } from './types'
 
 import SearchBar from '@components//Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
-import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
+import ListCards from '@components/Bootstrap/ListCards'
 
 export default function Index() {  
   const formContext = useFormContext()
@@ -39,22 +39,24 @@ export default function Index() {
     ]
   }
 
-  const listTableProps = {
-    data: {
-      thead: [
-        { name: 'order', displayName: 'Ordem', style: { width:  '10%' } },
-        { name: 'name', displayName: 'Nome', style: { width:  '10%' } },
-        { name: 'attributes', displayName: 'Atributos'  },
-      ],
-      tbody: context.state.data?.map((item) => { 
-        return {
-          id: { value: item.id.toString(), node: item.id.toString(), render: false },
-          order: { value: item.order.toString(), node: item.order.toString()+'º', render: true },
-          name: { value: item.name.toString(), node: item.name.toString(), render: true },
-          attributes: { value: item.attributes.toString(), node: <i className='text-muted'>{item.attributes.toString()}</i>, render: true },
-        }
-      })
+  const paginationBarProps = {
+    data: {paginationLinks: context.state.paginationLinks},
+    actions: {
+      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
+        context.setStateContext({ data, paginationLinks })
+      }   
     },
+    additionalComponents: []
+  }
+
+  const listCardsProps = {
+    data: context.state.data?.map((item) => { 
+      return {
+        id: item.id.toString(),
+        name: item.name.toString(),
+        description: item.name.toString(),
+      }
+    }),
     actions: {
       handleEditAction: (itemId: string) => {
         formContext.getFormContext(itemId)
@@ -73,16 +75,6 @@ export default function Index() {
     additionalComponents: []
   }
 
-  const paginationBarProps = {
-    data: {paginationLinks: context.state.paginationLinks},
-    actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
-        context.setStateContext({ data, paginationLinks })
-      }   
-    },
-    additionalComponents: []
-  }
-
   return (
     <>
       <SearchBar 
@@ -93,10 +85,10 @@ export default function Index() {
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>
-            <ListTable 
-              data={listTableProps.data} 
-              actions={listTableProps.actions} 
-              additionalComponents={listTableProps.additionalComponents} 
+            <ListCards
+              data={listCardsProps.data} 
+              actions={listCardsProps.actions} 
+              additionalComponents={listCardsProps.additionalComponents}
             />
             <PaginationBar 
               data={paginationBarProps.data} 

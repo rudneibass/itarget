@@ -104,8 +104,10 @@ export default function Index({ data, actions }: InputSelectSearchablePropsType)
         <div>
         <label className="text-muted" htmlFor={data.attributes?.name || data.attributes?.id || ''}>
             &nbsp;
-            { data.attributes?.label || data.attributes?.name } 
-            { data.attributes?.required && (<span className="required">&nbsp;*</span>) }
+            <small>
+              { data.attributes?.label || data.attributes?.name } 
+              { data.attributes?.required && (<span className="required">&nbsp;*</span>) }
+            </small>
           </label> 
         </div>
 

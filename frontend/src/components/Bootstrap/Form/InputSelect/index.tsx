@@ -75,7 +75,10 @@ export default function Index({ data, actions }: InputSelectPropsType) {
     <div className={`col-md-${data.attributes?.grid}`}>
       <div className="form-group mb-3">
         <label className="text-muted" htmlFor={data.attributes?.name || data.attributes?.id || ''}>
-          &nbsp;{data.attributes?.label || data.attributes?.name || ''}
+          &nbsp;
+          <small>
+            {data.attributes?.label || data.attributes?.name || ''}
+          </small>
         </label>
         <select
           className={`form-control ${data.attributes?.class} ${!isValidValue ? 'is-invalid' : ''}`}
