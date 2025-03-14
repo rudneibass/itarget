@@ -25,3 +25,14 @@ Route::put($formFieldEntityPath.'/update/{id}', 'App\Modules\\'.$modulePath.'\In
 
 Route::get($formFieldEntityPath.'/form/create', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$formFieldEntity.'\GetFormCreateController@handle');
 Route::get($formFieldEntityPath.'/form/edit', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$formFieldEntity.'\GetFormEditController@handle');
+
+
+$fieldEntityPath = '/field';
+$fieldEntity = 'Field';
+Route::post($fieldEntityPath.'/create', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\Create'.$fieldEntity.'Controller@handle');
+Route::get($fieldEntityPath.'/name/{name}', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\Get'.$fieldEntity.'Controller@handle');
+Route::get($fieldEntityPath.'/list', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\List'.$fieldEntity.'Controller@handle');
+Route::get($fieldEntityPath.'/search', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\Paginate'.$fieldEntity.'Controller@handle');
+Route::put($fieldEntityPath.'/update/{id}', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\Update'.$fieldEntity.'Controller@handle');
+Route::get($fieldEntityPath.'/form/create', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\Get'.$fieldEntity.'CreateFormController@handle');
+Route::get($fieldEntityPath.'/form/edit', 'App\Modules\\'.$modulePath.'\Infra\Controllers\\'.$fieldEntity.'\Get'.$fieldEntity.'EditFormController@handle');

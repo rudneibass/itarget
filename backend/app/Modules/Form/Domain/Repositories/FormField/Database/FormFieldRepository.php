@@ -36,20 +36,21 @@ class FormFieldRepository {
 
     public function getById(string $id) : FormField {
         $formField = $this->formFieldModelAdapter->where(['id' => $id]);
+        
         if (!count($formField)) { 
             throw new Exception("Não foi possivel localizar campo com id = '".$id."'");
         }
         return 
         new FormField(
             new FormFieldDto([
-                'id' => $formField['id'],
-                'form_id' => $formField['form_id'],
-                'name' => $formField['name'],
-                'rules' => $formField['rules'],
-                'is_active' => $formField['is_active'],
-                'attributes' => $formField['attributes'],
-                'data_source' => $formField['data_source'],
-                'order' => $formField['order'],
+                'id' => $formField[0]['id'],
+                'form_id' => $formField[0]['form_id'],
+                'name' => $formField[0]['name'],
+                'rules' => $formField[0]['rules'],
+                'is_active' => $formField[0]['is_active'],
+                'attributes' => $formField[0]['attributes'],
+                'data_source' => $formField[0]['data_source'],
+                'order' => $formField[0]['order'],
             ])
         );
     }
@@ -127,14 +128,10 @@ class FormFieldRepository {
     }
 
     public function getFormCreateByName(string $name) : Form {
-        //$form = $this->formModelAdapter->where(['name' => $name]);
-                
         $form = $this->databaseAdapter->rawQuery("SELECT * FROM 'form' WHERE name = '{$name}' ");
-
         if (!count($form)) { 
             throw new Exception("Não foi possivel localizar formulário com nome = '".$name."'"); 
-        }  
-
+        }
         return new Form(
             new FormDto([
                 'id' => $form[0]['id'],
@@ -154,13 +151,13 @@ class FormFieldRepository {
                     }, 
                     $this->databaseAdapter
                     ->rawQuery(
-                        "SELECT * 
-                        FROM 'form_field' 
-                        WHERE form_id = {$form[0]['id']} 
+                        'SELECT * 
+                        FROM "form_field" 
+                        WHERE form_id = '.$form[0]["id"].' 
                         ORDER BY 
-                        'order' asc, 
-                        'name' asc, 
-                        id asc"
+                        "order" ASC, 
+                        name ASC, 
+                        id ASC'
                     )
                 )
             ])

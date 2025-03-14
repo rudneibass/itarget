@@ -1,14 +1,19 @@
 <?php
 
-namespace App\Modules\Form\Domain\UseCases\FormField\GetFormEdit;
+namespace App\Modules\Form\Domain\UseCases\Field\GetFieldEditForm;
 
 use App\Modules\Form\Domain\UseCases\FormField\GetFormCreate\GetFormCreate;
+
+use App\Modules\Form\Domain\Repositories\FormFieldOption\Database\FormFieldOptionRepository;
 use App\Modules\Form\Domain\Repositories\FormField\Database\FormFieldRepository;
+use App\Modules\Form\Domain\Repositories\Factory\RepositoryFactory;
+
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
 
-class GetFormEdit {
+class GetFieldEditForm {
     private $repository;
+    private $repositoryFactory;
   
     public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
         $this->repository = 
@@ -16,13 +21,21 @@ class GetFormEdit {
             formFieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );
+
+        $this->repositoryFactory = 
+        new RepositoryFactory(
+            modelAdapter: $modelAdapter, 
+            databaseAdapter: $databaseAdapter
+        );
     }
 
     public function execute(array $request){
         
-        $useCase = new GetFormCreate($this->modelAdapter, $this->databaseAdapter);
+        $useCase = new GetFormCreate ($this->modelAdapter, $this->databaseAdapter);
         $form = $useCase->execute();
-        $entityData = $this->repository->getById($request['id'])->toArray();
+
+        $entity = $this->repository->getById($request['id']);
+        $entityData = $entity->toArray();
 
         $form['fields'] = 
         array_map(function($field)  use ($entityData) {
@@ -48,19 +61,32 @@ class GetFormEdit {
                 }
             }
 
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                }
-            }
-
-            # Refazer o searchable com o listService
             if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'searchable') {
                 if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
                     $field['attributes']['value'] = $entityData[$field['name']];
+                    $field['attributes']['data_value_description'] = '';
+                    
+                    if(filter_var($field['attributes']['data_source'], FILTER_VALIDATE_URL)){
+                        $parsedUrl = parse_url($field['attributes']['data_source']);
+                        $repository = $this->repositoryFactory->getRepository($parsedUrl['path']);
+                        $entityDataSource = $repository->getByName($entityData[$field['name']]);
+                        $field['attributes']['data_value_description'] = $entityDataSource->displayName;
+                    }
+                    
                 }
-            } 
-        
+            }
+
+            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
+                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
+                    $field['attributes']['value'] = $entityData[$field['name']];
+                    $optionsDataSource = $field['attributes']['data_source'];
+
+                    if (method_exists(FormFieldOptionRepository::class, $optionsDataSource)) {
+                        $field->options = FormFieldOptionRepository ::$optionsDataSource();
+                    }
+                }
+            }
+            
             return $field;
 
         }, $form['fields']);
