@@ -3,11 +3,10 @@
 namespace App\Modules\Form\Domain\UseCases\Form\GetFormCreate;
 
 use App\Modules\Form\Domain\Entities\Form\Form;
+use App\Modules\Form\Domain\Repositories\Option\Database\OptionRepository;
 use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
-use App\Modules\Form\Domain\Repositories\FormFieldOption\Database\FormFieldOptionRepository;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Interfaces\Model;
-
 class GetFormCreate {
     private $repository;
     
@@ -24,8 +23,8 @@ class GetFormCreate {
                 $field['attributes'] = json_decode($field['attributes'], true);
                 if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
                     $methodDataSource = $field['attributes']['data_source'];
-                    if (method_exists(FormFieldOptionRepository::class, $methodDataSource)) {
-                        $field['options'] = FormFieldOptionRepository::$methodDataSource($field['id']);
+                    if (method_exists(OptionRepository::class, $methodDataSource)) {
+                        $field['options'] = OptionRepository::$methodDataSource($field['id']);
                     }
                 }
                 return $field;
