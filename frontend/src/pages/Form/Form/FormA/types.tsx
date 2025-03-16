@@ -1,14 +1,10 @@
 import { ReactNode } from "react";
 
 export interface FormContextextType {
-  form: FormType | undefined;
-  setFormContext?: (form: FormType) => void;
-  inputs: FormInputsType;
-  setInputsContext: (inputs: FormInputsType) => void;
-  activeTab: string;
+  state: { form: FormType | undefined, isLoading: boolean, activeTab: string};
+  setStateContext: ({ form, isLoading, activeTab } : { form?: FormType, isLoading?: boolean, activeTab?: string }) => void,
+  saveFormContext: (inputs: FormInputsType) => void;
   closeFormTab: ({ tabId }: { tabId: string }) => void;
-  isLoading: boolean,
-  setIsLoadingContext: ({ isLoading } : { isLoading: boolean }) => void,
   successAlert?: (message: string) => void;
   warningAlert?: (message: string) => void;
   errorAlert?: (message: string) => void;

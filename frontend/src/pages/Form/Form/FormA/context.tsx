@@ -18,31 +18,33 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         mainTabsContext.handleRemoveTab({ eventKey: tabId })
     }
 
-    const [form, setForm] = useState<FormType>()
-    function setFormContext(form: FormType){
-        setForm(form)
+    const [state, setState] = useState({
+        form: {} as FormType,
+        isLoading: false,
+        activeTab: mainTabsContext.activeTab
+    })
+    
+    function setStateContext({ form, isLoading, activeTab } : { form?: FormType, isLoading?: boolean, activeTab?: string }){
+        setState((prevState) => ({
+            form: form !== undefined ? form : prevState.form,
+            isLoading: isLoading !== undefined ? isLoading : prevState.isLoading,
+            activeTab: activeTab !== undefined ? activeTab : prevState.activeTab
+        }));
     }
 
-    const [inputs, setInputs] = useState<FormInputsType>({} as FormInputsType);
-    function setInputsContext(inputs: FormInputsType){
+    function saveFormContext(inputs: FormInputsType){
         saveForm(inputs)
-        setInputs(inputs)
-    }
-
-    const [isLoading, setIsLoading] = useState(false)
-    function setIsLoadingContext({ isLoading } : { isLoading: boolean }){
-        setIsLoading(isLoading)
     }
 
     async function saveForm(inputs: FormInputsType){
         try {
             if(!id){
                 await formApi.create(formApi.endpoints.create, inputs)
-                successAlert('Inscrição realizada com sucesso!')
+                successAlert('Operação realizada com sucesso!')
             }
             if(id){
                 await formApi.update({ endpoint: formApi.endpoints.update , id: id, data: inputs })
-                successAlert('Inscrição atualizada com sucesso!')
+                successAlert('Operação atualizada com sucesso!')
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -53,51 +55,49 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }
     }
     
+    async function getForm(){
+        try {
+            let form
+            setStateContext({isLoading: true})
+            if(!id){
+                form = await formApi.getForm({ endpoint: formApi.endpoints.formCreate, formName: 'form' });
+            }
+            if(id){ 
+                form = await formApi.getFormWithValues({endpoint: formApi.endpoints.formEdit, id: id, formName: 'form' })
+            }
+            if(form){
+                if(isFormType(form)){
+                    setStateContext({form})
+                }
+                if(!isFormType(form)){
+                    setStateContext({ form: convertToFormType(form) })
+                }
+            } 
+            setStateContext({isLoading: false})
+        } catch (error) {
+            setStateContext({isLoading: false})
+            if (error instanceof Error) { 
+                warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
+            } else {
+                errorAlert("Caught unknown error.")
+            }    
+        }   
+    }
+
     useEffect(() => {
-        async function getForm(){
-            try {
-                let form
-                setIsLoadingContext({isLoading: true})
-                if(!id){
-                    form = await formApi.getForm({ endpoint: formApi.endpoints.formCreate, formName: 'form' });
-                }
-                if(id){ 
-                    form = await formApi.getFormWithValues({endpoint: formApi.endpoints.formEdit, id: id, formName: 'form' })
-                }
-                if(form){
-                    if(isFormType(form)){
-                        setFormContext(form)
-                    }
-                    if(!isFormType(form)){
-                        setFormContext(convertToFormType(form))
-                    }
-                } 
-                setIsLoadingContext({isLoading: false})
-            } catch (error) {
-                setIsLoadingContext({isLoading: false})
-                if (error instanceof Error) { 
-                    warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
-                } else {
-                    errorAlert("Caught unknown error.")
-                }    
-            }   
-        }
         getForm()
     },[])
+
     return (
         <FormContext.Provider 
             value={{
-                form,
-                setFormContext,
-                inputs, 
-                setInputsContext,
-                activeTab: mainTabsContext.activeTab,
+                state,
+                setStateContext,
+                saveFormContext,
                 closeFormTab,
-                isLoading,
-                setIsLoadingContext,
                 successAlert,
                 warningAlert,
-                errorAlert
+                errorAlert,
             }}
         >
             {children}

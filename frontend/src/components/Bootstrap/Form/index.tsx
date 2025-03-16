@@ -35,13 +35,14 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
 
     if (!checkRequiredFields()) {
       
-      if(!actions?.handleAlertRequiredsFieldAction) {
-        alert('Por favor, preencha os campos obrigatórios.');
-      }
       if(actions?.handleAlertRequiredsFieldAction){
         actions?.handleAlertRequiredsFieldAction('Por favor, preencha os campos obrigatórios.')
       }
 
+      if(!actions?.handleAlertRequiredsFieldAction) {
+        alert('Por favor, preencha os campos obrigatórios.');
+      }
+      
       return;
     }
     

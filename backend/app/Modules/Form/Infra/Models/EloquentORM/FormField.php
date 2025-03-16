@@ -9,7 +9,7 @@ class FormField extends Model
 {
     use HasFactory;
     protected $table='form_field';
-    protected $fillable = ['form_id', 'name', 'attributes','rules', 'order'];
+    protected $fillable = ['form_id', 'name', 'attributes','rules', 'order','is_active'];
     protected $casts = [
         'id' => 'string',
         'form_id' => 'string',

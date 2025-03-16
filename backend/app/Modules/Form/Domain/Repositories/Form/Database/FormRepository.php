@@ -125,8 +125,8 @@ class FormRepository {
 
 
     public function create(Form $form): ?Form {
-        $newRecord = $this->formModelAdapter->
-        create($form->toArray());
+        $newRecord = $this->formModelAdapter->create($form->toArray());
+        $newRecord = $this->formModelAdapter->find((int)$newRecord['id']);
         return 
         new Form(
             new FormDto([

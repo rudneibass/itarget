@@ -34,7 +34,9 @@ class Field extends EntityBase {
             'name' => $this->name,
             'display_name' => $this->displayName,
             'attributes' => $this->attributes,
-            'rules' => $this->rules
+            'rules' => $this->rules,
+            'is_active' => $this->isActive,
+            'data_source' => $this->dataSource ?? null,
         ];
     }
 
@@ -44,7 +46,6 @@ class Field extends EntityBase {
     public function setFormId(string $formId) {
         $this->formId = $formId;
     }
-
 
     public function getName(): string {
         return $this->name;

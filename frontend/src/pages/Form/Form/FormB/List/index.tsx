@@ -3,7 +3,7 @@ import { useListContext } from './context'
 import { useFormContext } from '../Form/context'
 import { PaginatedListLinksType } from './types'
 
-import SearchBar from '@components//Bootstrap/SearchBar'
+import SearchBar from '@components/Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
 import ListCards from '@components/Bootstrap/ListCards'
@@ -31,7 +31,7 @@ export default function Index() {
         className='btn btn-sm btn-outline-primary'  
         onClick={() => {
           formContext.getFormContext()
-          formContext.setShowModalFormContext(true)
+          formContext.setStateContext({showModalForm: true})
       }}>
         <i className="fs-7 bi-save"></i>&nbsp;
         Add Campo
@@ -60,7 +60,7 @@ export default function Index() {
     actions: {
       handleEditAction: (itemId: string) => {
         formContext.getFormContext(itemId)
-        formContext.setShowModalFormContext(true)
+        formContext.setStateContext({showModalForm: true})
       },
       handleDeleteAction: (itemId: string) => {
         context.handleDeleteContext(itemId)

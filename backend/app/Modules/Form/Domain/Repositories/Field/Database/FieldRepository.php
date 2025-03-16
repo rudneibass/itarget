@@ -85,9 +85,9 @@ class FieldRepository {
     }
 
 
-    public function create(Field $formField): ?Field {
+    public function create(Field $formField): ?Field {        
         $newRecord = $this->formFieldModelAdapter->create($formField->toArray());
-
+        $newRecord = $this->formFieldModelAdapter->find((int)$newRecord['id']);
         return 
         new Field(
             new FieldDto([

@@ -1,21 +1,15 @@
 import { ReactNode } from "react";
 
 export interface FormContextextType {
-  form: FormType | undefined;
-  setFormContext?: (form: FormType) => void;
-  inputs: FormInputsType;
-  setInputsContext: (inputs: FormInputsType) => void;
-  activeTab: string;
-  closeFormTab: ({ tabId }: { tabId: string }) => void;
-  isLoading: boolean;
-  setShowModalFormContext: (show: boolean) => void;
-  showModalForm: boolean;
-  setIsLoadingContext: ({ isLoading } : { isLoading: boolean }) => void;
+  state: { form: FormType | undefined, isLoading: boolean, activeTab: string, showModalForm: boolean; recordId: string | undefined };
+  setStateContext: ({ form, isLoading, activeTab, showModalForm, recordId } : { form?: FormType, isLoading?: boolean, activeTab?: string, showModalForm?: boolean; recordId?: string}) => void,
+  saveFormContext: (inputs: FormInputsType) => void;
   getFormContext: (id?: string) => void;
   successAlert?: (message: string) => void;
   warningAlert?: (message: string) => void;
   errorAlert?: (message: string) => void;
   warningAlertWithHtmlContent?: (content: ReactNode) => void;
+  closeFormTab: ({ tabId }: { tabId: string }) => void;
 }
 
 export type FormInputsType = {

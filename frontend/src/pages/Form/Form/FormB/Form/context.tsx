@@ -7,7 +7,7 @@ import { fieldApi } from "@services/backendApi/fieldApi";
 export const FormContext = createContext({} as FormContextextType)
 
 export const useFormContext = () => {
-    const context = useContext( FormContext);
+    const context = useContext(FormContext);
     return context
 }
 
@@ -18,42 +18,40 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         mainTabsContext.handleRemoveTab({ eventKey: tabId })
     }
 
-    const [form, setForm] = useState<FormType>()
-    function setFormContext(form: FormType){
-        setForm(form)
+    const [state, setState] = useState({
+        form: {} as FormType,
+        isLoading: false,
+        activeTab: mainTabsContext.activeTab,
+        showModalForm: false,
+        recordId: id
+    })
+        
+    function setStateContext(
+        { form, isLoading, activeTab, showModalForm, recordId } : 
+        { form?: FormType, isLoading?: boolean, activeTab?: string, showModalForm?: boolean, recordId?: string | undefined}
+    ){
+        setState((prevState) => ({
+            form: form !== undefined ? form : prevState.form,
+            isLoading: isLoading !== undefined ? isLoading : prevState.isLoading,
+            activeTab: activeTab !== undefined ? activeTab : prevState.activeTab,
+            showModalForm: showModalForm !== undefined ? showModalForm : prevState.showModalForm,
+            recordId: recordId !== undefined ? recordId : prevState.recordId
+        }));
     }
 
-    const [inputs, setInputs] = useState<FormInputsType>({} as FormInputsType);
-    function setInputsContext(inputs: FormInputsType){
+    function saveFormContext(inputs: FormInputsType){
         saveForm(inputs)
-        setInputs(inputs)
-    }
-
-    const [showModalForm, setShowModalForm] = useState(false);
-    function setShowModalFormContext(show: boolean){
-        setShowModalForm(show)
-    }
-
-    const [isLoading, setIsLoading] = useState(false)
-    function setIsLoadingContext({ isLoading } : { isLoading: boolean }){
-        setIsLoading(isLoading)
-    }
-
-    const [recordId, setRecordId] = useState(id)
-    function setRecordIdContext(recordId: string){
-        setRecordId(recordId)
     }
 
     async function saveForm(inputs: FormInputsType){
         try {
-            if(!recordId){
+            if(!state.recordId){
                 await fieldApi.create(fieldApi.endpoints.create, inputs)
-                successAlert('Operação realizada com sucesso!')
             }
-            if(recordId){
-                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: recordId, data: inputs })
-                successAlert('Operação realizada com sucesso!')
+            if(state.recordId){
+                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: state.recordId, data: inputs })
             }
+            successAlert('Operação realizada com sucesso!')
         } catch (error) {
             if (error instanceof Error) {
                 warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
@@ -63,37 +61,40 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }
     }
 
-    async function getFormContext( id?: string ){
+    function getFormContext(id?: string){
+        getForm(id)
+    }
+
+    async function getForm( id?: string ){
         try {
-            setIsLoadingContext({isLoading: true})
             let form;
-            
+            setStateContext({isLoading: true})
             if(id){
                 form = await fieldApi.getFormWithValues({ endpoint: fieldApi.endpoints.formEdit, formName: 'form-field', id: id });
-                setRecordIdContext(id)
+                setStateContext({recordId: id})
             }
 
             if(!id){
                 form = await fieldApi.getForm({ endpoint: fieldApi.endpoints.formCreate, formName: 'form-field' });
-                setRecordIdContext('')
+                setStateContext({recordId: ''})
             } 
             
             if(form){
                 if(isFormType(form)){
                     if(JSON.stringify(form) !== JSON.stringify(form)){
-                        setFormContext(form)
+                        setStateContext({form})
                     }
                 }
                 if(!isFormType(form)){
                     const convertedToFormType = convertToFormType(form)
                     if(JSON.stringify(convertedToFormType) !== JSON.stringify(form)){
-                        setFormContext(convertedToFormType)
+                        setStateContext({form: convertedToFormType})
                     }
                 }
             } 
-            setIsLoadingContext({isLoading: false})
+            setStateContext({isLoading: false})
         } catch (error) {
-            setIsLoadingContext({isLoading: false})
+            setStateContext({isLoading: false})
             if (error instanceof Error) { 
                 warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
             } else {
@@ -109,20 +110,14 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
     return (
         <FormContext.Provider 
             value={{
-                form,
-                setFormContext,
-                inputs, 
-                setInputsContext,
-                activeTab: mainTabsContext.activeTab,
-                closeFormTab,
-                isLoading,
-                setShowModalFormContext,
-                showModalForm,
-                setIsLoadingContext,
+                state,
+                setStateContext,
                 getFormContext,
+                closeFormTab,
+                saveFormContext,
                 successAlert,
                 warningAlert,
-                errorAlert
+                errorAlert,
             }}
         >
             {children}
