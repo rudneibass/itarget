@@ -7,6 +7,8 @@ import SearchBar from '@components/Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
 import ListCards from '@components/Bootstrap/ListCards'
+import Button from '@components/Bootstrap/Button'
+import Icon from '@components/Bootstrap/Icon'
 
 export default function Index() {  
   const formContext = useFormContext()
@@ -27,15 +29,18 @@ export default function Index() {
       },   
     },
     additionalComponents: [
-      <button 
-        className='btn btn-sm btn-outline-primary'  
+      <Button
+        variant="outline-primary"
+        size="sm"
         onClick={() => {
           formContext.getFormContext()
           formContext.setStateContext({showModalForm: true})
-      }}>
-        <i className="fs-7 bi-save"></i>&nbsp;
-        Add Campo
-      </button>
+        }}
+      >
+        <Icon name="bi bi-save" size={16} />
+        &nbsp;&nbsp;
+        Cadastrar
+      </Button>
     ]
   }
 

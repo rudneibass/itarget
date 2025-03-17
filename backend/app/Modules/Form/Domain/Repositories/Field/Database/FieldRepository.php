@@ -104,10 +104,15 @@ class FieldRepository {
     }
 
     public function update(Field $formField): bool {
-        $formField = $this->formFieldModelAdapter->find((int)$formField->id);
-        $formField['name'] = $formField['name'];
-        $formField['attributes'] = $formField['attributes'];
-        return $this->formFieldModelAdapter->update($formField['id'], $formField);
+        $field = $this->formFieldModelAdapter->find((int)$formField->id);
+        $field['name'] = $formField->name;
+        $field['attributes'] = $formField->attributes;
+        $field['rules'] = $formField->rules;
+        $field['data_source'] = $formField->data_source;
+        $field['order'] = $formField->order;
+        $field['form_id'] = $formField->form_id;
+        $field['is_active'] = $formField->is_active;
+        return $this->formFieldModelAdapter->update((int)$formField->id, $field);
     }
 
     public function list(): array {

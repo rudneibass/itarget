@@ -8,10 +8,10 @@ import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 import Button from '@components/Bootstrap/Button'
+import Icon from '@components/Bootstrap/Icon'
+
 
 import Form from '@pages/Form/Form'
-import Icon from '@components/Bootstrap/Icon'
-import ListCards from '@components/Bootstrap/ListCards'
 
 export default function Index() {  
   const context = useListContext()
@@ -101,7 +101,7 @@ export default function Index() {
               })
             }
           >
-            <Icon name="plus-circle" size={16} />
+            <Icon name="bi bi-plus-circle" size={16} />
             &nbsp;&nbsp;
             Cadastrar
           </Button>
