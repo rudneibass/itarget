@@ -13,17 +13,20 @@ class Field extends EntityBase {
     private ?string $order = 'Não ordenado';
     private ?string $rules;
     private ?string $dataSource = null;
+    private ?string $id;
+    private ?string $isActive;
+    private ?string $displayName = '';
 
     public function __construct(FieldDto $dto) {
         $this->formId = $dto->formId;
         $this->name = $dto->name;
         $this->attributes = $dto->attributes;
+        
+        $this->id = $dto->id ?? null; 
         $this->rules = $dto->rules ?? null;
-
-        if(isset($dto->id)){ $this->id = $dto->id; }
-        if(isset($dto->order)){ $this->order = $dto->order; }
-        if(isset($dto->isActive)){ $this->isActive = $dto->isActive; }
-        if(isset($dto->dataSource)){ $this->dataSource = $dto->dataSource; }
+        $this->order = $dto->order ?? null;
+        $this->isActive = $dto->isActive ?? null;
+        $this->dataSource = $dto->dataSource ?? null;
     }
     
     public function toArray() {
@@ -90,5 +93,22 @@ class Field extends EntityBase {
     }
     public function setDataSource(string $dataSource) {
         $this->dataSource = $dataSource;
+    }
+
+
+    public function setId(string $id) {
+        $this->id = (string) $id;
+    }
+
+    public function getId(): ?string {
+        return $this->id;
+    }
+
+    public function setIsActive(string $isActive) {
+        $this->isActive = $isActive;
+    }
+
+    public function getIsActive(): ?string {
+      return $this->isActive;
     }
 }

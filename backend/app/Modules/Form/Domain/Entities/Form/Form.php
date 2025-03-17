@@ -11,14 +11,18 @@ class Form extends EntityBase {
     const FORM_NAME = 'form';
     
     private string $name;
-    private ?string $attributes;
+    private string $attributes;
     private ?array $fields;
+    private ?string $id;
+    private ?string $isActive;
 
     public function __construct(FormDto $dto) {
-        if(isset($dto->id)){ $this->setId($dto->id); }
-        $this->setFields($dto->fields ?? []);
-        $this->setName($dto->name);
-        $this->setAttributes($dto->attributes);
+        $this->name = $dto->name;
+        $this->attributes = $dto->attributes;
+
+        $this->id= $dto->id ?? null; 
+        $this->fields = $dto->fields ?? [];
+        $this->isActive = $dto->isActive ?? null;
     }
 
     public function toArray(){
@@ -61,5 +65,21 @@ class Form extends EntityBase {
 
     public function getFields() : ?array {
         return $this->fields;
+    }
+
+    public function setId(string $id) {
+        $this->id = (string) $id;
+    }
+
+    public function getId(): ?string {
+        return $this->id;
+    }
+
+    public function setIsActive(string $isActive) {
+        $this->isActive = $isActive;
+    }
+
+    public function getIsActive(): ?string {
+      return $this->isActive;
     }
 }
