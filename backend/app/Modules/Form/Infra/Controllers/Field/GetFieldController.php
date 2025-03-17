@@ -11,7 +11,10 @@ use App\Modules\Form\Infra\Adapters\ModelAdapter;
 class GetFieldController extends BaseController {
     public function handle(string $name) {
         return $this->executeAction(function() use ($name){
-            $useCase = new GetField(new ModelAdapter(new FormField()), new DatabaseAdapter());
+            $useCase = new GetField(
+                modelAdapter: new ModelAdapter(new FormField()), 
+                databaseAdapter: new DatabaseAdapter()
+            );
             return $useCase->execute($name);
         });
     }

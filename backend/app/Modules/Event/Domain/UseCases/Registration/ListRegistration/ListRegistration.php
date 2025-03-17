@@ -23,7 +23,9 @@ class ListRegistration {
                 'id' => $registration->id,
                 'event_id' => $registration->eventId,
                 'registration_id' => $registration->registrationId,
-                'published' => $registration->published
+                'published' => $registration->publishedm,
+                'option_value' => $registration->id,
+                'option_text' => $registration->name
             ];
         }, $this->repository->findAllByParams($params));
     }

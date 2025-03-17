@@ -7,12 +7,18 @@ use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Form\Infra\Adapters\ModelAdapter;
 use App\Modules\Form\Infra\Models\EloquentORM\FormField;
 use App\Modules\Form\Domain\UseCases\Field\GetFieldEditForm\GetFieldEditForm;
+use App\Modules\Form\Infra\Adapters\ListServiceAdapter;
+use App\Modules\Integrations\Services\Internal\List\ListService;
 use Illuminate\Http\Request;
 
 class GetFieldEditFormController extends BaseController {
     public function handle(Request $request) {
         return $this->executeAction(function() use ($request) {
-            $useCase = new GetFieldEditForm(new ModelAdapter(new FormField()), new DatabaseAdapter());
+            $useCase = new GetFieldEditForm(
+               modelAdapter: new ModelAdapter(new FormField()), 
+               databaseAdapter: new DatabaseAdapter(),
+               listServiceAdapter: new ListServiceAdapter(new ListService())
+            );
             return $useCase->execute($request->all());
         });
     }

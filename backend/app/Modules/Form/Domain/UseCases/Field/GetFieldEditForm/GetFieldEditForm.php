@@ -3,14 +3,19 @@
 namespace App\Modules\Form\Domain\UseCases\Field\GetFieldEditForm;
 
 use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\ListService;
 use App\Modules\Form\Domain\Interfaces\Model;
 use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
 use App\Modules\Form\Domain\UseCases\Field\GetFieldCreateForm\GetFieldCreateForm;
 
 class GetFieldEditForm {
     private $repository;
-  
-    public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
+
+    public function __construct(
+        private Model $modelAdapter, 
+        private Database $databaseAdapter,
+        private ListService $listServiceAdapter
+    ) {
         $this->repository = 
         new FieldRepository(
             formFieldModelAdapter: $modelAdapter, 
@@ -19,8 +24,11 @@ class GetFieldEditForm {
     }
 
     public function execute(array $request){
-        
-        $useCase = new GetFieldCreateForm($this->modelAdapter, $this->databaseAdapter);
+        $useCase = new GetFieldCreateForm(
+           modelAdapter: $this->modelAdapter, 
+           databaseAdapter: $this->databaseAdapter, 
+           listServiceAdapter: $this->listServiceAdapter
+        );
         $form = $useCase->execute();
 
         $entity = $this->repository->getById($request['id']);

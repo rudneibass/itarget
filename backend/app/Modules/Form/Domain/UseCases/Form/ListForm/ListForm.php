@@ -18,7 +18,9 @@ class ListForm {
             return [
                 'id' => $form->id,
                 'name' => $form->name,
-                'attributes' => $form->attributes
+                'attributes' => $form->attributes,
+                'option_value' => $form->id,
+                'option_text' => $form->name
             ];
         }, $this->repository->findAllByParams($params));
     }

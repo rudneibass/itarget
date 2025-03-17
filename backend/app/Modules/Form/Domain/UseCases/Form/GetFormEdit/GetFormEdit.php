@@ -4,25 +4,29 @@ namespace App\Modules\Form\Domain\UseCases\Form\GetFormEdit;
 
 use App\Modules\Form\Domain\UseCases\Form\GetFormCreate\GetFormCreate;
 
-use App\Modules\Form\Domain\Repositories\FormFieldOption\Database\FormFieldOptionRepository;
 use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 use App\Modules\Form\Domain\Repositories\Factory\RepositoryFactory;
 
 use App\Modules\Form\Domain\Interfaces\Database;
+use App\Modules\Form\Domain\Interfaces\ListService;
 use App\Modules\Form\Domain\Interfaces\Model;
 
 class GetFormEdit {
     private $repository;
     private $repositoryFactory;
   
-    public function __construct(private Model $modelAdapter, private Database $databaseAdapter) {
+    public function __construct(
+        private Model $modelAdapter, 
+        private Database $databaseAdapter, 
+        private ListService $listServiceAdapter
+    ) {
         $this->repository = new FormRepository($this->modelAdapter, $this->databaseAdapter);
         $this->repositoryFactory = new RepositoryFactory($this->modelAdapter, $this->databaseAdapter);
     }
 
     public function execute(array $request){
         
-        $useCase = new GetFormCreate($this->modelAdapter, $this->databaseAdapter);
+        $useCase = new GetFormCreate($this->modelAdapter, $this->databaseAdapter, $this->listServiceAdapter);
         $form = $useCase->execute();
 
         $entity = $this->repository->getById($request['id']);
@@ -52,6 +56,13 @@ class GetFormEdit {
                 }
             }
 
+            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
+                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
+                    $field['attributes']['value'] = $entityData[$field['name']];
+                }
+            }
+
+            # Refazer com $jistServiceAdapter
             if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'searchable') {
                 if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
                     $field['attributes']['value'] = $entityData[$field['name']];
@@ -64,17 +75,6 @@ class GetFormEdit {
                         $field['attributes']['data_value_description'] = $entityDataSource->displayName;
                     }
                     
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                    $optionsDataSource = $field['attributes']['data_source'];
-
-                    if (method_exists(FormFieldOptionRepository::class, $optionsDataSource)) {
-                        $field->options = FormFieldOptionRepository ::$optionsDataSource();
-                    }
                 }
             }
             
