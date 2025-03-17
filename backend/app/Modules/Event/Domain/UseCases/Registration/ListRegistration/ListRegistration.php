@@ -23,7 +23,7 @@ class ListRegistration {
                 'id' => $registration->id,
                 'event_id' => $registration->eventId,
                 'registration_id' => $registration->registrationId,
-                'published' => $registration->publishedm,
+                'published' => $registration->published,
                 'option_value' => $registration->id,
                 'option_text' => $registration->name
             ];

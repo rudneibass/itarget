@@ -12,13 +12,4 @@ class EventDto extends DtoBase {
     public ?string $email = null;
     public ?string $cpf = null;
     public ?bool $published = null;
-
-
-    /*
-    public ?string $id = null;
-    public string $name;
-    public string $status;
-    public string $startDate;
-    public string $endDate;
-    */
 }

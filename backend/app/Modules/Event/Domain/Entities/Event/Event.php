@@ -11,22 +11,17 @@ class Event extends EntityBase {
     private string $email;
     private string $cpf;
     private ?string $registrationId;
-    private ?bool $published = true; 
+    private ?bool $published; 
 
     public function __construct(EventDto $dto) {
-        if(isset($dto->id)){ $this->setId($dto->id); }
-        $this->setName($dto->name);
-        $this->setEmail($dto->email);
-        $this->setcpf($dto->cpf);
-        $this->setEventId($dto->eventId);
-        $this->setRegistrationId($dto->registrationId ?? '0');
-        
-        if(isset($dto->published) && $dto->published){
-            $this->published(); 
-        }
-        if(isset($dto->published) && !$dto->published){
-            $this->unpublished(); 
-        }
+        $this->name = $dto->name;
+        $this->email = $dto->email;
+        $this->cpf = $dto->cpf;
+        $this->eventId = $dto->eventId;
+
+        $this->setId = $dto->id ?? null;
+        $this->published = $dto->published ?? false;
+        $this->registrationId = $dto->registrationId ?? '0';
     }
 
     public function toArray(){
