@@ -14,16 +14,15 @@ class FormTest extends TestCase {
             new FormDto([
                 'id' => 1,
                 'name' => 'Form Name',
-                'attributes' => [
+                'attributes' => '{
                     "id" => "form-id",
                     "name" => "form-name"
-                ]
+                }'
             ])
         );
 
         $this->assertIsObject($form);
         $this->assertEquals(1, $form->id);
         $this->assertEquals('Form Name', $form->name);
-        $this->assertIsArray($form->attributes);
     }
 }

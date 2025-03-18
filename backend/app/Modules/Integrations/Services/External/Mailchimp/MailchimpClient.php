@@ -14,6 +14,6 @@ class MailchimpClient {
         ]);
         
         $response = $mailchimp->ping->get();
-        print_r($response);
+        //print_r($response);
     }
 }

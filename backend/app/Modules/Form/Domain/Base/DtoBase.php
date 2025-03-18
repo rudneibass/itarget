@@ -36,6 +36,7 @@ abstract class DtoBase
         foreach ($data as $key => $value) {
             if (!$reflection->hasProperty($key)) { 
                 throw new Exception('Propriedade $' . $key . ' não existe. \n' . get_class($this));
+                print_r('Propriedade $' . $key . ' não existe. \n' . get_class($this));
             }
         }
     }
@@ -49,6 +50,7 @@ abstract class DtoBase
             if ($property->getType() !== null && !$property->getType()->allowsNull()) {
                 if (!array_key_exists($property->getName(), $data)) {
                     throw new Exception("A propriedade obrigatória '{$property->getName()}' está ausente no array de entrada. " . get_class($this));
+                    print_r("A propriedade obrigatória '{$property->getName()}' está ausente no array de entrada. " . get_class($this));
                 }
             }
         }
@@ -65,6 +67,7 @@ abstract class DtoBase
             
             if ($value === null && !$property->getType()->allowsNull()) {
                 throw new Exception("A propriedade '{$key}' não permite valores nulos. " . get_class($this));
+                print_r("A propriedade '{$key}' não permite valores nulos. " . get_class($this));
             }
         }
     }
@@ -81,6 +84,7 @@ abstract class DtoBase
             if ($property->getType() !== null) {
                 if ($value !== null && !$this->isValueOfType($value, $property->getType()->getName())) {
                     throw new Exception("Tipo inválido para a propriedade '{$key}'. Esperado: {$property->getType()->getName()}, recebido: " . gettype($value) . " \n" . get_class($this));
+                    print_r("Tipo inválido para a propriedade '{$key}'. Esperado: {$property->getType()->getName()}, recebido: " . gettype($value) . " \n" . get_class($this));
                 }
             }
         }

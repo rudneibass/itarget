@@ -6,7 +6,6 @@ use App\Modules\Event\Domain\UseCases\Registration\ListRegistration\ListRegistra
 use App\Modules\Event\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Event\Infra\Adapters\ModelAdapter;
 use App\Modules\Event\Infra\Models\EloquentORM\Registration;
-use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class ListRegistrationTest extends TestCase {
