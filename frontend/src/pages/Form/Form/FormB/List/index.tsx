@@ -9,6 +9,8 @@ import Loading from '@components/Bootstrap/Loading'
 import ListCards from '@components/Bootstrap/ListCards'
 import Button from '@components/Bootstrap/Button'
 import Icon from '@components/Bootstrap/Icon'
+import ListInputs from '@components/Bootstrap/ListInputs'
+import { useEffect } from 'react'
 
 export default function Index() {  
   const formContext = useFormContext()
@@ -80,6 +82,24 @@ export default function Index() {
     additionalComponents: []
   }
 
+
+  const listInputsProps = {
+    data: context.state.data?.map((item) => { 
+      return {
+        id: item.id,
+        rules: item.rules || '',
+        attributes: JSON.parse(item.attributes) ,
+      }
+    }),
+    actions: {
+      handleEditAction: (itemId: string) => {
+        formContext.getFormContext(itemId)
+        formContext.setStateContext({showModalForm: true})
+      }
+    },
+    additionalComponents: []
+  }
+
   return (
     <>
       <SearchBar 
@@ -90,15 +110,11 @@ export default function Index() {
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>
-            <ListCards
-              data={listCardsProps.data} 
-              actions={listCardsProps.actions} 
-              additionalComponents={listCardsProps.additionalComponents}
-            />
-            <PaginationBar 
-              data={paginationBarProps.data} 
-              actions={paginationBarProps.actions} 
-              additionalComponents={paginationBarProps.additionalComponents}
+            <br/>
+            <ListInputs
+              data={listInputsProps.data} 
+              actions={listInputsProps.actions} 
+              additionalComponents={listInputsProps.additionalComponents}
             />
           </>
         )}

@@ -63,7 +63,7 @@ class FieldRepository {
             .(isset($params['id']) && !empty($params['id']) ? " AND id = {$params['id']}" : "" )
             .(isset($params['form_id']) && !empty($params['form_id']) ? " AND form_id = {$params['form_id']}" : "" )
             .(isset($params['name']) && !empty($params['name']) ? " AND name like '%{$params['name']}%'" : "" )
-            .(isset($params['order']) && !empty($params['order']) ? " ORDER BY {$params['order']}" : " ORDER BY id" )
+            .(isset($params['order']) && !empty($params['order']) ? " ORDER BY {$params['order']}" : " ORDER BY \"order\", id" )
             .(isset($params['limit']) && !empty($params['limit']) ? " LIMIT {$params['limit']}" : "" )
             .(isset($params['offset']) && !empty($params['offset']) ? " OFFSET {$params['offset']}" : "" );
 
@@ -130,7 +130,7 @@ class FieldRepository {
                     'order' => $item['order'],
                 ])
             );
-        }, $this->formFieldModelAdapter->all());
+        }, $this->databaseAdapter->rawQuery('SELECT * FROM "form_field" ORDER BY "order" '));
     }
 
     public function getFormCreateByName(string $name) : Form {

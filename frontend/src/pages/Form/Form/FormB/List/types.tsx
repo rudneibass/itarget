@@ -21,10 +21,11 @@ export interface ListContextType  {
 }
 
 export type ListType = {
-  id: number;
+  id: string;
   name: string;
   order: string;
-  attributes: object
+  attributes: string;
+  rules?: string;
 }
 
 export type PaginatedListLinksType = {
