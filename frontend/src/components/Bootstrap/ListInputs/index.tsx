@@ -15,10 +15,10 @@ type FormPropsType = {
     }>
     actions?: {
       handleEditAction?: (itemId: string) => void,
-    }
+    },
 }
 
-export default function ListInputs({data, actions }: FormPropsType) {
+export default function ListInputs({data, actions}: FormPropsType) {
 
   function handleEditAction(itemId: string) {
     if(actions?.handleEditAction){
@@ -70,7 +70,7 @@ export default function ListInputs({data, actions }: FormPropsType) {
                   <InputCheckbox
                     key={index}
                     data={{ id: field.id, attributes: field.attributes }}
-                    actions={{ handleEditAction }}                    
+                    actions={{ handleEditAction }}
                   />
                 );
               default:
