@@ -36,7 +36,6 @@ class PaginateField {
                 'rules' => $formField->rules,
                 'is_active' => $formField->isActive,
                 'attributes' => $formField->attributes,
-                'data_source' => $formField->dataSource,
                 'order' => $formField->order,
             ];
         }, $this->repository->findAllByParams($params));

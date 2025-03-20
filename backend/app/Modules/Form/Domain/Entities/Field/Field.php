@@ -12,7 +12,6 @@ class Field extends EntityBase {
     private string $attributes;
     private ?string $order = 'Não ordenado';
     private ?string $rules;
-    private ?string $dataSource = null;
     private ?string $id;
     private ?string $isActive;
     private ?string $displayName = '';
@@ -26,7 +25,6 @@ class Field extends EntityBase {
         $this->rules = $dto->rules ?? null;
         $this->order = $dto->order ?? null;
         $this->isActive = $dto->isActive ?? null;
-        $this->dataSource = $dto->dataSource ?? null;
     }
     
     public function toArray() {
@@ -39,7 +37,6 @@ class Field extends EntityBase {
             'attributes' => $this->attributes,
             'rules' => $this->rules,
             'is_active' => $this->isActive,
-            'data_source' => $this->dataSource ?? null,
         ];
     }
 
@@ -85,14 +82,6 @@ class Field extends EntityBase {
     }
     public function setRules(?string $rules) {
         $this->rules = $rules;
-    }
-
-
-    public function getDataSource(): ?string {
-        return $this->dataSource;
-    }
-    public function setDataSource(string $dataSource) {
-        $this->dataSource = $dataSource;
     }
 
 

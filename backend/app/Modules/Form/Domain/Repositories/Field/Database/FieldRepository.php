@@ -2,7 +2,6 @@
 
 namespace App\Modules\Form\Domain\Repositories\Field\Database;
 
-use App\Modules\Form\Domain\Entities\FormField\FormField;
 use App\Modules\Form\Domain\Entities\Field\Field;
 use App\Modules\Form\Domain\Entities\Field\FieldDto;
 use App\Modules\Form\Domain\Entities\Form\Form;
@@ -29,7 +28,6 @@ class FieldRepository {
                 'rules' => $formFields[0]['rules'],
                 'is_active' => $formFields[0]['is_active'],
                 'attributes' => $formFields[0]['attributes'],
-                'data_source' => $formFields[0]['data_source'],
                 'order' => $formFields[0]['order'],
             ])
         );
@@ -50,7 +48,6 @@ class FieldRepository {
                 'rules' => $formField[0]['rules'],
                 'is_active' => $formField[0]['is_active'],
                 'attributes' => $formField[0]['attributes'],
-                'data_source' => $formField[0]['data_source'],
                 'order' => $formField[0]['order'],
             ])
         );
@@ -77,7 +74,6 @@ class FieldRepository {
                     'name' => $item['name'],
                     'rules' => $item['rules'],
                     'attributes' => $item['attributes'],
-                    'data_source' => $item['data_source'],
                     'order' => $item['order'],
                 ])
             );
@@ -97,7 +93,6 @@ class FieldRepository {
                 'rules' => $newRecord['rules'],
                 'is_active' => $newRecord['is_active'],
                 'attributes' => $newRecord['attributes'],
-                'data_source' => $newRecord['data_source'],
                 'order' => $newRecord['order'],
             ])
         );
@@ -108,7 +103,6 @@ class FieldRepository {
         $field['name'] = $formField->name;
         $field['attributes'] = $formField->attributes;
         $field['rules'] = $formField->rules;
-        $field['data_source'] = $formField->data_source;
         $field['order'] = $formField->order;
         $field['form_id'] = $formField->form_id;
         $field['is_active'] = $formField->is_active;
@@ -126,7 +120,6 @@ class FieldRepository {
                     'rules' => $item['rules'],
                     'is_active' => $item['is_active'],
                     'attributes' => $item['attributes'],
-                    'data_source' => $item['data_source'],
                     'order' => $item['order'],
                 ])
             );

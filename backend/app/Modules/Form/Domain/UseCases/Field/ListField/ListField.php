@@ -26,7 +26,6 @@ class ListField {
                 'rules' => $item->rules,
                 'is_active' => $item->isActive,
                 'attributes' => $item->attributes,
-                'data_source' => $item->dataSource,
                 'order' => $item->order,
             ];
         }, $this->repository->list($params));

@@ -8,7 +8,6 @@ class FieldDto extends DtoBase
 {
     public ?string $id = null;
     public ?string $rules = null;
-    public ?string $dataSource = null;
     public ?string $isActive = '1';
     public string $formId;
     public string $name;
