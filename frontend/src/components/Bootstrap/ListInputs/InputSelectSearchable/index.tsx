@@ -12,13 +12,9 @@ type InputSelectSearchablePropsType = {
     value?: string
   },
   actions?: {
-    handleChangeAction?: (input: Record<string, string>) => void,
-    handleClickAction?: (input: Record<string, string>) => void,
-    handleBlurAction?: (input: Record<string, string>) => void,
-    handleFocusInAction?: (input: Record<string, string>) => void,
-    handleFocusOutAction?: (input: Record<string, string>) => void,
-    handleEditAction?:(itemId: string) => void,
-    handleInactiveAction?:(itemId: string) => void,
+    edit?: (itemId: string) => void,
+    remove?: (itemId: string) => void,
+    activeDeactive?: (itemId: string) => void
   }
 }
 
@@ -45,9 +41,6 @@ export default function Index({ data, actions }: InputSelectSearchablePropsType)
     }
   }
   function handleSelectOption({ displayName, value } : { displayName: string, value: string }){
-    if(actions?.handleChangeAction){ 
-      actions.handleChangeAction({name: data.attributes?.name, value: value })
-    }
     setSelectedOption(`${value} - ${displayName}`)
     setSelectedOptionId(value)
     handleCloseOptions()
@@ -93,14 +86,20 @@ export default function Index({ data, actions }: InputSelectSearchablePropsType)
   }
 
   function handleEdit(itemId: string) {
-    if(actions?.handleEditAction){
-      actions.handleEditAction(itemId);
+    if(actions?.edit){
+      actions.edit(itemId);
     }
   }
 
-  function handleInactive(itemId: string){
-    if(actions?.handleInactiveAction){
-      actions.handleInactiveAction(itemId)
+  function handleRemove(itemId: string) {
+    if(actions?.remove){
+      actions.remove(itemId);
+    }
+  }
+
+  function handleActiveDeactive(itemId: string){
+    if(actions?.activeDeactive){
+      actions.activeDeactive(itemId)
     }
   }
   
@@ -125,29 +124,30 @@ export default function Index({ data, actions }: InputSelectSearchablePropsType)
           </label> 
 
           <div style={{paddingBottom: '7px'}}>
-            {actions?.handleEditAction && (
+            {actions?.remove && (
               <>
                 <span 
                   className="badge text-bg-danger" 
                   style={{ borderRadius: "0px"}}
-                  onClick={() => handleInactive(data.id)}
+                  onClick={() => handleRemove(data.id)}
                 >
                   <i className='bi-trash'/>
                 </span>              
               </>
             )}
-            {actions?.handleEditAction && (
+            {actions?.activeDeactive && (
               <>
                 &nbsp;
                 <span 
                   className="badge text-bg-secondary" 
                   style={{ borderRadius: "0px"}}
+                  onClick={() => handleActiveDeactive(data.id)}
                 >
-                <i className='bi-eye'/>
+                <i className='bi-check'/>
                 </span>
               </>
             )}
-            {actions?.handleEditAction && (
+            {actions?.edit && (
               <>
                 &nbsp;
                 <span 

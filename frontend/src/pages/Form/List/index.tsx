@@ -56,20 +56,20 @@ export default function Index() {
       })  
     },
     actions: {
-      handleEditAction: (itemId: string) => {
+      edit: (itemId: string) => {
         context.renderFormTab({ 
           title: 'Editar Formulário', 
           eventKey: 'tab-edit-form', 
           content: <Form id={itemId} />
         })
       },
-      handleDeleteAction: (itemId: string) => {
+      remove: (itemId: string) => {
         context.handleDeleteContext(itemId)
       },
-      handleActiveAction: (itemId: string) => {
+      activeDeactive: (itemId: string) => {
         context.handleActiveContext(itemId)
       },
-      handleSortAction: (sortBy: string, sortDirection: string) => {
+      sort: (sortBy: string, sortDirection: string) => {
         context.handleSortContext(sortBy, sortDirection)
       } 
     },

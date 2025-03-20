@@ -9,10 +9,10 @@ type ListTableType = {
     node?: ReactNode;
   }> | undefined,
   actions?: {
-    handleEditAction?: (itemId: string) => void,
-    handleDeleteAction?: (itemId: string) => void,
-    handleActiveAction?: (itemId: string) => void,
-    handleSortAction?: (sortBy: string, sortDirection: string) => void
+    edit?: (itemId: string) => void,
+    remove?: (itemId: string) => void,
+    activeDeactive?: (itemId: string) => void,
+    sort?: (sortBy: string, sortDirection: string) => void
   },
   additionalComponents?: Array<ReactNode>
 }
@@ -22,27 +22,27 @@ export default function ListCards({ data, actions } : ListTableType) {
   const [sortDirection, setSortDirection] = useState('ASC')
 
   function handleActive(itemId: string) {
-      if(actions?.handleActiveAction){
-        actions.handleActiveAction(itemId);
+      if(actions?.activeDeactive){
+        actions.activeDeactive(itemId);
       }
   }
 
   function handleEdit(itemId: string) {
-    if(actions?.handleEditAction){
-      actions.handleEditAction(itemId);
+    if(actions?.edit){
+      actions.edit(itemId);
     }
   }
 
   function handleDelete(itemId: string) {
-    if(actions?.handleDeleteAction){
-      actions.handleDeleteAction(itemId);
+    if(actions?.remove){
+      actions.remove(itemId);
     } 
   }
 
   function handleSort(sortBy: string) {    
-    if(actions?.handleSortAction){
+    if(actions?.sort){
       const newSortDirection = sortDirection == 'ASC' ? 'DESC' : 'ASC'
-      actions.handleSortAction(sortBy, newSortDirection);
+      actions.sort(sortBy, newSortDirection);
       
       setSortDirection(newSortDirection)
       setSortBy(sortBy)

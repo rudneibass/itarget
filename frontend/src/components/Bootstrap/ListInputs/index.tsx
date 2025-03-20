@@ -1,30 +1,24 @@
-import { ReactNode, FormEvent, useState, useEffect } from "react"
-
 import InputText from './InputText/index'
 import InputTextarea from './InputTextarea/index'
 import InputSelect from './InputSelect/index'
 import InputSelectSearchable from './InputSelectSearchable/index'
 import InputCheckbox from './InputCheckbox/index'
 
-type FormPropsType = {
+type ListInputsType = {
     data: Array<{
       id: string,
       rules?: string;
       options?: Array<{ option_value: string, option_text: string }>;
       attributes: Record<string, string>;
-    }>
+    }> | undefined,
     actions?: {
-      handleEditAction?: (itemId: string) => void,
+      edit?: (itemId: string) => void,
+      remove?: (itemId: string) => void,
+      activeDeactive?: (itemId: string) => void
     },
 }
 
-export default function ListInputs({data, actions}: FormPropsType) {
-
-  function handleEditAction(itemId: string) {
-    if(actions?.handleEditAction){
-      actions.handleEditAction(itemId);
-    }
-  }
+export default function ListInputs({ data, actions }: ListInputsType) {
 
   return (
     <>
@@ -38,7 +32,7 @@ export default function ListInputs({data, actions}: FormPropsType) {
                   <InputText 
                     key={index}
                     data={{ id: field.id, attributes: field.attributes, rules: field.rules }}
-                    actions={{ handleEditAction }}
+                    actions={actions}
                   />
                 );
               case 'textarea':
@@ -46,7 +40,7 @@ export default function ListInputs({data, actions}: FormPropsType) {
                   <InputTextarea 
                     key={index}
                     data={{ id: field.id, attributes: field.attributes, rules: field.rules }}
-                    actions={{ handleEditAction }}
+                    actions={actions}
                   />
                 );
               case 'select':
@@ -54,7 +48,7 @@ export default function ListInputs({data, actions}: FormPropsType) {
                   <InputSelect 
                     key={index}
                     data={{ id: field.id, attributes: field.attributes, rules: field.rules }}
-                    actions={{ handleEditAction }}
+                    actions={actions}
                   />
                 );
               case 'searchable':
@@ -62,7 +56,7 @@ export default function ListInputs({data, actions}: FormPropsType) {
                     <InputSelectSearchable 
                       key={index}
                       data={{ id: field.id, attributes: field.attributes, rules: field.rules }}
-                      actions={{ handleEditAction }}
+                      actions={actions}
                     />
                   );  
               case 'checkbox':
@@ -70,7 +64,7 @@ export default function ListInputs({data, actions}: FormPropsType) {
                   <InputCheckbox
                     key={index}
                     data={{ id: field.id, attributes: field.attributes }}
-                    actions={{ handleEditAction }}
+                    actions={actions}
                   />
                 );
               default:

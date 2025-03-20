@@ -10,8 +10,9 @@ type InputTextPropsType = {
         value?: string
     },
     actions?: {
-      handleEditAction?: (itemId: string) => void,
-      handleInactiveAction?: (itemId: string) => void,
+      edit?: (itemId: string) => void,
+      remove?: (itemId: string) => void,
+      activeDeactive?: (itemId: string) => void
     }
   }
 
@@ -54,14 +55,20 @@ export default function Index({data, actions}: InputTextPropsType) {
     }
     
     function handleEdit(itemId: string) {
-      if(actions?.handleEditAction){
-        actions.handleEditAction(itemId);
+      if(actions?.edit){
+        actions.edit(itemId);
       }
     }
 
-    function handleInactive(itemId: string){
-      if(actions?.handleInactiveAction){
-        actions.handleInactiveAction(itemId)
+    function handleRemove(itemId: string) {
+      if(actions?.remove){
+        actions.remove(itemId);
+      }
+    }
+
+    function handleActiveDeactive(itemId: string){
+      if(actions?.activeDeactive){
+        actions.activeDeactive(itemId)
       }
     }
 
@@ -82,29 +89,30 @@ export default function Index({data, actions}: InputTextPropsType) {
             </label>
 
             <div style={{paddingBottom: '7px'}}>
-              {actions?.handleEditAction && (
+              {actions?.remove && (
                 <>
                   <span 
                     className="badge text-bg-danger" 
                     style={{ borderRadius: "0px"}}
-                    onClick={() => handleInactive(data.id)}
+                    onClick={() => handleRemove(data.id)}
                   >
                     <i className='bi-trash'/>
                   </span>              
                 </>
               )}
-              {actions?.handleEditAction && (
+              {actions?.activeDeactive && (
                 <>
                   &nbsp;
                   <span 
                     className="badge text-bg-secondary" 
                     style={{ borderRadius: "0px"}}
+                    onClick={() => handleActiveDeactive(data.id)}
                   >
-                  <i className='bi-eye'/>
+                  <i className='bi-check'/>
                   </span>
                 </>
               )}
-              {actions?.handleEditAction && (
+              {actions?.edit && (
                 <>
                   &nbsp;
                   <span 

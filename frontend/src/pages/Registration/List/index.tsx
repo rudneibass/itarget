@@ -91,16 +91,16 @@ export default function Index() {
       })
     },
     actions: {
-      handleEditAction: (itemId: string) => {
+      edit: (itemId: string) => {
         context.renderFormTab({ title: 'Editar Inscrição', eventKey: 'tab-edit-registration', content: <RegistrationForm id={itemId} />})
       },
-      handleDeleteAction: (itemId: string) => {
+      remove: (itemId: string) => {
         context.handleDeleteContext(itemId)
       },
-      handleActiveAction: (itemId: string) => {
+      activeDeactive: (itemId: string) => {
         context.handleActiveContext(itemId)
       },
-      handleSortAction: (sortBy: string, sortDirection: string) => {
+      sort: (sortBy: string, sortDirection: string) => {
         context.handleSortContext(sortBy, sortDirection)
       }   
     },

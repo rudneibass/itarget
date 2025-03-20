@@ -1,4 +1,5 @@
 
+import { useState } from 'react'
 import { useListContext } from './context'
 import { useFormContext } from '../Form/context'
 import { PaginatedListLinksType } from './types'
@@ -6,13 +7,14 @@ import { PaginatedListLinksType } from './types'
 import SearchBar from '@components/Bootstrap/SearchBar'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
-import ListCards from '@components/Bootstrap/ListCards'
 import Button from '@components/Bootstrap/Button'
 import Icon from '@components/Bootstrap/Icon'
 import ListInputs from '@components/Bootstrap/ListInputs'
-import { useEffect } from 'react'
+import ListTable from '@components/Bootstrap/ListTable'
+
 
 export default function Index() {  
+  const [listViewMode, setListViewMode] = useState('listInput')
   const formContext = useFormContext()
   const context = useListContext()
   const isLoading = context.state.isLoading
@@ -42,8 +44,46 @@ export default function Index() {
         <Icon name="bi bi-save" size={16} />
         &nbsp;&nbsp;
         Cadastrar
+      </Button>,
+
+      <Button
+        variant="outline-primary"
+        size="sm"
+        onClick={() => { setListViewMode('listTable')}}
+      >
+        <Icon name="bi bi-list" size={16} />
+      </Button>,
+      <Button
+        variant="outline-primary"
+        size="sm"
+        onClick={() => { setListViewMode('listInput')}}
+      >
+        <Icon name="bi bi-columns-gap" size={16} />
       </Button>
     ]
+  }
+
+  const listInputsProps = {
+    data: context.state.data?.map((item) => { 
+      return {
+        id: item.id,
+        rules: item.rules || '',
+        attributes: JSON.parse(item.attributes),
+      }
+    }),
+    actions: {
+      edit: (itemId: string) => {
+        formContext.getFormContext(itemId)
+        formContext.setStateContext({showModalForm: true})
+      },
+      remove: (itemId: string) => {
+        alert(`remove ${itemId}`)
+      },
+      activeDeactive: (itemId: string) => {
+        alert(`activeDeactive ${itemId}`)
+      }
+    },
+    additionalComponents: []
   }
 
   const paginationBarProps = {
@@ -56,49 +96,37 @@ export default function Index() {
     additionalComponents: []
   }
 
-  const listCardsProps = {
-    data: context.state.data?.map((item) => { 
-      return {
-        id: item.id.toString(),
-        name: item.name.toString(),
-        description: item.name.toString(),
-      }
-    }),
+  const listTableProps = {
+    data: {
+      thead: [
+        {name: 'id', displayName: 'ID', style: { width:  '10%' }},
+        {name: 'name', displayName: 'Nome'},
+      ],
+      tbody: context.state.data?.map((item) => { 
+        return {
+          id: { value: item.id.toString(), node: item.id.toString(), render: true },
+          name: { value: item.name.toString(), node: item.name.toString(), render: true },
+        }
+      })  
+    },
     actions: {
-      handleEditAction: (itemId: string) => {
+      edit: (itemId: string) => {
         formContext.getFormContext(itemId)
         formContext.setStateContext({showModalForm: true})
       },
-      handleDeleteAction: (itemId: string) => {
+      remove: (itemId: string) => {
         context.handleDeleteContext(itemId)
       },
-      handleActiveAction: (itemId: string) => {
+      activeDeactive: (itemId: string) => {
         context.handleActiveContext(itemId)
       },
-      handleSortAction: (sortBy: string, sortDirection: string) => {
+      sort: (sortBy: string, sortDirection: string) => {
         context.handleSortContext(sortBy, sortDirection)
       }
     },
     additionalComponents: []
   }
-
-
-  const listInputsProps = {
-    data: context.state.data?.map((item) => { 
-      return {
-        id: item.id,
-        rules: item.rules || '',
-        attributes: JSON.parse(item.attributes) ,
-      }
-    }),
-    actions: {
-      handleEditAction: (itemId: string) => {
-        formContext.getFormContext(itemId)
-        formContext.setStateContext({showModalForm: true})
-      }
-    },
-    additionalComponents: []
-  }
+  
 
   return (
     <>
@@ -110,12 +138,30 @@ export default function Index() {
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>
-            <br/>
-            <ListInputs
-              data={listInputsProps.data} 
-              actions={listInputsProps.actions} 
-              additionalComponents={listInputsProps.additionalComponents}
-            />
+            {listViewMode == 'listInput' && (
+              <>
+                <br/>
+                <ListInputs
+                  data={listInputsProps.data} 
+                  actions={listInputsProps.actions} 
+                />
+              </>
+            )}
+
+            {listViewMode == 'listTable' && (
+              <>
+                <ListTable
+                  data={listTableProps.data} 
+                  actions={listTableProps.actions} 
+                  additionalComponents={listTableProps.additionalComponents}
+                />
+                <PaginationBar 
+                  data={paginationBarProps.data} 
+                  actions={paginationBarProps.actions} 
+                  additionalComponents={paginationBarProps.additionalComponents}
+                />
+              </>
+            )}
           </>
         )}
     </>
