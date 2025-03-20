@@ -14,7 +14,7 @@ class PaginateField {
     public function __construct(Model $modelAdapter, Database $databaseAdapter){
         $this->repository = 
         new FieldRepository(
-            formFieldModelAdapter: $modelAdapter, 
+            fieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );
     }

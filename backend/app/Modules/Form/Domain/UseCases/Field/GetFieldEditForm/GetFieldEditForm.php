@@ -18,7 +18,7 @@ class GetFieldEditForm {
     ) {
         $this->repository = 
         new FieldRepository(
-            formFieldModelAdapter: $modelAdapter, 
+            fieldModelAdapter: $modelAdapter, 
             databaseAdapter: $databaseAdapter
         );
     }

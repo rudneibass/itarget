@@ -12,10 +12,10 @@ use Exception;
 
 class FieldRepository {
 
-    public function __construct(private Model $formFieldModelAdapter, private Database $databaseAdapter){}
+    public function __construct(private Model $fieldModelAdapter, private Database $databaseAdapter){}
 
     public function getByName(string $name) : Field {
-        $formFields = $this->formFieldModelAdapter->where(['name' => $name]);
+        $formFields = $this->fieldModelAdapter->where(['name' => $name]);
         if (!count($formFields)) { 
             throw new Exception("Não foi possivel localizar campo com nome = '".$name."'"); 
         }  
@@ -34,7 +34,7 @@ class FieldRepository {
     }
 
     public function getById(string $id) : Field {
-        $formField = $this->formFieldModelAdapter->where(['id' => $id]);
+        $formField = $this->fieldModelAdapter->where(['id' => $id]);
         
         if (!count($formField)) { 
             throw new Exception("Não foi possivel localizar campo com id = '".$id."'");
@@ -82,8 +82,8 @@ class FieldRepository {
 
 
     public function create(Field $formField): ?Field {        
-        $newRecord = $this->formFieldModelAdapter->create($formField->toArray());
-        $newRecord = $this->formFieldModelAdapter->find((int)$newRecord['id']);
+        $newRecord = $this->fieldModelAdapter->create($formField->toArray());
+        $newRecord = $this->fieldModelAdapter->find((int)$newRecord['id']);
         return 
         new Field(
             new FieldDto([
@@ -99,14 +99,14 @@ class FieldRepository {
     }
 
     public function update(Field $formField): bool {
-        $field = $this->formFieldModelAdapter->find((int)$formField->id);
+        $field = $this->fieldModelAdapter->find((int)$formField->id);
         $field['name'] = $formField->name;
         $field['attributes'] = $formField->attributes;
         $field['rules'] = $formField->rules;
         $field['order'] = $formField->order;
         $field['form_id'] = $formField->form_id;
         $field['is_active'] = $formField->is_active;
-        return $this->formFieldModelAdapter->update((int)$formField->id, $field);
+        return $this->fieldModelAdapter->update((int)$formField->id, $field);
     }
 
     public function list(): array {
