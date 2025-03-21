@@ -9,12 +9,12 @@ import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
 import Button from '@components/Bootstrap/Button'
 import Icon from '@components/Bootstrap/Icon'
-import ListInputs from '@components/Bootstrap/ListInputs'
 import ListTable from '@components/Bootstrap/ListTable'
+import ListInputsDragDrop from '@components/Bootstrap/ListInputsDragDrop'
 
 
 export default function Index() {  
-  const [listViewMode, setListViewMode] = useState('listInput')
+  const [listViewMode, setListViewMode] = useState('listInputsDragDrop')
   const formContext = useFormContext()
   const context = useListContext()
   const isLoading = context.state.isLoading
@@ -56,7 +56,7 @@ export default function Index() {
       <Button
         variant="outline-primary"
         size="sm"
-        onClick={() => { setListViewMode('listInput')}}
+        onClick={() => { setListViewMode('listInputsDragDrop')}}
       >
         <Icon name="bi bi-columns-gap" size={16} />
       </Button>
@@ -138,10 +138,10 @@ export default function Index() {
         { isLoading && (<Loading />) }
         { !isLoading && ( 
           <>
-            {listViewMode == 'listInput' && (
+            {listViewMode == 'listInputsDragDrop' && (
               <>
                 <br/>
-                <ListInputs
+                <ListInputsDragDrop
                   data={listInputsProps.data} 
                   actions={listInputsProps.actions} 
                 />
