@@ -104,8 +104,8 @@ class FieldRepository {
         $field['attributes'] = $formField->attributes;
         $field['rules'] = $formField->rules;
         $field['order'] = $formField->order;
-        $field['form_id'] = $formField->form_id;
-        $field['is_active'] = $formField->is_active;
+        $field['form_id'] = $formField->formId;
+        $field['is_active'] = $formField->isActive;
         return $this->fieldModelAdapter->update((int)$formField->id, $field);
     }
 
