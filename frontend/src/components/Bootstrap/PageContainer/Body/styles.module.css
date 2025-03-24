@@ -2,5 +2,6 @@
   min-height: 69vh;
   max-height: 69vh; 
   padding: 15px 20px 0px 20px;
-  overflow-y: auto
+  overflow-y: auto;
+  position: relative
 }

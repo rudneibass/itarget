@@ -6,12 +6,22 @@ import Form from '@components/Bootstrap/Form'
 import Loading from '@components/Bootstrap/Loading'
 import Modal from '@components/Bootstrap/Modal'
 
-import { ListContextProvider } from '../List/context';
-import List from '../List'
-
-export default function Index({ id }: { id?: string }) {
+export default function Index() {
   const context = useFormContext()
   const isLoading = context.state.isLoading
+
+  const modalProps = {
+    data: {
+      show: context.state.showModalForm, 
+      title: 'Adicionar Campo'
+    },
+    actions: {
+      handleCloseAction: () => {
+        context.setStateContext({ showModalForm: false })
+      }   
+    },
+    additionalComponents: []
+  }
 
   const formProps = {
     data: {
@@ -35,50 +45,28 @@ export default function Index({ id }: { id?: string }) {
       }
     },
     additionalComponents: [
-      { name: 'backButton', 
-        component: 
-        <button 
-          type="button" 
-          className="btn btn-outline-secondary" 
-          onClick={() => context.closeFormTab({tabId: context.state.activeTab })}
-        >
-          <small>
-            <i className="fs-7 bi-back"></i> Voltar
-          </small>
-        </button> 
-      }
+      <button 
+        type="button" 
+        className="btn btn-outline-secondary" 
+        onClick={() => context.closeFormTab({tabId: context.state.activeTab })}
+      >
+        <small>
+          <i className="fs-7 bi-back"></i> Voltar
+        </small>
+      </button> 
     ]
-  }
-
-  const modalProps = {
-    data: {
-      show: context.state.showModalForm, 
-      title: 'Adicionar Campo'
-    },
-    actions: {
-      handleCloseAction: () => {
-        context.setStateContext({ showModalForm: false })
-      }   
-    },
-    additionalComponents: []
   }
 
   return (
     <>
       <Modal data={modalProps.data} actions={modalProps.actions} >
-        { isLoading && (<Loading />) }
-        { !isLoading && ( 
-          <Form  
-              data={formProps.data} 
-              actions={formProps.actions} 
-              additionalComponents={formProps.additionalComponents} 
-          />
-        )}
+        <Loading isLoading={isLoading}/>
+        <Form  
+            data={formProps.data} 
+            actions={formProps.actions} 
+            additionalComponents={formProps.additionalComponents} 
+        />
       </Modal>
-
-      <ListContextProvider formId={id}>
-        <List />
-      </ListContextProvider>
     </>
   )
 }

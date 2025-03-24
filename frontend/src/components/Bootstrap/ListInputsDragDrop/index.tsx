@@ -17,20 +17,28 @@ type ListInputsType = {
     edit?: (itemId: string) => void;
     remove?: (itemId: string) => void;
     activeDeactive?: (itemId: string) => void;
+    reorder?: (reorderedList: []) => void;
   };
 };
 
 export default function ListInputsDragDrop({ data: initialData, actions }: ListInputsType) {
   const [data, setData] = useState(initialData || []);
 
-
-  const onDragEnd = (result: DropResult) => {
+  function onDragEnd(result: DropResult){
     if (!result.destination) return;
     const reorderedData = [...data];
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
+    
+    handleReorder([])
     setData(reorderedData);
   };
+
+  function handleReorder(reorderedList: []){
+    if(actions?.reorder){
+      actions.reorder([]);
+    }
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

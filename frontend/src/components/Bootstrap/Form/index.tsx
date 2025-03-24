@@ -23,7 +23,7 @@ type FormPropsType = {
       handleSubmitAction?: (inputsValues: object) => void
       handleAlertRequiredsFieldAction?: (alertMessage: string) => void
     },
-    additionalComponents?: Array<{name: string, component: ReactNode}>
+    additionalComponents?: Array<ReactNode>
 }
 
 export default function Index({data, actions, additionalComponents}: FormPropsType) {
@@ -34,20 +34,18 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
     event.preventDefault();
 
     if (!checkRequiredFields()) {
-      
       if(actions?.handleAlertRequiredsFieldAction){
         actions?.handleAlertRequiredsFieldAction('Por favor, preencha os campos obrigatórios.')
       }
-
       if(!actions?.handleAlertRequiredsFieldAction) {
         alert('Por favor, preencha os campos obrigatórios.');
       }
-      
-      return;
     }
     
-    if(actions?.handleSubmitAction){        
-      actions.handleSubmitAction(inputsValues)
+    if (checkRequiredFields()){
+      if(actions?.handleSubmitAction){        
+        actions.handleSubmitAction(inputsValues)
+      }
     }
   }
 
@@ -164,7 +162,7 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
           }
         </div>
         <div className="col-md-12 d-flex justify-content-end pt-4 border-top" >
-          { additionalComponents && additionalComponents.map((item) => item.component ) }
+          { additionalComponents && additionalComponents.map((component) => component ) }
           &nbsp;
           <button type="submit" className="btn btn-secondary" style={{minWidth: '80px'}}>
             <small>

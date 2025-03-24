@@ -35,7 +35,7 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         }));
     }
 
-    async function handleSearchContext(searchParams?: object){
+    async function search(searchParams?: object){
         try {
             if(formId){
                 setStateContext({ isLoading: true })
@@ -63,20 +63,25 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         } 
     }
 
-    function handleDeleteContext(itemId: string){
+    function remove(itemId: string){
         alert('Delete item '+itemId)
     }
 
-    function handleActiveContext(itemId: string){
+    function activeDeactive(itemId: string){
         alert('Active item '+itemId)
     }
 
-    function handleSortContext(sortBy: string, sortDirection: string){
+    function sort(sortBy: string, sortDirection: string){
         alert('Sort by '+sortBy+' '+sortDirection)
     } 
 
+    function reorder(reorderedList: []){
+        alert('Reordered!')
+        console.log(reorderedList)
+    } 
+
     useEffect(() => {
-        handleSearchContext()
+        search()
     }, [])
     
     return (
@@ -85,10 +90,11 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
                 state,
                 setStateContext,
                 renderFormTab,
-                handleSearchContext,
-                handleActiveContext,
-                handleDeleteContext,
-                handleSortContext
+                search,
+                activeDeactive,
+                remove,
+                sort,
+                reorder
             }}
         >
             { children }

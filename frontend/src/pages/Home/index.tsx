@@ -1,5 +1,4 @@
 import CustomCard from '@components/Bootstrap/CustomCard'
-import HorizontalDragList from '@components/Lab/HorizontalDragList'
 
 export default function index() {
     const customCardProps = {
@@ -8,7 +7,8 @@ export default function index() {
           shortDescription:
           <>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
+            <i className="fs-7 bi-house"></i>
+            &nbsp;&nbsp;
           </>
         },
         actions: {},

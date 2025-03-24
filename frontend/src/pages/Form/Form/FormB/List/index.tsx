@@ -2,10 +2,8 @@
 import { useState } from 'react'
 import { useListContext } from './context'
 import { useFormContext } from '../Form/context'
-import { PaginatedListLinksType } from './types'
 
 import SearchBar from '@components/Bootstrap/SearchBar'
-import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
 import Button from '@components/Bootstrap/Button'
 import Icon from '@components/Bootstrap/Icon'
@@ -14,7 +12,7 @@ import ListInputsDragDrop from '@components/Bootstrap/ListInputsDragDrop'
 
 
 export default function Index() {  
-  const [listViewMode, setListViewMode] = useState('listInputsDragDrop')
+  const [listViewMode, setListViewMode] = useState('listTable')
   const formContext = useFormContext()
   const context = useListContext()
   const isLoading = context.state.isLoading
@@ -28,7 +26,7 @@ export default function Index() {
     actions: {
       handleSearchAction: async (searchParams: object) => {
         if(context.state.formId){
-          context.handleSearchContext(searchParams)
+          context.search(searchParams)
         }
       },   
     },
@@ -63,17 +61,17 @@ export default function Index() {
     ]
   }
 
-  const listInputsProps = {
+  const listInputsDragDropProps = {
     data: context.state.data?.map((item) => { 
       return {
         id: item.id,
         rules: item.rules || '',
         attributes: JSON.parse(item.attributes),
       }
-    }),
+    }) || [],
     actions: {
       edit: (itemId: string) => {
-        formContext.getFormContext(itemId)
+        formContext.getForm(itemId)
         formContext.setStateContext({showModalForm: true})
       },
       remove: (itemId: string) => {
@@ -81,17 +79,10 @@ export default function Index() {
       },
       activeDeactive: (itemId: string) => {
         alert(`activeDeactive ${itemId}`)
+      },
+      reorder: (reorderedList: []) => {
+        context.reorder(reorderedList)
       }
-    },
-    additionalComponents: []
-  }
-
-  const paginationBarProps = {
-    data: {paginationLinks: context.state.paginationLinks},
-    actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
-        context.setStateContext({ data, paginationLinks })
-      }   
     },
     additionalComponents: []
   }
@@ -115,55 +106,43 @@ export default function Index() {
         formContext.setStateContext({showModalForm: true})
       },
       remove: (itemId: string) => {
-        context.handleDeleteContext(itemId)
+        context.remove(itemId)
       },
       activeDeactive: (itemId: string) => {
-        context.handleActiveContext(itemId)
+        context.activeDeactive(itemId)
       },
       sort: (sortBy: string, sortDirection: string) => {
-        context.handleSortContext(sortBy, sortDirection)
+        context.sort(sortBy, sortDirection)
       }
     },
     additionalComponents: []
   }
   
-
   return (
-    <>
+    <div style={{position: 'relative'}}>
       <SearchBar 
         data={searchBarProps.data} 
         actions={searchBarProps.actions} 
         additionalComponents={searchBarProps.additionalComponents} 
       />
-        { isLoading && (<Loading />) }
-        { !isLoading && ( 
+        <Loading isLoading={isLoading} />
+        {listViewMode == 'listInputsDragDrop' && (
           <>
-            {listViewMode == 'listInputsDragDrop' && (
-              <>
-                <br/>
-                <ListInputsDragDrop
-                  data={listInputsProps.data} 
-                  actions={listInputsProps.actions} 
-                />
-              </>
-            )}
-
-            {listViewMode == 'listTable' && (
-              <>
-                <ListTable
-                  data={listTableProps.data} 
-                  actions={listTableProps.actions} 
-                  additionalComponents={listTableProps.additionalComponents}
-                />
-                <PaginationBar 
-                  data={paginationBarProps.data} 
-                  actions={paginationBarProps.actions} 
-                  additionalComponents={paginationBarProps.additionalComponents}
-                />
-              </>
-            )}
+            <br/>
+            <ListInputsDragDrop
+              data={listInputsDragDropProps.data} 
+              actions={listInputsDragDropProps.actions} 
+            />
           </>
         )}
-    </>
+
+        {listViewMode == 'listTable' && (
+          <ListTable
+            data={listTableProps.data} 
+            actions={listTableProps.actions} 
+            additionalComponents={listTableProps.additionalComponents}
+          />
+        )}
+    </div>
   )
 }

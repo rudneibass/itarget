@@ -4,7 +4,10 @@ export interface FormContextextType {
   state: { form: FormType | undefined, isLoading: boolean, activeTab: string, showModalForm: boolean; recordId: string | undefined };
   setStateContext: ({ form, isLoading, activeTab, showModalForm, recordId } : { form?: FormType, isLoading?: boolean, activeTab?: string, showModalForm?: boolean; recordId?: string}) => void,
   saveFormContext: (inputs: FormInputsType) => void;
+  
   getFormContext: (id?: string) => void;
+  getForm: (id?: string) => void;
+  
   successAlert?: (message: string) => void;
   warningAlert?: (message: string) => void;
   errorAlert?: (message: string) => void;

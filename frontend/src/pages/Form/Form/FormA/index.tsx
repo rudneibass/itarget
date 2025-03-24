@@ -31,31 +31,26 @@ export default function Index() {
       }
     },
     additionalComponents: [
-      { name: 'backButton', 
-        component: 
-        <button 
-          type="button" 
-          className="btn btn-outline-secondary" 
-          onClick={() => context.closeFormTab({tabId: context.state.activeTab })}
-        >
-          <small>
-            <i className="fs-7 bi-back"></i> Voltar
-          </small>
-        </button> 
-      }
+      <button 
+        type="button" 
+        className="btn btn-outline-secondary" 
+        onClick={() => context.closeFormTab({tabId: context.state.activeTab })}
+      >
+        <small>
+          <i className="fs-7 bi-back"></i> Voltar
+        </small>
+      </button> 
     ]
   }
 
   return (
     <>
-      { isLoading && (<Loading />) }
-      { !isLoading && ( 
-        <Form  
-          data={formProps.data} 
-          actions={formProps.actions} 
-          additionalComponents={formProps.additionalComponents} 
-        />
-      )}
+      <Loading isLoading={isLoading} /> 
+      <Form  
+        data={formProps.data} 
+        actions={formProps.actions} 
+        additionalComponents={formProps.additionalComponents} 
+      />
     </>
   )
 }

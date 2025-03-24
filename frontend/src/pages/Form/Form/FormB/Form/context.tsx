@@ -80,6 +80,7 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             } 
             
             if(form){
+                alert(JSON.stringify(form))
                 if(isFormType(form)){
                     if(JSON.stringify(form) !== JSON.stringify(form)){
                         setStateContext({form})
@@ -104,7 +105,7 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
     }
 
     useEffect(() => {
-        getFormContext()
+        getForm()
     },[])
 
     return (
@@ -113,6 +114,7 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
                 state,
                 setStateContext,
                 getFormContext,
+                getForm,
                 closeFormTab,
                 saveFormContext,
                 successAlert,
