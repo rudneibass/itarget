@@ -22,11 +22,10 @@ export default function Index() {
       ]
     },
     actions: {
-      handleSearchAction: async (searchParams: object) => {
-        context.handleSearchContext(searchParams)
+      search: async (searchParams: object) => {
+        context.search(searchParams)
       },   
-    },
-    additionalComponents: []
+    }
   }
 
   const listTableProps = {
@@ -43,22 +42,22 @@ export default function Index() {
       })  
     },
     actions: {
+      remove: (itemId: string) => {
+        context.remove(itemId)
+      },
+      activeDeactive: (itemId: string) => {
+        context.activeDeactive(itemId)
+      },
+      sort: (sortBy: string, sortDirection: string) => {
+        context.sort(sortBy, sortDirection)
+      },
       edit: (itemId: string) => {
-        context.renderFormTab({ 
+        context.addTab({ 
           title: 'Editar Formulário', 
           eventKey: 'tab-edit-form', 
           content: <ViewB id={itemId} />
         })
-      },
-      remove: (itemId: string) => {
-        context.handleDeleteContext(itemId)
-      },
-      activeDeactive: (itemId: string) => {
-        context.handleActiveContext(itemId)
-      },
-      sort: (sortBy: string, sortDirection: string) => {
-        context.handleSortContext(sortBy, sortDirection)
-      } 
+      }
     },
     additionalComponents: []
   }

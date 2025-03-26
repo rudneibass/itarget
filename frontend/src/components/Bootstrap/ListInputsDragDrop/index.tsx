@@ -17,6 +17,7 @@ type ListInputsType = {
     edit?: (itemId: string) => void;
     remove?: (itemId: string) => void;
     activeDeactive?: (itemId: string) => void;
+    reorder?: (reorderedData: []) => void;
   };
 };
 
@@ -30,6 +31,10 @@ export default function ListInputsDragDrop({ data: initialData, actions }: ListI
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
     setData(reorderedData);
+
+    if(actions?.reorder){
+      actions.reorder([])
+    }
   };
 
   return (

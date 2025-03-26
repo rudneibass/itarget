@@ -26,13 +26,13 @@ export default function Index() {
       ]
     },
     actions: {
-      handleSearchAction: async (searchParams: object) => {
+      search: async (searchParams: object) => {
         context.search(searchParams)
       },   
     }
   }
 
-  const listInputsProps = {
+  const listInputsDragDropProps = {
     data: context.state.data?.map((item) => { 
       return {
         id: item.id,
@@ -46,10 +46,13 @@ export default function Index() {
         formContext.setStateContext({showModalForm: true})
       },
       remove: (itemId: string) => {
-        alert(`remove ${itemId}`)
+        context.remove(itemId)
       },
       activeDeactive: (itemId: string) => {
-        alert(`activeDeactive ${itemId}`)
+        context.activeDeactive(itemId)
+      },
+      reorder: (reorderedData: []) => {
+        context.reorder(reorderedData)
       }
     },
     additionalComponents: []
@@ -126,8 +129,8 @@ export default function Index() {
             <>
               <br/>
               <ListInputsDragDrop
-                data={listInputsProps.data} 
-                actions={listInputsProps.actions} 
+                data={listInputsDragDropProps.data} 
+                actions={listInputsDragDropProps.actions} 
               />
             </>
           )}

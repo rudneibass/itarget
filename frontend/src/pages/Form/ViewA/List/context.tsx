@@ -14,7 +14,7 @@ export const useListContext = () => {
 
 export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
     const mainTabsContext = useMainTabsContext()
-    function renderFormTab({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }){
+    function addTab({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }){
         mainTabsContext.handleAddTab({ title, eventKey, content })
     }
     
@@ -33,7 +33,7 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
         })); 
     }
 
-    async function handleSearchContext(searchParams?: object){
+    async function search(searchParams?: object){
         setStateContext({ isLoading: true })
         try{
             const response = await formApi.search(`${formApi.endpoints.search}`, searchParams)
@@ -60,20 +60,25 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
         } 
     }
 
-    function handleDeleteContext(itemId: string){
+    function remove(itemId: string){
         alert('Delete item '+itemId)
     }
 
-    function handleActiveContext(itemId: string){
+    function activeDeactive(itemId: string){
         alert('Active item '+itemId)
     }
 
-    function handleSortContext(sortBy: string, sortDirection: string){
+    function sort(sortBy: string, sortDirection: string){
         alert('Sort by '+sortBy+' '+sortDirection)
     } 
 
+    function reorder(dataReordered: []){
+        alert('Reorder')
+        console.log(dataReordered)
+    } 
+
     useEffect(() => {
-        handleSearchContext()
+        search()
     }, [])
     
     return (
@@ -81,11 +86,11 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
             value={{
                 state,
                 setStateContext,
-                renderFormTab,
-                handleSearchContext,
-                handleDeleteContext,
-                handleActiveContext,
-                handleSortContext
+                addTab,
+                activeDeactive,
+                search,
+                remove,
+                sort
             }}
         >
             {children}

@@ -2,7 +2,7 @@ import { useState, FormEvent, ReactNode} from "react";
 
 type QuickSearchPropsType = {
   data: { searchBy: Array<Record<string, string>> },
-  actions?: { handleSearchAction: (searchParams: object) => void;},
+  actions?: { search: (searchParams: object) => void;},
   children?: ReactNode
 }
 
@@ -11,8 +11,8 @@ export default function Root({data, actions, children} : QuickSearchPropsType) {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault();
-    if(actions?.handleSearchAction){
-      actions.handleSearchAction({name: inputValue, paginate: '10'});
+    if(actions?.search){
+      actions.search({name: inputValue, paginate: '10'});
     } 
   }
 

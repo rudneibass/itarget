@@ -69,6 +69,11 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         alert('Sort by '+sortBy+' '+sortDirection)
     } 
 
+    function reorder(reorderedData: []){
+        alert('Reordered')
+        console.log(reorderedData)
+    } 
+
     useEffect(() => {
         search()
     }, [])
@@ -81,7 +86,8 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
                 activeDeactive,
                 search,
                 remove,
-                sort
+                sort,
+                reorder
             }}
         >
             { children }
