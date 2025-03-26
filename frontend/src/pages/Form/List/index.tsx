@@ -108,24 +108,24 @@ export default function Index() {
         </PageContainer.Head>
 
         <PageContainer.Boddy>
+          
+          <Loading isLoading={isLoading} />
+
           <QuickSearch.Root data={searchBarProps.data} actions={searchBarProps.actions}>
             <QuickSearch.ShowInactive />
           </QuickSearch.Root>
-          { isLoading && (<Loading />) }
-          { !isLoading && ( 
-            <>
-              <ListTable 
-                data={listTableProps.data} 
-                actions={listTableProps.actions} 
-                additionalComponents={listTableProps.additionalComponents} 
-              />
-              <PaginationBar 
-                data={paginationBarProps.data} 
-                actions={paginationBarProps.actions} 
-                additionalComponents={paginationBarProps.additionalComponents}
-              />
-            </>
-          )}
+
+            <ListTable 
+              data={listTableProps.data} 
+              actions={listTableProps.actions} 
+              additionalComponents={listTableProps.additionalComponents} 
+            />
+            <PaginationBar 
+              data={paginationBarProps.data} 
+              actions={paginationBarProps.actions} 
+              additionalComponents={paginationBarProps.additionalComponents}
+            />
+
         </PageContainer.Boddy>
       </PageContainer.Root>
     </>

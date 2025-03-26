@@ -48,14 +48,12 @@ export default function Index() {
 
   return (
     <>
-      { isLoading && (<Loading />) }
-      { !isLoading && ( 
-        <Form  
-          data={formProps.data} 
-          actions={formProps.actions} 
-          additionalComponents={formProps.additionalComponents} 
-        />
-      )}
+      <Loading isLoading={isLoading}/> 
+      <Form  
+        data={formProps.data} 
+        actions={formProps.actions} 
+        additionalComponents={formProps.additionalComponents} 
+      />
     </>
   )
 }
