@@ -1,28 +1,24 @@
-import CustomCard from '@components/Bootstrap/CustomCard'
+import { PageContainer } from '@components/Bootstrap/PageContainer'
 
 export default function index() {
-    const customCardProps = {
-        data: {
-          title:'Home', 
-          shortDescription:
-          <>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
-          </>
-        },
-        actions: {},
-        additionalComponents: [],
-      }
-    
   return (
     <>
-      <CustomCard 
-        data={customCardProps.data} 
-        actions={customCardProps.actions} 
-        additionalComponents={customCardProps.additionalComponents}
-      >
+      <PageContainer.Root>
+        <PageContainer.Head 
+          title='Formulários' 
+          shortDescription={
+            <>
+              <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
+              <small className="text-muted" >
+               {'> Cadastros > Formulários'}
+              </small> 
+            </>
+          }
+        />
+        <PageContainer.Boddy>
           <span className='text-muted'>Seja bem vindo.</span>
-      </CustomCard>
+        </PageContainer.Boddy>
+      </PageContainer.Root>
     </>
   )
 }
