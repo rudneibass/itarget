@@ -2,12 +2,14 @@
 import { useListContext } from './context'
 import { PaginatedListLinksType } from './types'
 
+import ViewB from '@pages/Form/ViewB'
+
 import { QuickSearch } from '@components/Bootstrap/QuickSearch'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 
-import Form from '@pages/Form/Form'
+
 
 export default function Index() {  
   const context = useListContext()
@@ -45,7 +47,7 @@ export default function Index() {
         context.renderFormTab({ 
           title: 'Editar Formulário', 
           eventKey: 'tab-edit-form', 
-          content: <Form id={itemId} />
+          content: <ViewB id={itemId} />
         })
       },
       remove: (itemId: string) => {
@@ -76,9 +78,8 @@ export default function Index() {
       <QuickSearch.Root data={quickSearchProps.data} actions={quickSearchProps.actions}>
         <QuickSearch.ShowInactive />
       </QuickSearch.Root>
-      { isLoading && (<Loading />) }
-      { !isLoading && ( 
         <>
+          <Loading isLoading={isLoading}/>
           <ListTable 
             data={listTableProps.data} 
             actions={listTableProps.actions} 
@@ -90,7 +91,6 @@ export default function Index() {
             additionalComponents={paginationBarProps.additionalComponents}
           />
         </>
-      )}
     </>
   )
 }

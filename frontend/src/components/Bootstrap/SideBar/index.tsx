@@ -11,8 +11,7 @@ import { Button } from 'react-bootstrap'
 import RegistrationList from '@pages/Registration/List'
 import { ListContextProvider as RegistrationListContext } from '@pages/Registration/List/context.tsx'
 
-import FormList from '@pages/Form/List'
-import { ListContextProvider as FormListContextProvider } from '@pages/Form/List/context.tsx'
+import ViewA from '@pages/Form/ViewA/index';
 
 export default function Index() {
   const mainTabsContext = useMainTabsContext()
@@ -63,16 +62,13 @@ export default function Index() {
             <Button 
               variant="dark w-100 text-left" 
               onClick={() => handleAddTab({ 
-                eventKey: 'tab-form-list', 
+                eventKey: 'form-view-a', // metch with activeTab 
                 title: 'Formulários', 
-                content: 
-                  <FormListContextProvider>
-                    <FormList />
-                  </FormListContextProvider> 
-                })
+                content: <ViewA />
+              })
               }
             >
-              <div className={`${ activeTab ===  'tab-form-list' ? 'active-route' : ''}`}>
+              <div className={`${ activeTab ===  'form-view-a' ? 'active-route' : ''}`}>
                 <i className='bi-grid sidebar-small'></i>
                 <small className='sidebar-small sidebar-small-label mx-2'>
                   Formulários

@@ -111,7 +111,7 @@ export default function Index() {
     },
     actions: {
       edit: (itemId: string) => {
-        formContext.getFormContext(itemId)
+        formContext.getForm(itemId)
         formContext.setStateContext({showModalForm: true})
       },
       remove: (itemId: string) => {
@@ -127,7 +127,6 @@ export default function Index() {
     additionalComponents: []
   }
   
-
   return (
     <>
       <SearchBar 
@@ -135,7 +134,7 @@ export default function Index() {
         actions={searchBarProps.actions} 
         additionalComponents={searchBarProps.additionalComponents} 
       />
-        { isLoading && (<Loading />) }
+        <Loading isLoading={isLoading}/>
         { !isLoading && ( 
           <>
             {listViewMode == 'listInputsDragDrop' && (

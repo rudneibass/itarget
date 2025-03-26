@@ -3,8 +3,8 @@ import { PageContainer } from '@components/Bootstrap/PageContainer'
 import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
 import Button from '@components/Bootstrap/Button'
 import Icon from '@components/Bootstrap/Icon'
-import Form from '@pages/Form/Form'
 
+import ViewB from '@pages/Form/ViewB'
 
 import { ListContextProvider } from './List/context'
 import List from './List/index'
@@ -33,7 +33,7 @@ export default function Index() {
               mainTabsContext.handleAddTab({
                 title: "Novo Formulário",
                 eventKey: "tab-new-form",
-                content: <Form />,
+                content: <ViewB />,
               })
             }
           >

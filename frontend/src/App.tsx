@@ -9,29 +9,28 @@ import Footer from "@components/Bootstrap/Footer"
 import MainTabs from "@components/Bootstrap/MainTabs"
 import { MainTabsContextProvider } from "@components/Bootstrap/MainTabs/context"
 import { toastContainer } from "@components/Toastify"
+import ErrorBoundary from "@components/ErrorBoundary"
 
 export default function App() {
   return (
-    <GlobalContextProvider>
-      <MainTabsContextProvider>
-        
-          <div className="d-flex">
-            {toastContainer}
-            <div className="bg-dark sidebar-container">
-              <SideBar />
+    <ErrorBoundary>
+      <GlobalContextProvider>
+        <MainTabsContextProvider>
+            <div className="d-flex">
+              {toastContainer}
+              <div className="bg-dark sidebar-container">
+                <SideBar />
+              </div>
+              <div className="main-container">
+                <NavBar />
+                <main>
+                  <MainTabs />
+                </main>
+                <Footer />
+              </div>
             </div>
-
-            <div className="main-container">
-              <NavBar />
-              <main>
-                <MainTabs />
-              </main>
-              <Footer />
-            </div>
-
-          </div>
-    
-      </MainTabsContextProvider>
-    </GlobalContextProvider>
+        </MainTabsContextProvider>
+      </GlobalContextProvider>
+    </ErrorBoundary>
   )
 }

@@ -39,30 +39,30 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }));
     }
 
-    function saveFormContext(inputs: FormInputsType){
-        saveForm(inputs)
-    }
-
-    async function saveForm(inputs: FormInputsType){
+    async function save(
+        { input, successCallback, errorCallback } : 
+        { input: FormInputsType, successCallback?: () => void, errorCallback?: () => void }
+    ){
         try {
             if(!state.recordId){
-                await fieldApi.create(fieldApi.endpoints.create, inputs)
+                await fieldApi.create(fieldApi.endpoints.create, input)
             }
             if(state.recordId){
-                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: state.recordId, data: inputs })
+                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: state.recordId, data: input })
             }
             successAlert('Operação realizada com sucesso!')
+            
+            if(successCallback){ successCallback() }
+
         } catch (error) {
             if (error instanceof Error) {
                 warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
             } else {
                 errorAlert("Caught unknown error.")
             }
-        }
-    }
 
-    function getFormContext(id?: string){
-        getForm(id)
+            if(errorCallback){ errorCallback() }
+        }
     }
 
     async function getForm( id?: string ){
@@ -103,8 +103,33 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }   
     }
 
+    function saveFormContext(inputs: FormInputsType){
+        saveForm(inputs)
+    }
+    function getFormContext(id?: string){
+        getForm(id)
+    }
+    
+    async function saveForm(inputs: FormInputsType){
+        try {
+            if(!state.recordId){
+                await fieldApi.create(fieldApi.endpoints.create, inputs)
+            }
+            if(state.recordId){
+                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: state.recordId, data: inputs })
+            }
+            successAlert('Operação realizada com sucesso!')
+        } catch (error) {
+            if (error instanceof Error) {
+                warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
+            } else {
+                errorAlert("Caught unknown error.")
+            }
+        }
+    }
+
     useEffect(() => {
-        getFormContext()
+        getForm()
     },[])
 
     return (
@@ -118,6 +143,9 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
                 successAlert,
                 warningAlert,
                 errorAlert,
+
+                getForm,
+                save
             }}
         >
             {children}

@@ -17,7 +17,11 @@ export default function Index() {
     },
     actions: {
       handleSubmitAction: (inputsValues: object) => {
-        context.saveFormContext(inputsValues); 
+        context.save({
+          input: inputsValues, 
+          successCallback: () => { alert('Called successCallback') },
+          errorCallback: () => { alert('Called ErrorCallback') } 
+        }); 
       },
       handleAlertRequiredsFieldAction: (message: string) => {
         if(context.warningAlert){
@@ -63,7 +67,7 @@ export default function Index() {
   return (
     <>
       <Modal data={modalProps.data} actions={modalProps.actions} >
-        { isLoading && (<Loading />) }
+        <Loading isLoading={isLoading}/>
         { !isLoading && ( 
           <Form  
               data={formProps.data} 

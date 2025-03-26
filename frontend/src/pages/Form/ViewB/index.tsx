@@ -1,7 +1,6 @@
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 
-import CustomCard from '@components/Bootstrap/CustomCard'
+import { Tab, Tabs }  from '@components/Bootstrap/Tabs'
+import { PageContainer } from '@components/Bootstrap/PageContainer'
 
 import { FormContextProvider as FormAContextProvider } from './FormA/context'
 import FormA from './FormA/index'
@@ -13,31 +12,25 @@ import { ListContextProvider } from './FormB/List/context';
 import List from './FormB/List/index';
 
 export default function Index({ id }: { id?: string }) {
-  const customCardProps = {
-    data: {
-      title:'Inscrições', 
-      shortDescription: 
-      <>
-        &emsp;
-        <i className="fs-7 bi-house"></i>
-        &nbsp;&nbsp;
-        <small className="text-muted" >
-           {'> Cadastros > Inscrições > Novo'}
-        </small> 
-      </>
-    },
-    actions: {},
-    additionalComponents: [],
+  const pageContainerHeadProps = {
+    title:'Formulários',
+    shortDescription:
+    <>
+      <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
+      <small className="text-muted" >
+         {'> Cadastros > Formulários'}
+      </small> 
+    </>
   }
-
   return (
     <>
-      <CustomCard 
-        data={customCardProps.data} 
-        actions={customCardProps.actions} 
-        additionalComponents={customCardProps.additionalComponents}
-      >
+      <PageContainer.Root>
+        <PageContainer.Head title={pageContainerHeadProps.title} shortDescription={pageContainerHeadProps.shortDescription}>
+          <></>
+        </PageContainer.Head>
+        <PageContainer.Boddy>
         <Tabs defaultActiveKey="tab-a" >
+          
           <Tab 
             eventKey="tab-a" 
             title={<><i className="fs-6 bi-grid"></i> Formulário</>} 
@@ -46,7 +39,6 @@ export default function Index({ id }: { id?: string }) {
             <FormAContextProvider id={id}>
               <FormA />
             </FormAContextProvider>
-
           </Tab>
 
           <Tab 
@@ -63,11 +55,11 @@ export default function Index({ id }: { id?: string }) {
                 </ListContextProvider>
               </>
             </FormBContextProvider>
-
           </Tab>
 
         </Tabs>
-      </CustomCard>
+        </PageContainer.Boddy>
+      </PageContainer.Root>
     </>
   )
 }

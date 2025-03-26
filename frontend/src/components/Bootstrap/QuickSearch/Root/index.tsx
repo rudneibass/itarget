@@ -29,8 +29,8 @@ export default function Root({data, actions, children} : QuickSearchPropsType) {
                   <div className="form-group mb-3">
                     <select className="form-control form-select ">
                       <option value="">Pesquisar por...</option>
-                      {data.searchBy.map((item) => 
-                        <option value={item.value}>{item.label}</option>
+                      {data.searchBy.map((item, index) => 
+                        <option key={index} value={item.value}>{item.label}</option>
                       )}
                     </select>
                   </div>
