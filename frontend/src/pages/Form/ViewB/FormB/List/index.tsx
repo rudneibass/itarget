@@ -4,7 +4,7 @@ import { useListContext } from './context'
 import { useFormContext } from '../Form/context'
 import { PaginatedListLinksType } from './types'
 
-import SearchBar from '@components/Bootstrap/SearchBar'
+import { QuickSearch } from '@components/Bootstrap/QuickSearch'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
 import Button from '@components/Bootstrap/Button'
@@ -19,7 +19,7 @@ export default function Index() {
   const context = useListContext()
   const isLoading = context.state.isLoading
 
-  const searchBarProps = {
+  const quickSearchProps = {
     data: {
       searchBy: [
         {value: 'name', label: 'Nome'}
@@ -27,40 +27,9 @@ export default function Index() {
     },
     actions: {
       handleSearchAction: async (searchParams: object) => {
-        if(context.state.formId){
-          context.handleSearchContext(searchParams)
-        }
+        context.search(searchParams)
       },   
-    },
-    additionalComponents: [
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={() => {
-          formContext.getFormContext()
-          formContext.setStateContext({showModalForm: true})
-        }}
-      >
-        <Icon name="bi bi-save" size={16} />
-        &nbsp;&nbsp;
-        Cadastrar
-      </Button>,
-
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={() => { setListViewMode('listTable')}}
-      >
-        <Icon name="bi bi-list" size={16} />
-      </Button>,
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={() => { setListViewMode('listInputsDragDrop')}}
-      >
-        <Icon name="bi bi-columns-gap" size={16} />
-      </Button>
-    ]
+    }
   }
 
   const listInputsProps = {
@@ -73,7 +42,7 @@ export default function Index() {
     }),
     actions: {
       edit: (itemId: string) => {
-        formContext.getFormContext(itemId)
+        formContext.getForm(itemId)
         formContext.setStateContext({showModalForm: true})
       },
       remove: (itemId: string) => {
@@ -115,54 +84,70 @@ export default function Index() {
         formContext.setStateContext({showModalForm: true})
       },
       remove: (itemId: string) => {
-        context.handleDeleteContext(itemId)
+        context.remove(itemId)
       },
       activeDeactive: (itemId: string) => {
-        context.handleActiveContext(itemId)
+        context.activeDeactive(itemId)
       },
       sort: (sortBy: string, sortDirection: string) => {
-        context.handleSortContext(sortBy, sortDirection)
+        context.sort(sortBy, sortDirection)
       }
     },
     additionalComponents: []
   }
   
   return (
-    <>
-      <SearchBar 
-        data={searchBarProps.data} 
-        actions={searchBarProps.actions} 
-        additionalComponents={searchBarProps.additionalComponents} 
-      />
-        <Loading isLoading={isLoading}/>
-        { !isLoading && ( 
-          <>
-            {listViewMode == 'listInputsDragDrop' && (
-              <>
-                <br/>
-                <ListInputsDragDrop
-                  data={listInputsProps.data} 
-                  actions={listInputsProps.actions} 
-                />
-              </>
-            )}
+    <>      
+      <Loading isLoading={isLoading}/>
+      <QuickSearch.Root data={quickSearchProps.data} actions={quickSearchProps.actions}>
+        <Button variant="outline-primary" size="sm" onClick={() => {
+            formContext.getForm()
+            formContext.setStateContext({showModalForm: true})
+          }}
+        >
+          <Icon name="bi bi-save" size={16} />
+          &nbsp;&nbsp;
+          Cadastrar
+        </Button>
+        &nbsp;&nbsp;
+        <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listTable')}}>
+          <Icon name="bi bi-list" size={16} />
+        </Button>
+        &nbsp;&nbsp;
+        <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listInputsDragDrop')}}>
+          <Icon name="bi bi-columns-gap" size={16} />
+        </Button>
+        &nbsp;&nbsp;
+      </QuickSearch.Root>
 
-            {listViewMode == 'listTable' && (
-              <>
-                <ListTable
-                  data={listTableProps.data} 
-                  actions={listTableProps.actions} 
-                  additionalComponents={listTableProps.additionalComponents}
-                />
-                <PaginationBar 
-                  data={paginationBarProps.data} 
-                  actions={paginationBarProps.actions} 
-                  additionalComponents={paginationBarProps.additionalComponents}
-                />
-              </>
-            )}
-          </>
-        )}
+      { !isLoading && ( 
+        <>
+          {listViewMode == 'listInputsDragDrop' && (
+            <>
+              <br/>
+              <ListInputsDragDrop
+                data={listInputsProps.data} 
+                actions={listInputsProps.actions} 
+              />
+            </>
+          )}
+
+          {listViewMode == 'listTable' && (
+            <>
+              <ListTable
+                data={listTableProps.data} 
+                actions={listTableProps.actions} 
+                additionalComponents={listTableProps.additionalComponents}
+              />
+              <PaginationBar 
+                data={paginationBarProps.data} 
+                actions={paginationBarProps.actions} 
+                additionalComponents={paginationBarProps.additionalComponents}
+              />
+            </>
+          )}
+        </>
+      )}
     </>
   )
 }

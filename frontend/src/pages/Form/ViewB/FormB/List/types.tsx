@@ -13,11 +13,10 @@ export interface ListContextType  {
     isLoading,
     showModalForm
   } : { data?: [], formId?: string, paginationLinks?: Array<PaginatedListLinksType>,  isLoading?: boolean, showModalForm?: boolean }) => void,
-  renderFormTab: ({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }) => void,
-  handleSearchContext: (searchParams?: object) => void
-  handleDeleteContext: (itemId: string) => void
-  handleActiveContext: (itemId: string) => void
-  handleSortContext: (sortBy: string, sortDirection: string) => void
+  search: (searchParams?: object) => void
+  remove: (itemId: string) => void
+  sort: (sortBy: string, sortDirection: string) => void
+  activeDeactive: (itemId: string) => void
 }
 
 export type ListType = {

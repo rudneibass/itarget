@@ -103,31 +103,6 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }   
     }
 
-    function saveFormContext(inputs: FormInputsType){
-        saveForm(inputs)
-    }
-    function getFormContext(id?: string){
-        getForm(id)
-    }
-    
-    async function saveForm(inputs: FormInputsType){
-        try {
-            if(!state.recordId){
-                await fieldApi.create(fieldApi.endpoints.create, inputs)
-            }
-            if(state.recordId){
-                await fieldApi.update({ endpoint: fieldApi.endpoints.update , id: state.recordId, data: inputs })
-            }
-            successAlert('Operação realizada com sucesso!')
-        } catch (error) {
-            if (error instanceof Error) {
-                warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
-            } else {
-                errorAlert("Caught unknown error.")
-            }
-        }
-    }
-
     useEffect(() => {
         getForm()
     },[])
@@ -137,15 +112,12 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             value={{
                 state,
                 setStateContext,
-                getFormContext,
+                getForm,
+                save,
                 closeFormTab,
-                saveFormContext,
                 successAlert,
                 warningAlert,
                 errorAlert,
-
-                getForm,
-                save
             }}
         >
             {children}

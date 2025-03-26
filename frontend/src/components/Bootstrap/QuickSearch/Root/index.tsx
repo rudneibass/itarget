@@ -19,7 +19,7 @@ export default function Root({data, actions, children} : QuickSearchPropsType) {
   return (
     <section>
       <div className="d-flex">
-        <div className={`d-flex width-100`}>
+        <div className={`width-100`}>
           {children}
         </div>         
         <div className="width-100">

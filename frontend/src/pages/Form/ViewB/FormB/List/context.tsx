@@ -1,6 +1,5 @@
 import { createContext, useState,useContext, useEffect } from  "react"
 import { isPaginatedListType, PaginatedListLinksType, ListContextType, isObject } from "./types"
-import { useMainTabsContext } from "@components/Bootstrap/MainTabs/context"
 import { errorAlert, HtmlContent, warningAlertWithHtmlContent } from "@components/Toastify"
 import { fieldApi } from "@services/backendApi/fieldApi"
   
@@ -12,11 +11,6 @@ export const useListContext = () => {
 }
 
 export const ListContextProvider = ({ formId, children }:{ formId?: string, children: JSX.Element }) => {
-    const mainTabsContext = useMainTabsContext()
-    function renderFormTab({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }){
-        mainTabsContext.handleAddTab({ title, eventKey, content })
-    }
-
     const [state, setState] = useState({
         data: [] as [],
         formId: formId || '',
@@ -35,7 +29,7 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         }));
     }
 
-    async function handleSearchContext(searchParams?: object){
+    async function search(searchParams?: object){
         try {
             if(formId){
                 setStateContext({ isLoading: true })
@@ -63,20 +57,20 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
         } 
     }
 
-    function handleDeleteContext(itemId: string){
+    function remove(itemId: string){
         alert('Delete item '+itemId)
     }
 
-    function handleActiveContext(itemId: string){
+    function activeDeactive(itemId: string){
         alert('Active item '+itemId)
     }
 
-    function handleSortContext(sortBy: string, sortDirection: string){
+    function sort(sortBy: string, sortDirection: string){
         alert('Sort by '+sortBy+' '+sortDirection)
     } 
 
     useEffect(() => {
-        handleSearchContext()
+        search()
     }, [])
     
     return (
@@ -84,11 +78,10 @@ export const ListContextProvider = ({ formId, children }:{ formId?: string, chil
             value={{
                 state,
                 setStateContext,
-                renderFormTab,
-                handleSearchContext,
-                handleActiveContext,
-                handleDeleteContext,
-                handleSortContext
+                activeDeactive,
+                search,
+                remove,
+                sort
             }}
         >
             { children }

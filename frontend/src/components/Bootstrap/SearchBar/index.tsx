@@ -1,12 +1,11 @@
 import { useState, FormEvent, ReactNode } from "react";
-//import svgLoadingWhite from '@assets/loading-white-sm.svg'
 
 type SearchBarPropsType = {
   data?: {
     searchBy: Array<Record<string, string>>
   },
   actions?: {
-    handleSearchAction: (searchParams: object) => void;
+    search: (searchParams: object) => void;
   },
   additionalComponents?: Array<ReactNode>
 }
@@ -16,8 +15,8 @@ export default function Index({data, actions, additionalComponents} : SearchBarP
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault();
-    if(actions?.handleSearchAction){
-      actions.handleSearchAction({name: inputValue, paginate: '10'});
+    if(actions?.search){
+      actions.search({name: inputValue, paginate: '10'});
     } 
   }
 
