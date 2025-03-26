@@ -4,7 +4,6 @@ import { FormType, FieldsType } from './types'
 
 import Form from '@components/Bootstrap/Form'
 import Loading from '@components/Bootstrap/Loading'
-import Modal from '@components/Bootstrap/Modal'
 
 export default function Index() {
   const context = useFormContext()
@@ -17,7 +16,7 @@ export default function Index() {
     },
     actions: {
       handleSubmitAction: (inputsValues: object) => {
-        context.saveFormContext(inputsValues); 
+        context.saveFormContext(inputsValues);
       },
       handleAlertRequiredsFieldAction: (message: string) => {
         if(context.warningAlert){
@@ -47,31 +46,16 @@ export default function Index() {
     ]
   }
 
-  const modalProps = {
-    data: {
-      show: context.state.showModalForm, 
-      title: 'Adicionar Campo'
-    },
-    actions: {
-      handleCloseAction: () => {
-        context.setStateContext({ showModalForm: false })
-      }   
-    },
-    additionalComponents: []
-  }
-
   return (
     <>
-      <Modal data={modalProps.data} actions={modalProps.actions} >
-        { isLoading && (<Loading />) }
-        { !isLoading && ( 
-          <Form  
-              data={formProps.data} 
-              actions={formProps.actions} 
-              additionalComponents={formProps.additionalComponents} 
-          />
-        )}
-      </Modal>
+      { isLoading && (<Loading />) }
+      { !isLoading && ( 
+        <Form  
+          data={formProps.data} 
+          actions={formProps.actions} 
+          additionalComponents={formProps.additionalComponents} 
+        />
+      )}
     </>
   )
 }

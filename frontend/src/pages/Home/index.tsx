@@ -1,5 +1,4 @@
 import CustomCard from '@components/Bootstrap/CustomCard'
-import HorizontalDragList from '@components/Lab/HorizontalDragList'
 
 export default function index() {
     const customCardProps = {
@@ -16,12 +15,14 @@ export default function index() {
       }
     
   return (
-    <CustomCard 
-      data={customCardProps.data} 
-      actions={customCardProps.actions} 
-      additionalComponents={customCardProps.additionalComponents}
-    >
-        <span className='text-muted'>Seja bem vindo.</span>
-    </CustomCard>
+    <>
+      <CustomCard 
+        data={customCardProps.data} 
+        actions={customCardProps.actions} 
+        additionalComponents={customCardProps.additionalComponents}
+      >
+          <span className='text-muted'>Seja bem vindo.</span>
+      </CustomCard>
+    </>
   )
 }
