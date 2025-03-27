@@ -4,7 +4,7 @@ import { rules } from './rules'
 type InputSelectPropsType = {
   data: {
     attributes: Record<string, string>,
-    options?: Array<{ option_value: string, option_text: string }>,
+    options?: Array<{ optionValue: string, optionText: string }>,
     rules?: string
   },
   actions?: {
@@ -96,8 +96,8 @@ export default function Index({ data, actions }: InputSelectPropsType) {
         >
           <option value="">Selecione uma opção</option>
           {data.options && data.options.map(option => (
-            <option key={option.option_value} value={option.option_value}>
-              {option.option_text}
+            <option key={option.optionValue} value={option.optionValue}>
+              {option.optionText}
             </option>
           ))}
         </select>

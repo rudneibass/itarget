@@ -15,7 +15,7 @@ type FormPropsType = {
         },
         fields?:Array<{
           rules?: string;
-          options?: Array<{ value: string, name: string }>;
+          options?: Array<{ optionValue: string, optionText: string }>;
           attributes: Record<string, string>;
         }>
     },

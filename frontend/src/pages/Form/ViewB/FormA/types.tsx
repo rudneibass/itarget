@@ -20,7 +20,7 @@ export type FormInputsType = {
 
 export type FieldsType = {
   rules?: string;
-  options?: Array<{ value: string, name: string }>;
+  options?: Array<{ optionValue: string, optionText: string }>;
   attributes: Record<string, string>;
 };
 
@@ -30,6 +30,30 @@ export type FormType = {
   attributes: object;
   fields?: Array<FieldsType>;
 };
+
+export type OptionsType = {
+  optionValue: string, 
+  optionText: string
+}
+
+export function isOptionsType(data: unknown): data is FormType {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return false;
+  }
+
+  const obj = data as {
+    optionValue?: unknown;
+    optionText?: unknown;
+  };
+
+  if (
+    typeof obj.optionValue !== "string" || 
+    typeof obj.optionValue !== "string" ) {
+    return false;
+  }
+
+  return true;
+}
 
 export function isFormType(data: unknown): data is FormType {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -63,6 +87,10 @@ export function isFormType(data: unknown): data is FormType {
       typeof field.form_id !== "string" ||
       typeof field.attributes !== "object"
     ) {
+      return false;
+    }
+
+    if(field.options && !isOptionsType(field.options)){
       return false;
     }
   }
@@ -104,7 +132,10 @@ export function convertToFormType(data: unknown): FormType {
       name: field.name || "",
       value: field.value || "",
       rules: field.rules || "",
-      options: field.options || [],
+      options: field.options ? field.options.map((option: Record<string, string>) => ({
+        optionValue: option.id,
+        optionText: option.name
+      })) : [],
       dataSource: field.dataSource || "",
       attributes: field.attributes || {},
     })),
