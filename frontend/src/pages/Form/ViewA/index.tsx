@@ -43,9 +43,9 @@ export default function Index() {
           </Button>
         </PageContainer.Head>
         <PageContainer.Boddy>
-         <ListContextProvider>
+          <ListContextProvider>
             <List />
-         </ListContextProvider>
+          </ListContextProvider>
         </PageContainer.Boddy>
       </PageContainer.Root>
     </>
