@@ -103,6 +103,16 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }   
     }
 
+    function addNew(){
+        getForm()
+        setStateContext({showModalForm: true})
+    }
+
+    function edit(id: string){
+        getForm(id)
+        setStateContext({showModalForm: true})
+    }
+
     useEffect(() => {
         getForm()
     },[])
@@ -112,7 +122,8 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             value={{
                 state,
                 setStateContext,
-                getForm,
+                addNew,
+                edit,
                 save,
                 closeFormTab,
                 successAlert,

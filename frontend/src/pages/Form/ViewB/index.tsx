@@ -8,8 +8,8 @@ import FormA from './FormA/index'
 import { FormContextProvider as FormBContextProvider } from './FormB/Form/context'
 import FormB from './FormB/Form/index'
 
-import { ListContextProvider } from './FormB/List/context';
-import List from './FormB/List/index';
+import { ListContextProvider as ListBContextProvider } from './FormB/List/context';
+import ListB from './FormB/List/index';
 
 export default function Index({ id }: { id?: string }) {
   const pageContainerHeadProps = {
@@ -46,13 +46,12 @@ export default function Index({ id }: { id?: string }) {
             title={<><i className="fs-6 bi-grid"></i> Campos</>} 
             style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
           >
-
             <FormBContextProvider id={id}>
               <>
                 <FormB/>
-                <ListContextProvider formId={id}>
-                  <List />
-                </ListContextProvider>
+                <ListBContextProvider formId={id}>
+                  <ListB />
+                </ListBContextProvider>
               </>
             </FormBContextProvider>
           </Tab>

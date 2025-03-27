@@ -7,6 +7,7 @@ import { PaginatedListLinksType } from './types'
 import { QuickSearch } from '@components/Bootstrap/QuickSearch'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
+import Stack from '@components/Bootstrap/Stack'
 import Button from '@components/Bootstrap/Button'
 import Icon from '@components/Bootstrap/Icon'
 import ListTable from '@components/Bootstrap/ListTable'
@@ -42,8 +43,7 @@ export default function Index() {
     }),
     actions: {
       edit: (itemId: string) => {
-        formContext.getForm(itemId)
-        formContext.setStateContext({showModalForm: true})
+        formContext.edit(itemId)
       },
       remove: (itemId: string) => {
         context.remove(itemId)
@@ -82,19 +82,10 @@ export default function Index() {
       })  
     },
     actions: {
-      edit: (itemId: string) => {
-        formContext.getForm(itemId)
-        formContext.setStateContext({showModalForm: true})
-      },
-      remove: (itemId: string) => {
-        context.remove(itemId)
-      },
-      activeDeactive: (itemId: string) => {
-        context.activeDeactive(itemId)
-      },
-      sort: (sortBy: string, sortDirection: string) => {
-        context.sort(sortBy, sortDirection)
-      }
+      edit: (itemId: string) => { formContext.edit(itemId) },
+      remove: (itemId: string) => { context.remove(itemId) },
+      activeDeactive: (itemId: string) => { context.activeDeactive(itemId) },
+      sort: (sortBy: string, sortDirection: string) => { context.sort(sortBy, sortDirection) }
     },
     additionalComponents: []
   }
@@ -103,24 +94,19 @@ export default function Index() {
     <>      
       <Loading isLoading={isLoading}/>
       <QuickSearch.Root data={quickSearchProps.data} actions={quickSearchProps.actions}>
-        <Button variant="outline-primary" size="sm" onClick={() => {
-            formContext.getForm()
-            formContext.setStateContext({showModalForm: true})
-          }}
-        >
-          <Icon name="bi bi-save" size={16} />
-          &nbsp;&nbsp;
-          Cadastrar
-        </Button>
-        &nbsp;&nbsp;
-        <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listTable')}}>
-          <Icon name="bi bi-list" size={16} />
-        </Button>
-        &nbsp;&nbsp;
-        <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listInputsDragDrop')}}>
-          <Icon name="bi bi-columns-gap" size={16} />
-        </Button>
-        &nbsp;&nbsp;
+        <Stack direction="horizontal" gap={3}>
+          <Button variant="outline-primary" size="sm" onClick={() => { formContext.addNew() }}>
+            <Icon name="bi bi-plus-circle" size={16} />
+            &nbsp;
+            Cadastrar
+          </Button>
+          <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listTable')}}>
+            <Icon name="bi bi-list" size={16} />
+          </Button>
+          <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listInputsDragDrop')}}>
+            <Icon name="bi bi-columns-gap" size={16} />
+          </Button>
+        </Stack>
       </QuickSearch.Root>
 
       { !isLoading && ( 
