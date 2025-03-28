@@ -1,9 +1,11 @@
-
 import { useFormContext } from './context'
-import { FormType, FieldsType } from './types'
+import { FormType, FieldsType, FormInputsType } from './types'
 
+import Stack from '@components/Bootstrap/Stack'
 import Form from '@components/Bootstrap/Form'
 import Loading from '@components/Bootstrap/Loading'
+import Button from '@components/Bootstrap/Button'
+import Icon from '@components/Bootstrap/Icon'
 
 export default function Index() {
   const context = useFormContext()
@@ -15,10 +17,10 @@ export default function Index() {
       fields: context.state.form?.fields || new Array<FieldsType> 
     },
     actions: {
-      handleSubmitAction: (inputsValues: object) => {
-        context.saveFormContext(inputsValues);
+      save: (data: FormInputsType) => {
+        context.save({input: data})
       },
-      handleAlertRequiredsFieldAction: (message: string) => {
+      alertRequiredFields: (message: string) => {
         if(context.warningAlert){
           context.warningAlert(message)
           return
@@ -28,32 +30,22 @@ export default function Index() {
           return
         }
         alert(message)
-      }
+      },
     },
-    additionalComponents: [
-      { name: 'backButton', 
-        component: 
-        <button 
-          type="button" 
-          className="btn btn-outline-secondary" 
-          onClick={() => context.closeFormTab({tabId: context.state.activeTab })}
-        >
-          <small>
-            <i className="fs-7 bi-back"></i> Voltar
-          </small>
-        </button> 
-      }
-    ]
   }
 
   return (
     <>
       <Loading isLoading={isLoading} />
-      <Form  
-        data={formProps.data} 
-        actions={formProps.actions} 
-        additionalComponents={formProps.additionalComponents} 
-      />
+      <Form data={formProps.data} actions={formProps.actions}>
+        <Stack direction="horizontal" gap={3}>
+          <Button variant="outline-secondary" onClick={() => context.closeFormTab({tabId: context.state.activeTab })}>
+            <Icon name="bi bi-back" size={16} />
+            &nbsp;
+            Voltar
+          </Button>
+        </Stack>
+      </Form>
     </>
   )
 }

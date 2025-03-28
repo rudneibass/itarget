@@ -22,11 +22,15 @@ type FormPropsType = {
     actions?: {
       handleSubmitAction?: (inputsValues: object) => void
       handleAlertRequiredsFieldAction?: (alertMessage: string) => void
+
+      save?: (inputsValues: object) => void
+      alertRequiredFields?: (alertMessage: string) => void
     },
-    additionalComponents?: Array<{name: string, component: ReactNode}>
+    additionalComponents?: Array<{name: string, component: ReactNode}>,
+    children?: ReactNode
 }
 
-export default function Index({data, actions, additionalComponents}: FormPropsType) {
+export default function Index({data, actions, additionalComponents, children}: FormPropsType) {
   const [inputsValues, setInputsValues] = useState({} as Record<string, string>)
   const [inputsRequired, setInputsRequired] = useState({} as Record<string, string>)
 
@@ -34,20 +38,17 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
     event.preventDefault();
 
     if (!checkRequiredFields()) {
-      
-      if(actions?.handleAlertRequiredsFieldAction){
-        actions?.handleAlertRequiredsFieldAction('Por favor, preencha os campos obrigatórios.')
-      }
-
-      if(!actions?.handleAlertRequiredsFieldAction) {
+      if(!actions?.alertRequiredFields) {
         alert('Por favor, preencha os campos obrigatórios.');
       }
-      
+      if(actions?.alertRequiredFields){
+        actions?.alertRequiredFields('Por favor, preencha os campos obrigatórios.')
+      }
       return;
     }
     
-    if(actions?.handleSubmitAction){        
-      actions.handleSubmitAction(inputsValues)
+    if(actions?.save){        
+      actions.save(inputsValues)
     }
   }
 
@@ -164,8 +165,8 @@ export default function Index({data, actions, additionalComponents}: FormPropsTy
           }
         </div>
         <div className="col-md-12 d-flex justify-content-end pt-4 border-top" >
-          { additionalComponents && additionalComponents.map((item) => item.component ) }
-          &nbsp;
+          { children }
+          &nbsp;&nbsp;
           <button type="submit" className="btn btn-secondary" style={{minWidth: '80px'}}>
             <small>
               <i className="fs-7 bi-save"></i> Salvar

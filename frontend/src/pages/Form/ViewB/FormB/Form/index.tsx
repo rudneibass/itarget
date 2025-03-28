@@ -1,10 +1,13 @@
 
 import { useFormContext } from './context'
-import { FormType, FieldsType } from './types'
+import { FormType, FieldsType, FormInputsType } from './types'
 
+import Stack from '@components/Bootstrap/Stack'
 import Form from '@components/Bootstrap/Form'
 import Loading from '@components/Bootstrap/Loading'
 import Modal from '@components/Bootstrap/Modal'
+import Button from '@components/Bootstrap/Button'
+import Icon from '@components/Bootstrap/Icon'
 
 export default function Index() {
   const context = useFormContext()
@@ -16,14 +19,15 @@ export default function Index() {
       fields: context.state.form?.fields || new Array<FieldsType> 
     },
     actions: {
-      handleSubmitAction: (inputsValues: object) => {
+      save: (data: FormInputsType) => {
         context.save({
-          input: inputsValues, 
+          input: data, 
           successCallback: () => { alert('Called successCallback') },
           errorCallback: () => { alert('Called ErrorCallback') } 
-        }); 
+        })
       },
-      handleAlertRequiredsFieldAction: (message: string) => {
+            
+      alertRequiredFields: (message: string) => {
         if(context.warningAlert){
           context.warningAlert(message)
           return
@@ -33,22 +37,8 @@ export default function Index() {
           return
         }
         alert(message)
-      }
-    },
-    additionalComponents: [
-      { name: 'backButton', 
-        component: 
-        <button 
-          type="button" 
-          className="btn btn-outline-secondary" 
-          onClick={() => context.closeFormTab({tabId: context.state.activeTab })}
-        >
-          <small>
-            <i className="fs-7 bi-back"></i> Voltar
-          </small>
-        </button> 
-      }
-    ]
+      },
+    }
   }
 
   const modalProps = {
@@ -57,11 +47,10 @@ export default function Index() {
       title: 'Adicionar Campo'
     },
     actions: {
-      handleCloseAction: () => {
+      close: () => {
         context.setStateContext({ showModalForm: false })
       }   
-    },
-    additionalComponents: []
+    }
   }
 
   return (
@@ -69,11 +58,15 @@ export default function Index() {
       <Modal data={modalProps.data} actions={modalProps.actions} >
         <Loading isLoading={isLoading}/>
         { !isLoading && ( 
-          <Form  
-              data={formProps.data} 
-              actions={formProps.actions} 
-              additionalComponents={formProps.additionalComponents} 
-          />
+          <Form data={formProps.data} actions={formProps.actions}>
+            <Stack direction="horizontal" gap={3}>
+              <Button variant="outline-secondary" onClick={() => context.setStateContext({ showModalForm: false })}>
+                <Icon name="bi bi-back" size={16} />
+                &nbsp;
+                Voltar
+              </Button>
+            </Stack>
+          </Form>
         )}
       </Modal>
     </>

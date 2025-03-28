@@ -6,6 +6,7 @@ export interface ListContextType  {
   remove: (itemId: string) => void
   activeDeactive: (itemId: string) => void
   sort: (sortBy: string, sortDirection: string) => void
+  reorder: (dataReordered: []) => void
 }
 
 export type ListType = {

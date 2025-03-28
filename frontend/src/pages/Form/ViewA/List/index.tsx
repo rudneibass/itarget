@@ -9,8 +9,6 @@ import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 
-
-
 export default function Index() {  
   const context = useListContext()
   const isLoading = context.state.isLoading
@@ -51,6 +49,9 @@ export default function Index() {
       sort: (sortBy: string, sortDirection: string) => {
         context.sort(sortBy, sortDirection)
       },
+      reorder: (reorderesData: []) =>{
+        context.reorder(reorderesData)
+      },
       edit: (itemId: string) => {
         context.addTab({ 
           title: 'Editar Formulário', 
@@ -58,18 +59,18 @@ export default function Index() {
           content: <ViewB id={itemId} />
         })
       }
-    },
-    additionalComponents: []
+    }
   }
 
   const paginationBarProps = {
-    data: {paginationLinks: context.state.paginationLinks},
+    data: { 
+      paginationLinks: context.state.paginationLinks
+    },
     actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
+      paginate: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
         context.setStateContext({ data, paginationLinks })
       }   
-    },
-    additionalComponents: []
+    }
   }
 
   return (
@@ -82,12 +83,10 @@ export default function Index() {
           <ListTable 
             data={listTableProps.data} 
             actions={listTableProps.actions} 
-            additionalComponents={listTableProps.additionalComponents} 
           />
           <PaginationBar 
             data={paginationBarProps.data} 
             actions={paginationBarProps.actions} 
-            additionalComponents={paginationBarProps.additionalComponents}
           />
         </>
     </>

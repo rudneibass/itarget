@@ -61,21 +61,21 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
     }
 
     function remove(itemId: string){
-        alert('Delete item '+itemId)
+        alert('Need to implement! Remove item '+itemId)
     }
 
     function activeDeactive(itemId: string){
-        alert('Active item '+itemId)
+        alert('Need to implement! Active item '+itemId)
     }
 
     function sort(sortBy: string, sortDirection: string){
-        alert('Sort by '+sortBy+' '+sortDirection)
+        alert('Need to implement! Sort by '+sortBy+' '+sortDirection)
     } 
 
-    function reorder(dataReordered: []){
-        alert('Reorder')
-        console.log(dataReordered)
-    } 
+    function reorder(reorderedData: []){
+        alert('Need to implement!')
+        console.log(reorderedData)
+    }
 
     useEffect(() => {
         search()
@@ -90,7 +90,8 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
                 activeDeactive,
                 search,
                 remove,
-                sort
+                sort,
+                reorder
             }}
         >
             {children}

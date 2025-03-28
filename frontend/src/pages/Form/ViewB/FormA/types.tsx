@@ -4,6 +4,10 @@ export interface FormContextextType {
   state: { form: FormType | undefined, isLoading: boolean, activeTab: string};
   setStateContext: ({ form, isLoading, activeTab } : { form?: FormType, isLoading?: boolean, activeTab?: string }) => void,
   saveFormContext: (inputs: FormInputsType) => void;
+  save: (
+      { input, successCallback, errorCallback } : 
+      { input: FormInputsType, successCallback?: () => void, errorCallback?: () => void }
+    ) => void;
   closeFormTab: ({ tabId }: { tabId: string }) => void;
   successAlert?: (message: string) => void;
   warningAlert?: (message: string) => void;

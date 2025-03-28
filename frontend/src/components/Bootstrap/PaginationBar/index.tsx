@@ -1,27 +1,24 @@
 import axios from 'axios';
-import { ReactNode } from "react";
 
-export type PaginatedListLinksType = {
+type PaginatedListLinksType = {
   url: string | null;
   label: string;
   active: boolean;
 }
 
-
 type PaginationBarType = {
   data: { paginationLinks: Array<PaginatedListLinksType> | undefined },
-  actions?: { handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => void },
-  additionalComponents?: Array<ReactNode>
+  actions?: { paginate: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => void }
 }
 
 export default function index({data, actions} : PaginationBarType) {
 
   async function handlePaginate(url: string) {
-    if(actions?.handlePaginateAction){
+    if(actions?.paginate){
       if (url){
         try {
           const response = await axios.get(url);
-          actions.handlePaginateAction({data: response.data.data, paginationLinks: response.data.links});
+          actions.paginate({data: response.data.data, paginationLinks: response.data.links});
         } catch (error) {
           console.error(error);
           throw new Error(`Erro ao tentar obter dados de ${url}`);

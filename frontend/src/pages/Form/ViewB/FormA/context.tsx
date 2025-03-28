@@ -21,14 +21,19 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
     const [state, setState] = useState({
         form: {} as FormType,
         isLoading: false,
-        activeTab: mainTabsContext.activeTab
+        activeTab: mainTabsContext.activeTab,
+        recordId: id
     })
     
-    function setStateContext({ form, isLoading, activeTab } : { form?: FormType, isLoading?: boolean, activeTab?: string }){
+    function setStateContext(
+        { form, isLoading, activeTab, recordId } : 
+        { form?: FormType, isLoading?: boolean, activeTab?: string, recordId?: string | undefined }
+    ){
         setState((prevState) => ({
             form: form !== undefined ? form : prevState.form,
             isLoading: isLoading !== undefined ? isLoading : prevState.isLoading,
-            activeTab: activeTab !== undefined ? activeTab : prevState.activeTab
+            activeTab: activeTab !== undefined ? activeTab : prevState.activeTab,
+            recordId: recordId !== undefined ? recordId : prevState.recordId
         }));
     }
 
@@ -84,6 +89,33 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
         }   
     }
 
+    async function save(
+            { input, successCallback, errorCallback } : 
+            { input: FormInputsType, successCallback?: () => void, errorCallback?: () => void }
+        ){
+            try {
+                if(!state.recordId){
+                    await formApi.create(formApi.endpoints.create, input)
+                }
+                if(state.recordId){
+                    await formApi.update({ endpoint: formApi.endpoints.update , id: state.recordId, data: input })
+                }
+                successAlert('Operação realizada com sucesso!')
+                
+                if(successCallback){ successCallback() }
+    
+            } catch (error) {
+                if (error instanceof Error) {
+                    warningAlertWithHtmlContent(<HtmlContent htmlContent={error.message} />)
+                } else {
+                    errorAlert("Caught unknown error.")
+                }
+    
+                if(errorCallback){ errorCallback() }
+            }
+        }
+    
+
     useEffect(() => {
         getForm()
     },[])
@@ -94,6 +126,7 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
                 state,
                 setStateContext,
                 saveFormContext,
+                save,
                 closeFormTab,
                 successAlert,
                 warningAlert,
