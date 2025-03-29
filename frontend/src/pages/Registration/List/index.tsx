@@ -110,7 +110,7 @@ export default function Index() {
   const paginationBarProps = {
     data: { paginationLinks: context.state.paginationLinks },
     actions: {
-      handlePaginateAction: ({ data, paginationLinks } : { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
+      paginate: ({ data, paginationLinks } : { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
         context.setStateContext({ data, paginationLinks })
       }   
     },
