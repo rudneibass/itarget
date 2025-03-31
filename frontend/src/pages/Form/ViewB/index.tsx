@@ -25,7 +25,6 @@ export default function Index({ id }: { id?: string }) {
         </PageContainer.Head>
         <PageContainer.Boddy>
         <Tabs defaultActiveKey="tab-a" >
-          
           <Tab 
             eventKey="tab-a" 
             title={<><i className="fs-6 bi-grid"></i> Formulário</>} 
