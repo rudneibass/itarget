@@ -8,6 +8,7 @@ import { QuickSearch } from '@components/Bootstrap/QuickSearch'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
+import Stack from '@components/Bootstrap/Stack'
 
 export default function Index() {  
   const context = useListContext()
@@ -75,20 +76,23 @@ export default function Index() {
 
   return (
     <>
-      <QuickSearch.Root data={quickSearchProps.data} actions={quickSearchProps.actions}>
+      <Loading isLoading={isLoading}/>
+      <QuickSearch.Root 
+        data={quickSearchProps.data} 
+        actions={quickSearchProps.actions}
+      >
         <QuickSearch.ShowInactive />
       </QuickSearch.Root>
-        <>
-          <Loading isLoading={isLoading}/>
-          <ListTable 
-            data={listTableProps.data} 
-            actions={listTableProps.actions} 
-          />
-          <PaginationBar 
-            data={paginationBarProps.data} 
-            actions={paginationBarProps.actions} 
-          />
-        </>
+      <div style={{maxHeight: '54vh', overflowY: 'scroll', overflowX: 'auto'}}>
+        <ListTable 
+          data={listTableProps.data} 
+          actions={listTableProps.actions} 
+        />
+      </div>
+      <PaginationBar 
+        data={paginationBarProps.data} 
+        actions={paginationBarProps.actions} 
+      />
     </>
   )
 }

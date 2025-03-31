@@ -5,7 +5,6 @@ import { GlobalContextProvider } from "./context/context"
 
 import SideBar from "@components/Bootstrap/SideBar"
 import NavBar from "@components/Bootstrap/NavBar"
-import Footer from "@components/Bootstrap/Footer"
 import MainTabs from "@components/Bootstrap/MainTabs"
 import { MainTabsContextProvider } from "@components/Bootstrap/MainTabs/context"
 import { toastContainer } from "@components/Toastify"
@@ -18,7 +17,7 @@ export default function App() {
         <MainTabsContextProvider>
             <div className="d-flex">
               {toastContainer}
-              <div className="bg-dark sidebar-container">
+              <div className="sidebar-container bg-dark ">
                 <SideBar />
               </div>
               <div className="main-container">
@@ -26,7 +25,6 @@ export default function App() {
                 <main>
                   <MainTabs />
                 </main>
-                <Footer />
               </div>
             </div>
         </MainTabsContextProvider>

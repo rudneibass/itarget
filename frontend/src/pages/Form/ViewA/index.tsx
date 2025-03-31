@@ -15,7 +15,11 @@ export default function Index() {
   return (
     <>
       <PageContainer.Root>
-        <PageContainer.Head title='Formulários' shortDescription={<Icon name="bi bi-house text-muted" size={16} labelRight='> Cadastros > Formulários' />}>
+        <PageContainer.Head 
+          title='Formulários' 
+          shortDescription={<Icon name="bi bi-house text-muted" size={16} 
+          rightLabel='> Cadastros > Formulários' />}
+        >
           <Button
             variant="outline-primary"
             size="sm"
@@ -27,9 +31,7 @@ export default function Index() {
               })
             }
           >
-            <Icon name="bi bi-plus-circle" size={16} />
-            &nbsp;&nbsp;
-            Cadastrar
+            <Icon name="bi bi-plus-circle" size={16} rightLabel='Cadastrar'/>
           </Button>
         </PageContainer.Head>
         <PageContainer.Boddy>

@@ -1,6 +1,5 @@
 .cardBody{
-  min-height: 69vh;
-  max-height: 69vh; 
+  height: 74vh;
   padding: 15px 20px 0px 20px;
   overflow-y: auto
 }

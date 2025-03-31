@@ -129,7 +129,7 @@ button, a{
 
 main {
   padding: 13px 13px 5vh 13px;  
-  max-height: 90vh;
+  max-height: 100vh;
   overflow: scroll;
 }
 

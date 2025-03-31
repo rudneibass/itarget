@@ -1,22 +1,22 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-export default function Icon({ name, size = 16, labelLeft, labelRight}:{name:string, size?: number, labelLeft?: string, labelRight?:string}){
+export default function Icon({ name, size = 16, leftLabel, rightLabel}:{name:string, size?: number, leftLabel?: string, rightLabel?:string}){
     return (
         <>
-            {labelLeft && (
+            {leftLabel && (
                 <>
                     <small className="text-muted">
-                        {labelLeft}
+                        {leftLabel}
                     </small> 
                     &nbsp;&nbsp;
                 </>
             )}
             <i className={`${name}`} style={{ fontSize: size }}></i>
-            {labelRight && (
+            {rightLabel && (
                 <>
                     &nbsp;&nbsp;
                     <small className="text-muted">
-                        {labelRight}
+                        {rightLabel}
                     </small> 
                 </>
             )}

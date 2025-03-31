@@ -1,6 +1,7 @@
 
 import { Tab, Tabs }  from '@components/Bootstrap/Tabs'
 import { PageContainer } from '@components/Bootstrap/PageContainer'
+import Icon from '@components/Bootstrap/Icon'
 
 import { FormContextProvider as FormAContextProvider } from './FormA/context'
 import FormA from './FormA/index'
@@ -12,20 +13,14 @@ import { ListContextProvider as ListBContextProvider } from './FormB/List/contex
 import ListB from './FormB/List/index';
 
 export default function Index({ id }: { id?: string }) {
-  const pageContainerHeadProps = {
-    title:'Formulários',
-    shortDescription:
-    <>
-      <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
-      <small className="text-muted" >
-         {'> Cadastros > Formulários'}
-      </small> 
-    </>
-  }
   return (
     <>
       <PageContainer.Root>
-        <PageContainer.Head title={pageContainerHeadProps.title} shortDescription={pageContainerHeadProps.shortDescription}>
+        <PageContainer.Head 
+          title='Formulários' 
+          shortDescription={<Icon name="bi bi-house text-muted" size={16} 
+          rightLabel='> Cadastros > Formulários' />}
+        >
           <></>
         </PageContainer.Head>
         <PageContainer.Boddy>
@@ -34,17 +29,16 @@ export default function Index({ id }: { id?: string }) {
           <Tab 
             eventKey="tab-a" 
             title={<><i className="fs-6 bi-grid"></i> Formulário</>} 
-            style={{ backgroundColor: 'white', padding: '20px 5px', minHeight: '38.5vh' }}
+            style={{ backgroundColor: 'white', padding: '10px 5px' }}
           >
             <FormAContextProvider id={id}>
               <FormA />
             </FormAContextProvider>
           </Tab>
-
           <Tab 
             eventKey="tab-b" 
             title={<><i className="fs-6 bi-grid"></i> Campos</>} 
-            style={{ backgroundColor: 'white', padding:"20px 5px", minHeight: '55vh'}}
+            style={{ backgroundColor: 'white', padding: '10px 5px' }}
           >
             <FormBContextProvider id={id}>
               <>

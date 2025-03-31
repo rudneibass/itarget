@@ -85,7 +85,6 @@ export default function Index({data, actions, additionalComponents, children}: F
             [field.attributes.name]: true
           }
         }
-
       })
     }
         
@@ -97,7 +96,7 @@ export default function Index({data, actions, additionalComponents, children}: F
   return (
     <>
       <form name={data.form.name} onSubmit={handleSibmit}>
-        <div className="row" style={{ height: '48vh', overflowY:"auto" }}>
+        <div className="row">
           {data.fields
             && data.fields.length > 0
             && data.fields.map((field, index) => {

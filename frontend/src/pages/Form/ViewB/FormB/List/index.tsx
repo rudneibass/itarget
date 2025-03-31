@@ -2,10 +2,8 @@
 import { useState } from 'react'
 import { useListContext } from './context'
 import { useFormContext } from '../Form/context'
-import { PaginatedListLinksType } from './types'
 
 import { QuickSearch } from '@components/Bootstrap/QuickSearch'
-import PaginationBar from '@components/Bootstrap/PaginationBar/'
 import Loading from '@components/Bootstrap/Loading'
 import Stack from '@components/Bootstrap/Stack'
 import Button from '@components/Bootstrap/Button'
@@ -58,16 +56,6 @@ export default function Index() {
     additionalComponents: []
   }
 
-  const paginationBarProps = {
-    data: {paginationLinks: context.state.paginationLinks},
-    actions: {
-      handlePaginateAction: ({ data, paginationLinks }: { data:[], paginationLinks: Array<PaginatedListLinksType> }) => {
-        context.setStateContext({ data, paginationLinks })
-      }   
-    },
-    additionalComponents: []
-  }
-
   const listTableProps = {
     data: {
       thead: [
@@ -94,7 +82,7 @@ export default function Index() {
     <>      
       <Loading isLoading={isLoading}/>
       <QuickSearch.Root data={quickSearchProps.data} actions={quickSearchProps.actions}>
-        <Stack direction="horizontal" gap={3}>
+        <Stack direction="horizontal" gap={2}>
           <Button variant="outline-primary" size="sm" onClick={() => { formContext.addNew() }}>
             <Icon name="bi bi-plus-circle" size={16} />
             &nbsp;
@@ -123,16 +111,13 @@ export default function Index() {
 
           {listViewMode == 'listTable' && (
             <>
-              <ListTable
-                data={listTableProps.data} 
-                actions={listTableProps.actions} 
-                additionalComponents={listTableProps.additionalComponents}
-              />
-              <PaginationBar 
-                data={paginationBarProps.data} 
-                actions={paginationBarProps.actions} 
-                additionalComponents={paginationBarProps.additionalComponents}
-              />
+              <div style={{height: '51vh', overflowY: 'scroll', overflowX: 'auto'}}>
+                <ListTable
+                  data={listTableProps.data} 
+                  actions={listTableProps.actions} 
+                  additionalComponents={listTableProps.additionalComponents}
+                />
+              </div>
             </>
           )}
         </>
