@@ -1,10 +1,10 @@
+import { Button } from 'react-bootstrap';
+import brand from './brand-exemple.png';
 import './styles.css';
 
 import { useMainTabsContext } from '../MainTabs/context';
 
 import Home from '@pages/Home';
-import brand from './brand-exemple.png';
-import { Button } from 'react-bootstrap';
 import FormViewA from '@pages/Form/ViewA/index';
 
 const menuGroups = [
