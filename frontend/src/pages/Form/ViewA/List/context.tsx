@@ -15,7 +15,7 @@ export const useListContext = () => {
 export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
     const mainTabsContext = useMainTabsContext()
     function addTab({ title, eventKey, content }: { eventKey: string, title: string, content: JSX.Element }){
-        mainTabsContext.handleAddTab({ title, eventKey, content })
+        mainTabsContext.addTab({ title, eventKey, content })
     }
     
     const [state, setState] = useState({

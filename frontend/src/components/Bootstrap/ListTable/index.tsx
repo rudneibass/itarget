@@ -96,41 +96,41 @@ export default function ListTable({ data, actions } : ListTableType) {
 
                 {actions && (
                   <td style={{ textAlign: 'center', verticalAlign: 'middle'}}>
-                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '.5rem'}}>
+                     <div style={{ width: '100%', display: 'flex', justifyContent:'center', gap: '.5rem'}}> 
                         {actions.edit && (
                           <button
                             type="button"
                             className="btn btn-warning btn-sm"
+                            data-bs-toggle="tooltip" 
+                            title="Editar registro"
                             onClick={() => handleEdit(item.id.value)}
                           >
                             <i className="bi bi-pencil" />
-                            &nbsp;
-                            Editar
                           </button>
                         )}
                         {actions.activeDeactive && (
                           <button
                             type="button"
                             className="btn btn-secondary btn-sm mr-2"
+                            data-bs-toggle="tooltip" 
+                            title="Ativar/desativar registro"
                             onClick={() => handleActive(item.id.value)}
                           >
                             <i className="bi bi-check" />
-                            &nbsp;
-                            Ativar/desativar
                           </button>
                         )}
                         {actions.remove && (
                           <button
                             type="button"
                             className="btn btn-danger btn-sm mr-2"
+                            data-bs-toggle="tooltip" 
+                            title="Excluir registro"
                             onClick={() => handleDelete(item.id.value)}
                           >
                             <i className="bi bi-trash" />
-                            &nbsp;
-                            Excluir
                           </button>
                         )}
-                    </div>
+                      </div> 
                   </td>
                 )}
               </tr>

@@ -15,7 +15,7 @@ export const MainTabsContextProvider = ({ children }: { children: JSX.Element })
     const [tabs, setTabs] = useState([{ eventKey: 'tab-home', title: 'Home', content: <Home /> }])
     const [activeTab, setActiveTab] = useState(tabs[0].eventKey)
 
-    function handleAddTab({ eventKey, title, content } : { eventKey: string, title: string, content: JSX.Element }){
+    function addTab({ eventKey, title, content } : { eventKey: string, title: string, content: JSX.Element }){
       setTabs((prevTabs) => {
         const tabExists = prevTabs.some(tab => tab.eventKey === eventKey)
         if(tabExists){ return prevTabs }
@@ -41,7 +41,7 @@ export const MainTabsContextProvider = ({ children }: { children: JSX.Element })
                 tabs,
                 activeTab,
                 setActiveTab,
-                handleAddTab,
+                addTab,
                 handleRemoveTab
             }}
         >

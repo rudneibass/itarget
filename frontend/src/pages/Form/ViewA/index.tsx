@@ -11,26 +11,16 @@ import List from './List/index'
 
 export default function Index() {  
   const mainTabsContext = useMainTabsContext()
-  const pageContainerHeadProps = {
-    title:'Formulários',
-    shortDescription:
-    <>
-      <i className="fs-7 bi-house"></i>&nbsp;&nbsp;
-      <small className="text-muted" >
-         {'> Cadastros > Formulários'}
-      </small> 
-    </>
-  }
 
   return (
     <>
       <PageContainer.Root>
-        <PageContainer.Head title={pageContainerHeadProps.title} shortDescription={pageContainerHeadProps.shortDescription}>
+        <PageContainer.Head title='Formulários' shortDescription={<Icon name="bi bi-house text-muted" size={16} labelRight='> Cadastros > Formulários' />}>
           <Button
             variant="outline-primary"
             size="sm"
             onClick={() =>
-              mainTabsContext.handleAddTab({
+              mainTabsContext.addTab({
                 title: "Novo Formulário",
                 eventKey: "tab-new-form",
                 content: <ViewB />,
