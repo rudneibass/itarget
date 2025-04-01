@@ -4,9 +4,9 @@ import { ReactNode, useState } from "react";
 type ListTableType = {
   data: Array<{
     id: string;  
-    name: string;
-    description: string;
-    node?: ReactNode;
+    name: string | ReactNode;
+    description: string | ReactNode;
+    node?: ReactNode; 
   }> | undefined,
   actions?: {
     edit?: (itemId: string) => void,
@@ -61,21 +61,21 @@ export default function ListCards({ data, actions } : ListTableType) {
                 <div className="d-flex justify-content-between">
                   <div>
                     <h5 className="card-title">{item.name}</h5>
-                    <p className="card-text">{item.description}</p>
+                    <small className="card-text text-muted">{item.description}</small>
                   </div>
                 </div>
               </div>
 
               <div className="card-footer d-flex justify-content-end">
-                <button className="btn btn-sm  btn-danger" onClick={() => handleDelete(item.id)}>
+                <button className="btn btn-sm  btn-danger p-1" onClick={() => handleDelete(item.id)}>
                   <i className="bi-trash"></i>
                 </button>
                 &nbsp;
-                <button className="btn btn-sm btn-secondary" onClick={() => handleActive(item.id)}>
+                <button className="btn btn-sm btn-secondary p-1" onClick={() => handleActive(item.id)}>
                   <i className="bi-eye"></i>
                 </button>
                 &nbsp;
-                <button className="btn btn-sm btn-warning" onClick={() => handleEdit(item.id)}>
+                <button className="btn btn-sm btn-warning p-1" onClick={() => handleEdit(item.id)}>
                   <i className="bi-pencil"></i>
                 </button>
               </div>

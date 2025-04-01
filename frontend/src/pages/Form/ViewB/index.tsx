@@ -24,15 +24,17 @@ export default function Index({ id }: { id?: string }) {
           <></>
         </PageContainer.Head>
         <PageContainer.Boddy>
-        <Tabs defaultActiveKey="tab-a" >
+        <Tabs defaultActiveKey="tab-a">
           <Tab 
             eventKey="tab-a" 
             title={<><i className="fs-6 bi-grid"></i> Formulário</>} 
-            style={{ backgroundColor: 'white', padding: '10px 5px' }}
+            style={{ backgroundColor: 'white', padding: '10px 5px'}}
           >
-            <FormAContextProvider id={id}>
-              <FormA />
-            </FormAContextProvider>
+            <div style={{height: '63vh'}}>
+              <FormAContextProvider id={id}>
+                <FormA />
+              </FormAContextProvider>
+            </div>
           </Tab>
           <Tab 
             eventKey="tab-b" 

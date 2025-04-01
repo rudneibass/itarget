@@ -30,7 +30,7 @@ type FormPropsType = {
     children?: ReactNode
 }
 
-export default function Index({data, actions, additionalComponents, children}: FormPropsType) {
+export default function Index({data, actions, children}: FormPropsType) {
   const [inputsValues, setInputsValues] = useState({} as Record<string, string>)
   const [inputsRequired, setInputsRequired] = useState({} as Record<string, string>)
 
@@ -95,8 +95,8 @@ export default function Index({data, actions, additionalComponents, children}: F
 
   return (
     <>
-      <form name={data.form.name} onSubmit={handleSibmit}>
-        <div className="row">
+      <form name={data.form.name} onSubmit={handleSibmit} style={{height: '100%', position: 'relative'}}>
+        <div className="row" style={{maxHeight: "85%", overflowY: 'scroll'}}>
           {data.fields
             && data.fields.length > 0
             && data.fields.map((field, index) => {
@@ -163,7 +163,7 @@ export default function Index({data, actions, additionalComponents, children}: F
             })
           }
         </div>
-        <div className="col-md-12 d-flex justify-content-end pt-4 border-top" >
+        <div className="col-md-12 d-flex justify-content-end pt-4 border-top">
           { children }
           &nbsp;&nbsp;
           <button type="submit" className="btn btn-secondary" style={{minWidth: '80px'}}>

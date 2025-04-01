@@ -5,7 +5,7 @@ export default function Icon({ name, size = 16, leftLabel, rightLabel}:{name:str
         <>
             {leftLabel && (
                 <>
-                    <small className="text-muted">
+                    <small>
                         {leftLabel}
                     </small> 
                     &nbsp;&nbsp;
@@ -15,7 +15,7 @@ export default function Icon({ name, size = 16, leftLabel, rightLabel}:{name:str
             {rightLabel && (
                 <>
                     &nbsp;&nbsp;
-                    <small className="text-muted">
+                    <small>
                         {rightLabel}
                     </small> 
                 </>
