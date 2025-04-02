@@ -19,23 +19,23 @@ export default function Root({data, actions, children} : QuickSearchPropsType) {
   return (
     <section>
       <div className="d-flex">
-        <div className={`d-flex width-100`}>
+        <div className={`width-100`}>
           {children}
         </div>         
         <div className="width-100">
           <form onSubmit={handleSubmit}>
             <div className="row justify-content-end">
-                <div className="col-md-3">
-                  <div className="form-group mb-3">
-                    <select className="form-control form-select ">
-                      <option value="">Pesquisar por...</option>
-                      {data.searchBy.map((item, index) => 
-                        <option key={index} value={item.value}>{item.label}</option>
-                      )}
-                    </select>
-                  </div>
+              <div className="col-md-4">
+                <div className="form-group mb-3">
+                  <select className="form-control form-select ">
+                    <option value="">Pesquisar por...</option>
+                    {data.searchBy.map((item, index) => 
+                      <option key={index} value={item.value}>{item.label}</option>
+                    )}
+                  </select>
                 </div>
-              <div className={`col-md-${data?.searchBy ? '9' : '12'}`}>
+              </div>
+              <div className={`col-md-8`}>
                 <div className="input-group mb-3">
                   <input 
                     type="text" 

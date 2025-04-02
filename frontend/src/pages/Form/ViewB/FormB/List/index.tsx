@@ -97,28 +97,23 @@ export default function Index() {
         </Stack>
       </QuickSearch.Root>
 
-      { !isLoading && ( 
+      {!isLoading && ( 
         <>
           {listViewMode == 'listInputsDragDrop' && (
-            <>
-              <br/>
-              <ListInputsDragDrop
-                data={listInputsDragDropProps.data} 
-                actions={listInputsDragDropProps.actions} 
-              />
-            </>
+            <ListInputsDragDrop
+              data={listInputsDragDropProps.data} 
+              actions={listInputsDragDropProps.actions} 
+            />
           )}
 
           {listViewMode == 'listTable' && (
-            <>
-              <div style={{height: '51vh', overflowY: 'scroll', overflowX: 'auto'}}>
-                <ListTable
-                  data={listTableProps.data} 
-                  actions={listTableProps.actions} 
-                  additionalComponents={listTableProps.additionalComponents}
-                />
-              </div>
-            </>
+            <div style={{height: '52vh', overflowY: 'scroll', overflowX: 'auto'}}>
+              <ListTable
+                data={listTableProps.data} 
+                actions={listTableProps.actions} 
+                additionalComponents={listTableProps.additionalComponents}
+              />
+            </div>
           )}
         </>
       )}

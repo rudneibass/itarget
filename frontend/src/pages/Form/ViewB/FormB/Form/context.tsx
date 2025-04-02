@@ -11,7 +11,7 @@ export const useFormContext = () => {
     return context
 }
 
-export const FormContextProvider = ({ id, children }:  { id?: string, children: JSX.Element }) => {
+export const FormContextProvider = ({ id, fk, children }:  { id?: string, fk?: string, children: JSX.Element }) => {
     const mainTabsContext = useMainTabsContext()
     
     function closeFormTab({ tabId }: { tabId: string }){
@@ -70,7 +70,7 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             let form;
             setStateContext({isLoading: true})
             if(id){
-                form = await fieldApi.getFormWithValues({ endpoint: fieldApi.endpoints.formEdit, formName: 'form-field', id: id });
+                form = await fieldApi.getFormWithValues({ endpoint: fieldApi.endpoints.formEdit, formName: 'form-field', id: id })
                 setStateContext({recordId: id})
             }
 
@@ -80,17 +80,19 @@ export const FormContextProvider = ({ id, children }:  { id?: string, children: 
             } 
             
             if(form){
-                if(isFormType(form)){
-                    if(JSON.stringify(form) !== JSON.stringify(form)){
-                        setStateContext({form})
+                const convertedToFormType = convertToFormType(form)
+                if(JSON.stringify(convertedToFormType) !== JSON.stringify(form)){
+                    if(fk){
+                        convertedToFormType.fields?.map((field) => {
+                            if(field.name && field.name === 'form_id'){
+                                field.attributes.disabled = 'disabled'
+                                field.attributes.readonly = 'readonly'
+                                field.attributes.value = fk
+                            }
+                        })
                     }
-                }
-                if(!isFormType(form)){
-                    const convertedToFormType = convertToFormType(form)
-                    if(JSON.stringify(convertedToFormType) !== JSON.stringify(form)){
-                        setStateContext({form: convertedToFormType})
-                    }
-                }
+                    setStateContext({form: convertedToFormType})
+                }     
             } 
             setStateContext({isLoading: false})
         } catch (error) {

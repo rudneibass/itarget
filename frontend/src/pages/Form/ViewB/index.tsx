@@ -41,7 +41,7 @@ export default function Index({ id }: { id?: string }) {
             title={<><i className="fs-6 bi-grid"></i> Campos</>} 
             style={{ backgroundColor: 'white', padding: '10px 5px' }}
           >
-            <FormBContextProvider id={id}>
+            <FormBContextProvider id={id} fk={id}>
               <>
                 <FormB/>
                 <ListBContextProvider formId={id}>

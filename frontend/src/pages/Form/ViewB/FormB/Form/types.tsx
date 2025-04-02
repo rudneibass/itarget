@@ -24,6 +24,7 @@ export type FormInputsType = {
 };
 
 export type FieldsType = {
+  name?: string,
   rules?: string;
   options?: Array<OptionsType>;
   attributes: Record<string, string>;

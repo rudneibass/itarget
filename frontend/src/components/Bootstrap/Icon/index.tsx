@@ -11,7 +11,8 @@ export default function Icon({ name, size = 16, leftLabel, rightLabel}:{name:str
                     &nbsp;&nbsp;
                 </>
             )}
-            <i className={`${name}`} style={{ fontSize: size }}></i>
+            <i className={`${name}`} style={{ fontSize: size }}>
+            </i>
             {rightLabel && (
                 <>
                     &nbsp;&nbsp;

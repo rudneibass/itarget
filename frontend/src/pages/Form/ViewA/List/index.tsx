@@ -1,8 +1,6 @@
-
+import { useState } from 'react'
 import { useListContext } from './context'
 import { PaginatedListLinksType } from './types'
-
-import ViewB from '@pages/Form/ViewB'
 
 import { QuickSearch } from '@components/Bootstrap/QuickSearch'
 import PaginationBar from '@components/Bootstrap/PaginationBar/'
@@ -10,10 +8,10 @@ import ListTable from '@components/Bootstrap/ListTable'
 import Loading from '@components/Bootstrap/Loading'
 import Icon from '@components/Bootstrap/Icon'
 import ListCards from '@components/Bootstrap/ListCards'
-
 import Stack from '@components/Bootstrap/Stack'
 import Button from '@components/Bootstrap/Button'
-import { useState } from 'react'
+
+import ViewB from '@pages/Form/ViewB'
 
 export default function Index() {  
   const [listViewMode, setListViewMode] = useState('listCards')
@@ -123,6 +121,19 @@ export default function Index() {
         actions={quickSearchProps.actions}
       >
         <Stack direction="horizontal" gap={2}>
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() =>
+              context.addTab({
+                title: "Novo Formulário",
+                eventKey: "tab-new-form",
+                content: <ViewB />,
+              })
+            }
+          >
+            <Icon name="bi bi-plus-circle" size={16} rightLabel='Cadastrar'/>
+          </Button>
           <Button variant="outline-primary" size="sm" onClick={() => { setListViewMode('listTable')}}>
             <Icon name="bi bi-list" size={16} />
           </Button>
@@ -153,14 +164,6 @@ export default function Index() {
               )}
             </>
           )}
-        {/*}
-        <ListTable 
-          data={listTableProps.data} 
-          actions={listTableProps.actions} 
-        /> 
-        */}
-
-        
       </div>
       <PaginationBar 
         data={paginationBarProps.data} 

@@ -16,7 +16,7 @@ export default function Index() {
   const formProps = {
     data: {
       form: context.state.form || {} as FormType,
-      fields: context.state.form?.fields || new Array<FieldsType> 
+      fields: context.state.form?.fields || new Array<FieldsType>
     },
     actions: {
       save: (data: FormInputsType) => {
