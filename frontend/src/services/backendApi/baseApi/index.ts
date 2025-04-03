@@ -2,7 +2,8 @@ import axios from 'axios'
 import { utils } from '../utils';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_URL
+  //baseURL: import.meta.env.VITE_APP_BASE_URL
+  baseURL: 'http://localhost:81/api'
 })
 
 function resolvePath(urlPath: string){
@@ -28,6 +29,7 @@ async function create(endpoint: string, params: object){
 
 async function search(endpoint: string, searchParams?: object) { 
   return await executeRequest(async () => {
+    console.log(endpoint)
     return await api.get(endpoint, {
       params: searchParams
     })
@@ -64,20 +66,6 @@ async function remove(endpoint: string, pk_data: string){
   })
 }
 
-async function getFormWithFields({ endpoint, formName } : { endpoint: string, formName: string }){
-  return await executeRequest(async () => {
-    const response = await api.get(`${endpoint}${formName}`)
-    return response.data
-  })
-}
-
-async function getFormWithFieldsAndValues({ endpoint, formName, id } : { endpoint: string, formName: string, id: string }){
-  return await executeRequest(async () => {
-    const response = await api.get(`${endpoint}${formName}/${id}`)
-    return response.data
-  })
-}
-
 async function getForm({ endpoint, formName } : { endpoint: string, formName?:string }) {
   return await executeRequest(async () => {
     const form_name = formName || ''
@@ -94,16 +82,16 @@ async function getFormWithValues({ endpoint, formName, id } : { endpoint: string
 }
 
 const defaultActions = {
-  list: "list",
-  get: "get",
-  create: "create",
-  edit: "edit",
-  update: "update",
-  delete: "delete",
-  search: "search",
-  paginate: "paginate",
-  formCreate: "form/create",
-  formEdit: "form/edit"
+  list: "/list",
+  get: "/get",
+  create: "/create",
+  edit: "/edit",
+  update: "/update",
+  delete: "/delete",
+  search: "/search",
+  paginate: "/paginate",
+  formCreate: "/form/create",
+  formEdit: "/form/edit"
 }
 
 export const baseApi = {
@@ -118,8 +106,6 @@ export const baseApi = {
   ,create
   ,search
   ,remove
-  ,getFormWithFields
-  ,getFormWithFieldsAndValues
   ,getForm
   ,getFormWithValues
 }

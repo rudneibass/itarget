@@ -36,6 +36,7 @@ export const ListContextProvider = ({ children }:{ children: JSX.Element }) => {
     async function search(searchParams?: object){
         setStateContext({ isLoading: true })
         try{
+            console.log(`${formApi.endpoints.search}`)
             const response = await formApi.search(`${formApi.endpoints.search}`, searchParams)
             if(response && isObject(response) && response.data){
                 if(isPaginatedListType(response.data)){

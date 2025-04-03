@@ -1,6 +1,6 @@
 import { baseApi } from '../baseApi/index'
 
-const path = 'field/'
+const path = '/field'
 const actions = Object.fromEntries(Object.entries(baseApi.defaultActions).map(([key, value]) => [key, path + value]))
 const endpoints = {
     ...actions,
