@@ -68,16 +68,18 @@ export const FormContextProvider = ({ id, fk, children }:  { id?: string, fk?: s
     async function getForm( id?: string ){
         try {
             let form;
+            
             setStateContext({isLoading: true})
-            if(id){
-                form = await fieldApi.getFormWithValues({ endpoint: fieldApi.endpoints.formEdit, formName: 'form-field', id: id })
-                setStateContext({recordId: id})
-            }
-
+            
             if(!id){
-                form = await fieldApi.getForm({ endpoint: fieldApi.endpoints.formCreate, formName: 'form-field' });
+                form = await fieldApi.getFormCreate({ endpoint: fieldApi.endpoints.formCreate, formName: 'form-field' });
                 setStateContext({recordId: ''})
             } 
+
+            if(id){
+                form = await fieldApi.getFormEdit({ endpoint: fieldApi.endpoints.formEdit, formName: 'form-field', id: id })
+                setStateContext({recordId: id})
+            }
             
             if(form){
                 const convertedToFormType = convertToFormType(form)
