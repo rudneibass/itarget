@@ -65,19 +65,19 @@ export default function ListCards({ data, actions } : ListTableType) {
                   </div>
                 </div>
               </div>
-
-              <div className="card-footer d-flex justify-content-end">
-                <button className="btn btn-sm  btn-danger p-1" onClick={() => handleDelete(item.id)}>
+              
+              <div className="card-footer text-end">  
+                <span className="badge bg-danger" onClick={() => handleDelete(item.id)}>
                   <i className="bi-trash"></i>
-                </button>
+                </span>
                 &nbsp;
-                <button className="btn btn-sm btn-secondary p-1" onClick={() => handleActive(item.id)}>
-                  <i className="bi-eye"></i>
-                </button>
+                <span className="badge bg-secondary" onClick={() => handleActive(item.id)}>
+                  <i className="bi-check"></i>
+                </span>
                 &nbsp;
-                <button className="btn btn-sm btn-warning p-1" onClick={() => handleEdit(item.id)}>
+                <span className="badge bg-warning" onClick={() => handleEdit(item.id)}>
                   <i className="bi-pencil"></i>
-                </button>
+                </span>
               </div>
             </div>
           </div>

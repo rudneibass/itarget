@@ -43,6 +43,12 @@ button, a {
   border-radius: 2px !important; 
 }
 
+.badge {
+  border-radius: 2px !important; 
+}
+.bg-warning {
+  color: rgb(0, 0, 0);
+}
 .gap-1{
   gap: 1rem;
 }

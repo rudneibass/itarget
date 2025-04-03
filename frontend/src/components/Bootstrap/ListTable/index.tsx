@@ -97,15 +97,15 @@ export default function ListTable({ data, actions } : ListTableType) {
                 {actions && (
                   <td style={{ textAlign: 'center', verticalAlign: 'middle'}}>
                      <div style={{ width: '100%', display: 'flex', justifyContent:'center', gap: '.5rem'}}> 
-                        {actions.edit && (
+                        {actions.remove && (
                           <button
                             type="button"
-                            className="btn btn-warning btn-sm"
+                            className="btn btn-danger btn-sm mr-2"
                             data-bs-toggle="tooltip" 
-                            title="Editar registro"
-                            onClick={() => handleEdit(item.id.value)}
+                            title="Excluir registro"
+                            onClick={() => handleDelete(item.id.value)}
                           >
-                            <i className="bi bi-pencil" />
+                            <i className="bi bi-trash" />
                           </button>
                         )}
                         {actions.activeDeactive && (
@@ -119,15 +119,15 @@ export default function ListTable({ data, actions } : ListTableType) {
                             <i className="bi bi-check" />
                           </button>
                         )}
-                        {actions.remove && (
+                        {actions.edit && (
                           <button
                             type="button"
-                            className="btn btn-danger btn-sm mr-2"
+                            className="btn btn-warning btn-sm"
                             data-bs-toggle="tooltip" 
-                            title="Excluir registro"
-                            onClick={() => handleDelete(item.id.value)}
+                            title="Editar registro"
+                            onClick={() => handleEdit(item.id.value)}
                           >
-                            <i className="bi bi-trash" />
+                            <i className="bi bi-pencil" />
                           </button>
                         )}
                       </div> 
