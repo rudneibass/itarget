@@ -10,21 +10,20 @@ import { update } from "./update"
 export const baseApi = {
   api
   ,get
-  ,update
   ,create
-  ,search
+  ,update
   ,remove
-  ,getFormCreate
+  ,search
   ,getFormEdit
+  ,getFormCreate
   ,defaultActions : {
     get: "/get",
-    list: "/list",
+    create: "/create",
+    update: "/update",
+    remove: "/remove",
     search: "/search",
     paginate: "/paginate",
     formEdit: "/form/edit",
     formCreate: "/form/create",
-    create: "/create",
-    update: "/update",
-    delete: "/delete",
   }
 }
