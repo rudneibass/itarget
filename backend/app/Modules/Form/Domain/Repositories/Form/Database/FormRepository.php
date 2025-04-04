@@ -87,7 +87,7 @@ class FormRepository {
         );
     }
 
-    public function getFormFieldOptions(string $formFieldId): array {
+    /*public function getFormFieldOptions(string $formFieldId): array {
         return array_map(function($option) {
             return new FormFieldOptionDto([
                     'id' => $option['id'],
@@ -99,7 +99,7 @@ class FormRepository {
                 ]);
             }, $this->databaseAdapter->rawQuery("SELECT * FROM 'form_field_id' WHERE form_id = {$formFieldId} ")
         );
-    }
+    } */
 
     public function findAllByParams(array $params = []): ?array {
         $query = "SELECT * 
