@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Form\Infra\Adapters;
+namespace App\Modules\Form\Infra\Adapters\ListServiceAdapter;
 
 use App\Modules\Form\Domain\Interfaces\ListService as InterfacesListService;
 use App\Modules\Integrations\Services\Internal\List\ListService;

@@ -5,8 +5,8 @@ namespace App\Modules\Form\Infra\Controllers\Form;
 use App\Modules\Form\Infra\Base\BaseController;
 use App\Modules\Form\Infra\Models\EloquentORM\Form;
 use App\Modules\Form\Domain\UseCases\Form\GetForm\GetForm;
-use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
-use App\Modules\Form\Infra\Adapters\ModelAdapter;
+use App\Modules\Form\Infra\Adapters\DatabaseAdapter\DatabaseAdapter;
+use App\Modules\Form\Infra\Adapters\ModelAdapter\ModelAdapter;
 
 class GetFormController extends BaseController {
     public function handle(string $name) {

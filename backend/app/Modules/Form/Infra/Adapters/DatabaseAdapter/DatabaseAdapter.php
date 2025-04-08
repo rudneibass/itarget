@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Form\Infra\Adapters;
+namespace App\Modules\Form\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Form\Domain\Interfaces\Database;
 use Illuminate\Support\Facades\DB;
 

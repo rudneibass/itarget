@@ -6,11 +6,11 @@ use App\Modules\Form\Infra\Base\BaseController;
 use App\Modules\Form\Infra\Models\EloquentORM\FormField;
 use App\Modules\Form\Domain\UseCases\Field\GetFieldCreateForm\GetFieldCreateForm;
 
-use App\Modules\Form\Infra\Adapters\ListServiceAdapter;
-use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
-use App\Modules\Form\Infra\Adapters\ModelAdapter;
+use App\Modules\Form\Infra\Adapters\DatabaseAdapter\DatabaseAdapter;
+use App\Modules\Form\Infra\Adapters\ModelAdapter\ModelAdapter;
 
 use App\Modules\Integrations\Services\Internal\List\ListService;
+use App\Modules\Form\Infra\Adapters\ListServiceAdapter\ListServiceAdapter;
 use Illuminate\Http\Request;
 
 class GetFieldCreateFormController extends BaseController {

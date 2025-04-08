@@ -3,11 +3,11 @@
 namespace App\Modules\Form\Infra\Controllers\Field;
 
 use App\Modules\Form\Infra\Base\BaseController;
-use App\Modules\Form\Infra\Adapters\DatabaseAdapter;
-use App\Modules\Form\Infra\Adapters\ModelAdapter;
+use App\Modules\Form\Infra\Adapters\DatabaseAdapter\DatabaseAdapter;
+use App\Modules\Form\Infra\Adapters\ModelAdapter\ModelAdapter;
 use App\Modules\Form\Infra\Models\EloquentORM\FormField;
 use App\Modules\Form\Domain\UseCases\Field\GetFieldEditForm\GetFieldEditForm;
-use App\Modules\Form\Infra\Adapters\ListServiceAdapter;
+use App\Modules\Form\Infra\Adapters\ListServiceAdapter\ListServiceAdapter;
 use App\Modules\Integrations\Services\Internal\List\ListService;
 use Illuminate\Http\Request;
 

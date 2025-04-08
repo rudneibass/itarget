@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Modules\Form\Infra\Adapters;
+namespace App\Modules\Form\Infra\Adapters\ModelAdapter;
 
 use App\Modules\Form\Domain\Interfaces\Model as ModelInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class ModelAdapter implements ModelInterface
 {
