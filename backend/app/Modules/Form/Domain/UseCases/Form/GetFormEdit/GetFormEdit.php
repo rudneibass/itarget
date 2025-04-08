@@ -24,7 +24,6 @@ class GetFormEdit {
         
         $useCase = new GetFormCreate($this->modelAdapter, $this->databaseAdapter, $this->listServiceAdapter);
         $form = $useCase->execute();
-
         $entity = $this->repository->getById($request['id']);
         $record = $entity->toArray();
 
