@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\Form\Database\Tests;
+namespace App\Modules\Form\Domain\Repositories\Form\Database\GetByName;
 
 use PHPUnit\Framework\TestCase;
 use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
 use App\Modules\Form\Domain\Entities\Form\Form;
-use App\Modules\Form\Domain\Entities\Form\FormDto;
 use App\Modules\Form\Domain\Interfaces\Model;
 use App\Modules\Form\Domain\Interfaces\Database;
 use Exception;

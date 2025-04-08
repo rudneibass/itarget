@@ -13,8 +13,8 @@ class ListService {
         ],
     ];
 
-    public function getList(string $module, string $entity, Request $request) : array {
+    public function getList(string $module, string $entity, Request $request, array $filter = []) : array {
         $controller = new $this->controllers[$module][$entity];
-        return $controller->handle($request)->getData(true);
+        return $controller->handle($request->replace($filter))->getData(true);
     }
 }

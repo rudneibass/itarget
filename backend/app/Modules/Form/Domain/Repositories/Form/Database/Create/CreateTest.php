@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\Form\Database\Tests;
+namespace App\Modules\Form\Domain\Repositories\Form\Database\Create;
 
 use PHPUnit\Framework\TestCase;
 use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;

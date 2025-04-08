@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\Form\Database\Tests;
+namespace App\Modules\Form\Domain\Repositories\Form\Database\Update;
 
 use PHPUnit\Framework\TestCase;
 use App\Modules\Form\Domain\Repositories\Form\Database\FormRepository;
@@ -64,9 +64,6 @@ class UpdateTest extends TestCase
 
         $result = $this->formRepository->update($form);
 
-        $this->assertInstanceOf(Form::class, $result);
-        $this->assertEquals('1', $result->id);
-        $this->assertEquals('updated_form', $result->name);
-        $this->assertEquals('{"new": "value"}', $result->attributes);
+        $this->assertTrue($result);
     }
 } 

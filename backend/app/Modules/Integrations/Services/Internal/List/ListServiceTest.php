@@ -8,10 +8,23 @@ class ListServiceTest extends TestCase
     public function testGetList()
     {
         $listService = new ListService();
-        $result = $listService->getList('event', 'registration', new Request([]));
+        $result = $listService->getList(
+            $module = 'event', 
+            $entity = 'registration', 
+            $request = new Request([])
+        );
         $this->assertIsArray($result);
-        # $this->assertNotEmpty($result);
-        # $this->assertArrayHasKey('id', $result[0]);
-        # $this->assertArrayHasKey('name', $result[0]);
+    }
+
+    public function testGetListFiltered()
+    {
+        $listService = new ListService();
+        $result = $listService->getList(
+            $module = 'event',  
+            $entity = 'registration', 
+            $request = new Request([]), 
+            $filter = ['id'=> 1]
+        );
+        $this->assertIsArray($result);
     }
 }

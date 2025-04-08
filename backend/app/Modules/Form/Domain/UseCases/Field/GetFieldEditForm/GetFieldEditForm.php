@@ -64,10 +64,22 @@ class GetFieldEditForm {
                 }
             }
 
-            # Refazer o searchable com o listService
             if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'searchable') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
+                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){                    
                     $field['attributes']['value'] = $entityData[$field['name']];
+                    $field['attributes']['data_value_description'] = '';
+                    if(isset($field['attributes']['module']) && isset($field['attributes']['module']) &&
+                        isset($field['attributes']['entity']) && isset($field['attributes']['entity'])
+                    ){
+                        $list = 
+                        $this->listServiceAdapter->getList(
+                            $module = $field['attributes']['module'], 
+                            $entity = $field['attributes']['entity'],
+                            $filter = ['id' => $entityData[$field['name']]]
+                        );
+
+                        $field['attributes']['data_value_description'] = $list[0]['id'];
+                    }
                 }
             }
             
