@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\Field\Database\Tests;
+namespace App\Modules\Form\Domain\Repositories\Field\Database\FindAllByParams;
 
 use PHPUnit\Framework\TestCase;
 use App\Modules\Form\Domain\Entities\Field\Field;

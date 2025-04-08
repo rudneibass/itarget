@@ -1,10 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\Field\Database\Tests;
+namespace App\Modules\Form\Domain\Repositories\Field\Database\Delete;
 
 use PHPUnit\Framework\TestCase;
-use App\Modules\Form\Domain\Entities\Field\Field;
-use App\Modules\Form\Domain\Entities\Field\FieldDto;
 use App\Modules\Form\Domain\Interfaces\Model;
 use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;

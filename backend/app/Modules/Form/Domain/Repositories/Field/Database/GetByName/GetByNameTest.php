@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Modules\Form\Domain\Repositories\Field\Database\Tests;
+namespace App\Modules\Form\Domain\Repositories\Field\Database\GetByName;
 
 use PHPUnit\Framework\TestCase;
 use App\Modules\Form\Domain\Entities\Field\Field;
@@ -9,7 +9,7 @@ use App\Modules\Form\Domain\Interfaces\Database;
 use App\Modules\Form\Domain\Repositories\Field\Database\FieldRepository;
 use Exception;
 
-class GetByIdTest extends TestCase
+class GetByNameTest extends TestCase
 {
     private Model $fieldModelAdapter;
     private Database $databaseAdapter;
@@ -18,14 +18,16 @@ class GetByIdTest extends TestCase
     protected function setUp(): void
     {
         $this->databaseAdapter = new class implements Database {
-            public function rawQuery(string $query, array $bindings = []): array {
+            public function rawQuery(string $query, array $bindings = []): array
+            {
                 return [];
             }
         };
         
         $this->fieldModelAdapter = new class implements Model {
-            public function where(array $params): array {
-                if ($params['id'] === '1') {
+            public function where(array $params): array
+            {
+                if ($params['name'] === 'test_field') {
                     return [
                         [
                             'id' => '1',
@@ -60,10 +62,10 @@ class GetByIdTest extends TestCase
         $this->fieldRepository = new FieldRepository($this->fieldModelAdapter, $this->databaseAdapter);
     }
 
-    public function testGetByIdSuccess()
+    public function testGetByNameSuccess()
     {
-        $id = '1';
-        $field = $this->fieldRepository->getById($id);
+        $name = 'test_field';
+        $field = $this->fieldRepository->getByName($name);
 
         $this->assertInstanceOf(Field::class, $field);
         $this->assertEquals('1', $field->id);
@@ -75,13 +77,13 @@ class GetByIdTest extends TestCase
         $this->assertEquals('1', $field->order);
     }
 
-    public function testGetByIdNotFound()
+    public function testGetByNameNotFound()
     {
-        $id = '999';
+        $name = 'non_existent_field';
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Não foi possivel localizar campo com id = '{$id}'");
+        $this->expectExceptionMessage("Não foi possivel localizar campo com nome = '{$name}'");
 
-        $this->fieldRepository->getById($id);
+        $this->fieldRepository->getByName($name);
     }
 } 
