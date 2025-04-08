@@ -26,63 +26,76 @@ class GetFormEdit {
         $form = $useCase->execute();
 
         $entity = $this->repository->getById($request['id']);
-        $entityData = $entity->toArray();
+        $record = $entity->toArray();
 
-        $form['fields'] = 
-        
-        array_map(function($field)  use ($entityData) {
-            if(isset($entityData[$field['name']]) && is_array($entityData[$field['name']])){
-                $entityData[$field['name']] = json_encode($entityData[$field['name']]);
+        $form['fields'] = array_map(function ($field) use ($record) {
+            if (isset($record[$field['name']]) && is_array($record[$field['name']])) {
+                $record[$field['name']] = json_encode($record[$field['name']]);
             }
 
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'text'){
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'textarea'){
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'checkbox'){
-                if(isset($entityData[$field['name']]) && $entityData[$field['name']] === '1'){
-                    $field['attributes']['checked'] = 'checked';
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                }
-            }
-
-            if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'searchable') {
-                if(isset($entityData[$field['name']]) && !empty($entityData[$field['name']])){                    
-                    $field['attributes']['value'] = $entityData[$field['name']];
-                    $field['attributes']['data_value_description'] = '';
-                    if(isset($field['attributes']['module']) && isset($field['attributes']['module']) &&
-                        isset($field['attributes']['entity']) && isset($field['attributes']['entity'])
-                    ){
-                        $list = 
-                        $this->listServiceAdapter->getList(
-                            $module = $field['attributes']['module'], 
-                            $entity = $field['attributes']['entity'],
-                            $filter = ['id' => $entityData[$field['name']]]
-                        );
-
-                        $field['attributes']['data_value_description'] = $list[0]['id'];
-                    }
-                }
-            }
-            
+            $field = $this->textField($field, $record);
+            $field = $this->textareaField($field, $record);
+            $field = $this->checkboxField($field, $record);
+            $field = $this->selectField($field, $record);
+            $field = $this->searchableField($field, $record);
+    
             return $field;
-
         }, $form['fields']);
-        
-
+    
         return $form;
+    }
+
+    private function textField(array $field, array $record): array {
+        if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'text') {
+            if (isset($record[$field['name']]) && !empty($record[$field['name']])) {
+                $field['attributes']['value'] = $record[$field['name']];
+            }
+        }
+        return $field;
+    }
+
+    private function textareaField(array $field, array $record): array {
+        if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'textarea') {
+            if (isset($record[$field['name']]) && !empty($record[$field['name']])) {
+                $field['attributes']['value'] = $record[$field['name']];
+            }
+        }
+        return $field;
+    }
+
+    private function checkboxField(array $field, array $record): array {
+        if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'checkbox') {
+            if (isset($record[$field['name']]) && $record[$field['name']] === '1') {
+                $field['attributes']['checked'] = 'checked';
+            }
+        }
+        return $field;
+    }
+
+    private function selectField(array $field, array $record): array {
+        if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'select') {
+            if (isset($record[$field['name']]) && !empty($record[$field['name']])) {
+                $field['attributes']['value'] = $record[$field['name']];
+            }
+        }
+        return $field;
+    }
+
+    private function searchableField(array $field, array $record): array {
+        if (isset($field['attributes']['type']) && $field['attributes']['type'] === 'searchable') {
+            if (isset($record[$field['name']]) && !empty($record[$field['name']])) {
+                $field['attributes']['value'] = $record[$field['name']];
+                $field['attributes']['data_value_description'] = '';
+                if (isset($field['attributes']['module']) && isset($field['attributes']['entity'])) {
+                    $list = $this->listServiceAdapter->getList(
+                        $field['attributes']['module'], 
+                        $field['attributes']['entity'],
+                        ['id' => $record[$field['name']]]
+                    );
+                    $field['attributes']['data_value_description'] = $list[0]['id'] ?? '';
+                }
+            }
+        }
+        return $field;
     }
 }
