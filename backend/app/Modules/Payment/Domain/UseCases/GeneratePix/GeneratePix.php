@@ -24,9 +24,7 @@ class GeneratePix
     }
 
     public function execute(array $request) {
-
         $pix = new Pix(new PixDto($request));
-
         $this->checkCache($this->getCacheKey($pix));
         $this->checkPaidPix($pix);
         $this->checkPendingPix($pix);
@@ -37,20 +35,17 @@ class GeneratePix
         return $newPix;
     }
 
-    private function getCacheKey(Pix $pix): string
-    {
+    private function getCacheKey(Pix $pix): string {
         return "qr_code_pix_product_id_{$pix->productId}_user_id_{$pix->userId}";
     }
 
-    private function checkCache(string $cacheKey)
-    {
+    private function checkCache(string $cacheKey) {
         if ($this->cacheAdapter->has($cacheKey)) {
             return $this->cacheAdapter->get($cacheKey);
         }
     }
 
-    private function checkPaidPix(Pix $pix)
-    {
+    private function checkPaidPix(Pix $pix) {
         $pixPaid = $this->repository->findAllByParams([
             'product_id' => $pix->productId,
             'user_id' => $pix->userId,
@@ -62,8 +57,7 @@ class GeneratePix
         }
     }
 
-    private function checkPendingPix(Pix $pix): void
-    {
+    private function checkPendingPix(Pix $pix): void {
         $pixPending = $this->repository->findAllByParams([
             'product_id' => $pix->productId,
             'user_id' => $pix->userId,
@@ -84,8 +78,7 @@ class GeneratePix
         }
     }
 
-    private function generatePix(Pix $pix): array
-    {
+    private function generatePix(Pix $pix): array {
         # Verifique a doc do serviço instanciado para saber quais são  
         # as informações nescessárias para os parametos dos mátodos 
         # setGateway(string $gateway): void;
@@ -106,8 +99,7 @@ class GeneratePix
         ]);
     }
 
-    private function storePix(Pix $pix, array $newPix): void
-    {
+    private function storePix(Pix $pix, array $newPix): void {
         $this->repository->create(new Pix(new PixDto([
             'product_id' => $pix->productId,
             'user_id' => $pix->userId,
@@ -118,8 +110,7 @@ class GeneratePix
         ])));
     }
 
-    private function cachePix(string $cacheKey, array $newPix): void
-    {
+    private function cachePix(string $cacheKey, array $newPix): void {
         $this->cacheAdapter->put(
             $key = $cacheKey,
             $value = ['qr_code' => $newPix['data']['qr_code']],
