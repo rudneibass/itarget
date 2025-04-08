@@ -4,8 +4,8 @@ namespace App\Modules\Payment\Domain\Repositories\Pix\Database;
 use App\Modules\Payment\Domain\Repositories\Pix\Database\PixRepository;
 use App\Modules\Payment\Domain\Entities\Pix;
 use App\Modules\Payment\Domain\Entities\PixDto;
-use App\Modules\Payment\Infra\Adapters\DatabaseAdapter;
-use App\Modules\Payment\Infra\Adapters\ModelAdapter;
+use App\Modules\Payment\Infra\Adapters\DatabaseAdapter\DatabaseAdapter;
+use App\Modules\Payment\Infra\Adapters\ModelAdapter\ModelAdapter;
 use App\Modules\Payment\Infra\Models\Pix as PixModel;
 use Tests\TestCase;
 

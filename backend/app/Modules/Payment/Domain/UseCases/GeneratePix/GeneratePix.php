@@ -23,55 +23,107 @@ class GeneratePix
             $this->repository = new PixRepository($this->modelAdapter, $this->databaseAdapter);
     }
 
-    public function execute(array $request)
-    {
+    public function execute(array $request) {
+
         $pix = new Pix(new PixDto($request));
 
-        $cacheKey = "qr_code_pix_product_id_{$pix->productId}_user_id_{$pix->useId}";
-        
-        if ($this->cacheAdapter->has($cacheKey)) { 
+        $this->checkCache($this->getCacheKey($pix));
+        $this->checkPaidPix($pix);
+        $this->checkPendingPix($pix);
+        $newPix = $this->generatePix($pix);
+        $this->storePix($pix, $newPix);
+        $this->cachePix($this->getCacheKey($pix), $newPix);
+
+        return $newPix;
+    }
+
+    private function getCacheKey(Pix $pix): string
+    {
+        return "qr_code_pix_product_id_{$pix->productId}_user_id_{$pix->userId}";
+    }
+
+    private function checkCache(string $cacheKey)
+    {
+        if ($this->cacheAdapter->has($cacheKey)) {
             return $this->cacheAdapter->get($cacheKey);
         }
+    }
 
-        if ($pixPaidFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PAID])[0]) {
-            return ['message' => 'Já existe um pagamento efetuado via pix pelo user_id '.$pix->userId.' associado ao produto_id '.$pix->productId];
+    private function checkPaidPix(Pix $pix)
+    {
+        $pixPaid = $this->repository->findAllByParams([
+            'product_id' => $pix->productId,
+            'user_id' => $pix->userId,
+            'status' => Pix::PAID
+        ]);
+
+        if(!empty($pixPaid)){
+            return ['message' => 'Já existe um pagamento efetuado via pix pelo user_id ' . $pix->userId . ' associado ao produto_id ' . $pix->productId];
         }
+    }
 
-        if ($pixPendingFoundOnRepository = $this->repository->findAllByParams(['product_id' => $pix->productId, 'user_id' => $pix->userId, 'status' => Pix::PENDING])[0]) {
-            if($pixPendingFoundOnGateway = $this->pixGatewayAdapter->search(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => ''])){
-                $pixPendingFoundOnRepository->status = $pixPendingFoundOnGateway['data']['status'];
-                $this->repository->update($pixPendingFoundOnRepository);
+    private function checkPendingPix(Pix $pix): void
+    {
+        $pixPending = $this->repository->findAllByParams([
+            'product_id' => $pix->productId,
+            'user_id' => $pix->userId,
+            'status' => Pix::PENDING
+        ]);
+
+        if (!empty($pixPending)) {
+            $pixPendingOnGateway = $this->pixGatewayAdapter->search([
+                'valor' => $pix->value,
+                'pessoa_cpf' => '',
+                'pessoa_nome' => ''
+            ]);
+
+            if ($pixPendingOnGateway) {
+                $pixPending[0]->status = $pixPendingOnGateway['data']['status'];
+                $this->repository->update($pixPending[0]);
             }
         }
-        
+    }
+
+    private function generatePix(Pix $pix): array
+    {
         # Verifique a doc do serviço instanciado para saber quais são  
         # as informações nescessárias para os parametos dos mátodos 
         # setGateway(string $gateway): void;
         # setCredentials(array $credentials): void e
         # generate(array $pix): array;
         $this->pixGatewayAdapter->setGateway('itau');
-        $this->pixGatewayAdapter->setCredentials(['client' => '', 'secret' => '', 'key_pix' => '', 'number' => '']); 
-        $newPix = $this->pixGatewayAdapter->generate(['valor' => $pix->value, 'pessoa_cpf' => '', 'pessoa_nome' => '']);
+        $this->pixGatewayAdapter->setCredentials([
+            'client' => '',
+            'secret' => '',
+            'key_pix' => '',
+            'number' => ''
+        ]);
 
-        $this->repository
-        ->create(
-            new Pix(
-                new PixDto([
-                    'product_id' => $pix->productId, 
-                    'user_id' => $pix->userId,
-                    'status' => Pix::PENDING, 
-                    'qr_code' => $newPix['data']['qr_code'], 
-                    'tx_id' => $newPix['data']['txid'], 
-                    'api_response' => $newPix['data']
-                ])
-        ));
+        return $this->pixGatewayAdapter->generate([
+            'valor' => $pix->value,
+            'pessoa_cpf' => '',
+            'pessoa_nome' => ''
+        ]);
+    }
 
+    private function storePix(Pix $pix, array $newPix): void
+    {
+        $this->repository->create(new Pix(new PixDto([
+            'product_id' => $pix->productId,
+            'user_id' => $pix->userId,
+            'status' => Pix::PENDING,
+            'qr_code' => $newPix['data']['qr_code'],
+            'tx_id' => $newPix['data']['txid'],
+            'api_response' => $newPix['data']
+        ])));
+    }
+
+    private function cachePix(string $cacheKey, array $newPix): void
+    {
         $this->cacheAdapter->put(
-            $key = $cacheKey, 
-            $value = ['qr_code' => $newPix['data']['qr_code']], 
+            $key = $cacheKey,
+            $value = ['qr_code' => $newPix['data']['qr_code']],
             $minutes = 5
         );
-
-        return $newPix;
     }
 }

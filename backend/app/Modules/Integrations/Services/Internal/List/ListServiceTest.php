@@ -9,8 +9,8 @@ class ListServiceTest extends TestCase
     {
         $listService = new ListService();
         $result = $listService->getList(
-            $module = 'event', 
-            $entity = 'registration', 
+            $module = 'form', 
+            $entity = 'form', 
             $request = new Request([])
         );
         $this->assertIsArray($result);
@@ -20,8 +20,8 @@ class ListServiceTest extends TestCase
     {
         $listService = new ListService();
         $result = $listService->getList(
-            $module = 'event',  
-            $entity = 'registration', 
+            $module = 'form',  
+            $entity = 'form', 
             $request = new Request([]), 
             $filter = ['id'=> 1]
         );

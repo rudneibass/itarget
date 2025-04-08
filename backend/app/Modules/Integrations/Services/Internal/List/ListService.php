@@ -8,9 +8,6 @@ class ListService {
         'form' => [
             'form' => \App\Modules\Form\Infra\Controllers\Form\ListFormController::class
         ],
-        'event' => [
-            'registration' => \App\Modules\Event\Infra\Controllers\Registration\ListRegistrationController::class
-        ],
     ];
 
     public function getList(string $module, string $entity, Request $request, array $filter = []) : array {

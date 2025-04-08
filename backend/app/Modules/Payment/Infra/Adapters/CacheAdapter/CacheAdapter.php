@@ -1,5 +1,5 @@
 <?php
-namespace App\Modules\Payment\Infra\Adapters;
+namespace App\Modules\Payment\Infra\Adapters\CacheAdapter;
 
 use App\Modules\Payment\Domain\Interfaces\Cache as CacheInterface;
 use Illuminate\Support\Facades\Cache;

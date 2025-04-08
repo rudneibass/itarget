@@ -1,5 +1,5 @@
 <?php
-namespace App\Modules\Payment\Infra\Adapters;
+namespace App\Modules\Payment\Infra\Adapters\PixGatewayAdapter;
 
 use App\Modules\Payment\Domain\Interfaces\PixGateway;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Payment\Infra\Adapters;
+namespace App\Modules\Payment\Infra\Adapters\DatabaseAdapter;
 use App\Modules\Payment\Domain\Interfaces\Database;
 use Illuminate\Support\Facades\DB;
 

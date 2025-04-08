@@ -2,15 +2,16 @@
 
 namespace App\Modules\Payment\Infra\Controllers\Pix;
 
-use App\Modules\Payment\Infra\Adapters\CacheAdapter;
-use App\Modules\Payment\Infra\Base\BaseController;
 use App\Modules\Payment\UseCases\GeneratePix\GeneratePix;
+
+use App\Modules\Payment\Infra\Base\BaseController;
 use App\Modules\Payment\Infra\Models\Pix;
 
-use App\Modules\Payment\Infra\Adapters\DatabaseAdapter;
-use App\Modules\Payment\Infra\Adapters\ModelAdapter;
+use App\Modules\Payment\Infra\Adapters\CacheAdapter\CacheAdapter;
+use App\Modules\Payment\Infra\Adapters\DatabaseAdapter\DatabaseAdapter;
+use App\Modules\Payment\Infra\Adapters\ModelAdapter\ModelAdapter;
+use App\Modules\Payment\Infra\Adapters\PixGatewayAdapter\PixGatewayAdapter;
 
-use App\Modules\Payment\Infra\Adapters\PixGatewayAdapter;
 use Illuminate\Http\Request;
 
 
