@@ -10,7 +10,6 @@ use App\Modules\Payment\Domain\Interfaces\Database;
 use App\Modules\Payment\Domain\Interfaces\Model;
 use App\Modules\Payment\Domain\Interfaces\PixGateway;
 
-
 class GeneratePix
 {
     private $repository;
@@ -20,17 +19,18 @@ class GeneratePix
         private Database $databaseAdapter,
         private Cache $cacheAdapter, 
         private PixGateway $pixGatewayAdapter) {
-            $this->repository = new PixRepository($this->modelAdapter, $this->databaseAdapter);
+        $this->repository = new PixRepository($this->modelAdapter, $this->databaseAdapter);
     }
 
     public function execute(array $request) {
         $pix = new Pix(new PixDto($request));
-        $this->checkCache($this->getCacheKey($pix));
+        $this->checkCachedPix($this->getCacheKey($pix));
         $this->checkPaidPix($pix);
         $this->checkPendingPix($pix);
+        
         $newPix = $this->generatePix($pix);
-        $this->storePix($pix, $newPix);
-        $this->cachePix($this->getCacheKey($pix), $newPix);
+        $this->storeNewPix($pix, $newPix);
+        $this->cacheNewPix($this->getCacheKey($pix), $newPix);
 
         return $newPix;
     }
@@ -39,7 +39,7 @@ class GeneratePix
         return "qr_code_pix_product_id_{$pix->productId}_user_id_{$pix->userId}";
     }
 
-    private function checkCache(string $cacheKey) {
+    private function checkCachedPix(string $cacheKey) {
         if ($this->cacheAdapter->has($cacheKey)) {
             return $this->cacheAdapter->get($cacheKey);
         }
@@ -99,18 +99,22 @@ class GeneratePix
         ]);
     }
 
-    private function storePix(Pix $pix, array $newPix): void {
-        $this->repository->create(new Pix(new PixDto([
-            'product_id' => $pix->productId,
-            'user_id' => $pix->userId,
-            'status' => Pix::PENDING,
-            'qr_code' => $newPix['data']['qr_code'],
-            'tx_id' => $newPix['data']['txid'],
-            'api_response' => $newPix['data']
-        ])));
+    private function storeNewPix(Pix $pix, array $newPix): void {
+        $this->repository->create(
+            new Pix(
+                new PixDto([
+                    'product_id' => $pix->productId,
+                    'user_id' => $pix->userId,
+                    'status' => Pix::PENDING,
+                    'qr_code' => $newPix['data']['qr_code'],
+                    'tx_id' => $newPix['data']['txid'],
+                    'api_response' => $newPix['data']
+                ])
+            )
+        );
     }
 
-    private function cachePix(string $cacheKey, array $newPix): void {
+    private function cacheNewPix(string $cacheKey, array $newPix): void {
         $this->cacheAdapter->put(
             $key = $cacheKey,
             $value = ['qr_code' => $newPix['data']['qr_code']],
