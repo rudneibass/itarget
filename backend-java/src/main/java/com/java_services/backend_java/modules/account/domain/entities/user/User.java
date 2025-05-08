@@ -59,17 +59,4 @@ public class User {
         }
         this.password = newPassword;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return id.equals(user.id); // identity-based equality
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

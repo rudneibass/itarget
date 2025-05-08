@@ -1,88 +1,104 @@
 package com.java_services.backend_java.modules.account.domain.entities.user;
 
+import com.java_services.backend_java.modules.account.domain.valueObject.Email;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserTest {
+class UserTest {
+
+    private User user;
+    private Email validEmail;
+
+    @BeforeEach
+    void setUp() {
+        // Configurações iniciais
+        validEmail = new Email("test@example.com");
+        user = new User(1L, "John Doe", validEmail, "password123");
+    }
 
     @Test
-    void testUserCreationWithId() {
-        User user = new User(1L, "João", "joao@email.com", "123456", null);
-
+    void testUserConstructor_validInput() {
+        assertNotNull(user);
         assertEquals(1L, user.getId());
-        assertEquals("João", user.getName());
-        assertEquals("joao@email.com", user.getEmail());
-        assertEquals("123456", user.getPassword());
+        assertEquals("John Doe", user.getName());
+        assertEquals(validEmail, user.getEmail());
+        assertEquals("password123", user.getPassword());
     }
 
     @Test
-    void testUserCreationWithoutId() {
-        User user = new User("Maria", "maria@email.com", "abcdef");
-
-        assertNull(user.getId());
-        assertEquals("Maria", user.getName());
-        assertEquals("maria@email.com", user.getEmail());
-        assertEquals("abcdef", user.getPassword());
+    void testUserConstructor_invalidId() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            new User(null, "John Doe", validEmail, "password123");
+        });
+        assertEquals("User ID cannot be null.", thrown.getMessage());
     }
 
     @Test
-    void testRenameValid() {
-        User user = new User("Carlos", "carlos@email.com", "senha123");
-        user.rename("Carlos Silva");
-
-        assertEquals("Carlos Silva", user.getName());
+    void testUserConstructor_invalidName() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            new User(1L, "", validEmail, "password123");
+        });
+        assertEquals("User name cannot be null or empty.", thrown.getMessage());
     }
 
     @Test
-    void testRenameInvalid() {
-        User user = new User("Carlos", "carlos@email.com", "senha123");
-
-        assertThrows(IllegalArgumentException.class, () -> user.rename(""));
-        assertThrows(IllegalArgumentException.class, () -> user.rename(null));
+    void testUserConstructor_invalidEmail() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            new User(1L, "John Doe", null, "password123");
+        });
+        assertEquals("User email cannot be null.", thrown.getMessage());
     }
 
     @Test
-    void testChangeEmailValid() {
-        User user = new User("Ana", "ana@email.com", "senha456");
-        user.changeEmail("nova@email.com");
-
-        assertEquals("nova@email.com", user.getEmail());
+    void testUserConstructor_invalidPassword() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            new User(1L, "John Doe", validEmail, "");
+        });
+        assertEquals("User password cannot be null or empty.", thrown.getMessage());
     }
 
     @Test
-    void testChangeEmailInvalid() {
-        User user = new User("Ana", "ana@email.com", "senha456");
-
-        assertThrows(IllegalArgumentException.class, () -> user.changeEmail("invalido"));
-        assertThrows(IllegalArgumentException.class, () -> user.changeEmail(null));
+    void testChangeName_valid() {
+        user.changeName("Jane Doe");
+        assertEquals("Jane Doe", user.getName());
     }
 
     @Test
-    void testChangePasswordValid() {
-        User user = new User("Pedro", "pedro@email.com", "senha789");
-        user.changePassword("novasenha");
-
-        assertEquals("novasenha", user.getPassword());
+    void testChangeName_invalid() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            user.changeName("");
+        });
+        assertEquals("New name cannot be null or empty.", thrown.getMessage());
     }
 
     @Test
-    void testChangePasswordInvalid() {
-        User user = new User("Pedro", "pedro@email.com", "senha789");
-
-        assertThrows(IllegalArgumentException.class, () -> user.changePassword("123"));
-        assertThrows(IllegalArgumentException.class, () -> user.changePassword(null));
+    void testChangeEmail_valid() {
+        Email newEmail = new Email("new@example.com");
+        user.changeEmail(newEmail);
+        assertEquals(newEmail, user.getEmail());
     }
 
     @Test
-    void testEqualsAndHashCode() {
-        User u1 = new User(1L, "A", "a@email.com", "123456", null);
-        User u2 = new User(1L, "B", "b@email.com", "abcdef", null);
-        User u3 = new User(2L, "C", "c@email.com", "zzzzzz", null);
+    void testChangeEmail_invalid() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            user.changeEmail(null);
+        });
+        assertEquals("New email cannot be null.", thrown.getMessage());
+    }
 
-        assertEquals(u1, u2); // mesmo ID
-        assertNotEquals(u1, u3); // IDs diferentes
+    @Test
+    void testChangePassword_valid() {
+        user.changePassword("newPassword123");
+        assertEquals("newPassword123", user.getPassword());
+    }
 
-        assertEquals(u1.hashCode(), u2.hashCode());
-        assertNotEquals(u1.hashCode(), u3.hashCode());
+    @Test
+    void testChangePassword_invalid() {
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+            user.changePassword("");
+        });
+        assertEquals("New password cannot be null or empty.", thrown.getMessage());
     }
 }

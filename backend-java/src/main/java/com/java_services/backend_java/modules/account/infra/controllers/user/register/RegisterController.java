@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
+
 public class RegisterController {
+
     @GetMapping("/register")
     public String handler(){
         return "Register an user";

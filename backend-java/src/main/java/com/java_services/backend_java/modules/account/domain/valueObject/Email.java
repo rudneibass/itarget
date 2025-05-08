@@ -1,4 +1,4 @@
-package com.java_services.backend_java.modules.account.domain.entities.valueobject;
+package com.java_services.backend_java.modules.account.domain.valueObject;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
