@@ -4,5 +4,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface Database {
-    List<Map<String, Object>> rawQuery(String query);
+    List<Map<String, Object>> rawQuery(String query, Object... bindings);
 }

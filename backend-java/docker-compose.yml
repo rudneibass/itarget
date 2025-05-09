@@ -15,7 +15,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
     networks:
       - backend-java-network
-
   postgres:
     image: postgres:15
     container_name: postgres-db
@@ -28,6 +27,15 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend-java-network
+  dev:
+    image: maven:3.8.5-openjdk-17
+    container_name: backend-java-dev
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: tail -f /dev/null
     networks:
       - backend-java-network
 
