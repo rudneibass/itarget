@@ -1,42 +1,27 @@
 package com.java_services.backend_java.modules.account.domain.entities.user;
 
-import java.util.Objects;
-import java.util.UUID;
-import com.java_services.backend_java.modules.account.domain.valueObject.Email;
+import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
 
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 public class User {
 
-    private long id;
+    private Long id;
     private String name;
     private Email email;
     private String password;
 
-    public User(Long id, String name, Email email, String password) {
-        if (id == null) throw new IllegalArgumentException("User ID cannot be null.");
-        if (name == null || name.trim().isEmpty()) throw new IllegalArgumentException("User name cannot be null or empty.");
-        if (email == null) throw new IllegalArgumentException("User email cannot be null.");
-        if (password == null || password.trim().isEmpty()) throw new IllegalArgumentException("User password cannot be null or empty.");
+    public User(UserDto dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) throw new IllegalArgumentException("User name cannot be null or empty.");
+        if (dto.getPassword() == null || dto.getPassword().isEmpty()) throw new IllegalArgumentException("User password cannot be null or empty.");
+        if (dto.getEmail() == null) throw new IllegalArgumentException("Email cannot be null or empty.");
 
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
+        this.id = dto.getId() != null ? dto.getId() : null;
+        this.name = dto.getName();
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();
     }
 
     public void changeName(String newName) {

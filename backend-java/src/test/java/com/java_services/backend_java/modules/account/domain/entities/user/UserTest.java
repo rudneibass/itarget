@@ -1,8 +1,9 @@
 package com.java_services.backend_java.modules.account.domain.entities.user;
 
-import com.java_services.backend_java.modules.account.domain.valueObject.Email;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,9 +14,9 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        // Configurações iniciais
         validEmail = new Email("test@example.com");
-        user = new User(1L, "John Doe", validEmail, "password123");
+        UserDto dto = new UserDto(1L, "John Doe", validEmail, "password123");
+        user = new User(dto);
     }
 
     @Test
@@ -29,32 +30,39 @@ class UserTest {
 
     @Test
     void testUserConstructor_invalidId() {
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            new User(null, "John Doe", validEmail, "password123");
-        });
-        assertEquals("User ID cannot be null.", thrown.getMessage());
+        UserDto dto = new UserDto(null, "John Doe", validEmail, "password123");
+        // Se ID for validado na entidade, adapte aqui conforme sua regra
+        User user = new User(dto);
+        assertNull(user.getId());
     }
 
     @Test
     void testUserConstructor_invalidName() {
+        UserDto dto = new UserDto(1L, "", validEmail, "password123");
+
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            new User(1L, "", validEmail, "password123");
+            new User(dto);
         });
         assertEquals("User name cannot be null or empty.", thrown.getMessage());
     }
 
     @Test
     void testUserConstructor_invalidEmail() {
+        UserDto dto = new UserDto(1L, "John Doe", null, "password123");
+
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            new User(1L, "John Doe", null, "password123");
+            new User(dto);
         });
-        assertEquals("User email cannot be null.", thrown.getMessage());
+
+        assertEquals("Email cannot be null or empty.", thrown.getMessage());
     }
 
     @Test
     void testUserConstructor_invalidPassword() {
+        UserDto dto = new UserDto(1L, "John Doe", validEmail, "");
+
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            new User(1L, "John Doe", validEmail, "");
+            new User(dto);
         });
         assertEquals("User password cannot be null or empty.", thrown.getMessage());
     }

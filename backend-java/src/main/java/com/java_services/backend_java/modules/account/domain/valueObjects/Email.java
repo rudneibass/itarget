@@ -1,4 +1,4 @@
-package com.java_services.backend_java.modules.account.domain.valueObject;
+package com.java_services.backend_java.modules.account.domain.valueObjects;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -29,6 +29,11 @@ public class Email {
     }
 
     @Override
+    public String toString() {
+        return address;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Email)) return false;
@@ -39,10 +44,5 @@ public class Email {
     @Override
     public int hashCode() {
         return Objects.hash(address);
-    }
-
-    @Override
-    public String toString() {
-        return address;
     }
 }

@@ -11,7 +11,7 @@ MVN = docker exec -it $(CONTAINER_NAME) mvn
 # Declara que 'mvn' é um comando, não um arquivo
 .PHONY: mvn
 
-# Comando genérico para executar qualquer comando mvn, exemplo: make mvn config:clear
+# Comando genérico para executar qualquer comando mvn
 mvn:
 	@$(MVN) $(filter-out $@,$(MAKECMDGOALS))
 
