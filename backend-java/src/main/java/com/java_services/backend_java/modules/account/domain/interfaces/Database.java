@@ -5,4 +5,5 @@ import java.util.Map;
 
 public interface Database {
     List<Map<String, Object>> rawQuery(String query, Object... bindings);
+    int executeUpdate(String sql, Object... bindings);
 }

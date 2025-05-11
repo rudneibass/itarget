@@ -41,6 +41,17 @@ public class DatabaseAdapter implements Database {
             .collect(Collectors.toList());
     }
 
+    @Override
+    public int executeUpdate(String sql, Object... bindings) {
+        Query query = entityManager.createNativeQuery(sql);
+
+        for (int i = 0; i < bindings.length; i++) {
+            query.setParameter(i + 1, bindings[i]);
+        }
+
+        return query.executeUpdate();
+    }
+
     /* 
     V2
     @Override

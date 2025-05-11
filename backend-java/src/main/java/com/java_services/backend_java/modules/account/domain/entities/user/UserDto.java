@@ -1,10 +1,8 @@
 package com.java_services.backend_java.modules.account.domain.entities.user;
 
-import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
-
 import lombok.Getter;
 import lombok.Setter;
-
+import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
 @Getter
 @Setter
 public class UserDto {
@@ -18,5 +16,9 @@ public class UserDto {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+    
+    public UserDto(String name, Email email, String password) {
+        this(null, name, email, password);
     }
 }
