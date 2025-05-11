@@ -20,7 +20,6 @@ public class DatabaseAdapterIntegrationTest {
 
     @Autowired
     private EntityManager entityManager;
-
     private DatabaseAdapter databaseAdapter;
 
     @BeforeEach
@@ -38,7 +37,10 @@ public class DatabaseAdapterIntegrationTest {
 
     @Test
     void testRawQueryReturnsExpectedResults() {
-        List<Map<String, Object>> results = databaseAdapter.rawQuery("SELECT * FROM users");
+        List<Map<String, Object>> 
+        results = 
+        databaseAdapter.rawQuery("SELECT * FROM users");
+
         assertEquals(2, results.size());
     }
 }
