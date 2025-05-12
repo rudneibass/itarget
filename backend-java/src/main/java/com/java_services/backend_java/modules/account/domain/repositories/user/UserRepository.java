@@ -5,6 +5,9 @@ import com.java_services.backend_java.modules.account.domain.entities.user.UserD
 import com.java_services.backend_java.modules.account.domain.interfaces.Database;
 import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,43 +20,82 @@ public class UserRepository {
     public UserRepository(Database database) {
         this.database = database;
     }
+
     public int create(User user) {
-        return
-        database.executeUpdate(
-            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-            user.getName(),
-            user.getEmail().getAddress(),
-            user.getPassword()
-        );
+        StringBuilder sql = new StringBuilder("INSERT INTO users (name, email, password");
+        StringBuilder values = new StringBuilder("VALUES (?, ?, ?");
+        
+        List<Object> 
+        parameters = new ArrayList<>();
+        parameters.add(user.getName());
+        parameters.add(user.getEmail().getAddress());
+        parameters.add(user.getPassword());
+    
+        Map<String, Object> 
+        optionalFields = new LinkedHashMap<>();
+        optionalFields.put("birth_date", user.getBirthDate());
+        for (Map.Entry<String, Object> entry : optionalFields.entrySet()) {
+            if (entry.getValue() != null) {
+                sql.append(", birth_date");
+                values.append(", ?");
+                parameters.add(user.getBirthDate());
+            }
+        }
+
+        sql.append(") ").append(values).append(")");
+    
+        return database.executeUpdate(sql.toString(), parameters.toArray());
     }
+
 
     public int update(User user) {
-        return database.executeUpdate(
-            "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?",
-            user.getName(), 
-            user.getEmail().getAddress(), 
-            user.getPassword(), 
-            user.getId()
-        );
+        if (user.getId() == null || user.getId() <= 0) {
+            throw new IllegalArgumentException("O ID do usuário é obrigatório e deve ser maior que zero.");
+        }
+
+        StringBuilder 
+        sql = new StringBuilder("UPDATE users SET ");
+        sql.append("name = ?, email = ?, password = ?");
+        
+        List<Object> 
+        parameters = new ArrayList<>();
+        parameters.add(user.getName());
+        parameters.add(user.getEmail().getAddress());
+        parameters.add(user.getPassword());
+
+        Map<String, Object> 
+        optionalFields = new LinkedHashMap<>();
+        optionalFields.put("birth_date", user.getBirthDate());
+        for (Map.Entry<String, Object> entry : optionalFields.entrySet()) {
+            if (entry.getValue() != null) {
+                sql.append(", ").append(entry.getKey()).append(" = :").append(entry.getKey());
+                parameters.add(entry.getValue());
+            }
+        }
+
+        sql.append(" WHERE id = ?");
+        parameters.add(user.getId());
+
+        return database.executeUpdate(sql.toString(), parameters.toArray());
     }
 
+    
     public List<User> all() {
-        List<Map<String, Object>> 
-        results = 
-        database.rawQuery("SELECT * FROM users");
+        List<Map<String, Object>> results = database.rawQuery("SELECT * FROM users");
     
         return 
         results.stream()
-        .map(row -> {
-            return 
-            new User(
-                new UserDto(
-                    (Long) row.get("id"),
-                    (String) row.get("name"),
-                    new Email((String) row.get("email")),
-                    (String) row.get("password")
-                )
-            );
-        }).collect(Collectors.toList());
+            .map(row -> {
+                return 
+                new User(
+                    UserDto.builder()
+                    .id((Long) row.get("id"))
+                    .name((String) row.get("name"))
+                    .email(new Email((String) row.get("email")))
+                    .password((String) row.get("password"))
+                    .build()
+                );
+            }
+        ).collect(Collectors.toList());
     }
 }

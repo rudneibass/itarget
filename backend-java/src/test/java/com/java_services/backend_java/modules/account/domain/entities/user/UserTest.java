@@ -1,9 +1,10 @@
 package com.java_services.backend_java.modules.account.domain.entities.user;
 
+import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +16,13 @@ class UserTest {
     @BeforeEach
     void setUp() {
         validEmail = new Email("test@example.com");
-        UserDto dto = new UserDto(1L, "John Doe", validEmail, "password123");
+        UserDto dto = UserDto.builder()
+                .id(1L)
+                .name("John Doe")
+                .email(validEmail)
+                .password("password123")
+                .birthDate(LocalDate.of(1990, 1, 1))
+                .build();
         user = new User(dto);
     }
 
@@ -30,15 +37,24 @@ class UserTest {
 
     @Test
     void testUserConstructor_invalidId() {
-        UserDto dto = new UserDto(null, "John Doe", validEmail, "password123");
-        // Se ID for validado na entidade, adapte aqui conforme sua regra
+        UserDto dto = UserDto.builder()
+                .id(null)
+                .name("John Doe")
+                .email(validEmail)
+                .password("password123")
+                .build();
         User user = new User(dto);
         assertNull(user.getId());
     }
 
     @Test
     void testUserConstructor_invalidName() {
-        UserDto dto = new UserDto(1L, "", validEmail, "password123");
+        UserDto dto = UserDto.builder()
+                .id(1L)
+                .name("")
+                .email(validEmail)
+                .password("password123")
+                .build();
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             new User(dto);
@@ -48,7 +64,12 @@ class UserTest {
 
     @Test
     void testUserConstructor_invalidEmail() {
-        UserDto dto = new UserDto(1L, "John Doe", null, "password123");
+        UserDto dto = UserDto.builder()
+                .id(1L)
+                .name("John Doe")
+                .email(null)
+                .password("password123")
+                .build();
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             new User(dto);
@@ -59,7 +80,12 @@ class UserTest {
 
     @Test
     void testUserConstructor_invalidPassword() {
-        UserDto dto = new UserDto(1L, "John Doe", validEmail, "");
+        UserDto dto = UserDto.builder()
+                .id(1L)
+                .name("John Doe")
+                .email(validEmail)
+                .password("")
+                .build();
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             new User(dto);
