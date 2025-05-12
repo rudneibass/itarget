@@ -44,11 +44,25 @@ public class DatabaseAdapter implements Database {
     @Override
     public int executeUpdate(String sql, Object... bindings) {
         Query query = entityManager.createNativeQuery(sql);
-
+        
         for (int i = 0; i < bindings.length; i++) {
             query.setParameter(i + 1, bindings[i]);
         }
 
+        if (sql.toUpperCase().startsWith("INSERT")) {
+            String sqlWithReturning = sql + " RETURNING id";
+            Query returningQuery = entityManager.createNativeQuery(sqlWithReturning);
+            for (int i = 0; i < bindings.length; i++) {
+                returningQuery.setParameter(i + 1, bindings[i]);
+            }
+            List<Object> resultList = returningQuery.getResultList();
+            if (!resultList.isEmpty()) {
+                Number generatedId = (Number) resultList.get(0);
+                return generatedId.intValue();
+            }
+        }
+        
         return query.executeUpdate();
     }
+
 }

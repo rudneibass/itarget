@@ -53,8 +53,8 @@ public class DatabaseAdapterTest {
     @Test
     void testExecuteUpdateUpdatesData() {
         String updateSql = "UPDATE users SET name = ? WHERE id = ?";
-        int rowsAffected = databaseAdapter.executeUpdate(updateSql, "Alice Updated", 1);
-        assertEquals(1, rowsAffected);
+        int id = databaseAdapter.executeUpdate(updateSql, "Alice Updated", 1);
+        assertEquals(1, id);
         List<Map<String, Object>> results = databaseAdapter.rawQuery("SELECT * FROM users WHERE id = 1");
         assertEquals(1, results.size());
         assertEquals("Alice Updated", results.get(0).get("name"));
@@ -63,8 +63,8 @@ public class DatabaseAdapterTest {
     @Test
     void testExecuteUpdateInsertsData() {
         String insertSql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-        int rowsAffected = databaseAdapter.executeUpdate(insertSql, "Charlie", "charlie@example.com", "123password");
-        assertEquals(1, rowsAffected);
+        int id = databaseAdapter.executeUpdate(insertSql, "Charlie", "charlie@example.com", "123password");
+        assertEquals(3, id);
         List<Map<String, Object>> results = databaseAdapter.rawQuery("SELECT * FROM users WHERE name = 'Charlie'");
         assertEquals(1, results.size());
         assertEquals("Charlie", results.get(0).get("name"));

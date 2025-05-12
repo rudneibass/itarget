@@ -75,14 +75,17 @@ public class UserRepository {
 
         sql.append(" WHERE id = ?");
         parameters.add(user.getId());
+        int rowsAffected = database.executeUpdate(sql.toString(), parameters.toArray());
+        if(rowsAffected == 0) {
+            return rowsAffected;
+        }
 
-        return database.executeUpdate(sql.toString(), parameters.toArray());
+        return user.getId().intValue();
     }
 
     
     public List<User> all() {
         List<Map<String, Object>> results = database.rawQuery("SELECT * FROM users");
-    
         return 
         results.stream()
             .map(row -> {
@@ -98,4 +101,24 @@ public class UserRepository {
             }
         ).collect(Collectors.toList());
     }
+
+    public User getById(Long id) {
+        Map<String, Object> 
+        row = database.rawQuery("SELECT * FROM users WHERE id = ?", id).stream().findFirst().orElse(null);
+        
+        if (row == null) {
+            return null; 
+        }
+    
+        return 
+        new User(
+            UserDto.builder()
+            .id((Long) row.get("id"))
+            .name((String) row.get("name"))
+            .email(new Email((String) row.get("email")))
+            .password((String) row.get("password"))
+            .build()
+        );
+    }
+    
 }

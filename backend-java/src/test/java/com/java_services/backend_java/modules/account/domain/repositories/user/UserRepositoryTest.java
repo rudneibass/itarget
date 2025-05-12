@@ -9,12 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 import com.java_services.backend_java.modules.account.domain.interfaces.Database;
 import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
@@ -83,8 +80,8 @@ public class UserRepositoryTest {
                 .build()
         );
     
-        int rowsAffected = userRepository.create(newUser);
-        assertThat(rowsAffected).isEqualTo(1);
+        int id = userRepository.create(newUser);
+        assertThat(id).isEqualTo(3); // 2 do setup + 1 novo
     
         List<User> users = userRepository.all();
         assertThat(users).hasSize(3); // 2 do setup + 1 novo
@@ -125,5 +122,38 @@ public class UserRepositoryTest {
         assertThat(result.getName()).isEqualTo("Bob with Birthdate");
         assertThat(result.getEmail().getAddress()).isEqualTo("bob.birth@example.com");
         assertThat(result.getPassword()).isEqualTo("novaSenha456");
+    }
+
+
+    @Test
+    public void testGetById_returnsUserWhenIdExists() {
+        UserRepository userRepository = new UserRepository(database);
+
+        User newUser = 
+        new User(
+            UserDto.builder()
+            .name("Charlie")
+            .email(new Email("charlie@example.com"))
+            .password("senhaSegura123")
+            .build()
+        );
+
+        int id = userRepository.create(newUser);
+        assertThat(id).isEqualTo(3); // 2 do setup + 1 novo
+
+        User retrievedUser = userRepository.getById(3L);
+
+        assertThat(retrievedUser).isNotNull();
+        assertThat(retrievedUser.getId()).isEqualTo(3L);
+        assertThat(retrievedUser.getName()).isEqualTo("Charlie");
+        assertThat(retrievedUser.getEmail().getAddress()).isEqualTo("charlie@example.com");
+        assertThat(retrievedUser.getPassword()).isEqualTo("senhaSegura123");
+    }
+
+    @Test
+    public void testGetById_returnsNullWhenIdDoesNotExist() {
+        UserRepository userRepository = new UserRepository(database);
+        User nonExistingUser = userRepository.getById(9999L);
+        assertThat(nonExistingUser).isNull();
     }
 }
