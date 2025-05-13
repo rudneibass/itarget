@@ -50,7 +50,7 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void testFindAllUsers_returnsMappedUserObjects() {
-        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
+        UserRepository userRepository = new UserRepository(database);
         List<User> users = userRepository.all();
 
         assertThat(users).isNotNull();
@@ -69,7 +69,7 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void testCreateUser_insertsNewUserSuccessfully() {
-        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
+        UserRepository userRepository = new UserRepository(database);
     
         User newUser = new User(
             UserDto.builder()
@@ -99,7 +99,7 @@ public class UserRepositoryIntegrationTest {
     
     @Test
     public void testUpdateUser_withBirthDate_updatesUserIncludingBirthDate() {
-        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
+        UserRepository userRepository = new UserRepository(database);
 
         List<User> users = userRepository.all();
         User user = users.get(0);
@@ -127,7 +127,7 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void testGetById_returnsUserWhenIdExists() {
-        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
+        UserRepository userRepository = new UserRepository(database);
 
         User newUser = 
         new User(
@@ -152,7 +152,7 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void testGetById_returnsNullWhenIdDoesNotExist() {
-        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
+        UserRepository userRepository = new UserRepository(database);
         User nonExistingUser = userRepository.getById(9999L);
         assertThat(nonExistingUser).isNull();
     }

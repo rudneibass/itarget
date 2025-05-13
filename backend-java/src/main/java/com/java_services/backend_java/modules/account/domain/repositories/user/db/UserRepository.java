@@ -6,14 +6,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class UserRepositoryFacade {
+public class UserRepository {
 
     private final CreateUserRepository createRepo;
     private final UpdateUserRepository updateRepo;
     private final DeleteUserRepository deleteRepo;
     private final ReadUserRepository readRepo;
 
-    public UserRepositoryFacade(Database database) {
+    public UserRepository(Database database) {
         this.createRepo = new CreateUserRepository(database);
         this.updateRepo = new UpdateUserRepository(database);
         this.deleteRepo = new DeleteUserRepository(database);
