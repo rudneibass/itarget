@@ -27,8 +27,8 @@ public class DatabaseAdapter implements Database {
         }
     
         @SuppressWarnings("unchecked")
-        List<Tuple> results = nativeQuery.getResultList();
-    
+        List<Tuple> 
+        results = nativeQuery.getResultList();
         return results.stream()
             .map(tuple -> {
                 Map<String, Object> 
@@ -43,26 +43,44 @@ public class DatabaseAdapter implements Database {
 
     @Override
     public int executeUpdate(String sql, Object... bindings) {
-        Query query = entityManager.createNativeQuery(sql);
+        Query 
+        query = entityManager.createNativeQuery(sql);
         
         for (int i = 0; i < bindings.length; i++) {
             query.setParameter(i + 1, bindings[i]);
-        }
-
-        if (sql.toUpperCase().startsWith("INSERT")) {
-            String sqlWithReturning = sql + " RETURNING id";
-            Query returningQuery = entityManager.createNativeQuery(sqlWithReturning);
-            for (int i = 0; i < bindings.length; i++) {
-                returningQuery.setParameter(i + 1, bindings[i]);
-            }
-            List<Object> resultList = returningQuery.getResultList();
-            if (!resultList.isEmpty()) {
-                Number generatedId = (Number) resultList.get(0);
-                return generatedId.intValue();
-            }
         }
         
         return query.executeUpdate();
     }
 
+    @Override
+    public int executeInsertAndReturnId(String sql, Object... bindings) {
+        Query 
+        query = entityManager.createNativeQuery(sql + " RETURNING id");
+        
+        for (int i = 0; i < bindings.length; i++) {
+            query.setParameter(i + 1, bindings[i]);
+        }
+
+        List<Object> resultList = query.getResultList();
+
+        if (!resultList.isEmpty()) {
+            Number generatedId = (Number) resultList.get(0);
+            return generatedId.intValue();
+        }
+        
+        return -1;
+    }
+
+    @Override
+    public int executeDelete(String sql, Object... bindings) {
+        Query 
+        query = entityManager.createNativeQuery(sql);
+
+        for (int i = 0; i < bindings.length; i++) {
+            query.setParameter(i + 1, bindings[i]);
+        }
+
+        return query.executeUpdate();
+    }
 }

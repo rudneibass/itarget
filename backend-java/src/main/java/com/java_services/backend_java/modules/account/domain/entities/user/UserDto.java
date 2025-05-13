@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
+import com.java_services.backend_java.modules.account.domain.value_objects.Email;
 @Getter
 @Setter
 @Builder

@@ -3,7 +3,8 @@ package com.java_services.backend_java.modules.account.domain.repositories.user;
 import com.java_services.backend_java.modules.account.domain.entities.user.User;
 import com.java_services.backend_java.modules.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.modules.account.domain.interfaces.Database;
-import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
+import com.java_services.backend_java.modules.account.domain.value_objects.Email;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

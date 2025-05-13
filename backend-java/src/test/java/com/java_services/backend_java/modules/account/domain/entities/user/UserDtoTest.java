@@ -1,7 +1,9 @@
 package com.java_services.backend_java.modules.account.domain.entities.user;
 
-import com.java_services.backend_java.modules.account.domain.valueObjects.Email;
 import org.junit.jupiter.api.Test;
+
+import com.java_services.backend_java.modules.account.domain.value_objects.Email;
+
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 

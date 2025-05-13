@@ -1,4 +1,4 @@
-package com.java_services.backend_java.modules.account.domain.repositories.user;
+package com.java_services.backend_java.modules.account.domain.repositories.user.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -21,7 +21,7 @@ import com.java_services.backend_java.modules.account.domain.entities.user.UserD
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class UserRepositoryTest {
+public class UserRepositoryIntegrationTest {
 
     @Autowired
     private Database database;
@@ -50,7 +50,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testFindAllUsers_returnsMappedUserObjects() {
-        UserRepository userRepository = new UserRepository(database);
+        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
         List<User> users = userRepository.all();
 
         assertThat(users).isNotNull();
@@ -69,7 +69,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testCreateUser_insertsNewUserSuccessfully() {
-        UserRepository userRepository = new UserRepository(database);
+        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
     
         User newUser = new User(
             UserDto.builder()
@@ -99,7 +99,7 @@ public class UserRepositoryTest {
     
     @Test
     public void testUpdateUser_withBirthDate_updatesUserIncludingBirthDate() {
-        UserRepository userRepository = new UserRepository(database);
+        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
 
         List<User> users = userRepository.all();
         User user = users.get(0);
@@ -127,7 +127,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testGetById_returnsUserWhenIdExists() {
-        UserRepository userRepository = new UserRepository(database);
+        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
 
         User newUser = 
         new User(
@@ -152,7 +152,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testGetById_returnsNullWhenIdDoesNotExist() {
-        UserRepository userRepository = new UserRepository(database);
+        UserRepositoryFacade userRepository = new UserRepositoryFacade(database);
         User nonExistingUser = userRepository.getById(9999L);
         assertThat(nonExistingUser).isNull();
     }
