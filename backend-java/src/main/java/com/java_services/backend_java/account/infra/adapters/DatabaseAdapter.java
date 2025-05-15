@@ -54,7 +54,7 @@ public class DatabaseAdapter implements Database {
     }
 
     @Override
-    public int executeInsertAndReturnId(String sql, Object... bindings) {
+    public int executeInsert(String sql, Object... bindings) {
         Query 
         query = entityManager.createNativeQuery(sql + " RETURNING id");
         

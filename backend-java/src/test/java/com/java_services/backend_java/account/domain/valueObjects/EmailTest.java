@@ -1,8 +1,8 @@
-package com.java_services.backend_java.account.domain.value_objects;
+package com.java_services.backend_java.account.domain.valueObjects;
 
 import org.junit.jupiter.api.Test;
 
-import com.java_services.backend_java.account.domain.value_objects.Email;
+import com.java_services.backend_java.account.domain.valueObjects.Email;
 
 import static org.junit.jupiter.api.Assertions.*;
 

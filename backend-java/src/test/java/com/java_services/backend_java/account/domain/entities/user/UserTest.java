@@ -3,7 +3,7 @@ package com.java_services.backend_java.account.domain.entities.user;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.java_services.backend_java.account.domain.value_objects.Email;
+import com.java_services.backend_java.account.domain.valueObjects.Email;
 
 import java.time.LocalDate;
 

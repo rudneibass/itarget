@@ -41,6 +41,6 @@ public class CreateUserRepository {
         .append(values)
         .append(") ");
 
-        return database.executeInsertAndReturnId(sql.toString(), parameters.toArray());
+        return database.executeInsert(sql.toString(), parameters.toArray());
     }
 }

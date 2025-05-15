@@ -61,9 +61,9 @@ public class DatabaseAdapterTest {
     }
 
     @Test
-    void testExecuteInsertAndReturnIdData() {
+    void testexecuteInsertData() {
         String insertSql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-        int id = databaseAdapter.executeInsertAndReturnId(insertSql, "Charlie", "charlie@example.com", "123password");
+        int id = databaseAdapter.executeInsert(insertSql, "Charlie", "charlie@example.com", "123password");
         assertEquals(3, id);
 
         List<Map<String, Object>> results = databaseAdapter.rawQuery("SELECT * FROM users WHERE name = 'Charlie'");

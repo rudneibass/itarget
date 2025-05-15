@@ -14,7 +14,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.java_services.backend_java.account.domain.interfaces.Database;
-import com.java_services.backend_java.account.domain.value_objects.Email;
+import com.java_services.backend_java.account.domain.valueObjects.Email;
 import com.java_services.backend_java.account.domain.entities.user.User;
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
 

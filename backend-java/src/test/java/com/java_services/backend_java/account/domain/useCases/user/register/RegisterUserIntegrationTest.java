@@ -1,4 +1,10 @@
-package com.java_services.backend_java.account.domain.repositories.user.db;
+package com.java_services.backend_java.account.domain.useCases.user.register;
+
+import com.java_services.backend_java.account.domain.entities.user.UserDto;
+import com.java_services.backend_java.account.domain.interfaces.Database;
+import com.java_services.backend_java.account.domain.repositories.user.db.CreateUserRepository;
+import com.java_services.backend_java.account.domain.useCases.use.RegisterUser;
+import com.java_services.backend_java.account.domain.valueObjects.Email;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -10,17 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.java_services.backend_java.account.domain.interfaces.Database;
-import com.java_services.backend_java.account.domain.valueObjects.Email;
-import com.java_services.backend_java.account.domain.entities.user.User;
-import com.java_services.backend_java.account.domain.entities.user.UserDto;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class CreateUserRepositoryIntegrationTest {
+class RegisterUserIntegrationTest {
 
     @Autowired
     private Database database;
@@ -50,16 +54,22 @@ public class CreateUserRepositoryIntegrationTest {
 
     @Test
     public void testCreateUser_insertsNewUserSuccessfully() {
-        CreateUserRepository createUserRepository = new CreateUserRepository(database);
-        User newUser = new User(
-            UserDto.builder()
-                .id(null)
-                .name("Charlie")
-                .email(new Email("charlie@example.com"))
-                .password("senhaSegura123")
-                .build()
-        );
-        int id = createUserRepository.create(newUser);
-        assertThat(id).isEqualTo(3); // 2 do setup + 1 novo
+        RegisterUser 
+        registerUser = new RegisterUser(database);
+        
+        UserDto
+        user =
+        UserDto.builder()
+            .id(null)
+            .name("Charlie")
+            .email(new Email("charlie@example.com"))
+            .password("senhaSegura123")
+            .build();
+  
+        UserDto
+        newUser =
+        registerUser.execute(user);
+        assertThat(newUser.getName()).isEqualTo("Charlie");
+        assertThat(newUser.getEmail().getAddress()).isEqualTo("charlie@example.com");
     }
 }
