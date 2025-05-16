@@ -7,12 +7,14 @@ import jakarta.persistence.Query;
 import jakarta.persistence.TupleElement;
 import jakarta.persistence.Tuple;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Primary
 public class DatabaseAdapter implements Database {
 
     @PersistenceContext
