@@ -1,9 +1,5 @@
 package com.java_services.backend_java.account.infra.controllers.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.java_services.backend_java.account.domain.entities.user.UserDto;
-import com.java_services.backend_java.account.domain.valueObjects.Email;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,26 +17,21 @@ public class RegisterUserControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Test
     public void shouldRegisterUserSuccessfully() throws Exception {
-
-        UserDto 
-        userDto = UserDto.builder()
-            .id(null)
-            .name("Charlie")
-            .email(new Email("charlie@example.com"))
-            .password("senhaSegura123")
-            .build();
-  
+        String requestBody = """
+            {
+                "name": "Charlie",
+                "email": "charlie@example.com",
+                "password": "senhaSegura123"
+            }
+        """;
 
         mockMvc.perform(post("/api/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto)))
+                .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Charlie"))
-                .andExpect(jsonPath("$.email.address").value("charlie@example.com"));
+                .andExpect(jsonPath("$.email").value("charlie@example.com"));
     }
 }

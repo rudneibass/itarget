@@ -1,8 +1,7 @@
-package com.java_services.backend_java.account.domain.useCases.user.register;
+package com.java_services.backend_java.account.domain.services.user.register;
 
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.account.domain.interfaces.Database;
-import com.java_services.backend_java.account.domain.repositories.user.db.CreateUserRepository;
 import com.java_services.backend_java.account.domain.valueObjects.Email;
 
 import jakarta.persistence.EntityManager;
@@ -15,15 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class RegisterUserIntegrationTest {
+class RegisterUserServiceIntegrationTest {
 
     @Autowired
     private Database database;
@@ -53,22 +49,21 @@ class RegisterUserIntegrationTest {
 
     @Test
     public void testCreateUser_insertsNewUserSuccessfully() {
-        RegisterUser 
-        registerUser = new RegisterUser(database);
+        RegisterUserService 
+        registerUserService = new RegisterUserService(database);
         
-        UserDto
+        RegisterUserInputData
         user =
-        UserDto.builder()
-            .id(null)
+        RegisterUserInputData.builder()
             .name("Charlie")
-            .email(new Email("charlie@example.com"))
+            .email("charlie@example.com")
             .password("senhaSegura123")
             .build();
   
-        UserDto
-        newUser =
-        registerUser.execute(user);
+        RegisterUserOutputData
+        newUser = registerUserService.execute(user);
+
         assertThat(newUser.getName()).isEqualTo("Charlie");
-        assertThat(newUser.getEmail().getAddress()).isEqualTo("charlie@example.com");
+        assertThat(newUser.getEmail()).isEqualTo("charlie@example.com");
     }
 }
