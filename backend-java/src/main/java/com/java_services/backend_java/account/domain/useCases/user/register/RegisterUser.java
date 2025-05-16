@@ -1,10 +1,13 @@
-package com.java_services.backend_java.account.domain.useCases.use;
+package com.java_services.backend_java.account.domain.useCases.user.register;
+
+import org.springframework.stereotype.Service;
 
 import com.java_services.backend_java.account.domain.entities.user.User;
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.account.domain.interfaces.Database;
 import com.java_services.backend_java.account.domain.repositories.user.db.UserRepository;
 
+@Service
 public class RegisterUser {
 
     private UserRepository userRepository;
@@ -12,7 +15,7 @@ public class RegisterUser {
     public RegisterUser(Database databaseAdapter) {
         this.userRepository = new UserRepository(databaseAdapter);
     }
-
+    
     public UserDto execute(UserDto userDto) {
         int id = userRepository.create(new User(userDto));
         User newUser = userRepository.getById(Long.valueOf(id));

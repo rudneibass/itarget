@@ -3,7 +3,6 @@ package com.java_services.backend_java.account.domain.useCases.user.register;
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.account.domain.interfaces.Database;
 import com.java_services.backend_java.account.domain.repositories.user.db.CreateUserRepository;
-import com.java_services.backend_java.account.domain.useCases.use.RegisterUser;
 import com.java_services.backend_java.account.domain.valueObjects.Email;
 
 import jakarta.persistence.EntityManager;

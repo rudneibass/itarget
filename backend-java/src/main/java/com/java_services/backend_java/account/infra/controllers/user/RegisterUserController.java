@@ -1,25 +1,29 @@
 package com.java_services.backend_java.account.infra.controllers.user;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
-import com.java_services.backend_java.account.domain.useCases.use.RegisterUser;
-import com.java_services.backend_java.account.infra.adapters.DatabaseAdapter;
+import com.java_services.backend_java.account.domain.services.user.RegisterUserService;
 
 @RestController
-@RequestMapping("/user")
-
+@RequestMapping("/api/user")
 public class RegisterUserController {
 
+    private final RegisterUserService registerUserService;
+
+    public RegisterUserController(RegisterUserService registerUserService) {
+        this.registerUserService = registerUserService;
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
-        RegisterUser useCase = new RegisterUser(new DatabaseAdapter());
-        UserDto createdUser = useCase.execute(userDto);
+    public ResponseEntity<UserDto> 
+    register(@RequestBody UserDto userDto) {
+        UserDto 
+        createdUser = registerUserService.execute(userDto);
         return ResponseEntity.ok(createdUser);
     }
 }

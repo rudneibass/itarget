@@ -1,4 +1,4 @@
-package com.java_services.backend_java.account.infra.controllers.user.register;
+package com.java_services.backend_java.account.infra.controllers.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
@@ -36,11 +36,11 @@ public class RegisterUserControllerIntegrationTest {
             .build();
   
 
-        mockMvc.perform(post("/user/register")
+        mockMvc.perform(post("/api/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Charlie"))
-                .andExpect(jsonPath("$.email").value("charlie@example.com"));
+                .andExpect(jsonPath("$.email.address").value("charlie@example.com"));
     }
 }
