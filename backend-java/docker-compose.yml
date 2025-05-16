@@ -5,8 +5,8 @@ services:
     build:
       context: ./
     container_name: backend-java
-    ports:
-      - "8080:8080"
+    #ports:
+    #  - "8080:8080"
     depends_on:
       - postgres
     environment:
@@ -15,6 +15,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
     networks:
       - backend-java-network
+ 
   postgres:
     image: postgres:15
     container_name: postgres-db
@@ -32,6 +33,8 @@ services:
   dev:
     image: maven:3.8.5-openjdk-17
     container_name: backend-java-dev
+    ports:
+      - "8080:8080"
     volumes:
       - ./:/app
     working_dir: /app
