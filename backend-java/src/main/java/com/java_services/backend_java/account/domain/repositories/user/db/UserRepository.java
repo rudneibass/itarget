@@ -39,4 +39,8 @@ public class UserRepository {
     public User getById(Long id) {
         return readRepo.getById(id);
     }
+
+    public User findByEmail(String email) {
+        return readRepo.findByEmail(email);
+    }
 }

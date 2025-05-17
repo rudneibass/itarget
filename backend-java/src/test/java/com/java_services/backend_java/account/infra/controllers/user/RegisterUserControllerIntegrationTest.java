@@ -27,7 +27,7 @@ public class RegisterUserControllerIntegrationTest {
             }
         """;
 
-        mockMvc.perform(post("/api/user/register")
+        mockMvc.perform(post("/api/account/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isOk())

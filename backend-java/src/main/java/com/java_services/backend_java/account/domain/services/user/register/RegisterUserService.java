@@ -1,5 +1,6 @@
 package com.java_services.backend_java.account.domain.services.user.register;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.java_services.backend_java.account.domain.entities.user.User;
@@ -11,10 +12,12 @@ import com.java_services.backend_java.account.domain.valueObjects.Email;
 @Service
 public class RegisterUserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public RegisterUserService(Database databaseAdapter) {
         this.userRepository = new UserRepository(databaseAdapter);
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
     
     public RegisterUserOutputData execute(RegisterUserInputData inputData) {
@@ -23,7 +26,7 @@ public class RegisterUserService {
             UserDto.builder()
             .name(inputData.getName())
             .email(new Email(inputData.getEmail()))
-            .password(inputData.getPassword())
+            .password(passwordEncoder.encode(inputData.getPassword()))
             .birthDate(inputData.getBirthDate())
             .build();
 

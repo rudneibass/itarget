@@ -11,7 +11,7 @@ import com.java_services.backend_java.account.domain.services.user.register.Regi
 import com.java_services.backend_java.account.domain.services.user.register.RegisterUserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/account/user")
 public class RegisterUserController {
 
     private final RegisterUserService registerUserService;
