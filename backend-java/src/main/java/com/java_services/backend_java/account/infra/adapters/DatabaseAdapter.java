@@ -31,6 +31,7 @@ public class DatabaseAdapter implements Database {
         @SuppressWarnings("unchecked")
         List<Tuple> 
         results = nativeQuery.getResultList();
+        
         return results.stream()
             .map(tuple -> {
                 Map<String, Object> 
@@ -64,7 +65,9 @@ public class DatabaseAdapter implements Database {
             query.setParameter(i + 1, bindings[i]);
         }
 
-        List<Object> resultList = query.getResultList();
+        @SuppressWarnings("unchecked")
+        List<Object> 
+        resultList = query.getResultList();
 
         if (!resultList.isEmpty()) {
             Number generatedId = (Number) resultList.get(0);

@@ -2,7 +2,9 @@ package com.java_services.backend_java.account.domain.services.user.register;
 
 import com.java_services.backend_java.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.account.domain.interfaces.Database;
+import com.java_services.backend_java.account.domain.interfaces.PasswordEncoder;
 import com.java_services.backend_java.account.domain.valueObjects.Email;
+import com.java_services.backend_java.integrations.services.internal.email.EmailSenderIntegrationService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -27,6 +29,12 @@ class RegisterUserServiceIntegrationTest {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private EmailSenderIntegrationService emailSenderIntegrationService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     public void setUp() {
         entityManager.createNativeQuery("DROP TABLE IF EXISTS users").executeUpdate();
@@ -50,7 +58,12 @@ class RegisterUserServiceIntegrationTest {
     @Test
     public void testCreateUser_insertsNewUserSuccessfully() {
         RegisterUserService 
-        registerUserService = new RegisterUserService(database);
+        registerUserService = 
+        new RegisterUserService(
+            database, 
+            emailSenderIntegrationService, 
+            passwordEncoder
+        );
         
         RegisterUserInputData
         user =
