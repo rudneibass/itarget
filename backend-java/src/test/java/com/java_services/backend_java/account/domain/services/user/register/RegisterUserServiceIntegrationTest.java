@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -32,6 +33,7 @@ public class RegisterUserServiceIntegrationTest {
     private EmailSender emailSenderAdapter;
 
     @Autowired
+    @Qualifier("accountPasswordEncoderAdapter")
     private PasswordEncoder passwordEncoderAdapter;
 
     private RegisterUserService registerUserService;
