@@ -2,8 +2,6 @@ package com.java_services.backend_java.account.domain.valueObjects;
 
 import org.junit.jupiter.api.Test;
 
-import com.java_services.backend_java.account.domain.valueObjects.Email;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class EmailTest {

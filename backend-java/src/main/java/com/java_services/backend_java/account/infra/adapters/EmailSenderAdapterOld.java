@@ -2,7 +2,6 @@ package com.java_services.backend_java.account.infra.adapters;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import com.java_services.backend_java.account.domain.interfaces.EmailSender;
 
 import jakarta.mail.internet.InternetAddress;
