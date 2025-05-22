@@ -31,7 +31,8 @@ public class RegisterUserService {
     }
     
     public RegisterUserOutputData execute(RegisterUserInputData inputData) {
-        User newUser = createUser(inputData);
+        User newUser = 
+        createUser(inputData);
         sendWelcomeEmail(newUser);
 
         return 
