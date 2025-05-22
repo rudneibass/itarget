@@ -26,6 +26,6 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-        return ResponseEntity.internalServerError().body(new ErrorResponse("Erro interno no servidor."));
+        return ResponseEntity.internalServerError().body(new ErrorResponse(ex.getMessage()));
     }
 }

@@ -23,14 +23,23 @@ public class LoginJwtService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String execute(String email, String rawPassword){
-        User user = userRepository.findByEmail(email);
+    public LoginJwtServiceOutputData execute(LoginJwtServiceInputData inputData) {
+        User user = userRepository.findByEmail(inputData.getEmail());
 
-        if(user == null || !passwordEncoder.matches(rawPassword, user.getPassword())) {
+        if(user == null) {
             throw new RuntimeException("Invalid credentials, try again.");
         }
 
-        return tokenProvider.generateToken(user.getEmail().getAddress());
+        if(!passwordEncoder.matches(inputData.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials, try again.");
+        }
+
+        LoginJwtServiceOutputData 
+        outputData = new LoginJwtServiceOutputData();
+        outputData.setMessage("Login successful");
+        outputData.setToken(tokenProvider.generateToken(user.getEmail().getAddress()));
+        
+        return outputData;
     }
 
 }
