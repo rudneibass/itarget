@@ -57,6 +57,27 @@ public class ReadUserRepository {
         );
     }
 
+    public User getByEmail(String email) {
+        Map<String, Object> 
+        row = database.rawQuery("SELECT * FROM users WHERE email = ?", email)
+            .stream()
+            .findFirst()
+            .orElse(null);
+
+        if (row == null) return null;
+
+        return 
+        new User(
+            UserDto
+            .builder()
+            .id((Long) row.get("id"))
+            .name((String) row.get("name"))
+            .email(new Email((String) row.get("email")))
+            .password((String) row.get("password"))
+            .build()
+        );
+    }
+
     @Comment("There is no test for this method")
     public User findByEmail(String email) {
         Map<String, Object> 

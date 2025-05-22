@@ -1,10 +1,8 @@
 package com.java_services.backend_java.account.domain.services.user.register;
 
-import com.java_services.backend_java.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.account.domain.interfaces.Database;
+import com.java_services.backend_java.account.domain.interfaces.EmailSender;
 import com.java_services.backend_java.account.domain.interfaces.PasswordEncoder;
-import com.java_services.backend_java.account.domain.valueObjects.Email;
-import com.java_services.backend_java.integrations.services.internal.email.EmailSenderIntegrationService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -24,16 +22,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RegisterUserServiceIntegrationTest {
 
     @Autowired
-    private Database database;
-
-    @Autowired
     private EntityManager entityManager;
 
     @Autowired
-    private EmailSenderIntegrationService emailSenderIntegrationService;
+    private Database databaseAdapter;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private EmailSender emailSenderAdapter;
+
+    @Autowired
+    private PasswordEncoder passwordEncoderAdapter;
 
     @BeforeEach
     public void setUp() {
@@ -60,9 +58,9 @@ class RegisterUserServiceIntegrationTest {
         RegisterUserService 
         registerUserService = 
         new RegisterUserService(
-            database, 
-            emailSenderIntegrationService, 
-            passwordEncoder
+            databaseAdapter, 
+            emailSenderAdapter, 
+            passwordEncoderAdapter
         );
         
         RegisterUserInputData

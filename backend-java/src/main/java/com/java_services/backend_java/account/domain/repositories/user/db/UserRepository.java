@@ -40,6 +40,10 @@ public class UserRepository {
         return readRepo.getById(id);
     }
 
+    public User getByEmail(String email) {
+        return readRepo.getByEmail(email);
+    }
+
     public User findByEmail(String email) {
         return readRepo.findByEmail(email);
     }
