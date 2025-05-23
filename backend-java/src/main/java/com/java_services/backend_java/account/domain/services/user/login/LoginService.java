@@ -1,29 +1,25 @@
-package com.java_services.backend_java.auth.domain.services.jwt.login;
-
+package com.java_services.backend_java.account.domain.services.user.login;
 
 import org.springframework.stereotype.Service;
-
 import com.java_services.backend_java.account.domain.entities.user.User;
-
-import com.java_services.backend_java.auth.domain.interfaces.PasswordEncoder;
-import com.java_services.backend_java.auth.domain.interfaces.TokenProvider;
-
+import com.java_services.backend_java.account.domain.interfaces.PasswordEncoder;
+import com.java_services.backend_java.account.domain.interfaces.TokenProvider;
 import com.java_services.backend_java.account.domain.repositories.user.db.UserRepository;
 
 @Service
-public class LoginJwtService {
+public class LoginService {
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public LoginJwtService(UserRepository userRepository, TokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
+    public LoginService(UserRepository userRepository, TokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public LoginJwtServiceOutputData execute(LoginJwtServiceInputData inputData) {
+    public LoginServiceOutputData execute(LoginServiceInputData inputData) {
         User user = userRepository.findByEmail(inputData.getEmail());
 
         if(user == null) {
@@ -34,8 +30,8 @@ public class LoginJwtService {
             throw new RuntimeException("Invalid credentials, try again.");
         }
 
-        LoginJwtServiceOutputData 
-        outputData = new LoginJwtServiceOutputData();
+        LoginServiceOutputData 
+        outputData = new LoginServiceOutputData();
         outputData.setMessage("Login successful");
         outputData.setToken(tokenProvider.generateToken(user.getEmail().getAddress()));
         

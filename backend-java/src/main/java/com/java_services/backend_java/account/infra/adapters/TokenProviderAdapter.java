@@ -1,11 +1,11 @@
-package com.java_services.backend_java.auth.infra.adapters;
+package com.java_services.backend_java.account.infra.adapters;
 
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.java_services.backend_java.auth.domain.interfaces.TokenProvider;
+import com.java_services.backend_java.account.domain.interfaces.TokenProvider;
 import io.jsonwebtoken.*;
 
 @Component

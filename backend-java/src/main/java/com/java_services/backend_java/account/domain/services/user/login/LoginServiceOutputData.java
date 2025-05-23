@@ -1,11 +1,11 @@
-package com.java_services.backend_java.auth.domain.services.jwt.login;
+package com.java_services.backend_java.account.domain.services.user.login;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginJwtServiceOutputData {
+public class LoginServiceOutputData {
     private String message;
     private String token;
 }

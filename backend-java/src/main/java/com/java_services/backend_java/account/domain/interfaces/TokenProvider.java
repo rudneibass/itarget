@@ -1,4 +1,4 @@
-package com.java_services.backend_java.auth.domain.interfaces;
+package com.java_services.backend_java.account.domain.interfaces;
 
 public interface TokenProvider {
     String generateToken(String subject);
