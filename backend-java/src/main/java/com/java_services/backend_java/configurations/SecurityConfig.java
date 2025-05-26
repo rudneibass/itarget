@@ -16,6 +16,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()     // liberar endpoints de auth
                 .requestMatchers("/api/account/**").permitAll()  // liberar endpoints de account
                 .requestMatchers("/health/db").permitAll()
+                .requestMatchers("/api/account/user/recover-password").permitAll()
                 .anyRequest().authenticated();               // o restante precisa de auth
 
         return http.build();
