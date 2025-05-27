@@ -13,11 +13,11 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**").permitAll()     // liberar endpoints de auth
-                .requestMatchers("/api/account/**").permitAll()  // liberar endpoints de account
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/account/**").permitAll()
                 .requestMatchers("/health/db").permitAll()
                 .requestMatchers("/api/account/user/recover-password").permitAll()
-                .anyRequest().authenticated();               // o restante precisa de auth
+                .anyRequest().authenticated();
 
         return http.build();
     }
