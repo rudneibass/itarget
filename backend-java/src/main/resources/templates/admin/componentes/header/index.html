@@ -1,0 +1,42 @@
+
+<header 
+    th:fragment="header"
+    class="site-header" 
+    style="margin-bottom: 55px;"
+>
+    <nav class="bg-success fixed-top" style="height: 55px;">      
+        <div class="row" style="height: 100%; align-items: center;">
+            <div 
+                class="col-md-2 p-0" 
+                style="background-color: #21883c; height: 100%; display: flex; align-items: center; justify-content: center;"
+            >
+                <b style="color: white; font-size:18px;">Admin</b>
+                <span style="color: white; font-size:18px;">W2E</span>
+            </div>
+            <div class="col-md-10 d-flex justify-content-between align-items-end">
+                <div> 
+                    <span id="span-razao-social" class="span-12 mt-3" style="color: #f7f7f7"></span>  
+                </div>
+                <div>
+                    <span id="span-cnpj" class="span-12 mt-3" style="color: #f7f7f7; margin-left: 20px;"></span> 
+                </div>
+                <div>
+                    <span id="span-fone-1" class="span-12 mt-3" style="color: #f7f7f7; margin-left: 20px;"></span> 
+                </div>
+                <div>
+                    <span id="span-dominio" class="span-12 mt-3" style="color: #f7f7f7; margin-left: 20px;"></span> 
+                </div>
+                <div>
+                    <div class="btn-group btn-group-usuario">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            usuario logado
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="?out=out" >Sair</a>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

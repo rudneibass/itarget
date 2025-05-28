@@ -1,0 +1,127 @@
+
+        div{
+          border: 1px solid;
+        }
+        .corpo-msg{background-color: #fafada; 
+           min-height: 120px;
+           padding: 10px 10px 10px 10px;
+           -webkit-box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
+           -moz-box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
+           box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
+        }
+                
+        /* //////////////////////////////////
+        //              GLOBAIS            //
+        //////////////////////////////////*/ 
+        body, html, .container-fluid, .full-screen {height: 100%;}
+        body{height: 100vh; overflow-y: hidden;}
+        main{overflow-y: scroll; max-height: 100vh; padding-bottom: 15vh;}
+        .span-25{font-size: 25px;}
+        .span-20{font-size: 20px;}
+        .span-30{font-size: 30px;}
+        .span-35{font-size: 35px;}
+        .span-14{font-size: 14px;}
+        .span-12{font-size: 12px;}
+        .w-10{
+          width: 10%;
+        }
+        .w-50{
+          width: 50%;
+        }
+        .w-100{
+          width: 100%;
+        }
+        .centro {position: relative; top: 50%; transform: translateY(-50%);}
+        .reset{padding: 0px; margin: 0px;}
+        .white{color: white}
+        .gray{color: gray}
+        ::-webkit-scrollbar {
+            width: 8px; 
+            height: 12px; 
+          }
+
+          ::-webkit-scrollbar-thumb {
+             background: #8888888a; 
+            /*background: #FFC107;*/
+            border-radius: 6px; 
+          }
+
+          ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 6px; 
+          }
+      
+          .rec-dot {
+            width: .6rem;
+            height: .6rem;
+            background-color: red;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            display: inline-block;
+            /*vertical-align: middle;*/
+            /*margin-right: 5px;*/
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        
+            50% {
+                transform: scale(1.3);
+                opacity: 0.7;
+            }
+        
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* //////////////////////////////////
+        //     MODAL UPLOAD DE IMAGENS     //
+        ///////////////////////////////////*/ 
+        .name_anexo {font-weight: bold;}
+        .size_anexo {font-size: 90%;}
+        small {color: #999}
+        .remover{background:red; border:red; color: white;margin-top: 10px;}
+        .fa fa-trash {color: white;}
+
+        #toast-container {margin-top:5%; margin-right:25%; min-width: 35%}
+        .toast-success, .toast-error, .toast-info, .toast-warning {min-width: 100%} 
+
+        .modal-header{background-color: #4CAF50; color:white}
+        .col-8 .card .card-body, .col-4 .card .card-body {min-height: 30%}
+        .anexo{padding: 0px 0px 0px 0px; border: 1px solid #D8D8D8}
+        .card-header{background-color: #fff}
+
+
+        /* //////////////////////////////////
+        //              GRID               //
+        ///////////////////////////////////*/
+        h2 {margin: 5px 5px 5px 5px }
+        .border{border: 1px solid; border-color: #dfe3ee}
+        .box-shadow{ -webkit-box-shadow: 10px 10px 20px -12px rgba(0,0,0,0.75)}
+        .bg-white{background-color: white}
+        .view-index-table-container {background: #fff; min-height: 50vh; max-height: 50vh; overflow: auto; margin-top: 1rem;}
+
+
+         /* //////////////////////////////////
+        //    FORMULARIO DE CADASTRO        //
+        ///////////////////////////////////*/ 
+        .border-bottom{ border-bottom: 1px solid #dfe3ee}
+        .border-bottom-top{ border-bottom: 1px solid #dfe3ee; border-top: 1px solid #dfe3ee}
+        .size-12{font-size: 12px;}
+        .size-14{font-size: 14px;}
+        .size-12{color : #5f6368}
+        .bg-white{background-color: white}
+        .table-striped>tbody>tr:nth-child(odd)>td, 
+        .table-striped>tbody>tr:nth-child(odd)>th {background-color: #f4faf4;}
+        .td-data {text-transform:uppercase}
+        select{width: 100%; height: 5%}
+        /*input {height: 5%;}*/
+        label {font-size: 90%;}
+        legend{border-bottom: 1px solid #dfe3ee;}
+        #add_cargo{margin-left: 76%; margin-bottom: 5%;}
+        #voltar_cargo{margin-left: 76%; margin-bottom: 5%;}
