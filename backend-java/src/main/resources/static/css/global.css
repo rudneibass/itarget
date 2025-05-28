@@ -1,19 +1,18 @@
-
-        div{
-          border: 1px solid;
-        }
-        .corpo-msg{background-color: #fafada; 
-           min-height: 120px;
-           padding: 10px 10px 10px 10px;
-           -webkit-box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
-           -moz-box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
-           box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
-        }
+.corpo-msg{background-color: #fafada; 
+  min-height: 120px;
+  padding: 10px 10px 10px 10px;
+  -webkit-box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
+  -moz-box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
+  box-shadow: inset 0px 0px 17px 0px rgba(232,230,188,1);
+}
                 
         /* //////////////////////////////////
         //              GLOBAIS            //
         //////////////////////////////////*/ 
-        body, html, .container-fluid, .full-screen {height: 100%;}
+        body, 
+        html, 
+        .container-fluid, 
+        .full-height {height: 100%;}
         body{height: 100vh; overflow-y: hidden;}
         main{overflow-y: scroll; max-height: 100vh; padding-bottom: 15vh;}
         .span-25{font-size: 25px;}
@@ -36,30 +35,30 @@
         .white{color: white}
         .gray{color: gray}
         ::-webkit-scrollbar {
-            width: 8px; 
-            height: 12px; 
-          }
+          width: 8px; 
+          height: 12px; 
+        }
 
-          ::-webkit-scrollbar-thumb {
-             background: #8888888a; 
-            /*background: #FFC107;*/
-            border-radius: 6px; 
-          }
+        ::-webkit-scrollbar-thumb {
+          background: #8888888a; 
+          /*background: #FFC107;*/
+          border-radius: 6px; 
+        }
 
-          ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-            border-radius: 6px; 
-          }
+        ::-webkit-scrollbar-track {
+          background: #f1f1f1; 
+          border-radius: 6px; 
+        }
       
-          .rec-dot {
-            width: .6rem;
-            height: .6rem;
-            background-color: red;
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-            display: inline-block;
-            /*vertical-align: middle;*/
-            /*margin-right: 5px;*/
+        .rec-dot {
+          width: .6rem;
+          height: .6rem;
+          background-color: red;
+          border-radius: 50%;
+          animation: pulse 1s infinite;
+          display: inline-block;
+          /*vertical-align: middle;*/
+          /*margin-right: 5px;*/
         }
 
         @keyframes pulse {

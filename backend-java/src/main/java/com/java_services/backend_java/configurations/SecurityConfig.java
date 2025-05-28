@@ -17,8 +17,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/account/**").permitAll()
                 .requestMatchers("/health/db").permitAll()
                 .requestMatchers("/api/account/user/recover-password").permitAll()
+                .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/admin/home").permitAll()
                 .requestMatchers("/admin/publicacoes").permitAll()
+                .requestMatchers("/js/**", "/css/**","/img/**","/webjars/**").permitAll()
                 .anyRequest().authenticated()
             );
         return http.build();
