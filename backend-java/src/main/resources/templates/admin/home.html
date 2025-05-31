@@ -57,17 +57,41 @@
     background: #f1f1f1; 
     border-radius: 3px; 
   }
+
+  .view-index-table-container{
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+    .section-acoes{
+      position: fixed;
+      top: 15.5vh;
+      right: 15px;
+      transform: translateY(-50%);
+      z-index: 1100;
+    }
+
+    .btn-flutuante {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-flutuante:hover {
+      background-color: #218838;
+    }
 </style>
 <script>
-    /*
-  function carregarFragmento(url, idConteiner) {
-    fetch(url)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById(idConteiner).innerHTML = html;
-        });
-  }*/
-
   function carregarFragmento(url, idConteiner) {
     fetch(url)
         .then(response => response.text())

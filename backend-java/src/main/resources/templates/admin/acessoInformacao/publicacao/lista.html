@@ -7,10 +7,10 @@
 <section>
 
 <section class="section-acoes">
-    <button class="btn btn-flutuante mb-2">
+    <button class="btn btn-success btn-flutuante mb-2" onclick="carregarFragmento('/admin/publicacoes/form', 'main')">
         <i class="fa fa-plus"></i>
     </button>
-    <button id="btn-toggle-barra" class="btn btn-flutuante">
+    <button class="btn btn-success btn-flutuante mb-2" id="btn-toggle-barra">
         <i class="fa fa-search"></i>
     </button>
 </section>
@@ -64,7 +64,7 @@
 
 <section>
     <div class="view-index-table-container">
-        <table class="table-hover table-bordered table-striped table-sm w-100" style="border-left: 0; border-right:0;">
+        <table class="table-sm  w-100">
             <thead id="thead">
             </thead>
             <tbody id="tbody">
@@ -200,14 +200,16 @@
 
     function listar() {
         $("tr").remove();
-        $('#thead').append(
-                $('<tr>')
-                .append($('<th>').append('Cod'))
-                .append($('<th>'))
-                .append($('<th>'))
-                .append($('<th>'))
-                .append($('<th>'))
-                );
+        /*
+        $('#thead')
+        .append(
+            $('<tr>')
+            .append($('<th>'))
+            .append($('<th>'))
+            .append($('<th>'))
+            .append($('<th>'))
+            .append($('<th>'))
+        );*/
         $.ajax({
             url: 'http://localhost:8080/admin/publicacoes/listar',
             cache: false,
@@ -232,14 +234,36 @@
                 var pagina = 0;
                 function paginar() {
                     for (var i = pagina * tamanhoPagina; i < retorno.length && i < (pagina + 1) * tamanhoPagina; i++) {
-                        $("#tbody").append(
-                                $('<tr id="linha' + retorno[i].id + '">')
-                                .append($('<td width="3%">').append(retorno[i].id))
-                                .append($('<td>').append('<b>Exerc.: </b>' + retorno[i].exercicio + '<br/> <b>Data: </b>' + retorno[i].data_publicacao + '<br/> <b>Num.: </b>' + retorno[i].numero+'<br/><b>Tipo: </b>' + retorno[i].tipo+ '<br/><b>Desc: </b>' + retorno[i].descricao))
-                                .append($('<td width="5%">').append('<center><button class="btn btn-secondary btn-sm"      onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"       data-toggle="modal" data-target="#modal-files"><i class="fa fa-file-text"></i></button></center>'))
-                                .append($('<td style="width: 5%">').append('<center><button class="btn btn-warning btn-sm" onclick="vizualizar(' + retorno[i].id + ')" ><i class="fa fa-pencil"></i></button></center>'))
-                                .append($('<td style="width: 5%">').append('<center><button class="btn btn-danger btn-sm"  onclick="deletar(' + retorno[i].id + ', 1)"><i class="fa fa-remove"></i></button></center>'))
-                                );
+                        $("#tbody")
+                        .append(
+                            $('<tr id="linha' + retorno[i].id + '">')
+                            .append($('<td class="pb-2">').append(`
+                                <div class="px-3 py-2 border" style="border-radius: 5px; border-left: 4px solid rgba(33,136,60)!important;  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                    <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small><b>Tipo: </b>${retorno[i].tipo}</small>&emsp;
+                                            <small><b>Exerc.: </b>${retorno[i].exercicio}</small>&emsp;
+                                            <small><b>Data: </b>${retorno[i].data_publicacao || '-'}</small>&emsp;
+                                        </div>
+                                        <div>
+                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
+                                                <i class="fa fa-paperclip text-muted"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="vizualizar(' + retorno[i].id + ')" >
+                                                <i class="fa fa-pencil text-muted"></i>
+                                            </a>
+                                            &nbsp;
+                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="deletar(' + retorno[i].id + ', 1)">
+                                                <i class="fa fa-remove text-muted"></i>
+                                            </a>
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                </div>
+                            `))
+                        );
                     }
                     $("#echos").empty();
                     $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
@@ -252,14 +276,6 @@
                     $('#proximo').click(function () {
                         if (pagina < retorno.length / tamanhoPagina - 1) {
                             $("tr").remove();
-                            $('#thead').append(
-                                    $('<tr>')
-                                    .append($('<th>').append('Cod'))
-                                    .append($('<th>'))
-                                    .append($('<th>'))
-                                    .append($('<th>'))
-                                    .append($('<th>'))
-                                    );
                             pagina++;
                             paginar();
                             ajustarBotoes();
@@ -268,14 +284,6 @@
                     $('#anterior').click(function () {
                         if (pagina >= 1) {
                             $("tr").remove();
-                            $('#thead').append(
-                                    $('<tr>')
-                                    .append($('<th>').append('Cod'))
-                                    .append($('<th>'))
-                                    .append($('<th>'))
-                                    .append($('<th>'))
-                                    .append($('<th>'))
-                                    );
                             pagina--;
                             paginar();
                             ajustarBotoes();

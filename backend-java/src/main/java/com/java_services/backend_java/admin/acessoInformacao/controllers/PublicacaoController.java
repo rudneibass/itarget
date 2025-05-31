@@ -21,16 +21,16 @@ public class PublicacaoController {
     @Autowired
     private PublicacaoDao publicacaoDao;
 
-    @GetMapping
+    @GetMapping("/lista")
     public String listar(Model model) {
         //model.addAttribute("publicacoes", publicacaoDao.findAll());
         return "admin/acessoInformacao/publicacao/lista"; 
     }
 
-    @GetMapping("/novo")
+    @GetMapping("/form")
     public String novo(Model model) {
-        model.addAttribute("publicacao", new Publicacao());
-        return "publicacoes/form";
+        //model.addAttribute("publicacao", new Publicacao());
+        return "admin/acessoInformacao/publicacao/form";
     }
 
     @GetMapping("/listar")
