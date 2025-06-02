@@ -1,18 +1,31 @@
 <section>
-    <div class="row mb-3 pr-3" style="border: 1px solid #dee2e6; background-color: #f4faf4; padding: 15px 0px 10px 5px">     
-        <div class="col-md-11" >
+
+    <div style="
+        border: 1px solid #dee2e6; 
+        border-radius: 5px;
+        background-color: #f4faf4; 
+        padding: 15px 0px 10px 5px; 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;"
+    >
+        <div class="px-2" >
             <span class="span-30" style="color: gray"><i class="fa fa-file-text-o"></i> Publicações </span>
         </div>
     </div>
 <section>
 
 <section class="section-acoes">
-    <button class="btn btn-success btn-flutuante mb-2" onclick="carregarFragmento('/admin/publicacoes/form', 'main')">
+    <a href="./admin">
+        <button class="btn btn-success btn-flutuante mb-2" >
+            <i class="fa fa-arrow-left"></i>
+        </button>
+    </a>
+    <button class="btn btn-success btn-flutuante mb-2" onclick="admin.navigate({url:'/admin/publicacoes/form', containerId:'main'})">
         <i class="fa fa-plus"></i>
     </button>
     <button class="btn btn-success btn-flutuante mb-2" id="btn-toggle-barra">
         <i class="fa fa-search"></i>
-    </button>
+    </button> 
 </section>
 
 <section class="section-barra-pesquisa-desktop oculto" id="section-barra-pesquisa-desktop">
@@ -143,73 +156,8 @@
 
 </script>
 <script>
-    function populaForm(id) {
-        $.ajax({
-            url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=listar',
-            type: 'POST',
-            dataType: "json",
-            data: {id: id},
-            beforeSend: function () {
-                $(".loading").show()
-                $("#tab-1-form-1 :input").prop("disabled", true);
-            },
-            error: function () {
-                $(".loading").hide()
-                $("#tab_1_alerts").html("Erro no Ajax");
-            },
-            success: function (json) {
-                $(".loading").hide()
-                $("#tab-1-form-1 :input").prop("disabled", false);
-                //FAZ AS ALTERAÇÕES NESCESSARIAS NO FORM PARA O MODO DE EDIÇÃO
-                var data = jQuery.parseJSON(JSON.stringify(json));
-                listarArquivos(data.id, data.tbl);
-                $("#tab-2-btn-show-modal-upload").attr("onclick", "showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', " + data.id + ", \'" + data.tbl + "\')");
-                $("#tab-1-btn-salvar").css("display", "none");
-                $('#tab-1-btn-salvar-alteracoes').css("display", "block");
-                $('#tab-1-btn-salvar-alteracoes').attr("onclick", "update(" + data.id + ")");
-                //POPULA O FORM COM AS INFORMAÇÕES DO BANCO DE DADOS
-                $.each(json, function (field, value) {
-                    container = '';
-                    prefix_field = '#';
-                    if ($(container + prefix_field + field).attr('type') == 'checkbox') {
-                        if ($(container + prefix_field + field).val() == value) {
-                            $(container + 'input[type="checkbox"]' + prefix_field + field).prop('checked', true);
-                        } else {
-                            $(container + 'input[type="checkbox"]' + prefix_field + field).prop('checked', false);
-                        }
-                    } else
-                    if ($(container + prefix_field + field).attr('type') == 'radio') {
-                        if ($(container + prefix_field + field).val() == value) {
-                            $(container + 'input[type="radio"]' + prefix_field + field).prop('checked', true);
-                        } else {
-                            $(container + 'input[type="radio"]' + prefix_field + field).prop('checked', false);
-                        }
-                    } else
-                    if ($(container + prefix_field + field).get(0) != undefined && $(container + prefix_field + field).get(0).tagName === 'IMG') {
-                        if (value != '') {
-                            t = new Date();
-                            $(container + prefix_field + field).attr('src', value + '?' + t.getTime());
-                        }
-                    } else {
-                        $(container + prefix_field + field).val(value);
-                    }
-                });
-            }
-        });
-    };
-
     function listar() {
         $("tr").remove();
-        /*
-        $('#thead')
-        .append(
-            $('<tr>')
-            .append($('<th>'))
-            .append($('<th>'))
-            .append($('<th>'))
-            .append($('<th>'))
-            .append($('<th>'))
-        );*/
         $.ajax({
             url: 'http://localhost:8080/admin/publicacoes/listar',
             cache: false,
@@ -237,9 +185,11 @@
                         $("#tbody")
                         .append(
                             $('<tr id="linha' + retorno[i].id + '">')
-                            .append($('<td class="pb-2">').append(`
+                            .append($('<td class="px-0 pb-2">').append(`
                                 <div class="px-3 py-2 border" style="border-radius: 5px; border-left: 4px solid rgba(33,136,60)!important;  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                                    <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
+                                    <div style="height: 50px; overflow-y:hidden">
+                                        <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
+                                    </div>
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <small><b>Tipo: </b>${retorno[i].tipo}</small>&emsp;
@@ -251,12 +201,12 @@
                                                 <i class="fa fa-paperclip text-muted"></i>
                                             </a>
                                             &nbsp;
-                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="vizualizar(' + retorno[i].id + ')" >
-                                                <i class="fa fa-pencil text-muted"></i>
+                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="admin.navigate({url:'/admin/publicacoes/form', containerId:'main', id: ${retorno[i].id}})" >
+                                                <i class="fa fa-cog text-muted"></i>
                                             </a>
                                             &nbsp;
                                             <a style="text-decoration: none; color: gray" href="javascript::void" onclick="deletar(' + retorno[i].id + ', 1)">
-                                                <i class="fa fa-remove text-muted"></i>
+                                                <i class="fa fa-trash text-muted"></i>
                                             </a>
                                             &nbsp;
                                         </div>
@@ -321,32 +271,7 @@
             }
         });
     }
-
-    function insert() {
-        $.ajax({
-            url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=insert',
-            type: 'POST',
-            data: $('#tab-1-form-1').serialize(),
-            beforeSend: function () {
-                toastr["info"]("Aguarde, as informções estão sendo salvas no banco de dados!");
-            },
-            success: function (data) {
-                if (!isNaN(data)) {
-                    $('.toast-info').hide();
-                    $('#relacionamento').val(data);
-                    toastr["success"]("Cadastro realizado com sucesso!");
-                    document.getElementById("tab-1-btn-salvar").disabled = true;
-                    document.getElementById("tab-2-btn-show-modal-upload").addEventListener('click', () =>{
-                        showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', data , 'publicacoes')  
-                    });
-                } else {
-                    $('.toast-info').hide();
-                    toastr["error"](data);
-                }
-            }
-        });
-    }
-
+    
     function deletar(id) {
         if (confirm("TEM CERTEZA QUE DESEJA EXCLUIR ESSE REGISTRO?")) {
             $.ajax({

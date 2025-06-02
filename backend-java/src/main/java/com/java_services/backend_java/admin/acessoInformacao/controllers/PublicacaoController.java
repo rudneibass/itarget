@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,15 +22,13 @@ public class PublicacaoController {
     @Autowired
     private PublicacaoDao publicacaoDao;
 
-    @GetMapping("/lista")
-    public String listar(Model model) {
-        //model.addAttribute("publicacoes", publicacaoDao.findAll());
-        return "admin/acessoInformacao/publicacao/lista"; 
+    @GetMapping("/list")
+    public String list(Model model) {
+        return "admin/acessoInformacao/publicacao/list"; 
     }
 
     @GetMapping("/form")
-    public String novo(Model model) {
-        //model.addAttribute("publicacao", new Publicacao());
+    public String form(Model model) {
         return "admin/acessoInformacao/publicacao/form";
     }
 
@@ -37,6 +36,12 @@ public class PublicacaoController {
     @ResponseBody
     public List<Publicacao> listarJson() {
         return publicacaoDao.findAll();
+    }
+
+    @GetMapping("/id/{id}")
+    @ResponseBody
+    public Publicacao findById(@PathVariable Long id) {
+        return publicacaoDao.findById(id);
     }
 
     @PostMapping("/salvar")
