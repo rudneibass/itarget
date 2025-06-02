@@ -1,26 +1,12 @@
-<section>
-
-    <div style="
-        border: 1px solid #dee2e6; 
-        border-radius: 5px;
-        background-color: #f4faf4; 
-        padding: 15px 0px 10px 5px; 
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;"
-    >
-        <div class="px-2" >
-            <span class="span-30" style="color: gray"><i class="fa fa-file-text-o"></i> Publicações </span>
-        </div>
-    </div>
-<section>
-
 <section class="section-acoes">
     <a href="./admin">
         <button class="btn btn-success btn-flutuante mb-2" >
             <i class="fa fa-arrow-left"></i>
         </button>
     </a>
-    <button class="btn btn-success btn-flutuante mb-2" onclick="admin.navigate({url:'/admin/publicacoes/form', containerId:'main'})">
+    <button class="btn btn-success btn-flutuante mb-2" 
+        onclick="admin.addTab({id: 'nova-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})"
+    >
         <i class="fa fa-plus"></i>
     </button>
     <button class="btn btn-success btn-flutuante mb-2" id="btn-toggle-barra">

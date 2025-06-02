@@ -1,13 +1,13 @@
 
 <aside
     th:fragment="menu"
-    class="col-md-2 menu-lateral p-0" 
+    class="width-20 menu-lateral p-0" 
     style="background-color: #414956; max-height: 100vh; overflow-y: scroll;"
 >
     <div id="jquery-accordion-menu" class="jquery-accordion-menu">
         <!--<div class="jquery-accordion-menu-header">Header </div> -->
         <ul>
-            <li class="active"><a href="../caixa-de-entrada/"><i class="fa fa-home"></i>Home </a></li>
+            <li class="active"><a href="./admin"><i class="fa fa-home"></i>Home </a></li>
 
             <li><a href="#"><i class="fa fa-building"></i>Institucional </a>
                 <ul class="submenu">
@@ -27,7 +27,11 @@
                     <li><a href="../diarias/">Diárias </a></li>
                     <li><a href="../licitacoes/">Licitações </a></li>
                     <li><a href="#">Portarias </a></li>
-                    <li><a href="javascript::void" onclick="admin.navigate({url:'/admin/publicacoes/list', containerId:'main'})">Outras Publicações </a></li>
+                    <li>
+                        <a href="javascript::void" onclick="admin.addTab({id: 'publicacoes', title: 'Publicações', url: '/admin/publicacoes/list'})">
+                            Outras Publicações 
+                        </a>
+                    </li>
                 </ul>
             </li>
 

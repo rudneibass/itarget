@@ -18,34 +18,39 @@
   <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
 
-  <link rel="stylesheet" src="/css/global.css">
-
   <style>
     .nav-link { color: gray; font-size: 14px}
   </style> 
 </head>
 <body>
-  <div class="container-fluid">
-      <header th:replace="~{admin/componentes/header/index :: header}"></header>
-      <div class="row full-height">
-        <aside th:replace="~{admin/componentes/menu/index :: menu}"></aside>
-        
-        <main class="col-md-10 p-2" id="main" style="position: relative;">
-          <section>
-              <div class="row mb-3 pr-3" style="border: 1px solid #dee2e6; background-color: #f4faf4; padding: 15px 0px 10px 5px">     
-                  <div class="col-md-11" >
-                      <span class="span-30" style="color: gray"><i class="fa fa-home"></i> Home</span>
-                  </div>
-              </div>
-          <section>
-          <section class="section-acoes">
-            <button class="btn btn-success btn-flutuante mb-2" id="aside-control">
-                <i class="fa fa-bars"></i>
-            </button>
-          </section>
-        </main>
+  <div class="full-height">
+    <!-- <header th:replace="~{admin/componentes/header/index :: header}"></header> -->
+    
+    <div class="d-flex width-100 full-height">
+      <aside th:replace="~{admin/componentes/menu/index :: menu}"></aside>  
+      
+      <main class="width-100 p-2">
+        <header th:replace="~{admin/componentes/header/index :: header}"></header>
+        <section>
+          <div class="col-md-12 p-0">
+            <ul class="nav nav-tabs" id="tabs">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home">
+                  <i class="fa fa-home"></i> Home
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-content bg-white" id="tab-content">
+            <div class="tab-pane active pt-3" id="home">
+              Conteúdo da aba Cadastro
+            </div>
+          </div>  
+        </section>
 
-      </div>
+      </main>
+
+    </div>
   </div>
 </body>
 
@@ -55,7 +60,7 @@
 <style>
   html, body, .container-fluid, .full-screen, .full-height { height: 100%; }
   body{ height: 100vh; overflow-y: hidden; }
-  main{ overflow-y: scroll; max-height: 100vh; padding-bottom: 15vh; transition: max-width 200ms linear; }
+  main{ overflow-y: scroll; max-height: 100vh; transition: max-width 200ms linear; }
 
   ::-webkit-scrollbar {
     width: 4px; 
@@ -79,13 +84,32 @@
     width: 0!important;
   }
 
+  .width-20{
+    width: 20%;
+  }
+
+  .width-80{
+    width: 80%;
+  }
+
   .width-100{
     width: 100%!important;
+  }
+  .cursor-pointer{
+    cursor: pointer;
+  }
+  .nav-tabs .nav-link.active {
+    /*
+    border-top: 2px solid #007bff; 
+    color:#007bff; */
+
+    border-top: 2px solid rgba(33,136,60);
+    color: rgba(33,136,60);
   }
 
   .section-acoes{
     position: fixed;
-    top: 15.5vh;
+    top: 18vh;
     right: 15px;
     transform: translateY(-50%);
     z-index: 1100;
@@ -110,10 +134,80 @@
     transition: background-color 0.2s ease;
   }
 </style>
+
+<script>
+  let tabCount = 1;
+
+  $(document).ready(function () {
+    $('#add-tab').on('click', function () {
+      tabCount++;
+
+      const tabId = 'tab-' + tabCount;
+      const tabTitle = 'Aba ' + tabCount;
+
+      // Aba (com botão de fechar "x")
+      const newTab = $(`
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#${tabId}">
+            ${tabTitle} <span class="close-tab ml-2" style="cursor:pointer;">&times;</span>
+          </a>
+        </li>
+      `);
+
+      // Conteúdo da aba
+      const newContent = $(`
+        <div class="tab-pane" id="${tabId}" style="padding: 20px;">
+          Conteúdo da ${tabTitle}
+        </div>
+      `);
+
+      $('#tabs').append(newTab);
+      $('#tab-content').append(newContent);
+
+      // Ativa a nova aba
+      $('#tabs .nav-link').removeClass('active');
+      $('#tab-content .tab-pane').removeClass('active');
+
+      newTab.find('a').addClass('active');
+      newContent.addClass('active');
+    });
+
+    // Delegação para o botão "x"
+    $('#tabs').on('click', '.close-tab', function (e) {
+      e.stopPropagation(); // Evita ativar a aba ao clicar no "x"
+
+      const $link = $(this).closest('a');
+      const targetId = $link.attr('href');
+      const $li = $(this).closest('li');
+
+      // Se estiver ativa, ativa a primeira aba
+      if ($link.hasClass('active')) {
+        const $first = $('#tabs .nav-link').not($link).first();
+        $first.addClass('active');
+        $($first.attr('href')).addClass('active');
+      }
+
+      $li.remove();
+      $(targetId).remove();
+    });
+
+    // Alternância de abas
+    $('#tabs').on('click', '.nav-link', function (e) {
+      e.preventDefault();
+
+      $('#tabs .nav-link').removeClass('active');
+      $('#tab-content .tab-pane').removeClass('active');
+
+      $(this).addClass('active');
+      $($(this).attr('href')).addClass('active');
+    });
+  });
+</script>
+
 <script>
   const admin = {
-    navigate: ({ url, containerId, id = null }) => {
-      fetch(url)
+  navigate: ({ url, containerId, id = null }) => {
+    fetch(url)
       .then(response => response.text())
       .then(html => {
         const container = document.getElementById(containerId);
@@ -123,7 +217,6 @@
         container.innerHTML = '';
         container.append(...tempDiv.childNodes);
 
-        // Se o ID for fornecido, atualiza o valor do input com ID "id"
         if (id !== null) {
           const inputId = container.querySelector('input#id');
           if (inputId) {
@@ -131,7 +224,6 @@
           }
         }
 
-        // Reexecuta os scripts embutidos ou externos
         scripts.forEach(script => {
           const newScript = document.createElement('script');
           if (script.type) newScript.type = script.type;
@@ -143,20 +235,93 @@
           document.body.appendChild(newScript);
         });
       });
+  },
+
+  addTab: ({ id, title, url }) => {
+    const tabId = `tab-${id}`;
+    const contentId = tabId + '-content';
+
+    // Já existe? Apenas ativa
+    if (document.getElementById(contentId)) {
+      $('.nav-link').removeClass('active');
+      $('.tab-pane').removeClass('active');
+      $(`#tabs a[href="#${contentId}"]`).addClass('active');
+      $(`#${contentId}`).addClass('active');
+      return;
+    }
+
+    // Criar aba
+    const newTab = $(`
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#${contentId}">
+          ${title}
+          <span style="cursor: pointer; margin-left: 5px;" onclick="admin.closeTab('${id}')">&times;</span>
+        </a>
+      </li>
+    `);
+
+    // Criar conteúdo
+    const newContent = $(`
+      <div class="tab-pane p-2" id="${contentId}">
+          <div id="${tabId}-container" style="position; relative">
+            Carregando...
+          </div>
+      </div>
+    `);
+
+    // Remover active de outras abas
+    $('#tabs .nav-link').removeClass('active');
+    $('#tab-content .tab-pane').removeClass('active');
+
+    // Adicionar nova aba e conteúdo
+    $('#tabs').append(newTab);
+    $('#tab-content').append(newContent);
+
+    // Ativar nova aba
+    newTab.find('a').addClass('active');
+    newContent.addClass('active');
+
+    // Carregar conteúdo via fetch
+    admin.navigate({
+      url: url,
+      containerId: `${tabId}-container`,
+      id: id
+    });
+  },
+
+  closeTab: (id) => {
+    const tabId = `tab-${id}`;
+    const contentId = tabId + '-content';
+
+    const $tab = $(`#tabs a[href="#${contentId}"]`);
+    const $li = $tab.closest('li');
+
+    const isActive = $tab.hasClass('active');
+
+    $li.remove();
+    $(`#${contentId}`).remove();
+
+    // Se era ativa, ativa a primeira restante
+    if (isActive) {
+      const $first = $('#tabs .nav-link').first();
+      $first.addClass('active');
+      $($first.attr('href')).addClass('active');
     }
   }
+};
+
 </script>
 <style>
+  
   @media only screen and (max-width: 768px) {
     aside{ 
-        position: absolute;
-        top: 100;
-        left: 0;
-        height: 100%;
-        /*width: 60%; */
-        transform: translateX(-100%);
-        transition: transform 200ms linear;
-        z-index: 1;
+      position: absolute;
+      top: 100;
+      left: 0;
+      height: 100%;
+      transform: translateX(-100%);
+      transition: transform 200ms linear;
+      z-index: 1;
     }
     .btn-group-usuario{
       display: none
@@ -237,15 +402,11 @@
       const $aside = $('aside');
       const $main = $('main');
       if ($aside.hasClass('aside-show') || !$aside.hasClass('aside-hide')) {
-        $aside.removeClass('aside-show').removeClass('col-md-2');
+        $aside.removeClass('aside-show');
         $aside.addClass('aside-hide').addClass('width-0');
-
-        $main.addClass('width-100').addClass('col-md-12');
       } else {
-        $aside.addClass('aside-show').addClass('col-md-2');
+        $aside.addClass('aside-show');
         $aside.removeClass('aside-hide').removeClass('width-0');
-
-        $main.removeClass('width-100').removeClass('col-md-12');
       }
     });
   });
