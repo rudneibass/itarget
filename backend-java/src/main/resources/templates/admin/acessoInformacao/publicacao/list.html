@@ -1,5 +1,5 @@
 <section class="section-acoes">
-    <button class="btn btn-success btn-float mb-2" onclick="admin.addTab({title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
+    <button class="btn btn-success btn-float mb-2" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
         <i class="fa fa-plus"></i>
     </button>
     <button class="btn btn-success btn-float mb-2" id="btn-toggle-barra">
@@ -175,15 +175,15 @@
                                             <small><b>Data: </b>${retorno[i].data_publicacao || '-'}</small>&emsp;
                                         </div>
                                         <div>
-                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
+                                            <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
                                                 <i class="fa fa-paperclip" style="color: var(--color-default)"></i>
                                             </a>
                                             &nbsp;
-                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="admin.navigate({url:'/admin/publicacoes/form', containerId:'main', id: ${retorno[i].id}})" >
+                                            <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="admin.addTab({tabId:'edit-publicacao', title: 'Editar Publicação', url: '/admin/publicacoes/form', id: ${retorno[i].id}})" >
                                                 <i class="fa fa-cog" style="color: var(--color-default)"></i>
                                             </a>
                                             &nbsp;
-                                            <a style="text-decoration: none; color: gray" href="javascript::void" onclick="deletar(' + retorno[i].id + ', 1)">
+                                            <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="deletar(' + retorno[i].id + ', 1)">
                                                 <i class="fa fa-trash" style="color: var(--color-default)"></i>
                                             </a>
                                             &nbsp;

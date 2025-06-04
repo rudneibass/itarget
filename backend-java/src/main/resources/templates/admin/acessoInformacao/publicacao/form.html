@@ -256,7 +256,7 @@
                 $("#tab-1-form-1 :input").prop("disabled", false);
                 //FAZ AS ALTERAÇÕES NESCESSARIAS NO FORM PARA O MODO DE EDIÇÃO
                 var data = jQuery.parseJSON(JSON.stringify(json));
-                listarArquivos(data.id, data.tbl);
+                //listarArquivos(data.id, data.tbl);
                 $("#tab-2-btn-show-modal-upload").attr("onclick", "showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', " + data.id + ", \'" + data.tbl + "\')");
                 $("#tab-1-btn-salvar").css("display", "none");
                 $('#tab-1-btn-salvar-alteracoes').css("display", "block");
