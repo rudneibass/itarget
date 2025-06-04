@@ -1,50 +1,44 @@
 <section class="section-acoes">
-    <a href="./admin">
-        <button class="btn btn-success btn-flutuante mb-2" >
-            <i class="fa fa-arrow-left"></i>
-        </button>
-    </a>
-    <button class="btn btn-success btn-flutuante mb-2" 
-        onclick="admin.addTab({id: 'nova-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})"
-    >
+    <button class="btn btn-success btn-float mb-2" onclick="admin.addTab({title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
         <i class="fa fa-plus"></i>
     </button>
-    <button class="btn btn-success btn-flutuante mb-2" id="btn-toggle-barra">
+    <button class="btn btn-success btn-float mb-2" id="btn-toggle-barra">
         <i class="fa fa-search"></i>
     </button> 
 </section>
 
-<section class="section-barra-pesquisa-desktop oculto" id="section-barra-pesquisa-desktop">
-    <div class="row barra-pesquisa-desktop" id="barra-pesquisa-desktop">     
+<!--
+<section>
+    <div class="alert alert-light border" role="alert" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <span class="text-muted">Dados da Publicação</span>
+    </div>
+</section>
+-->
+<section class="section-search-bar hide" id="section-search-bar">
+    <div class="row search-bar" id="search-bar">     
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header" ><span class="text-muted">Pesquisa Por...</span></div>
+                <div class="card-header bg-success-light" ><span class="text-muted">Pesquisa Por...</span></div>
                 <div class="card-body">
                     <form id="search">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="input-group  input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend1"> <i class="fa fa-file-text"> </i></span>
-                                    </div>
+                                <div class="input-group mb-3">
                                     <input type="text" name="c1"  id="c1" class="form-control" placeholder="Código">
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="input-group  input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend1"> <i class="fa fa-file-text"> </i></span>
-                                    </div>
+                                <div class="input-group mb-3">
                                     <input type="text" name="c2"  id="c2" class="form-control" placeholder="Nome">
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="input-group  input-group-sm mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
                                     <input type="date" name="c3"  id="c3" class="form-control" placeholder="CPF">
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="input-group  input-group-sm mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group mb3">
                                     <input type="date" name="c4"  id="c4" class="form-control" placeholder="CPF">
                                 </div>
                             </div>
@@ -52,7 +46,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar" onclick="listar()" >
+                    <button type="button" class="btn btn-success btn-sm" id="btn-pesquisar" onclick="listar()" >
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -74,48 +68,51 @@
             <img class="loading mt-5" src="../img/loading-sm.svg" style="display: none">
         </div>  
     </div>
-    <div class="d-flex justify-content-end w-100 align-items-center border bg-white">
-        <i class="btn fa fa-chevron-circle-left" style="font-size: 20px;" id="anterior" disabled></i>
-        <span id="numeracao" class="size-14"></span>
-        <i class="btn fa fa-chevron-circle-right" style="font-size: 20px" id="proximo" disabled></i>
+    <div class="pagination-bar-default">
+        <div>
+            <small class="gray-default">Total:</small>
+            <small class="gray-default" id="total" ></small>
+            <small class="gray-default">registros</small>
+        </div>
+        <div>
+            <i class="fa fa-circle-chevron-left gray-default" id="anterior" disabled></i>
+            &emsp;
+            <span class="gray-default" id="numeracao" ></span>
+            &emsp;
+            <i class="fa fa-chevron-circle-right gray-default" id="proximo" disabled></i>
+        </div>
     </div>
 </section>
 
 <style>
-    .oculto {
+    .hide {
         transform: translateX(100%);
         transition: transform 0.3s ease-in-out;
-        position: absolute;
+        position: fixed;
         
         right: 0;
-        top: 10vh;
-        z-index: 1050;
+        top: 17.5vh;
+        z-index: 998;
         overflow-y: auto;
         overflow-x: hidden;
-
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .visivel {
-      transform: translateX(0);
+    .visible {
+      transform: translateX(-5%);
     }
 
     .section-acoes{
-      position: fixed;
-      top: 15.5vh;
-      right: 15px;
-      transform: translateY(-50%);
-      z-index: 1100;
+      position: absolute;
+      top: 0;
+      right: -15px;
+      z-index: 999;
     }
 
-    .btn-flutuante {
+    .btn-float {
+      border-radius: 50%;
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
 
       display: flex;
       align-items: center;
@@ -124,22 +121,17 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       transition: background-color 0.2s ease;
     }
-
-    .btn-flutuante:hover {
-      background-color: #218838;
-    }
 </style>
 <script>
   document.getElementById('btn-toggle-barra').addEventListener('click', () => {
-    const barra = document.getElementById('section-barra-pesquisa-desktop');
-    barra.classList.toggle('visivel');
+    const barra = document.getElementById('section-search-bar');
+    barra.classList.toggle('visible');
   });
 
   document.getElementById('btn-pesquisar').addEventListener('click', () => {
-    const barra = document.getElementById('section-barra-pesquisa-desktop');
-    barra.classList.toggle('visivel');
+    const barra = document.getElementById('section-search-bar');
+    barra.classList.toggle('visible');
   });
-
 </script>
 <script>
     function listar() {
@@ -172,7 +164,7 @@
                         .append(
                             $('<tr id="linha' + retorno[i].id + '">')
                             .append($('<td class="px-0 pb-2">').append(`
-                                <div class="px-3 py-2 border" style="border-radius: 5px; border-left: 4px solid rgba(33,136,60)!important;  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                                <div class="card-default">
                                     <div style="height: 50px; overflow-y:hidden">
                                         <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
                                     </div>
@@ -184,15 +176,15 @@
                                         </div>
                                         <div>
                                             <a style="text-decoration: none; color: gray" href="javascript::void" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
-                                                <i class="fa fa-paperclip text-muted"></i>
+                                                <i class="fa fa-paperclip" style="color: var(--color-default)"></i>
                                             </a>
                                             &nbsp;
                                             <a style="text-decoration: none; color: gray" href="javascript::void" onclick="admin.navigate({url:'/admin/publicacoes/form', containerId:'main', id: ${retorno[i].id}})" >
-                                                <i class="fa fa-cog text-muted"></i>
+                                                <i class="fa fa-cog" style="color: var(--color-default)"></i>
                                             </a>
                                             &nbsp;
                                             <a style="text-decoration: none; color: gray" href="javascript::void" onclick="deletar(' + retorno[i].id + ', 1)">
-                                                <i class="fa fa-trash text-muted"></i>
+                                                <i class="fa fa-trash" style="color: var(--color-default)"></i>
                                             </a>
                                             &nbsp;
                                         </div>
@@ -201,8 +193,9 @@
                             `))
                         );
                     }
-                    $("#echos").empty();
+                    $("#tab_1_alerts").empty();
                     $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
+                    $('#total').text(retorno.length)
                 }
                 function ajustarBotoes() {
                     $('#proximo').prop('disabled', retorno.length <= tamanhoPagina || pagina >= Math.ceil(retorno.length / tamanhoPagina) - 1);

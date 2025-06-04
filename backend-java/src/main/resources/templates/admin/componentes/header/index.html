@@ -1,12 +1,5 @@
 <header th:fragment="header">
-    <div style="
-        border: 1px solid #dee2e6; 
-        border-radius: 5px;
-        background-color: #f4faf4; 
-        padding: 15px; 
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;"
-    >
+    <div class="header">
         <div class="px-2 d-flex">
             <a class="text-muted cursor-pointer" id="aside-control">
                 <i class="fa fa-bars"></i>
@@ -17,4 +10,30 @@
             </span>
         </div>
     </div>
+    <style>
+        .header{
+            border: 1px solid var(--border-color-default);
+            border-radius: var(--border-radius-default);
+            background-color: var(--color-default-light);
+            box-shadow: var(--shadows-default);
+            padding: 15px; 
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+          $('#aside-control').on('click', function() {
+            const $aside = $('aside');
+            const $main = $('main');
+            if ($aside.hasClass('aside-show') || !$aside.hasClass('aside-hide')) {
+              $aside.removeClass('aside-show');
+              $aside.addClass('aside-hide').addClass('width-0');
+            } else {
+              $aside.addClass('aside-show');
+              $aside.removeClass('aside-hide').removeClass('width-0');
+            }
+          });
+        });
+    </script>
 </header>
+
