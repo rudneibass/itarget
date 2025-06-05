@@ -3,8 +3,6 @@ package com.java_services.backend_java.api.account.infra.adapters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.java_services.backend_java.api.account.infra.adapters.TokenProviderAdapter;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;

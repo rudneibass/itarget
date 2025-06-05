@@ -8,8 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.java_services.backend_java.api.account.infra.adapters.DatabaseJdbcAdapter;
-
 import java.util.List;
 import java.util.Map;
 

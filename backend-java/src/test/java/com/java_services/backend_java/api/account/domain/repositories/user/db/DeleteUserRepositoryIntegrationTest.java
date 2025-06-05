@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.java_services.backend_java.api.account.domain.interfaces.Database;
-import com.java_services.backend_java.api.account.domain.repositories.user.db.DeleteUserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

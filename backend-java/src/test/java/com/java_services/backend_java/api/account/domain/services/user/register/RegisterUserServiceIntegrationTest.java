@@ -15,9 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import com.java_services.backend_java.api.account.domain.interfaces.Database;
 import com.java_services.backend_java.api.account.domain.interfaces.EmailSender;
 import com.java_services.backend_java.api.account.domain.interfaces.PasswordEncoder;
-import com.java_services.backend_java.api.account.domain.services.user.register.RegisterUserInputData;
-import com.java_services.backend_java.api.account.domain.services.user.register.RegisterUserOutputData;
-import com.java_services.backend_java.api.account.domain.services.user.register.RegisterUserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

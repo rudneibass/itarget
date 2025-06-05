@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.java_services.backend_java.api.account.domain.entities.user.User;
 import com.java_services.backend_java.api.account.domain.interfaces.Database;
-import com.java_services.backend_java.api.account.domain.repositories.user.db.ReadUserRepository;
 
 import java.util.List;
 

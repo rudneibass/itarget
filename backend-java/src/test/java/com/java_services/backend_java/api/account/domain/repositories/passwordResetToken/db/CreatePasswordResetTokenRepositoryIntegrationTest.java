@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.java_services.backend_java.api.account.domain.entities.passwordResetToken.PasswordResetToken;
 import com.java_services.backend_java.api.account.domain.interfaces.Database;
-import com.java_services.backend_java.api.account.domain.repositories.passwordResetToken.db.CreatePasswordResetTokenRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

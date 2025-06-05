@@ -13,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import com.java_services.backend_java.api.account.domain.entities.user.User;
 import com.java_services.backend_java.api.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.api.account.domain.interfaces.Database;
-import com.java_services.backend_java.api.account.domain.repositories.user.db.CreateUserRepository;
 import com.java_services.backend_java.api.account.domain.valueObjects.Email;
 
 import static org.assertj.core.api.Assertions.assertThat;

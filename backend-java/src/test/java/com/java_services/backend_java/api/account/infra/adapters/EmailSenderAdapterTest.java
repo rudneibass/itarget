@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.java_services.backend_java.api.account.infra.adapters.EmailSenderAdapter;
-
 @SpringBootTest
 @ActiveProfiles("test")
 public class EmailSenderAdapterTest {

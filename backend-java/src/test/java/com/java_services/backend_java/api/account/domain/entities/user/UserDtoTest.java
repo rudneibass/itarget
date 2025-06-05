@@ -2,7 +2,6 @@ package com.java_services.backend_java.api.account.domain.entities.user;
 
 import org.junit.jupiter.api.Test;
 
-import com.java_services.backend_java.api.account.domain.entities.user.UserDto;
 import com.java_services.backend_java.api.account.domain.valueObjects.Email;
 
 import java.time.LocalDate;
