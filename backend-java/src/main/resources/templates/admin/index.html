@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/global.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/tabs.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/section-actions.css" crossorigin="anonymous">
 
     <script type='text/javascript' src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -29,19 +30,22 @@
         <main class="width-100 p-2">
           <header th:replace="~{admin/componentes/header/index :: header}"></header>
           <section>
-            <div class="col-md-12 p-0">
-              <ul class="nav nav-tabs" id="tabs">
-                <li class="nav-item">
-                  <a class="nav-link active" data-toggle="tab" href="#home">
+
+            <div>
+              <ul class="nav nav-tabs main-nav-tabs" id="tabs">
+                <li class="nav-item main-nav-item">
+                  <a class="nav-link active main-nav-link" data-toggle="tab" href="#home">
                     <i class="fa-solid fa-house"></i> Home
                   </a>
                 </li>
               </ul>
             </div>
-            <div class="tab-content bg-white" id="tab-content">
-              <div class="tab-pane active pt-3" id="home">
+
+            <div class="tab-content main-tab-content" id="tab-content">
+              <div class="tab-pane main-tab-pane active pt-3" id="home">
               </div>
-            </div>  
+            </div>
+
           </section>
         </main>
       </div>

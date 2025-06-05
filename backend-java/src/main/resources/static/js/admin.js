@@ -34,10 +34,9 @@ const admin = {
       const tabElementId = `tab-${tabId}`;
       const contentId = tabElementId + '-content';
 
-      // Já existe? Apenas ativa
       if (document.getElementById(contentId)) {
-        $('.nav-link').removeClass('active');
-        $('.tab-pane').removeClass('active');
+        $('.main-nav-link').removeClass('active');
+        $('.main-tab-pane').removeClass('active');
         $(`#tabs a[href="#${contentId}"]`).addClass('active');
         $(`#${contentId}`).addClass('active');
         return;
@@ -45,17 +44,17 @@ const admin = {
 
       // Criar aba
       const newTab = $(`
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#${contentId}">
+        <li class="nav-item main-nav-item">
+          <a class="nav-link main-nav-link" data-toggle="tab" href="#${contentId}">
             ${title}
-            <span style="cursor: pointer; margin-left: 5px;" onclick="admin.closeTab('${tabId}')">&times;</span>
+            <span style="cursor: pointer; margin-left: 8px; font-size: 15px" onclick="admin.closeTab('${tabId}')">&times;</span>
           </a>
         </li>
       `);
 
       // Criar conteúdo
       const newContent = $(`
-        <div class="tab-pane p-2" id="${contentId}">
+        <div class="tab-pane main-tab-pane p-2" id="${contentId}">
           <div class="tab-container" id="${tabElementId}-container">
             Carregando...
           </div>
@@ -80,24 +79,31 @@ const admin = {
         containerId: `${tabElementId}-container`,
         id: id
       });
+
     },
-    closeTab: (id) => {
-        const tabId = `tab-${id}`;
-        const contentId = tabId + '-content';
+  closeTab: (id) => {
+  const tabId = `tab-${id}`;
+  const contentId = tabId + '-content';
 
-        const $tab = $(`#tabs a[href="#${contentId}"]`);
-        const $li = $tab.closest('li');
+  const $tab = $(`#tabs a[href="#${contentId}"]`);
+  const $li = $tab.closest('li');
 
-        const isActive = $tab.hasClass('active');
+  const isActive = $tab.hasClass('active');
 
-        $li.remove();
-        $(`#${contentId}`).remove();
+  // Captura a aba anterior e a próxima, se existirem
+  const $prev = $li.prev('li').find('a.nav-link');
+  const $next = $li.next('li').find('a.nav-link');
 
-        // Se era ativa, ativa a primeira restante
-        if (isActive) {
-          const $first = $('#tabs .nav-link').first();
-          $first.addClass('active');
-          $($first.attr('href')).addClass('active');
-        }
+  $li.remove();
+  $(`#${contentId}`).remove();
+
+  // Se era ativa, ativa a anterior ou próxima
+  if (isActive) {
+    const $newActive = $prev.length ? $prev : $next;
+    if ($newActive.length) {
+      $newActive.addClass('active');
+      $($newActive.attr('href')).addClass('active');
     }
+  }
+}
 };

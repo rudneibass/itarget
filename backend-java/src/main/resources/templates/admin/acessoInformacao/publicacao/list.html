@@ -1,19 +1,18 @@
-<section class="section-acoes">
-    <button class="btn btn-success btn-float mb-2" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
-        <i class="fa fa-plus"></i>
-    </button>
-    <button class="btn btn-success btn-float mb-2" id="btn-toggle-barra">
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-success btn-float section-actions-btn" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
+          <i class="fa fa-plus"></i>
+          <span class="btn-label">Novo</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+      <button class="btn btn-success btn-float section-actions-btn" id="btn-toggle-barra">
         <i class="fa fa-search"></i>
-    </button> 
-</section>
-
-<!--
-<section>
-    <div class="alert alert-light border" role="alert" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <span class="text-muted">Dados da Publicação</span>
+        <span class="btn-label">Pesquisar</span>
+      </button>
     </div>
 </section>
--->
+
 <section class="section-search-bar hide" id="section-search-bar">
     <div class="row search-bar" id="search-bar">     
         <div class="col-md-12">
@@ -52,6 +51,13 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default" >
+        <small><i class="fa fa-file-text-o"></i></small>
+        <small>Publicações</small>
     </div>
 </section>
 
@@ -109,6 +115,7 @@
       z-index: 999;
     }
 
+  
     .btn-float {
       border-radius: 50%;
       width: 40px;
@@ -121,6 +128,8 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       transition: background-color 0.2s ease;
     }
+
+    
 </style>
 <script>
   document.getElementById('btn-toggle-barra').addEventListener('click', () => {
