@@ -24,12 +24,12 @@ public class PublicacaoController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        return "admin/acessoInformacao/publicacao/list"; 
+        return "admin/pages/acessoInformacao/publicacao/list/list"; 
     }
 
     @GetMapping("/form")
     public String form(Model model) {
-        return "admin/acessoInformacao/publicacao/form";
+        return "admin/pages/acessoInformacao/publicacao/form/form";
     }
 
     @GetMapping("/listar")
