@@ -14,17 +14,17 @@
     <div class="section-actions-btn-parent">
         <button class="btn btn-warning btn-float section-actions-btn">
           <i class="fa fa fa-pencil"></i>
-          <span class="btn-label">Editar</span>
+          <span class="btn-label" onclick="publicacoesForm.edit('tab-1-form-1')">Editar</span>
         </button>
     </div>
     <div class="section-actions-btn-parent">
-        <button class="btn btn-danger btn-float section-actions-btn">
+        <button class="btn btn-danger btn-float section-actions-btn" onclick="publicacoesForm.cancel('tab-1-form-1')">
           <i class="fa fa fa-undo"></i>
           <span class="btn-label">Cancelar</span>
         </button>
     </div>
     <div class="section-actions-btn-parent">
-        <button class="btn btn-primary btn-float section-actions-btn">
+        <button class="btn btn-primary btn-float section-actions-btn" onclick="publicacoesForm.save('tab-1-form-1')">
           <i class="fa fa fa-floppy-o"></i>
           <span class="btn-label">Salvar</span>
         </button>
@@ -63,6 +63,8 @@
                                 <select name="tipo" id="tipo" class="form-control">
                                     <option value=''><span class='txtselect'></span></option>
                                     <optgroup label="Tipo de Publicação" id="optgroup_tipo">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
                                     </optgroup>
                                 </select>
                             </div>
@@ -92,69 +94,57 @@
                                     <option  value='0'></option>
                                     <optgroup id="optGroupmandatos" label="Gestão/Legislatura">
                                     </optgroup>
-                                </select>                        
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">
-                                        Número
-                                    </small>
+                                    <small class="text-muted">Número</small>
                                 </label>	
-                                <input type="text" name="numero" class="form-control" placeholder="Número" id="numero" value="" />
+                                <input type="text" name="numero" class="form-control" placeholder="Número" id="numero" value="" required/>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group mb-3">	
                                 <label>
-                                    <small class="text-muted">
-                                        Exercício
-                                    </small>
+                                    <small class="text-muted">Exercício</small>
                                 </label>
-                                <input type="text" name=exercicio class="form-control" id="exercicio" value=""  />
+                                <input type="text" name=exercicio class="form-control" id="exercicio" value=""  required/>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">
-                                        Competência
-                                    </small>
+                                    <small class="text-muted">Competência</small>
                                 </label>				
-                                <select name="competencia" id="competencia"  class="form-control" >
+                                <select name="competencia" id="competencia"  class="form-control" required>
                                     <option id='txtselect' value=''>Competência</option><option  value='1'>Janeiro</option><option  value='2'>Fevereiro</option><option  value='3'>Março</option><option  value='4'>Abril</option><option  value='5'>Maio</option><option  value='6'>Junho</option><option  value='7'>Julho</option><option  value='8'>Agosto</option><option  value='9'>Setembro</option><option  value='10'>Outubro</option><option  value='11'>Novembro</option><option  value='12'>Dezembro</option><option  value='13'>1º Bimestre</option><option  value='14'>2º Bimestre</option><option  value='15'>3º Bimestre</option><option  value='16'>4º Bimestre</option><option  value='17'>5º Bimestre</option><option  value='18'>6º Bimestre</option><option  value='19'>1° Quadrimestre</option><option  value='20'>2° Quadrimestre</option><option  value='21'>3° Quadrimestre</option><option  value='22'>1° Semestre</option><option  value='23'>2° Semestre</option><option  value='24'>Anual</option>
-                                </select>			
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">
-                                        Data
-                                    </small>
+                                    <small class="text-muted">Data</small>
                                 </label>	
-                                <input type="date" name="data_publicacao" class="form-control" id="data_publicacao" />
+                                <input type="date" name="data_publicacao" class="form-control" id="data_publicacao" required/>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group mb-3">	
                                 <label> 
-                                    <small class="text-muted">
-                                        Titulo
-                                    </small>
+                                    <small class="text-muted">Titulo</small>
                                 </label>
-                                <input type="text" name="titulo" class="form-control" id="titulo" value=""  />
+                                <input type="text" name="titulo" class="form-control" id="titulo" value=""  required/>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group mb-3">	
                                 <label> 
-                                    <small class="text-muted">
-                                        Descrição
-                                    </small>
+                                    <small class="text-muted">Descrição</small>
                                 </label>
-                                <textarea  name="descricao" class="form-control" id="descricao" value="" rows="4"></textarea>
+                                <textarea  name="descricao" class="form-control" id="descricao" value="" rows="4" required></textarea>
                             </div>
                         </div> 
                     </div>
@@ -215,86 +205,109 @@
 </section> 
 
 <script>
-    function edit(id) {
-        $.ajax({
-            url: `http://localhost:8080/admin/publicacoes/id/${id}`,
-            type: 'GET',
-            dataType: "json",
-            beforeSend: function () {
-                $(".loading").show()
-                $("#tab-1-form-1 :input").prop("disabled", true);
-            },
-            error: function () {
-                $(".loading").hide()
-                $("#tab_1_alerts").html("Erro no Ajax");
-            },
-            success: function (json) {
-                $(".loading").hide()
-                //$("#tab-1-form-1 :input").prop("disabled", false);
-                //FAZ AS ALTERAÇÕES NESCESSARIAS NO FORM PARA O MODO DE EDIÇÃO
-                var data = jQuery.parseJSON(JSON.stringify(json));
-                //listarArquivos(data.id, data.tbl);
-                $("#tab-2-btn-show-modal-upload").attr("onclick", "showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', " + data.id + ", \'" + data.tbl + "\')");
-                $("#tab-1-btn-salvar").css("display", "none");
-                $('#tab-1-btn-salvar-alteracoes').css("display", "block");
-                $('#tab-1-btn-salvar-alteracoes').attr("onclick", "update(" + data.id + ")");
+    var publicacoesForm = {
+        edit: (formId) => {
+            $("#"+formId+' :input').prop("disabled", false);
+        },
+        cancel: (formId) => {
+            $("#"+formId+' :input').prop("disabled", true);
+        },
+        populateForm: (id) => {
+            $.ajax({
+                url: `http://localhost:8080/admin/publicacoes/id/${id}`,
+                type: 'GET',
+                dataType: "json",
+                beforeSend: function () {
+                    $(".loading").show()
+                    $("#tab-1-form-1 :input").prop("disabled", true);
+                },
+                error: function () {
+                    $(".loading").hide()
+                    $("#tab_1_alerts").html("Erro no Ajax");
+                },
+                success: function (responseData) {
+                    $(".loading").hide()
+                    var responseData = jQuery.parseJSON(JSON.stringify(responseData));
+                    $.each(responseData, function (field, value) {
+                        
+                        if ($('#'+field).attr('type') == 'text'){
+                            $('#'+field).val(value);
+                        }
 
-                $.each(json, function (field, value) {
-                    container = '';
-                    prefix_field = '#';
-                    if ($(container + prefix_field + field).attr('type') == 'checkbox') {
-                        if ($(container + prefix_field + field).val() == value) {
-                            $(container + 'input[type="checkbox"]' + prefix_field + field).prop('checked', true);
-                        } else {
-                            $(container + 'input[type="checkbox"]' + prefix_field + field).prop('checked', false);
+                        if ($('#'+field).attr('type') == 'date'){
+                            $('#'+field).val(value);
                         }
-                    } else
-                    if ($(container + prefix_field + field).attr('type') == 'radio') {
-                        if ($(container + prefix_field + field).val() == value) {
-                            $(container + 'input[type="radio"]' + prefix_field + field).prop('checked', true);
-                        } else {
-                            $(container + 'input[type="radio"]' + prefix_field + field).prop('checked', false);
-                        }
-                    } else
-                    if ($(container + prefix_field + field).get(0) != undefined && $(container + prefix_field + field).get(0).tagName === 'IMG') {
-                        if (value != '') {
-                            t = new Date();
-                            $(container + prefix_field + field).attr('src', value + '?' + t.getTime());
-                        }
-                    } else {
-                        $(container + prefix_field + field).val(value);
-                    }
-                });
-            }
-        });
-    };
 
-    function save() {
-        $.ajax({
-            url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=insert',
-            type: 'POST',
-            data: $('#tab-1-form-1').serialize(),
-            beforeSend: function () {
-                toastr["info"]("Aguarde, as informções estão sendo salvas no banco de dados!");
-            },
-            success: function (data) {
-                if (!isNaN(data)) {
-                    $('.toast-info').hide();
-                    $('#relacionamento').val(data);
-                    toastr["success"]("Cadastro realizado com sucesso!");
-                    document.getElementById("tab-1-btn-salvar").disabled = true;
-                    document.getElementById("tab-2-btn-show-modal-upload").addEventListener('click', () =>{
-                        showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', data , 'publicacoes')  
+                        if ($('#'+field).attr('type') == 'checkbox') {
+                            if ($('#'+field).val() == value) {
+                                $('input[type="checkbox"]#'+ field).prop('checked', true);
+                            } else {
+                                $('input[type="checkbox"]#'+ field).prop('checked', false);
+                            }
+                        }
+
+                        if ($('#'+field).attr('type') == 'radio') {
+                            if ($('#'+field).val() == value) {
+                                $('input[type="radio"]#'+field).prop('checked', true);
+                            } else {
+                                $('input[type="radio"]#'+field).prop('checked', false);
+                            }
+                        }
+                        
+                        if ($('#'+field).get(0) != undefined && $('#'+field).get(0).tagName === 'IMG') {
+                            if (value != '') {
+                                $(container + prefix_field + field).attr('src', value + '?' + new Date().getTime());
+                            }
+                        }
+
+                        if ($('#'+field).get(0) != undefined && $('#'+field).get(0).tagName === 'TEXTAREA'){
+                            $('#'+field).val(value);
+                        }
+
+                        if ($('#'+field).get(0) != undefined && $('#'+field).get(0).tagName === 'SELECT'){
+                            $('#'+field).val(value);
+                        }
                     });
-                } else {
-                    $('.toast-info').hide();
-                    toastr["error"](data);
                 }
+            });
+        },
+        save: (formId) => {
+            alert('oi')
+            if($("#"+formId+' :input').prop("disabled", true)){
+                return;
+            }    
+            if(!admin.validForm('#'+formId)){
+                toastr["error"]("Preencha os campos obrigatórios.");
+                return;
             }
-        });
-    }
+            $.ajax({
+                url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=insert',
+                type: 'POST',
+                data: $('#'+formId).serialize(),
+                beforeSend: function () {
+                    toastr["info"]("Aguarde, as informções estão sendo salvas no banco de dados!");
+                },
+                success: function (data) {
+                    if (!isNaN(data)) {
+                        $('.toast-info').hide();
+                        $('#relacionamento').val(data);
+                        toastr["success"]("Cadastro realizado com sucesso!");
+                        document.getElementById("tab-1-btn-salvar").disabled = true;
+                        document.getElementById("tab-2-btn-show-modal-upload").addEventListener('click', () =>{
+                            showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', data , 'publicacoes')  
+                        });
+                    } else {
+                        $('.toast-info').hide();
+                        toastr["error"](data);
+                    }
+                }
+            });
+        }
+    }    
 
     if($("#id").val()){
-        edit($("#id").val())
+        publicacoesForm.populateForm($("#id").val())
     }
+    admin.setupBootstrapValidationBlur('#tab-1-form-1')
+    
 </script>

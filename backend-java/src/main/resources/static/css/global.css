@@ -89,7 +89,7 @@ html{
 
 
 .view-index-table-container{
-  max-height: 75vh;
+  max-height: 65vh;
   overflow-y: auto;
 }
 .card-default{
