@@ -1,5 +1,12 @@
 const 
 admin = {
+  baseUrl: 'http://localhost:8080/admin',
+  endpoints:{
+    publicacoes: {
+      get: '/publicacoes/id',
+      list: '/publicacoes/listar'
+    }
+  },
   navigate: ({ url, containerId, id = null }) => {
     fetch(url)
     .then(response => response.text())
@@ -108,8 +115,8 @@ admin = {
       }
     }
   },
-  setupBootstrapValidationBlur: (formSelector) => {
-    const $form = $(formSelector);
+  validateInputs: (formId) => {
+    const $form = $('#'+formId);
     $form.find('input, select, textarea').on('blur', function () {
       const $input = $(this);
       if (this.checkValidity()) {
@@ -119,8 +126,8 @@ admin = {
       }
     });
   },
-  validForm: (formId) => {
-    const $form = $(formId);
+  validateForm: (formId) => {
+    const $form = $('#'+formId);
     let validForm = true;
     $form.find('input[required], select[required], textarea[required]').each(function () {
       const $input = $(this);

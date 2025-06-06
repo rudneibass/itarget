@@ -14,17 +14,23 @@
     <div class="section-actions-btn-parent">
         <button class="btn btn-warning btn-float section-actions-btn">
           <i class="fa fa fa-pencil"></i>
-          <span class="btn-label" onclick="publicacoesForm.edit('tab-1-form-1')">Editar</span>
+          <span class="btn-label" onclick="publicacaoForm.edit('tab-1-form-1')">Editar</span>
         </button>
     </div>
     <div class="section-actions-btn-parent">
-        <button class="btn btn-danger btn-float section-actions-btn" onclick="publicacoesForm.cancel('tab-1-form-1')">
+        <button class="btn btn-danger btn-float section-actions-btn" onclick="publicacaoForm.cancel('tab-1-form-1')">
           <i class="fa fa fa-undo"></i>
           <span class="btn-label">Cancelar</span>
         </button>
     </div>
     <div class="section-actions-btn-parent">
-        <button class="btn btn-primary btn-float section-actions-btn" onclick="publicacoesForm.save('tab-1-form-1')">
+        <button 
+            class="btn btn-primary btn-float section-actions-btn" 
+            onclick="publicacaoForm.save({ 
+                url: admin.baseUrl+admin.endpoints.publicacoes.get, 
+                formId: 'tab-1-form-1'
+            })"
+        >
           <i class="fa fa fa-floppy-o"></i>
           <span class="btn-label">Salvar</span>
         </button>
@@ -205,16 +211,17 @@
 </section> 
 
 <script>
-    var publicacoesForm = {
+    var publicacaoForm = {
         edit: (formId) => {
             $("#"+formId+' :input').prop("disabled", false);
         },
         cancel: (formId) => {
             $("#"+formId+' :input').prop("disabled", true);
         },
-        populateForm: (id) => {
+        populateForm: ({ url, id = null }) => {
+            if(!id){ return; }
             $.ajax({
-                url: `http://localhost:8080/admin/publicacoes/id/${id}`,
+                url: `${url}/${id}`,
                 type: 'GET',
                 dataType: "json",
                 beforeSend: function () {
@@ -223,7 +230,7 @@
                 },
                 error: function () {
                     $(".loading").hide()
-                    $("#tab_1_alerts").html("Erro no Ajax");
+                    $("#tab_1_alerts").html("Erro 500");
                 },
                 success: function (responseData) {
                     $(".loading").hide()
@@ -271,43 +278,54 @@
                 }
             });
         },
-        save: (formId) => {
-            alert('oi')
-            if($("#"+formId+' :input').prop("disabled", true)){
+        save: ({ url, formId }) => {
+            if($('#'+formId+' input').length === $('#'+formId+' input:disabled').length){
                 return;
             }
-            if(!admin.validForm('#'+formId)){
+            if(!admin.validateForm(formId)){
                 toastr["error"]("Preencha os campos obrigatórios.");
                 return;
             }
             $.ajax({
                 url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=insert',
                 type: 'POST',
+                dataType: 'json',
                 data: $('#'+formId).serialize(),
                 beforeSend: function () {
                     toastr["info"]("Aguarde, as informções estão sendo salvas no banco de dados!");
                 },
-                success: function (data) {
-                    if (!isNaN(data)) {
-                        $('.toast-info').hide();
-                        $('#relacionamento').val(data);
-                        toastr["success"]("Cadastro realizado com sucesso!");
-                        document.getElementById("tab-1-btn-salvar").disabled = true;
-                        document.getElementById("tab-2-btn-show-modal-upload").addEventListener('click', () =>{
-                            showModalUpload('modal-upload', 'ControllerUploadMultiplo', 'analisaArquivo', data , 'publicacoes')  
-                        });
-                    } else {
-                        $('.toast-info').hide();
-                        toastr["error"](data);
-                    }
+                error: function () {
+                    $(".loading").hide()
+                    $("#tab_1_alerts").html("Erro 500");
+                },
+                success: function (responseData) {
+                    bootbox.confirm({
+                        title: "Atenção",
+                        message: responseData.message,
+                        buttons: {
+                            cancel: {
+                                label: "Não",
+                                className: "btn-secondary"
+                            },
+                            confirm: {
+                                label: "Sim",
+                                className: "btn-success"
+                            }
+                        },
+                        callback: function(result) {
+                            if (result) {
+                                $('#aba_leis_alteradas').click()
+                            }
+                        }
+                    });
                 }
             });
         }
     }    
 
-    if($("#id").val()){
-        publicacoesForm.populateForm($("#id").val())
-    }
-    admin.setupBootstrapValidationBlur('#tab-1-form-1')
-    
+    admin.validateInputs('tab-1-form-1');
+    publicacaoForm.populateForm({ 
+        url: admin.baseUrl+admin.endpoints.publicacoes.get, 
+        id: $("#id").val() 
+    });
 </script>

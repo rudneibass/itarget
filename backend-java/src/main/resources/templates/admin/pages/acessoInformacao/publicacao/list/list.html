@@ -45,7 +45,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-success btn-sm" id="btn-pesquisar" onclick="listar()" >
+                    <button type="button" class="btn btn-success btn-sm" id="btn-pesquisar" onclick=" publicacoesList.list({ url: admin.baseUrl+admin.endpoints.publicacoes.list  })" >
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -101,161 +101,100 @@
   });
 </script>
 <script>
-    function listar() {
-        $("tr").remove();
-        $.ajax({
-            url: 'http://localhost:8080/admin/publicacoes/listar',
-            cache: false,
-            type: 'GET',
-            data: $('#search').serialize(),
-            dataType: "json",
-            beforeSend: function () {
-                $(".loading").show();
-            },
-            error: function () {
-                $(".loading").hide();
-                $("#tab_1_alerts").html("Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.");
-            },
-            success: function (retorno) {
-                $(".loading").hide();
-                if(retorno.length === 0){
-                    $("#tab_1_alerts").show()
-                    $("#tab_1_alerts").html("Não há dados cadastrados.")
-                    return
-                }
-                var tamanhoPagina = 10;
-                var pagina = 0;
-                function paginar() {
-                    for (var i = pagina * tamanhoPagina; i < retorno.length && i < (pagina + 1) * tamanhoPagina; i++) {
-                        $("#tbody")
-                        .append(
-                            $('<tr id="linha' + retorno[i].id + '">')
-                            .append($('<td class="px-0 pb-2">').append(`
-                                <div class="card-default">
-                                    <div style="height: 50px; overflow-y:hidden">
-                                        <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <small><b>Tipo: </b>${retorno[i].tipo}</small>&emsp;
-                                            <small><b>Exerc.: </b>${retorno[i].exercicio}</small>&emsp;
-                                            <small><b>Data: </b>${retorno[i].data_publicacao || '-'}</small>&emsp;
-                                        </div>
-                                        <div>
-                                            <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
-                                                <i class="fa fa-paperclip" style="color: var(--color-default)"></i>
-                                            </a>
-                                            &nbsp;
-                                            <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="admin.addTab({tabId:'edit-publicacao', title: 'Editar Publicação', url: '/admin/publicacoes/form', id: ${retorno[i].id}})" >
-                                                <i class="fa fa-cog" style="color: var(--color-default)"></i>
-                                            </a>
-                                            &nbsp;
-                                            <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="deletar(' + retorno[i].id + ', 1)">
-                                                <i class="fa fa-trash" style="color: var(--color-default)"></i>
-                                            </a>
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                </div>
-                            `))
-                        );
-                    }
-                    $("#tab_1_alerts").empty();
-                    $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
-                    $('#total').text(retorno.length)
-                }
-                function ajustarBotoes() {
-                    $('#proximo').prop('disabled', retorno.length <= tamanhoPagina || pagina >= Math.ceil(retorno.length / tamanhoPagina) - 1);
-                    $('#anterior').prop('disabled', retorno.length <= tamanhoPagina || pagina == 0);
-                }
-                $(function () {
-                    $('#proximo').click(function () {
-                        if (pagina < retorno.length / tamanhoPagina - 1) {
-                            $("tr").remove();
-                            pagina++;
-                            paginar();
-                            ajustarBotoes();
-                        }
-                    });
-                    $('#anterior').click(function () {
-                        if (pagina >= 1) {
-                            $("tr").remove();
-                            pagina--;
-                            paginar();
-                            ajustarBotoes();
-                        }
-                    });
-                    paginar();
-                    ajustarBotoes();
-                });
-            }
-        });
-    }
-
-    function  update(id) {
-        $.ajax({
-            url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=update&&id=' + id,
-            type: 'POST',
-            data: $('#tab-1-form-1').serialize(),
-            beforeSend: function () {
-                toastr["info"]("Aguarde, estamos providenciando o envio de suas informações!")
-            },
-            success: function (data) {
-                $('.toast-info').hide();
-                if (isNaN(data)) {
-                    toastr["error"](data);
-                } else {
-                    switch (data) {
-                        case '1':
-                            toastr["success"]("Dados atualizados com sucesso!");
-                            break;
-                        case '0':
-                            toastr["success"]("Embora a transação tenha sido efetuada com sucesso você não inseriu nenhum dado novo!");
-                            break;
-                    }
-                }
-            }
-        });
-    }
-    
-    function deletar(id) {
-        if (confirm("TEM CERTEZA QUE DESEJA EXCLUIR ESSE REGISTRO?")) {
+    var publicacoesList = {
+        list: ({ url }) => {
+            $("tr").remove();
             $.ajax({
-                url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=delete',
-                type: "POST",
-                data: {id: id},
-                success: function (data) {
-                    $("#linha" + id).remove();
-                    toastr["success"]("Excluido com sucesso!");
+                //url: 'http://localhost:8080/admin/publicacoes/listar',
+                url: url,
+                cache: false,
+                type: 'GET',
+                data: $('#search').serialize(),
+                dataType: "json",
+                beforeSend: function () {
+                    $(".loading").show();
+                },
+                error: function () {
+                    $(".loading").hide();
+                    $("#tab_1_alerts").html("Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.");
+                },
+                success: function (retorno) {
+                    $(".loading").hide();
+                    if(retorno.length === 0){
+                        $("#tab_1_alerts").show()
+                        $("#tab_1_alerts").html("Não há dados cadastrados.")
+                        return
+                    }
+                    var tamanhoPagina = 10;
+                    var pagina = 0;
+                    function paginar() {
+                        for (var i = pagina * tamanhoPagina; i < retorno.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                            $("#tbody")
+                            .append(
+                                $('<tr id="linha' + retorno[i].id + '">')
+                                .append($('<td class="px-0 pb-2">').append(`
+                                    <div class="card-default">
+                                        <div style="height: 50px; overflow-y:hidden">
+                                            <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <small><b>Tipo: </b>${retorno[i].tipo}</small>&emsp;
+                                                <small><b>Exerc.: </b>${retorno[i].exercicio}</small>&emsp;
+                                                <small><b>Data: </b>${retorno[i].data_publicacao || '-'}</small>&emsp;
+                                            </div>
+                                            <div>
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
+                                                    <i class="fa fa-paperclip" style="color: var(--color-default)"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="admin.addTab({tabId:'edit-publicacao', title: 'Editar Publicação', url: '/admin/publicacoes/form', id: ${retorno[i].id}})" >
+                                                    <i class="fa fa-cog" style="color: var(--color-default)"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="deletar(' + retorno[i].id + ', 1)">
+                                                    <i class="fa fa-trash" style="color: var(--color-default)"></i>
+                                                </a>
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                `))
+                            );
+                        }
+                        $("#tab_1_alerts").empty();
+                        $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
+                        $('#total').text(retorno.length)
+                    }
+                    function ajustarBotoes() {
+                        $('#proximo').prop('disabled', retorno.length <= tamanhoPagina || pagina >= Math.ceil(retorno.length / tamanhoPagina) - 1);
+                        $('#anterior').prop('disabled', retorno.length <= tamanhoPagina || pagina == 0);
+                    }
+                    $(function () {
+                        $('#proximo').click(function () {
+                            if (pagina < retorno.length / tamanhoPagina - 1) {
+                                $("tr").remove();
+                                pagina++;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        $('#anterior').click(function () {
+                            if (pagina >= 1) {
+                                $("tr").remove();
+                                pagina--;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        paginar();
+                        ajustarBotoes();
+                    });
                 }
             });
-        };
+        }
     }
 
+    publicacoesList.list({ url: admin.baseUrl+admin.endpoints.publicacoes.list  })
 
-    function importarJson() {
-      var formData = new FormData(document.getElementById('formJson'));
-      $.ajax({
-        url: '/admin/publicacoes/api',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-          $(".loadingFormJson").show();
-          toastr["info"]("Aguarde, as informções estão sendo salvas no banco de dados!");
-        },
-        error: function(error) {
-          console.error(error);
-          $(".loadingFormJson").hide();
-        },
-        success: function(response) {
-          $(".loadingFormJson").hide();
-          console.log(response);
-          toastr["success"]("Cadastro realizado com sucesso!");
-        },
-      });
-    }
-
-    listar();
 </script>
