@@ -16,7 +16,7 @@
                         <div class="page-info-bar">
                             <small><i class="fa fa-file-text-o"></i></small>
                             <small>Dados Básicos</small>&nbsp;
-                            <img class="loading" src="/img/loading-sm.svg" alt="loading"/>
+                            <img class="loading" src="/img/loading-sm.svg" alt="loading" style="display: none;"/>
                         </div>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                         <button 
                             class="btn btn-primary btn-float section-actions-btn" 
                             onclick="publicacaoForm.save({ 
-                                url: admin.baseUrl+publicacaoForm.endpoints.save, 
+                                url: admin.baseUrl+endpoints.publicacao.save, 
                                 formId: publicacaoForm.formId
                             })"
                         >
@@ -222,10 +222,6 @@
 <script>
     var publicacaoForm = {
         formId: 'tab-1-form-1',
-        endpoints:{
-            get: '/publicacoes/id',
-            save: '/publicacoes/save'  
-        },
         edit: (formId) => {
             $("#"+formId+' :input').prop("disabled", false);
         },
@@ -233,6 +229,7 @@
             $("#"+formId+' :input').prop("disabled", true);
         },
         populateForm: ({ url, id = null }) => {
+            
             if(!id){ return; }
             $.ajax({
                 url: `${url}/${id}`,
@@ -325,7 +322,7 @@
     admin.tinymceInit();
     admin.tinymceTriggerSave();
     publicacaoForm.populateForm({ 
-        url: admin.baseUrl+publicacaoForm.endpoints.get, 
+        url: admin.baseUrl+endpoints.publicacao.get, 
         id: $("#id").val() 
     });
 </script>

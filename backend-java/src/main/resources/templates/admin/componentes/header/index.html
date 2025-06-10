@@ -1,6 +1,6 @@
 <header th:fragment="header">
     <div class="header">
-        <div class="px-2 d-flex">
+        <div class="px-2 d-flex align-items-center">
             <a class="text-muted cursor-pointer" id="aside-control">
                 <i class="fa fa-bars"></i>
             </a>
@@ -8,6 +8,12 @@
             <span class="span-30" style="color: gray">
                 <i class="fa fa"></i>Admin 
             </span>
+        </div>
+
+        <div class="d-flex align-items-center">
+          <i class="fa-solid fa-bell gray-default"></i>
+          &emsp;
+          <i class="fa-regular fa-circle-user gray-default" style="font-size:28px"></i>
         </div>
     </div>
     <style>
@@ -18,24 +24,12 @@
             box-shadow: var(--shadows-default);
             padding: 15px; 
             margin-bottom: 10px;
+
+            display: flex;
+            justify-content: space-between;
         }
     </style>
     <script>
-      /*
-        $(document).ready(function() {
-          $('#aside-control').on('click', function() {
-            const $aside = $('aside');
-            const $main = $('main');
-            if ($aside.hasClass('aside-show') || !$aside.hasClass('aside-hide')) {
-              $aside.removeClass('aside-show');
-              $aside.addClass('aside-hide').addClass('width-0');
-            } else {
-              $aside.addClass('aside-show');
-              $aside.removeClass('aside-hide').removeClass('width-0');
-            }
-          });
-        });*/
-
         $(document).ready(function() {
           $('#aside-control').on('click', function() {
             const $aside = $('aside');

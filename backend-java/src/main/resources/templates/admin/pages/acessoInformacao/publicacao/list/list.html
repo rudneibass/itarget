@@ -102,11 +102,6 @@
 </script>
 <script>
     var publicacaoList = {
-        endpoints:{
-            get: '/publicacoes/id',
-            list: '/publicacoes/findAll',
-            save: '/publicacoes/save'  
-        },
         list: ({ url }) => {
             $("tr").remove();
             $.ajax({
@@ -200,6 +195,6 @@
         }
     }
 
-    publicacaoList.list({url: admin.baseUrl+publicacaoList.endpoints.list  })
+    publicacaoList.list({url: admin.baseUrl+endpoints.publicacao.list  })
 
 </script>
