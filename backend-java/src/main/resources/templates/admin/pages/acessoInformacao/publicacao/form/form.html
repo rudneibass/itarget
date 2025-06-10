@@ -1,42 +1,3 @@
-<section class="section-actions">
-    <div class="section-actions-btn-parent">
-        <button class="btn btn-success btn-float section-actions-btn" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
-          <i class="fa fa-plus"></i>
-          <span class="btn-label">Novo</span>
-        </button>
-    </div>
-    <div class="section-actions-btn-parent">
-        <button class="btn btn-info btn-float section-actions-btn">
-          <i class="fa fa fa-cloud-upload"></i>
-          <span class="btn-label">Upload</span>
-        </button>
-    </div>
-    <div class="section-actions-btn-parent">
-        <button class="btn btn-warning btn-float section-actions-btn">
-          <i class="fa fa fa-pencil"></i>
-          <span class="btn-label" onclick="publicacaoForm.edit('tab-1-form-1')">Editar</span>
-        </button>
-    </div>
-    <div class="section-actions-btn-parent">
-        <button class="btn btn-danger btn-float section-actions-btn" onclick="publicacaoForm.cancel('tab-1-form-1')">
-          <i class="fa fa fa-undo"></i>
-          <span class="btn-label">Cancelar</span>
-        </button>
-    </div>
-    <div class="section-actions-btn-parent">
-        <button 
-            class="btn btn-primary btn-float section-actions-btn" 
-            onclick="publicacaoForm.save({ 
-                url: admin.baseUrl+admin.endpoints.publicacoes.get, 
-                formId: 'tab-1-form-1'
-            })"
-        >
-          <i class="fa fa fa-floppy-o"></i>
-          <span class="btn-label">Salvar</span>
-        </button>
-    </div>
-</section>
-
 <section>
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
@@ -54,7 +15,8 @@
                     <div class="col-md-12">
                         <div class="page-info-bar">
                             <small><i class="fa fa-file-text-o"></i></small>
-                            <small>Dados Básicos</small>
+                            <small>Dados Básicos</small>&nbsp;
+                            <img class="loading" src="/img/loading-sm.svg" alt="loading"/>
                         </div>
                     </div>
                 </div>
@@ -137,7 +99,7 @@
                                 <input type="date" name="data_publicacao" class="form-control" id="data_publicacao" required/>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group mb-3">	
                                 <label> 
                                     <small class="text-muted">Titulo</small>
@@ -150,12 +112,46 @@
                                 <label> 
                                     <small class="text-muted">Descrição</small>
                                 </label>
-                                <textarea  name="descricao" class="form-control" id="descricao" value="" rows="4" required></textarea>
+                                <textarea  name="descricao" class="form-control tinymce" id="descricao" value="" rows="4" required></textarea>
                             </div>
                         </div> 
                     </div>
                 </form>
+
+                <section class="section-actions">
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-success btn-float section-actions-btn" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
+                          <i class="fa fa-plus"></i>
+                          <span class="btn-label">Novo</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-warning btn-float section-actions-btn">
+                          <i class="fa fa fa-pencil"></i>
+                          <span class="btn-label" onclick="publicacaoForm.edit('tab-1-form-1')">Editar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-danger btn-float section-actions-btn" onclick="publicacaoForm.cancel('tab-1-form-1')">
+                          <i class="fa fa fa-undo"></i>
+                          <span class="btn-label">Cancelar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button 
+                            class="btn btn-primary btn-float section-actions-btn" 
+                            onclick="publicacaoForm.save({ 
+                                url: admin.baseUrl+publicacaoForm.endpoints.save, 
+                                formId: publicacaoForm.formId
+                            })"
+                        >
+                          <i class="fa fa fa-floppy-o"></i>
+                          <span class="btn-label">Salvar</span>
+                        </button>
+                    </div>
+                </section>
             </div>
+
             <div class="tab-pane fade" id="tab-2">
                 <div class="row">
                     <div class="col-md-12">
@@ -192,6 +188,20 @@
                         </div>
                     </div>      
                 </form>
+                <section class="section-actions">
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-success btn-float section-actions-btn">
+                          <i class="fa fa-search"></i>
+                          <span class="btn-label">Pesquisar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-info btn-float section-actions-btn">
+                          <i class="fa fa fa-cloud-upload"></i>
+                          <span class="btn-label">Upload</span>
+                        </button>
+                    </div>
+                </section>
                 <table class="table table-hover table-bordered table-striped">
                     <thead id='thead-arquivos'>
                         <tr>
@@ -209,9 +219,13 @@
     </div>
     <br/>
 </section> 
-
 <script>
     var publicacaoForm = {
+        formId: 'tab-1-form-1',
+        endpoints:{
+            get: '/publicacoes/id',
+            save: '/publicacoes/save'  
+        },
         edit: (formId) => {
             $("#"+formId+' :input').prop("disabled", false);
         },
@@ -228,9 +242,9 @@
                     $(".loading").show()
                     $("#tab-1-form-1 :input").prop("disabled", true);
                 },
-                error: function () {
-                    $(".loading").hide()
-                    $("#tab_1_alerts").html("Erro 500");
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.loading').hide();
+                    toastr["error"](jqXHR.responseText);
                 },
                 success: function (responseData) {
                     $(".loading").hide()
@@ -287,45 +301,31 @@
                 return;
             }
             $.ajax({
-                url: '../../_php/Dispatch.php?controller=ControllerPublicacoes&&action=insert',
+                url: url,
                 type: 'POST',
                 dataType: 'json',
+                contentType: 'application/json',
                 data: $('#'+formId).serialize(),
                 beforeSend: function () {
-                    toastr["info"]("Aguarde, as informções estão sendo salvas no banco de dados!");
+                    $('.loading').show();
                 },
-                error: function () {
-                    $(".loading").hide()
-                    $("#tab_1_alerts").html("Erro 500");
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.loading').hide();
+                    toastr["error"](jqXHR.responseText);
                 },
                 success: function (responseData) {
-                    bootbox.confirm({
-                        title: "Atenção",
-                        message: responseData.message,
-                        buttons: {
-                            cancel: {
-                                label: "Não",
-                                className: "btn-secondary"
-                            },
-                            confirm: {
-                                label: "Sim",
-                                className: "btn-success"
-                            }
-                        },
-                        callback: function(result) {
-                            if (result) {
-                                $('#aba_leis_alteradas').click()
-                            }
-                        }
-                    });
+                    $('.loading').hide();
+                    toastr["success"](responseData.message)
                 }
             });
         }
     }    
 
-    admin.validateInputs('tab-1-form-1');
+    admin.validateInputs(publicacaoForm.formId);
+    admin.tinymceInit();
+    admin.tinymceTriggerSave();
     publicacaoForm.populateForm({ 
-        url: admin.baseUrl+admin.endpoints.publicacoes.get, 
+        url: admin.baseUrl+publicacaoForm.endpoints.get, 
         id: $("#id").val() 
     });
 </script>

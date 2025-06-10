@@ -1,7 +1,12 @@
 .section-actions {
-  position: absolute;
+  /*position: absolute;
   top: 0;
-  right: -12px;
+  right: -12px;*/
+
+  position: fixed; 
+  top: 18vh;
+  right: 0px;
+
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -39,7 +44,7 @@
 }
 
 .section-actions-btn:hover {
-  width: auto; /* vira uma cápsula */
+  width: auto;
   border-radius: 20px;
   justify-content: start;
   padding-left: 12px;

@@ -32,9 +32,9 @@ public class PublicacaoController {
         return "admin/pages/acessoInformacao/publicacao/form/form";
     }
 
-    @GetMapping("/listar")
+    @GetMapping("/findAll")
     @ResponseBody
-    public List<Publicacao> listarJson() {
+    public List<Publicacao> findAll() {
         return publicacaoDao.findAll();
     }
 
@@ -44,9 +44,9 @@ public class PublicacaoController {
         return publicacaoDao.findById(id);
     }
 
-    @PostMapping("/salvar")
+    @PostMapping("/save")
     @ResponseBody
-    public Long salvarJson(@RequestBody Publicacao publicacao) {
+    public Long save(@RequestBody Publicacao publicacao) {
         return publicacaoDao.save(publicacao);
     }
 }
