@@ -21,6 +21,7 @@
         }
     </style>
     <script>
+      /*
         $(document).ready(function() {
           $('#aside-control').on('click', function() {
             const $aside = $('aside');
@@ -33,7 +34,20 @@
               $aside.removeClass('aside-hide').removeClass('width-0');
             }
           });
-        });
+        });*/
+
+        $(document).ready(function() {
+          $('#aside-control').on('click', function() {
+            const $aside = $('aside');
+            if ($aside.hasClass('width-320-px') || !$aside.hasClass('width-70-px')) {
+              $aside.removeClass('width-320-px');
+              $aside.addClass('width-70-px')
+            } else {
+              $aside.addClass('width-320-px');
+              $aside.removeClass('width-70-px');
+            }
+          });
+        })
     </script>
 </header>
 
