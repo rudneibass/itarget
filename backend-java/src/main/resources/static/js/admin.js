@@ -85,7 +85,14 @@ admin = {
       id: id
     });
   },
-  
+  showModal: ({modalId, title, url, data}) => {
+    const $modal = $(`#${modalId}`);
+    if ($modal.length) {
+      $modal.modal('show');
+    } else {
+      console.error(`Modal with ID ${modalId} not found.`);
+    }
+  },
   closeTab: (id) => {
     const tabId = `tab-${id}`;
     const contentId = tabId + '-content';
