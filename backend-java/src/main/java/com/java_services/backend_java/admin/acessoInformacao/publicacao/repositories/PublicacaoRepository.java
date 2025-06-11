@@ -1,21 +1,22 @@
-package com.java_services.backend_java.admin.acessoInformacao.publicacao.daos;
+package com.java_services.backend_java.admin.acessoInformacao.publicacao.repositories;
+import com.java_services.backend_java.admin.acessoInformacao.publicacao.models.Publicacao;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.java_services.backend_java.admin.acessoInformacao.publicacao.models.Publicacao;
-
+import java.sql.*;
 import java.util.List;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import java.sql.*;
+
 
 @Repository
-public class PublicacaoDao {
+public class PublicacaoRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PublicacaoDao(JdbcTemplate jdbcTemplate) {
+    public PublicacaoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -43,23 +44,27 @@ public class PublicacaoDao {
     }
 
     public Long save(Publicacao p) {
-        String sql = """
-            INSERT INTO publicacoes (titulo, tipo, data_publicacao, descricao, numero, exercicio, competencia, data_cadastro)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update((Connection con) -> {
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, p.getTitulo());
-            ps.setString(2, p.getTipo());
-            ps.setObject(3, p.getDataPublicacao());
-            ps.setString(4, p.getDescricao());
-            ps.setString(5, p.getNumero());
-            ps.setString(6, p.getExercicio());
-            ps.setString(6, p.getCompetencia());
-            ps.setTimestamp(8, Timestamp.valueOf(p.getDataCadastro()));
+            PreparedStatement ps = 
+            con.prepareStatement(
+                """
+                    INSERT INTO publicacoes (tipo, numero, exercicio, competencia, data_publicacao, titulo, descricao, data_cadastro)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    RETURNING id
+                """, 
+                Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, p.getTipo());
+            ps.setString(2, p.getNumero());
+            ps.setString(3, p.getExercicio());
+            ps.setString(4, p.getCompetencia());
+            ps.setObject(5, p.getDataPublicacao());
+            ps.setString(6, p.getTitulo());
+            ps.setString(7, p.getDescricao());
+            ps.setTimestamp(8, Timestamp.valueOf(java.time.LocalDateTime.now()));
             return ps;
         }, keyHolder);
 
@@ -67,15 +72,13 @@ public class PublicacaoDao {
     }
 
     public Long update(Publicacao p) {
-        String sql = """
+        jdbcTemplate
+        .update(
+            """
             UPDATE publicacoes
             SET titulo=?, tipo=?, data_publicacao=?, descricao=?, numero=?, exercicio=?, competencia=?
             WHERE id=?
-        """;
-
-        jdbcTemplate
-        .update(
-            sql,
+            """,
             p.getTitulo(), 
             p.getTipo(), 
             p.getDataPublicacao(),
