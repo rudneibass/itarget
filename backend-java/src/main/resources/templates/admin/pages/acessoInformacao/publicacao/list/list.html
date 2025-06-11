@@ -6,7 +6,7 @@
         </button>
     </div>
     <div class="section-actions-btn-parent">
-      <button class="btn btn-success btn-float section-actions-btn" id="btn-toggle-barra">
+      <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra">
         <i class="fa fa-search"></i>
         <span class="btn-label">Pesquisar</span>
       </button>
@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-header bg-success-light" ><span class="text-muted">Pesquisa Por...</span></div>
                 <div class="card-body">
-                    <form id="search">
+                    <form id="formSearch">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group mb-3">
@@ -33,19 +33,23 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group mb-3">
-                                    <input type="date" name="c3"  id="c3" class="form-control" placeholder="CPF">
+                                    <input type="date" name="c3"  id="c3" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group mb3">
-                                    <input type="date" name="c4"  id="c4" class="form-control" placeholder="CPF">
+                                    <input type="date" name="c4"  id="c4" class="form-control">
                                 </div>
                             </div>
                         </div>      
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-success btn-sm" id="btn-pesquisar" onclick=" publicacoesList.list({ url: admin.baseUrl+admin.endpoints.publicacoes.list  })" >
+                    <button 
+                        type="button" 
+                        class="btn btn-success btn-sm" 
+                        id="btn-pesquisar" 
+                        onclick="publicacaoList.list({url: admin.baseUrl+endpoints.publicacao.list, formSearchId: publicacaoList.formSearchId })">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -102,27 +106,28 @@
 </script>
 <script>
     var publicacaoList = {
-        list: ({ url }) => {
+        formSearchId: 'formSearch',
+        list: ({ url, formSearchId }) => {
             $("tr").remove();
             $.ajax({
-                //url: 'http://localhost:8080/admin/publicacoes/listar',
                 url: url,
                 cache: false,
                 type: 'GET',
-                data: $('#search').serialize(),
+                data: $('#'+formSearchId).serialize(),
                 dataType: "json",
                 beforeSend: function () {
                     $(".loading").show();
                 },
                 error: function () {
                     $(".loading").hide();
-                    $("#tab_1_alerts").html("Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.");
+                    $("#alerts_feedback").html("Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.");
                 },
                 success: function (retorno) {
                     $(".loading").hide();
+                    $("#alerts_feedback").empty();
                     if(retorno.length === 0){
-                        $("#tab_1_alerts").show()
-                        $("#tab_1_alerts").html("Não há dados cadastrados.")
+                        $("#alerts_feedback").show()
+                        $("#alerts_feedback").html("Não há dados cadastrados.")
                         return
                     }
                     var tamanhoPagina = 10;
@@ -148,7 +153,7 @@
                                                     <i class="fa fa-paperclip" style="color: var(--color-default)"></i>
                                                 </a>
                                                 &nbsp;
-                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="admin.addTab({tabId:'form-publicacao', title: 'Editar Publicação', url: '/admin/publicacoes/form', id: ${retorno[i].id}})" >
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="admin.addTab({tabId:'form-publicacao', title: 'Editar Publicação', url: '${admin.baseUrl+endpoints.publicacao.form}', id: ${retorno[i].id}})" >
                                                     <i class="fa fa-cog" style="color: var(--color-default)"></i>
                                                 </a>
                                                 &nbsp;
@@ -162,7 +167,7 @@
                                 `))
                             );
                         }
-                        $("#tab_1_alerts").empty();
+                        $("#alerts_feedback").empty();
                         $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
                         $('#total').text(retorno.length)
                     }

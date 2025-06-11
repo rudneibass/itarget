@@ -33,14 +33,14 @@
   white-space: nowrap;
   position: relative;
 
-  transition: opacity 0.3s ease, width 0.3s ease;
-
+  transition: width 200ms linear;
 }
 
 .section-actions-btn .btn-label {
   opacity: 0;
   width: 0;
   font-size: 14px;
+  transition: width 200ms linear;
 }
 
 .section-actions-btn:hover {

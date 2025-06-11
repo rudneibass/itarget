@@ -1,8 +1,10 @@
-package com.java_services.backend_java.admin.acessoInformacao.dao;
+package com.java_services.backend_java.admin.acessoInformacao.publicacao.daos;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import com.java_services.backend_java.admin.acessoInformacao.model.Publicacao;
+
+import com.java_services.backend_java.admin.acessoInformacao.publicacao.models.Publicacao;
+
 import java.util.List;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,8 +28,7 @@ public class PublicacaoDao {
         p.setDescricao(rs.getString("descricao"));
         p.setNumero(rs.getString("numero"));
         p.setExercicio(rs.getString("exercicio"));
-        p.setUsuario(rs.getString("usuario"));
-        p.setDataCadastro(rs.getTimestamp("data_cadastro") != null ? rs.getTimestamp("data_cadastro").toLocalDateTime() : null);
+        p.setCompetencia(rs.getString("competencia"));
         return p;
     };
 
@@ -43,7 +44,7 @@ public class PublicacaoDao {
 
     public Long save(Publicacao p) {
         String sql = """
-            INSERT INTO publicacoes (titulo, tipo, data_publicacao, descricao, numero, exercicio, usuario, data_cadastro)
+            INSERT INTO publicacoes (titulo, tipo, data_publicacao, descricao, numero, exercicio, competencia, data_cadastro)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
@@ -57,7 +58,7 @@ public class PublicacaoDao {
             ps.setString(4, p.getDescricao());
             ps.setString(5, p.getNumero());
             ps.setString(6, p.getExercicio());
-            ps.setString(7, p.getUsuario());
+            ps.setString(6, p.getCompetencia());
             ps.setTimestamp(8, Timestamp.valueOf(p.getDataCadastro()));
             return ps;
         }, keyHolder);
@@ -68,14 +69,22 @@ public class PublicacaoDao {
     public Long update(Publicacao p) {
         String sql = """
             UPDATE publicacoes
-            SET titulo=?, tipo=?, data_publicacao=?, descricao=?, numero=?, exercicio=?, usuario=?, data_cadastro=?
+            SET titulo=?, tipo=?, data_publicacao=?, descricao=?, numero=?, exercicio=?, competencia=?
             WHERE id=?
         """;
 
-        jdbcTemplate.update(sql,
-                p.getTitulo(), p.getTipo(), p.getDataPublicacao(),
-                p.getDescricao(), p.getNumero(), p.getExercicio(),
-                p.getUsuario(), p.getDataCadastro(), p.getId());
+        jdbcTemplate
+        .update(
+            sql,
+            p.getTitulo(), 
+            p.getTipo(), 
+            p.getDataPublicacao(),
+            p.getDescricao(), 
+            p.getNumero(), 
+            p.getExercicio(),
+            p.getCompetencia(),
+            p.getId()
+        );
 
         return p.getId();
     }

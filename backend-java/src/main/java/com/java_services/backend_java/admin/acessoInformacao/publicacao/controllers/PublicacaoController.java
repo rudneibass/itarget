@@ -1,4 +1,4 @@
-package com.java_services.backend_java.admin.acessoInformacao.controllers;
+package com.java_services.backend_java.admin.acessoInformacao.publicacao.controllers;
 
 import java.util.List;
 
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.java_services.backend_java.admin.acessoInformacao.dao.PublicacaoDao;
-import com.java_services.backend_java.admin.acessoInformacao.model.Publicacao;
+import com.java_services.backend_java.admin.acessoInformacao.publicacao.models.Publicacao;
+import com.java_services.backend_java.admin.acessoInformacao.publicacao.services.PublicacaoService;
 
 @Controller
 @RequestMapping("/admin/publicacoes")
 public class PublicacaoController {
 
     @Autowired
-    private PublicacaoDao publicacaoDao;
+    private PublicacaoService publicacaoService;
 
     @GetMapping("/list")
     public String list(Model model) {
@@ -32,21 +32,21 @@ public class PublicacaoController {
         return "admin/pages/acessoInformacao/publicacao/form/form";
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/all")
     @ResponseBody
     public List<Publicacao> findAll() {
-        return publicacaoDao.findAll();
+        return publicacaoService.findAll();
     }
 
     @GetMapping("/id/{id}")
     @ResponseBody
     public Publicacao findById(@PathVariable Long id) {
-        return publicacaoDao.findById(id);
+        return publicacaoService.findById(id);
     }
 
     @PostMapping("/save")
     @ResponseBody
     public Long save(@RequestBody Publicacao publicacao) {
-        return publicacaoDao.save(publicacao);
+        return publicacaoService.save(publicacao);
     }
 }

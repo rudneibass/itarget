@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <form id="tab-1-form-1">
-                    <input type="hidden" id="id" />
+                    <input type="hidden" id="id" name="id" />
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group mb-3">
@@ -33,34 +33,6 @@
                                     <optgroup label="Tipo de Publicação" id="optgroup_tipo">
                                         <option value="A">A</option>
                                         <option value="B">B</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">
-                                        Órgão 
-                                    </small>
-                                </label>
-                                <select  class="form-control" name="id_entidade_orgaos" id="id_entidade_orgaos">
-                                    <option  value='0'></option>
-                                    <optgroup id="optGroupentidade_orgaos" label="Órgão">
-                                    </optgroup>
-                                </select>                        
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">
-                                        Gestão/Legislatura
-                                    </small>
-                                </label>
-                                <select  class="form-control" name="id_mandatos" id="id_mandatos">
-                                    <option  value='0'></option>
-                                    <optgroup id="optGroupmandatos" label="Gestão/Legislatura">
                                     </optgroup>
                                 </select>
                             </div>
@@ -99,7 +71,7 @@
                                 <input type="date" name="data_publicacao" class="form-control" id="data_publicacao" required/>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group mb-3">	
                                 <label> 
                                     <small class="text-muted">Titulo</small>
@@ -222,6 +194,7 @@
 <script>
     var publicacaoForm = {
         formId: 'tab-1-form-1',
+        tabId: 'form-publicacao',
         edit: (formId) => {
             $("#"+formId+' :input').prop("disabled", false);
         },
@@ -302,7 +275,10 @@
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: $('#'+formId).serialize(),
+                data: JSON.stringify($('#'+formId).serializeArray().reduce(function(obj, item) {
+                    obj[item.name] = item.value;
+                    return obj;
+                }, {})),
                 beforeSend: function () {
                     $('.loading').show();
                 },
@@ -312,15 +288,25 @@
                 },
                 success: function (responseData) {
                     $('.loading').hide();
-                    toastr["success"](responseData.message)
+                    if(typeof responseData == 'number'){
+                        toastr["success"]("Operação realizada com sucesso.");
+                        admin.addTab({ 
+                            title: 'Editar Publicação',
+                            id: responseData,
+                            tabId: publicacaoForm.tabId,  
+                            url: admin.baseUrl+endpoints.publicacao.form,
+                        });
+                        return;
+                    }
+                    toastr["error"](responseData.message)
                 }
             });
         }
     }    
 
     admin.validateInputs(publicacaoForm.formId);
-    admin.tinymceInit();
-    admin.tinymceTriggerSave();
+    //admin.tinymceInit();
+    //admin.tinymceTriggerSave();
     publicacaoForm.populateForm({ 
         url: admin.baseUrl+endpoints.publicacao.get, 
         id: $("#id").val() 

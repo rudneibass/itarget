@@ -1,4 +1,4 @@
-package com.java_services.backend_java.admin.acessoInformacao.controllers;
+package com.java_services.backend_java.admin.home.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
