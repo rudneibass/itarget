@@ -99,6 +99,10 @@ html{
   color: var(--gray-default);
 }
 
+.resizeble{
+  resize: both;
+  overflow: auto;
+}
 
 .view-index-table-container{
   max-height: 65vh;

@@ -1,7 +1,7 @@
 const 
 admin = {
   baseUrl: 'http://localhost:8080/admin',
-  navigate: ({ url, containerId, id = null }) => {
+  navigate: ({ url, containerId, id = null, data = null }) => {
     fetch(url)
     .then(response => response.text())
     .then(html => {
@@ -17,6 +17,15 @@ admin = {
           if (inputId) {
             inputId.value = id;
           }
+        }
+
+        if (data !== null) {
+          $.each(data, function (field, value) {
+            const inputData = container.querySelector('input#'+field);
+            if (inputData){
+                inputData.value = value;
+            }
+          })
         }
 
         scripts.forEach(script => {
@@ -85,14 +94,6 @@ admin = {
       id: id
     });
   },
-  showModal: ({modalId, title, url, data}) => {
-    const $modal = $(`#${modalId}`);
-    if ($modal.length) {
-      $modal.modal('show');
-    } else {
-      console.error(`Modal with ID ${modalId} not found.`);
-    }
-  },
   closeTab: (id) => {
     const tabId = `tab-${id}`;
     const contentId = tabId + '-content';
@@ -116,6 +117,27 @@ admin = {
         $newActive.addClass('active');
         $($newActive.attr('href')).addClass('active');
       }
+    }
+  },
+  showModal: ({modalId, title, url, data}) => {
+    const $modal = $(`#${modalId}`);
+
+    if ($modal.length) {
+      $modal.find('#defaultModalTitle').empty();
+      $modal.find('#defaultModalTitle').text(title);
+      $modal.modal('show');
+    } 
+    admin.navigate({
+      url: url,
+      containerId:`defaultModalBody`,
+      id: null,
+      data: data
+    });
+  },
+  hideModal: ({ modalId }) => {
+    const $modal = $(`#${modalId}`);
+    if ($modal.length) { 
+      $modal.modal('hide');
     }
   },
   validateInputs: (formId) => {
@@ -143,6 +165,10 @@ admin = {
     });
 
     return validForm;
+  },
+  tooltipInit: () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   },
   tinymceTriggerSave: () =>{
     //tinymce.get('.tinymce').save();

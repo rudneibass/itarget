@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/admin/home").permitAll()
                 .requestMatchers("/admin/publicacoes").permitAll()
+                .requestMatchers("/admin/arquivo/**").permitAll()
                 .requestMatchers("/js/**", "/css/**","/img/**","/webjars/**").permitAll()
                 .anyRequest().authenticated()
             );

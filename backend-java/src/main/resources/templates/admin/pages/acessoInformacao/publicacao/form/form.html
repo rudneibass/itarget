@@ -171,10 +171,13 @@
                         <button 
                             class="btn btn-info btn-float section-actions-btn" 
                             onclick="admin.showModal({ 
-                                modalId: 'modalListFiles', 
-                                title: 'Arquivos', 
-                                url: admin.baseUrl+endpoints.publicacao.listFiles, 
-                                data: { id_tabela_pai: $('#id').val() }
+                                modalId: 'defaultModal', 
+                                title: 'Selecionar Arquivo(s)', 
+                                url: admin.baseUrl+endpoints.arquivo.form,
+                                data: { 
+                                    idTabelaPai: $('#id').val(),
+                                    tabelaPai: 'publicacao',
+                                }
                             })"
                         >
                           <i class="fa fa fa-cloud-upload"></i>
@@ -199,25 +202,7 @@
     </div>
     <br/>
 </section> 
-<section>
-    <div class="modal" tabindex="-1" id="modalListFiles">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-</section>
+
 <script>
     var publicacaoForm = {
         formId: 'tab-1-form-1',

@@ -5,5 +5,8 @@ endpoints = {
         list: '/publicacoes/all',
         form: '/publicacoes/form',
         save: '/publicacoes/save'  
+    },
+    arquivo: {
+        form: '/arquivo/form'
     }
 }

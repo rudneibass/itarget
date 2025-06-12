@@ -1,0 +1,15 @@
+<section th:fragment="modal">
+    <div class="modal fade" id="defaultModal" tabindex="-1" aria-labelledby="defaultModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="modal-title" id="defaultModalTitle">Modal title</span>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="admin.hideModal({modalId: 'defaultModal'})"></button>
+          </div>
+          <div class="modal-body" id="defaultModalBody">
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
