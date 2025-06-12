@@ -5,7 +5,7 @@
                 <input type="hidden" name="idTabelaPai" id="idTabelaPai">
                 <input type="hidden" name="tabelaPai" id="tabelaPai">
                 <div class="custom-file mb-3">
-                    <input type="file" name="arquivo[]" id="selecionaArquivos" class="form-control" multiple/>
+                    <input type="file" name="arquivos[]" id="selecionaArquivos" class="form-control" multiple/>
                 </div>
             </form>
             <div 
@@ -19,7 +19,7 @@
 
     <div class="modal-footer pb-0 px-0">
       <button type="button" class="btn btn-sm btn-secondary" onclick="admin.hideModal({modalId: 'defaultModal'})">Voltar</button>
-      <button type="button" class="btn btn-sm btn-success"><i class="fa fa fa-cloud-upload"></i> Enviar</button>
+      <button type="button" class="btn btn-sm btn-success" id="enviar"><i class="fa fa fa-cloud-upload"></i> Enviar</button>
     </div>
 </section>
 
@@ -85,13 +85,6 @@
       });
     });
 
-
-
-    function remover(id) {
-        $('#'+id).remove();
-        $('#selecionaArquivos').val(null);
-    }
-
     function removerArquivoSelecionado(indexParaRemover) {
         $('#listaArquivosSelecionados').empty();
         const input = document.getElementById('selecionaArquivos');
@@ -108,41 +101,40 @@
 
 
     $('#enviar').on('click', function () {
-        var action = $('#form-upload > #action').val();
-        var controller = $('#form-upload >  #controller').val()
-        var verificaIdTbl = $('#form-upload > #id_tabela_pai').val();
-        var verificaTbl = $('#form-upload >  #tabela_pai').val();
-    
-        if (!verificaIdTbl || !verificaTbl) {
-            toastr["warning"]("<b>Atenção: </b>Preencha todos os campos, clique em <button class='btn btn-sm btn-success'><i class='fa fa-floppy-o'></i> Salvar</button> e só depois envie a imagem!");
-            exit;
-        }
-    
-        var form = $('#form-upload')[0];
-        var formData = new FormData(form);
 
-        $.ajax({
-            url: '../../_php/Dispatch.php?controller=' + controller + '&&action=' + action,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                toastr["info"]("Aguardando conexão com o servidor...");
-                $("#progress").html('<br/><span class="text-muted border-bottom">Enviando Arquivo </span><br/><progress class="mt-1"></progress></div>')
-            },
-            error: function () {
-                toastr["error"]("Não foi possivel executar a ação desejada, favor entrar em contato com o administrador!");
-            },
-            success: function (data) {
-                $('.toast-info').hide();
-                $("#progress").empty();
-                toastr["success"](data);
-                
-                if(verificaTbl === 'noticias'){listarImagens(verificaIdTbl, verificaTbl);}
-                
-                listarArquivos(verificaIdTbl, verificaTbl);
-            }
-        });
-    });
+      if (!$('#selecionaArquivos').val()) {
+        toastr["warning"]("<b>Atenção: </b> Selecione ao menos um aquivo!");
+        return;
+      }
+
+      const formElement = $('#form-upload')[0];
+      const formData = new FormData(formElement);
+
+      $.ajax({
+          url: admin.baseUrl + endpoints.arquivo.uploadLocalServer,
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function () {
+              toastr["info"]("Aguardando conexão com o servidor...");
+              $("#progress").html('<br/><span class="text-muted border-bottom">Enviando Arquivo </span><br/><progress class="mt-1"></progress>');
+          },
+          error: function () {
+              toastr["error"]("Não foi possível executar a ação desejada, favor entrar em contato com o administrador!");
+          },
+          success: function (data) {
+              $('.toast-info').hide();
+              $("#progress").empty();
+              toastr["success"]("Arquivos enviados com sucesso!");
+
+              if (tabelaPai === 'noticias') {
+                  listarImagens(idTabelaPai, tabelaPai);
+              }
+
+              listarArquivos(idTabelaPai, tabelaPai);
+          }
+      });
+  });
+
 </script>
