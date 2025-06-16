@@ -16,7 +16,7 @@ public class Arquivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "tabela_pai", nullable = false, length = 200)
     private String tabelaPai;

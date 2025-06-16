@@ -31,7 +31,7 @@ public class ArquivoController {
     @ResponseBody
     public ResponseEntity<String> uploadArquivos(@RequestParam("arquivos[]") MultipartFile[] arquivos) {
         try {
-            localServerUploadService.handle(arquivos);
+            localServerUploadService.execute(arquivos);
             return ResponseEntity.ok("Arquivos enviados com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erro ao salvar arquivos: " + e.getMessage());
