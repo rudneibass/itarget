@@ -8,10 +8,7 @@
                     <input type="file" name="arquivos[]" id="selecionaArquivos" class="form-control" multiple/>
                 </div>
             </form>
-            <div 
-                id="listaArquivosSelecionados" 
-                style="height: 220px; overflow-y: scroll; overflow-x: hidden;"
-            >
+            <div id="listaArquivosSelecionados"  style="height: 220px; overflow-y: scroll; overflow-x: hidden;">
             </div>
             <div id="progress" class="text-center"></div>
         </div>
@@ -47,7 +44,7 @@
         const row = $(`
           <div class="p-2 d-flex width-100 justify-content-between border-bottom" id="${fileId}">
             <div class="d-flex align-items-center justify-content-center flex-column">
-              <div>
+              <div class="px-3 py-1">
                 <i class="fa fa-paperclip gray-default"></i> &nbsp;
                 <span class="name_anexo gray-default">${file.name}</span><br />
                 &emsp;&nbsp;&nbsp;<small class="size_anexo gray-default">${formatBytes(file.size)}</small>

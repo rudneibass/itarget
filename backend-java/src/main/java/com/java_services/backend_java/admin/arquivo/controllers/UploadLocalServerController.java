@@ -1,6 +1,5 @@
 package com.java_services.backend_java.admin.arquivo.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,18 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.java_services.backend_java.admin.arquivo.services.LocalServerUploadService;
 
-
 @Controller
 @RequestMapping("/admin/arquivo")
-public class ArquivoController {
+public class UploadLocalServerController {
 
     @Autowired
     private LocalServerUploadService localServerUploadService;
-
-    @GetMapping("/form")
-    public String form(Model model) {
-        return "admin/pages/arquivo/form/form";
-    }
 
     @PostMapping("/upload-local-server")
     @ResponseBody

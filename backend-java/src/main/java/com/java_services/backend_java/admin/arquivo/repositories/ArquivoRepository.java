@@ -2,8 +2,10 @@ package com.java_services.backend_java.admin.arquivo.repositories;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import com.java_services.backend_java.admin.arquivo.models.Arquivo;
 
+@Repository
 public class ArquivoRepository {
 
     @Autowired

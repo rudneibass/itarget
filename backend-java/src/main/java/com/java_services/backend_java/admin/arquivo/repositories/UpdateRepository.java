@@ -1,11 +1,13 @@
 package com.java_services.backend_java.admin.arquivo.repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.java_services.backend_java.admin.arquivo.models.Arquivo;
 
 import java.sql.*;
 
+@Repository
 public class UpdateRepository {
 
     @Autowired
