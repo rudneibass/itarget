@@ -1,0 +1,56 @@
+  .light-border-bottom {
+    border-bottom: 1px solid #a0a0a0b6;
+   }
+
+
+   .light-border-bottom-offset {
+      border-bottom: 1px solid #616161b6; 
+      margin: .75rem 0;
+    }
+   
+    .sidebar-offset {
+      margin: .2rem 0;
+    }
+
+   li{ 
+      position: relative;
+      width: 100%;
+    }
+  
+   .active-route::before {
+      border-bottom: 13px solid transparent;
+      border-right: 13px solid #F4F3EF;
+      border-top: 13px solid transparent;
+      content: "";
+      display: inline-block;
+      opacity: 1;
+      position: absolute;
+      right: -21px;
+      top: 7px;
+      transition: opacity .15s ease-in;
+  }
+  
+  #sidebar-menu li a i::before{
+    color: #e2e0e0;
+  }
+
+  #sidebar-menu li a i{
+    font-size: 16px;
+    margin-right: 14px;
+    transition: all .3s ease;
+  }
+
+  #sidebar-menu li a span, 
+  #sidebar-menu li a small{
+    font-size: 14px;
+    text-decoration: none;
+    color: #f1f1f1;
+    transition: all .3s ease;
+  }
+
+  
+  #sidebar-menu li a:hover span, 
+  #sidebar-menu li a:hover small,
+  #sidebar-menu li a:hover i::before{
+    color: #cfcfcf;
+  }

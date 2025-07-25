@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Modules\Form\Domain\Entities\Form;
+
+use App\Modules\Form\Domain\Base\EntityBase;
+use App\Modules\Form\Domain\Entities\Form\FormDto;
+use Exception;
+
+class Form extends EntityBase {
+    
+    const FORM_NAME = 'form';
+    
+    private string $name;
+    private string $attributes;
+    private ?array $fields;
+    private ?string $id;
+    private ?string $isActive;
+
+    public function __construct(FormDto $dto) {
+        $this->name = $dto->name;
+        $this->attributes = $dto->attributes;
+
+        $this->id= $dto->id ?? null; 
+        $this->fields = $dto->fields ?? [];
+        $this->isActive = $dto->isActive ?? null;
+    }
+
+    public function toArray(){
+        return [
+            'id' => $this->id ?? null,
+            'name' => $this->name,
+            'attributes' => $this->attributes
+        ];
+    }
+
+    public function setName(string $name) {
+        if(!isset($name) || empty($name)){ throw new Exception('Nome é obrigatório.'); }
+        $this->name = $name;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getDisplayName(): string {
+        return $this->displayName;
+    }
+    public function setDisplayName(string $name) {
+        $this->displayName = ucfirst($name);
+    }
+    
+    public function setAttributes(string $attributes) {
+        if(!isset($attributes) || empty($attributes)){ throw new Exception('Attributes é obrigatório.'); }
+        $this->attributes = $attributes;
+    }
+
+    public function getAttributes(): string {
+        return $this->attributes;
+    }
+    
+
+    public function setFields(array $fields) {
+        $this->fields = $fields;
+    }
+
+    public function getFields() : ?array {
+        return $this->fields;
+    }
+
+    public function setId(string $id) {
+        $this->id = (string) $id;
+    }
+
+    public function getId(): ?string {
+        return $this->id;
+    }
+
+    public function setIsActive(string $isActive) {
+        $this->isActive = $isActive;
+    }
+
+    public function getIsActive(): ?string {
+      return $this->isActive;
+    }
+}
