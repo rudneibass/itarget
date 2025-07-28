@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace App\Framework\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -10,7 +10,7 @@ class Kernel extends ConsoleKernel
 
     protected $commands = [
         // Registre o seu comando aqui
-        \App\Console\Commands\CreateModuleLayersEntity::class,
+        \App\Framework\Console\Commands\CreateModuleLayersEntity::class,
     ];
 
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Framework\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class CreateModuleLayersEntity extends Command
+class CreateModuleEntity extends Command
 {
-    protected $signature = 'make:module-layers-entity {module} {entity}';
+    protected $signature = 'make:module-entity {module} {entity}';
     protected $description = 'Cria estrutura de arquivos para uma nova entidade dentro de um módulo.';
 
     public function handle()
@@ -15,16 +15,18 @@ class CreateModuleLayersEntity extends Command
         $module = ucfirst($this->argument('module'));
         $entity = ucfirst($this->argument('entity'));
         $basePath = base_path("app/Modules/$module");
+        $entityPath = "$basePath/$entity";
 
         // Criar estrutura de pastas
         $paths = [
             $basePath,
-            "$basePath/Base/",
-            "$basePath/Controllers/{$entity}",
-            "$basePath/Services/{$entity}",
-            "$basePath/Models/{$entity}",
-            "$basePath/Daos/{$entity}",
-            "$basePath/Routes/{$entity}",
+            "$basePath/Base",
+            $entityPath,
+            "$entityPath/Controllers",
+            "$entityPath/Services",
+            "$entityPath/Models",
+            "$entityPath/Daos",
+            "$entityPath/Routes",
         ];
 
         foreach ($paths as $path) {
@@ -49,14 +51,13 @@ class CreateModuleLayersEntity extends Command
             }
         }
 
-       
         // Criar arquivos da entidade
         $entityFiles = [
-            "$basePath/Controllers/{$entity}/{$entity}Controller.php" => $this->getEntityControllerContent($module, $entity),
-            "$basePath/Services/{$entity}/{$entity}Service.php" => $this->getEntityServiceContent($module, $entity),
-            "$basePath/Models/{$entity}/{$entity}.php" => $this->getEntityModelContent($module, $entity),
-            "$basePath/Daos/{$entity}/{$entity}Dao.php" => $this->getEntityDaoContent($module, $entity),
-            "$basePath/Routes/{$entity}/routes.php" => $this->getRoutesContent($module, $entity)
+            "$entityPath/Controllers/{$entity}Controller.php" => $this->getEntityControllerContent($module, $entity),
+            "$entityPath/Services/{$entity}Service.php" => $this->getEntityServiceContent($module, $entity),
+            "$entityPath/Models/{$entity}.php" => $this->getEntityModelContent($module, $entity),
+            "$entityPath/Daos/{$entity}Dao.php" => $this->getEntityDaoContent($module, $entity),
+            "$entityPath/Routes/routes.php" => $this->getRoutesContent($module, $entity)
         ];
 
         foreach ($entityFiles as $file => $content) {
@@ -311,12 +312,12 @@ abstract class BaseService {
     {
         return "<?php
 
-namespace App\Modules\\$module\\Controllers\\$entity;
+namespace App\Modules\\$module\\$entity\\Controllers;
 
 use Illuminate\Http\Request;
 
 use App\Modules\\$module\\Base\BaseController;
-use App\Modules\\$module\\Services\\$entity\\{$entity}Service;
+use App\Modules\\$module\\$entity\\Services\\{$entity}Service;
 
 class {$entity}Controller extends BaseController
 {
@@ -347,11 +348,11 @@ class {$entity}Controller extends BaseController
     {
         return "<?php 
 
-namespace App\Modules\\$module\\Services\\$entity;
+namespace App\Modules\\$module\\$entity\\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Modules\\$module\\Base\BaseService;
-use App\Modules\\$module\\Daos\\$entity\\{$entity}Dao;
+use App\Modules\\$module\\$entity\\Daos\\{$entity}Dao;
 
 class {$entity}Service extends BaseService
 {
@@ -385,10 +386,10 @@ class {$entity}Service extends BaseService
     {
         return "<?php declare(strict_types=1);
 
-namespace App\Modules\\$module\\Daos\\$entity;
+namespace App\Modules\\$module\\$entity\\Daos;
 
 use App\Modules\\$module\\Base\BaseDao;
-use App\Modules\\$module\\Models\\$entity\\{$entity} as {$entity}Model;
+use App\Modules\\$module\\$entity\\Models\\{$entity} as {$entity}Model;
 use Illuminate\Support\Facades\DB;
 
 class {$entity}Dao extends BaseDao {
@@ -416,7 +417,7 @@ class {$entity}Dao extends BaseDao {
     {
         return "<?php
 
-namespace App\Modules\\$module\\Models\\$entity;
+namespace App\Modules\\$module\\$entity\\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -437,7 +438,7 @@ class {$entity} extends Model
         return "<?php
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\\$module\\Controllers\\$entity\\{$entity}Controller;
+use App\Modules\\$module\\$entity\\Controllers\\{$entity}Controller;
 
 Route::prefix('user')->group(function(){
     Route::controller({$entity}Controller::class)->group(function(){
@@ -472,7 +473,6 @@ O comando CreateModuleEntity é usado para criar uma nova entidade dentro de um 
 
 ## Estrutura de Pastas e Arquivos
 
-
 ```plaintext
 Modules/
 └── <ModuleName>/
@@ -480,20 +480,16 @@ Modules/
         ├── BaseController.php
         ├── BaseDao.php
         └── BaseService.php
-    ├── Controllers/
-        └── <EntityName>/
+    ├── <EntityName>/
+        ├── Controllers/
             └── <EntityName>Controller.php
-    ├── Daos/
-        └── <EntityName>/
+        ├── Dao/
             └── <EntityName>Dao.php
-    ├── Services/
-        └── <EntityName>/
+        ├── Services/
             └── <EntityName>Service.php
-    ├── Models/
-        └── <EntityName>/
+        ├── Models/
             └── <EntityName>.php
-    └── Routes/
-        └── <EntityName>/
+        └── Routes/    
             └── routes.php    
 ```
 
@@ -550,7 +546,6 @@ Modules/
 ## Exemplo Prático
 Se você criar uma entidade chamada Product no módulo Inventory, a estrutura gerada será:
 
-
 ```plaintext
 Modules/
 └── Inventory/
@@ -558,20 +553,16 @@ Modules/
         ├── BaseController.php
         ├── BaseDao.php
         └── BaseService.php
-    ├── Controllers/
-        └── Product/
+    ├── Product/
+        ├── Controllers/
             └── ProductController.php
-    ├── Daos/
-        └── Product/
+        ├── Daos/
             └── ProductDao.php
-    ├── Services/
-        └── Product/
+        ├── Services/
             └── ProductService.php
-    ├── Models/
-        └── Product/
+        ├── Models/
             └── Product.php
-    └── Routes/
-        └── Product/
+        └── Routes/    
             └── routes.php    
 ```
 

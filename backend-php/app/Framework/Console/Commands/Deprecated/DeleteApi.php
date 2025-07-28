@@ -1,35 +1,20 @@
 <?php
 
-namespace App\Console\Commands\Deprecated;
+namespace App\Framework\Console\Commands\Deprecated;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-class DeleteModule extends Command
+class DeleteApi extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'delete:module {name}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Delete a module with routes, controller, service, and repository';
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
+    
+    protected $signature = 'delete:api {name}';
+    protected $description = 'Delete Api with routes, controller, service, and repository';
+    
     public function handle()
     {
         $name = $this->argument('name');
-        $this->deleteRoutes($name);
+        //$this->deleteRoutes($name);
         $this->deleteController($name);
         $this->deleteService($name);
         $this->deleteRepository($name);
@@ -58,38 +43,35 @@ class DeleteModule extends Command
 
     protected function deleteController($name)
     {
-        $controllerPath = app_path("Http/Controllers/{$name}Controller.php");
+        $controllerPath = app_path("Http/Controllers/Api/{$name}Controller.php");
 
         if (File::exists($controllerPath)) {
             File::delete($controllerPath);
-            $this->info("Deleted app/Http/Controllers/{$name}Controller.php");
+            $this->info("Deleted app/Http/Controllers/Api/{$name}Controller.php");
         }
     }
 
     protected function deleteService($name)
     {
-        $serviceDirectory = app_path("Services/$name");
-
+        $serviceDirectory = app_path("Services/Api/$name");
         if (File::exists($serviceDirectory)) {
             File::deleteDirectory($serviceDirectory);
-            $this->info("Deleted app/Services/$name");
+            $this->info("Deleted app/Services/Api/$name");
         }
     }
 
     protected function deleteRepository($name)
     {
-        $repositoryDirectory = app_path("Repositories/{$name}Repository.php");
-
+        $repositoryDirectory = app_path("Repositories/Api/{$name}Repository.php");
         if (File::exists($repositoryDirectory)) {
             File::delete($repositoryDirectory);
-            $this->info("Deleted app/Repositories/{$name}Repository.php");
+            $this->info("Deleted app/Repositories/Api/{$name}Repository.php");
         }
     }
 
     protected function deleteModel($name)
     {
         $modelPath = app_path("Models/{$name}.php");
-
         if (File::exists($modelPath)) {
             File::delete($modelPath);
             $this->info("Deleted app/Models/{$name}.php");
@@ -100,7 +82,6 @@ class DeleteModule extends Command
     {
         $tableName = strtolower($name);
         $migrationFiles = File::files(database_path('migrations'));
-
         foreach ($migrationFiles as $file) {
             if (strpos($file->getFilename(), "create_{$tableName}_table") !== false) {
                 File::delete($file->getPathname());

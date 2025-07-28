@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Deprecated;
+namespace App\Framework\Console\Commands\Deprecated;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
