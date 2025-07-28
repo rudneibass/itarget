@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  backend:
+  backend-php:
     build:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    container_name: php-prototipo-laravel
+    container_name: app-laravel
     ports:
       - '81:80'
       - '6001:6001'
@@ -24,7 +24,7 @@ services:
       
   redis:
     image: redis
-    container_name: redis_laravel
+    container_name: redis
     ports:
       - "6379:6379"
     networks:
