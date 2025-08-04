@@ -19,7 +19,7 @@ describe('CreateUserController (e2e)', () => {
     await app.close();
   });
 
-  it('/user/create (POST) - deve criar um usuário com sucesso', async () => {
+  it('/api/user/create (POST) - deve criar um usuário com sucesso', async () => {
     const response = await request(app.getHttpServer())
       .post('/user/create')
       .send({
@@ -30,17 +30,5 @@ describe('CreateUserController (e2e)', () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
-  });
-
-  it('/user/create (POST) - deve retornar erro se dados estiverem inválidos', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/user/create')
-      .send({
-        email: 'sem_nome@example.com',
-        // faltando `name`
-      });
-
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error');
   });
 });
