@@ -17,6 +17,8 @@ services:
     depends_on:
       - postgres-backend-javascript
     command: npm run start:dev
+    networks:
+      - backend-javascript-network
 
   postgres-backend-javascript:
     image: postgres:15
