@@ -1,3 +1,3 @@
 export interface IDatabaseAdapter {
-  insert(data: { name: string; email: string }): Promise<{ id: string }>;
+  insert(query: string, data: { name: string; email: string }): Promise<{ id: string }>;
 }

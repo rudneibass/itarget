@@ -16,13 +16,7 @@ export class DatabaseAdapter implements IDatabaseAdapter {
     });
   }
 
-  async insert(data: { name: string; email: string }): Promise<{ id: string }> {
-    const query = `
-      INSERT INTO "user" (name, email)
-      VALUES ($1, $2)
-      RETURNING id
-    `;
-
+  async insert(query: string,  data: { name: string; email: string }): Promise<{ id: string }> {
     try {
       const result = await this.pool.query(query, [data.name, data.email]);
       const id = result.rows[0]?.id;

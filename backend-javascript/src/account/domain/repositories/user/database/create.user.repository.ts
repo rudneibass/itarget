@@ -7,9 +7,10 @@ export class CreateUserRepository {
   constructor(@Inject('IDatabaseAdapter') private readonly db: IDatabaseAdapter) {}
 
   async create(user: User): Promise< {id: string }> {
-    return await this.db.insert({
-      name: user.getName(),
-      email: user.getEmail(),
-    });
+    return await 
+    this.db.insert(
+      `INSERT INTO "user" (name, email) VALUES ($1, $2) RETURNING id`,
+      {name: user.getName(), email: user.getEmail(),}
+    );
   }
 }
