@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserService } from '../../../../domain/services/user/create.user.service';
 import { CreateUserDto } from '../../../../domain/services/user/create.user.dto';
 
@@ -8,6 +8,16 @@ export class CreateUserController {
 
   @Post('create')
   async handle(@Body() body: CreateUserDto) {
-    return await this.service.execute(body);
+    try {
+      return await this.service.execute(body);
+    } catch (error) {
+      throw new HttpException(
+        { 
+          message: error.message || 'Erro ao criar usuário',
+          error: error.stack
+        },
+        HttpStatus.BAD_REQUEST
+      );
+    }
   }
 }

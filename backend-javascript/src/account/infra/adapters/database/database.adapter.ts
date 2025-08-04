@@ -34,7 +34,7 @@ export class DatabaseAdapter implements IDatabaseAdapter {
       return { id };
     } catch (error) {
       console.error('Database insertion error:', error);
-      throw new Error('Error inserting user into the database');
+      throw new Error(`${error}`);
     }
   }
 }
