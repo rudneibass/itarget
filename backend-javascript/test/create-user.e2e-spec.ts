@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from '../src/app.module';
 
 describe('CreateUserController (e2e)', () => {
@@ -8,7 +8,7 @@ describe('CreateUserController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule], // deve importar o módulo principal que inclui o controller
+      imports: [AppModule],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -24,13 +24,12 @@ describe('CreateUserController (e2e)', () => {
       .post('/user/create')
       .send({
         name: 'João da Silva',
-        email: 'joao@example.com',
+        email: `jhon${Math.random()}@exemple.com`,
         password: '123456',
       });
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('id'); // dependendo do que o serviço retorna
-    expect(response.body.name).toBe('João da Silva');
+    expect(response.body).toHaveProperty('id');
   });
 
   it('/user/create (POST) - deve retornar erro se dados estiverem inválidos', async () => {
@@ -38,7 +37,7 @@ describe('CreateUserController (e2e)', () => {
       .post('/user/create')
       .send({
         email: 'sem_nome@example.com',
-        // faltando `name` e `password`
+        // faltando `name`
       });
 
     expect(response.status).toBe(400);

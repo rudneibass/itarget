@@ -27,7 +27,14 @@ describe('PostgresDatabaseAdapter Integration Test', () => {
 
   it('should insert a user and return its id', async () => {
     const testEmail = `test-integration-${Date.now()}@example.com`;
-    const result = await adapter.insert({ name: 'Integration Test', email: testEmail });
+    const result = await 
+    adapter.insert(
+       `INSERT INTO "user" (name, email) VALUES ($1, $2) RETURNING id`,
+      { 
+        name: 'Integration Test', 
+        email: testEmail 
+      }
+    );
 
     expect(result).toHaveProperty('id');
     expect(typeof result.id).toBe('number');
