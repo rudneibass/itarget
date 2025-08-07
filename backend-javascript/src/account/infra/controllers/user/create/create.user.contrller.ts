@@ -1,13 +1,13 @@
-import { Body, Controller, Post, HttpException, HttpStatus } from '@nestjs/common';
-import { CreateUserService } from '../../../../domain/services/user/create.user.service';
-import { CreateUserDto } from '../../../../domain/services/user/create.user.dto';
+import { Body, Controller, Post } from '@nestjs/common';
+import { CreateUserService } from '../../../../domain/services/user/create/create.user.service';
+import { CreateUserServiceInputDto } from '../../../../domain/services/user/create/create.user.service.input.dto';
 
 @Controller('user')
 export class CreateUserController {
   constructor(private readonly service: CreateUserService) {}
 
   @Post('create')
-  async handle(@Body() body: CreateUserDto) {
+  async handle(@Body() body: CreateUserServiceInputDto) {
     return await this.service.execute(body);
   }
 }

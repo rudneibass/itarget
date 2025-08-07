@@ -1,4 +1,4 @@
-export class CreateUserDto {
+export class CreateUserServiceInputDto {
   name: string;
   email: string;
 

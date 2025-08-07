@@ -43,4 +43,24 @@ describe('PostgresDatabaseAdapter Integration Test', () => {
     expect(res.rowCount).toBe(1);
     expect(res.rows[0].email).toBe(testEmail);
   });
+
+
+  it('should delete a user and return affectedRows = 1', async () => {
+    const testEmail = `test-integration-delete-${Date.now()}@example.com`;
+    const insertResult = await adapter.insert(
+      `INSERT INTO "user" (name, email) VALUES ($1, $2) RETURNING id`,
+      { name: 'Delete Test', email: testEmail }
+    );
+
+    const userId = insertResult.id;
+    const deleteResult = await adapter.delete(
+      `DELETE FROM "user" WHERE id = $1`,
+      [userId]
+    );
+
+    expect(deleteResult).toHaveProperty('affectedRows', 1);
+    const res = await pool.query(`SELECT * FROM "user" WHERE id = $1`, [userId]);
+    expect(res.rowCount).toBe(0);
+  });
+
 });

@@ -31,4 +31,15 @@ export class DatabaseAdapter implements IDatabaseAdapter {
       throw new Error(`${error}`);
     }
   }
+
+  async delete(query: string, params: string[]): Promise<{ affectedRows: number }> {
+    try {
+      const result = await this.pool.query(query, params);
+      return { affectedRows: result.rowCount };
+    } catch (error) {
+      console.error('Database deletion error:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
 }
