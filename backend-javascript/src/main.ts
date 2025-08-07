@@ -7,11 +7,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  
+  // Filters
   app.useGlobalFilters(new AllExceptionsFilter());
+  
+  // Pipes
   //app.useGlobalPipes(new ValidationPipe({ transform: true }));
   
+  // Swagger
   const config = new DocumentBuilder()
-    .setTitle('Minha API')
+    .setTitle("Rudnei's API")
     .setDescription('Documentação da API NestJS com Swagger')
     .setVersion('1.0')
     .addTag('usuarios')
