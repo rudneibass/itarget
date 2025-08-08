@@ -1,5 +1,5 @@
-import { DeleteUserRepository } from './delete.user.repository';
-import type { IDatabaseAdapter } from '../../../interfaces/database-adapter.interface';
+import { DeleteUserRepository } from '@src/account/domain/repositories/user/database/delete.user.repository';
+import type { IDatabaseAdapter } from '@src/account/domain/interfaces/database-adapter.interface';
 
 describe('DeleteUserRepository', () => {
   let repository: DeleteUserRepository;

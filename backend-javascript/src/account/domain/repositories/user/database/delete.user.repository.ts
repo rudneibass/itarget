@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import type { IDatabaseAdapter } from "../../../interfaces/database-adapter.interface";
+import type { IDatabaseAdapter } from '@src/account/domain/interfaces/database-adapter.interface';
 
 @Injectable()
 export class DeleteUserRepository {

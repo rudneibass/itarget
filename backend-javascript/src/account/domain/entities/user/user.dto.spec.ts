@@ -1,4 +1,4 @@
-import { UserDto } from './user.dto';
+import { UserDto } from '@src/account/domain/entities/user/user.dto';
 
 describe('UserDto', () => {
   it('should create a dto with name and email', () => {

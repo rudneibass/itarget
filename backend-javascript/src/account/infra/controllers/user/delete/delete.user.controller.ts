@@ -1,5 +1,5 @@
 import { Controller, Delete, Param } from "@nestjs/common";
-import { DeleteUserService } from "../../../../domain/services/user/delete/dekete.user.service";
+import { DeleteUserService } from '@src/account/domain/services/user/delete/dekete.user.service';
 import { ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 
 @Controller('user')

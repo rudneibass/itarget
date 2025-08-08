@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateUserService } from '../../../../domain/services/user/create/create.user.service';
-import { CreateUserServiceInputDto } from '../../../../domain/services/user/create/create.user.service.input.dto';
+import { CreateUserService } from '@src/account/domain/services/user/create/create.user.service';
+import { CreateUserServiceInputDto } from '@src/account/domain/services/user/create/create.user.service.input.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('user')

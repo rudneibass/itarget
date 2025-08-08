@@ -1,4 +1,4 @@
-import { DatabaseAdapter } from './database.adapter';
+import { DatabaseAdapter } from '@src/account/infra/adapters/database/database.adapter';
 import { Pool } from 'pg';
 
 describe('PostgresDatabaseAdapter Integration Test', () => {

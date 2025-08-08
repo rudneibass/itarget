@@ -1,7 +1,7 @@
-import { CreateUserRepository } from './create.user.repository';
-import type { IDatabaseAdapter } from '../../../interfaces/database-adapter.interface';
-import { User } from '../../../entities/user/user.entity';
-import { UserDto } from '../../../entities/user/user.dto';
+import { CreateUserRepository } from '@src/account/domain/repositories/user/database/create.user.repository';
+import type { IDatabaseAdapter } from '@src/account/domain/interfaces/database-adapter.interface';
+import { User } from '@src/account/domain/entities/user/user.entity';
+import { UserDto } from '@src/account/domain/entities/user/user.dto';
 
 describe('CreateUserRepository', () => {
   let repository: CreateUserRepository;

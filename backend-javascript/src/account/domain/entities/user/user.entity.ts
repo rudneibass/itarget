@@ -1,5 +1,5 @@
-import { Email } from '../../value-objects/email/email.vo';
-import { UserDto } from './user.dto';
+import { Email } from '@src/account/domain/value-objects/email/email.vo';
+import { UserDto } from '@src/account/domain/entities/user/user.dto';
 
 export class User {
   private readonly name: string;

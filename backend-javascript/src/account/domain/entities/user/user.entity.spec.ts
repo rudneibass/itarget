@@ -1,5 +1,5 @@
-import { User } from './user.entity';
-import { UserDto } from './user.dto';
+import { User } from '@src/account/domain/entities/user/user.entity';
+import { UserDto } from '@src/account/domain/entities/user/user.dto';
 
 describe('User Entity', () => {
   it('should create a User from UserDto', () => {

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { DeleteUserRepository } from "../../../repositories/user/database/delete.user.repository";
+import { DeleteUserRepository } from '@src/account/domain/repositories/user/database/delete.user.repository';
 
 @Injectable()
 export class DeleteUserService {
