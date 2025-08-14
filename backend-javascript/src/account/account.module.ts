@@ -6,20 +6,27 @@ import { CreateUserService } from '@src/account/domain/services/user/create/crea
 import { DeleteUserController } from '@src/account/infra/controllers/user/delete/delete.user.controller';
 import { DeleteUserService } from '@src/account/domain/services/user/delete/dekete.user.service';
 import { DeleteUserRepository } from '@src/account/domain/repositories/user/database/delete.user.repository';
+import { FindUserController } from '@src/account/infra/controllers/user/find/find.user.controller';
+import { FindUserService } from '@src/account/domain/services/user/find/find.user.service';
+import { FindUserRepository } from '@src/account/domain/repositories/user/database/find.user.repository';
 
 @Module({
-  imports: [],
-  controllers: [CreateUserController, DeleteUserController],
+  controllers: [
+    CreateUserController,
+    DeleteUserController,
+    FindUserController,
+  ],
   providers: [
     {
       provide: 'IDatabaseAdapter',
       useClass: DatabaseAdapter,
     },
-    CreateUserService,
     CreateUserRepository,
+    CreateUserService,
+    DeleteUserRepository,
     DeleteUserService,
-    DeleteUserRepository
-
+    FindUserRepository,
+    FindUserService,
   ],
 })
 export class AccountModule {}

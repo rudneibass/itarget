@@ -42,4 +42,23 @@ export class DatabaseAdapter implements IDatabaseAdapter {
     }
   }
 
+  async findById(query: string, params: string[]): Promise<{ id: string; name: string; email: string } | null> {
+    try {
+      const result = await this.pool.query(query, params);
+      const user = result.rows[0];
+
+      if (!user) {
+        return null;
+      }
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
+    } catch (error) {
+      console.error('Database findById error:', error);
+      throw new Error(`${error}`);
+    }
+  }
 }
