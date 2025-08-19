@@ -16,10 +16,11 @@ services:
       - /app/node_modules
     depends_on:
       - postgres-backend-javascript
+      - rabbitmq
     command: npm run start:dev
     networks:
       - backend-javascript-network
-
+      - rabbitmq-network
   postgres-backend-javascript:
     image: postgres:15
     container_name: postgres-backend-javascript
@@ -35,8 +36,22 @@ services:
     networks:
       - backend-javascript-network
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - '5672:5672'   # Porta do protocolo AMQP
+      - '15672:15672' # Porta do painel de administração
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - rabbitmq-network
+      
 volumes:
   pgdata:
 
 networks:
   backend-javascript-network:
+  rabbitmq-network:
