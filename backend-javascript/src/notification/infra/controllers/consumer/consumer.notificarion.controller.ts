@@ -11,11 +11,11 @@ export class ConsumerNotificationController {
   @ApiParam({ name: 'id', description: 'UUID da mensagem' })
   @ApiResponse({ status: 200, description: 'Status encontrado', schema: { example: { mensagemId: 'uuid', status: 'sucesso' } } })
   @ApiResponse({ status: 404, description: 'Status não encontrado para o mensagemId informado.' })
-  getStatus(@Param('id') id: string) {
+  handle(@Param('id') id: string) {
     const status = this.stroreNotificationService.getStatus(id);
     if (!status) {
       throw new NotFoundException('Status não encontrado para o mensagemId informado.');
     }
-    return { mensagemId: id, status };
+    return { messageId: id, status };
   }
 }

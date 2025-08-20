@@ -20,29 +20,30 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
       username: 'admin',
       password: 'admin',
     });
+
     this.channel = await this.connection.createChannel();
     await this.channel.assertQueue(this.queue, { durable: true });
     await this.channel.assertQueue(this.statusQueue, { durable: true });
 
-    this.channel.consume(this.queue, async (msg) => {
-      if (msg) {
-        const content = msg.content.toString();
+    this.channel.consume(this.queue, async (message) => {
+      if (message) {
+        const content = message.content.toString();
         this.logger.log(`Mensagem recebida: ${content}`);
-
-        let mensagemId: string;
+        let messageId: string;
 
         try {
           const parsed = JSON.parse(content);
-          mensagemId = parsed.mensagemId || parsed.messageId;
+          messageId = parsed.messageId
 
         } catch {
           this.logger.error('Mensagem inválida, ignorando.');
-          this.channel.ack(msg);
+          this.channel.ack(message);
           return;
         }
-        if (!mensagemId) {
-          this.logger.error('mensagemId ausente na mensagem, ignorando.');
-          this.channel.ack(msg);
+
+        if (!messageId) {
+          this.logger.error('messageId ausente na mensagem, ignorando.');
+          this.channel.ack(message);
           return;
         }
 
@@ -51,13 +52,13 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
         const random = Math.floor(Math.random() * 10) + 1;
         const status = random <= 2 ? 'falha' : 'sucesso';
 
-        this.statusStore.setStatus(mensagemId, status);
+        this.statusStore.setStatus(messageId, status);
 
-        const statusPayload = JSON.stringify({ mensagemId, status });
+        const statusPayload = JSON.stringify({ messageId, status });
         await this.channel.sendToQueue(this.statusQueue, Buffer.from(statusPayload), { persistent: true });
 
         this.logger.log(`Processamento concluído: ${content} | Status: ${status}`);
-        this.channel.ack(msg);
+        this.channel.ack(message);
       }
     });
     this.logger.log(`Consumidor iniciado na fila: ${this.queue}`);

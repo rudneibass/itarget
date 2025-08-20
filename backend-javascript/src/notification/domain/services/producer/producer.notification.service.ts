@@ -1,5 +1,7 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import * as amqp from 'amqplib';
+import { ProducerNotificationOutputDto } from './producer.notification.output.dto';
+import { ProducerNotificationInputDto } from './producer.notification.input.dto';
 
 @Injectable()
 export class ProducerNotificationService implements OnModuleDestroy {
@@ -7,9 +9,11 @@ export class ProducerNotificationService implements OnModuleDestroy {
   private channel: amqp.Channel;
   private readonly queue = 'fila.notificacao.entrada.rudnei';
 
-  async onModuleDestroy() {
-    await this.channel?.close();
-    await this.connection?.close();
+  async execute(inputDto: ProducerNotificationInputDto): Promise<ProducerNotificationOutputDto> {
+    const channel = await this.getChannel();
+    const payload = JSON.stringify(inputDto);
+    await channel.sendToQueue(this.queue, Buffer.from(payload), { persistent: true });
+    return { messageId: inputDto.messageId };
   }
 
   private async getChannel(): Promise<amqp.Channel> {
@@ -26,9 +30,8 @@ export class ProducerNotificationService implements OnModuleDestroy {
     return this.channel;
   }
 
-  async publishNotification(messageId: string, messageContent: string): Promise<void> {
-    const channel = await this.getChannel();
-    const payload = JSON.stringify({ messageId, messageContent });
-    await channel.sendToQueue(this.queue, Buffer.from(payload), { persistent: true });
+  async onModuleDestroy() {
+    await this.channel?.close();
+    await this.connection?.close();
   }
 }
