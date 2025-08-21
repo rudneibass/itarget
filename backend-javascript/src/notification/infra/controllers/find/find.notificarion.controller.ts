@@ -3,7 +3,7 @@ import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { StoreNotificationService } from '@src/notification/domain/services/store/store.notification.service';
 
 @Controller('notification')
-export class ConsumerNotificationController {
+export class FindNotificationController {
   constructor(private readonly stroreNotificationService: StoreNotificationService) {}
 
   @Get('status/:id')

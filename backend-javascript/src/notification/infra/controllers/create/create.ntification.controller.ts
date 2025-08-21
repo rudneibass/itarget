@@ -2,11 +2,10 @@ import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, UsePipes, 
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProducerNotificationInputDto } from '@src/notification/domain/services/producer/producer.notification.input.dto';
 import { ProducerNotificationService } from '@src/notification/domain/services/producer/producer.notification.service';
-import { stat } from 'fs';
 
 
 @Controller('notification')
-export class ProducerNotificationController {
+export class CreateNotificationController {
   constructor(private readonly notificationService: ProducerNotificationService) {}
 
   @Post()
