@@ -1,6 +1,7 @@
 CREATE TABLE "notification" (
   id SERIAL PRIMARY KEY,
-  content TEXT NOT NULL,
+  uuid TEXT NOT NULL,
+  message TEXT NOT NULL,
   status TEXT NOT NULL,
   created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

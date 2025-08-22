@@ -5,9 +5,9 @@ export class ProducerNotificationInputDto {
   @IsUUID('4', { message: 'O campo mensagemId deve ser um UUID v4 válido' })
   @IsNotEmpty({ message: 'O campo mensagemId não pode ser vazio' })
   @ApiProperty({ description: 'UUID da mensagem' })
-  messageId: string;
+  uuid: string;
 
   @IsNotEmpty({ message: 'O campo conteudoMensagem não pode ser vazio' })
   @ApiProperty({ description: 'Conteúdo da mensagem' })
-  messageContent: string;
+  message: string;
 }

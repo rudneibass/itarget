@@ -3,17 +3,17 @@ import { NotificationEntity } from "@src/notification/domain/entities/notificati
 import type { IDatabaseAdapter } from '@src/notification/domain/interfaces/database-adapter.interface';
 
 @Injectable()
-export class CreateNotificationRepository {
+export class StoreNotificationRepository {
   constructor(@Inject('IDatabaseAdapter') private readonly db: IDatabaseAdapter) {}
 
-  async create(notification: NotificationEntity): Promise< {id: string }> {
+  async store(notification: NotificationEntity): Promise< {id: string }> {
     return await 
     this.db.insert(
-      `INSERT INTO "notification" (uuid, content, status) VALUES ($1, $2, $3) RETURNING id`,
+      `INSERT INTO "notification" (uuid, message, status) VALUES ($1, $2, $3) RETURNING id`,
       {
         uuid: notification.uuid, 
         message: notification.message,
-        status: notification.status
+        status: 'pending',
       }
     );
   }

@@ -1,5 +1,5 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import * as amqp from 'amqplib';
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ProducerNotificationOutputDto } from './producer.notification.output.dto';
 import { ProducerNotificationInputDto } from './producer.notification.input.dto';
 
@@ -13,7 +13,7 @@ export class ProducerNotificationService implements OnModuleDestroy {
     const channel = await this.getChannel();
     const payload = JSON.stringify(inputDto);
     await channel.sendToQueue(this.queue, Buffer.from(payload), { persistent: true });
-    return { messageId: inputDto.messageId };
+    return { uuid: inputDto.uuid };
   }
 
   private async getChannel(): Promise<amqp.Channel> {

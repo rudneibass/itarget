@@ -15,7 +15,7 @@ export class CreateNotificationController {
   @ApiBody({ type: ProducerNotificationInputDto })
   @ApiResponse({ type: ProducerNotificationInputDto })
   async handle(@Body() body) {
-    const { messageId, messageContent } = body;
-    return await this.notificationService.execute({messageId, messageContent});
+    const { uuid, message } = body;
+    return await this.notificationService.execute({uuid, message});
   }
 }

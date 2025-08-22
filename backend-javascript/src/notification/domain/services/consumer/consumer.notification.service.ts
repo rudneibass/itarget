@@ -1,8 +1,7 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import * as amqp from 'amqplib';
-import { StoreNotificationService } from '@src/notification/domain/services/store/store.notification.service';
 import { NotificationEntity } from '@src/notification/domain/entities/notification/notification.entity';
-import { CreateNotificationRepository } from '@src/notification/domain/repositories/notification/database/create/create.notification.repository';
+import { StoreNotificationRepository } from '@src/notification/domain/repositories/notification/database/store/store.notification.repository';
 
 @Injectable()
 export class ConsumerNotificationService implements OnModuleInit, OnModuleDestroy {
@@ -13,8 +12,7 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
   private readonly logger = new Logger(ConsumerNotificationService.name);
 
   constructor(
-    private readonly statusStore: StoreNotificationService,
-    private readonly createNotificationRepository: CreateNotificationRepository
+    private readonly storeNotificationRepository: StoreNotificationRepository
   ) {}
 
   async onModuleInit() {
@@ -29,7 +27,6 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
     await this.connection?.close();
   }
 
-  // 🔹 Conexão com RabbitMQ
   private async connect() {
     this.connection = await amqp.connect({
       hostname: 'rabbitmq',
@@ -40,13 +37,11 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
     this.channel = await this.connection.createChannel();
   }
 
-  // 🔹 Criação das filas
   private async setupQueues() {
     await this.channel.assertQueue(this.queue, { durable: true });
     await this.channel.assertQueue(this.statusQueue, { durable: true });
   }
 
-  // 🔹 Início do consumo
   private startConsumer() {
     this.channel.consume(this.queue, async (message) => {
       if (!message) return;
@@ -68,12 +63,11 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
     });
   }
 
-  // 🔹 Parse da mensagem
-  private parseMessage(content: string): { messageId: string; conteudoMensagem: string } {
+  private parseMessage(content: string): { uuid: string; message: string } {
     try {
       const parsed = JSON.parse(content);
-      if (!parsed.messageId || !parsed.conteudoMensagem) {
-        throw new Error('Mensagem inválida: messageId ou conteudoMensagem ausente');
+      if (!parsed.uuid || !parsed.message) {
+        throw new Error('Mensagem inválida: uuid ou message ausente');
       }
       return parsed;
     } catch {
@@ -81,32 +75,27 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
     }
   }
 
-  // 🔹 Persistência da notificação
-  private async persistNotification(parsed: { messageId: string; conteudoMensagem: string }) {
+  private async persistNotification(parsed: { uuid: string; message: string }) {
     const notification = new NotificationEntity({
-      uuid: parsed.messageId,
-      message: parsed.conteudoMensagem,
-      status: 'pendente',
+      uuid: parsed.uuid,
+      message: parsed.message,
+      status: 'pending',
     });
 
-    await this.createNotificationRepository.create(notification);
+    await this.storeNotificationRepository.store(notification);
     return notification;
   }
 
-  // 🔹 Simulação de processamento (delay + status aleatório)
   private async processNotification(notification: NotificationEntity): Promise<string> {
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
     const random = Math.floor(Math.random() * 10) + 1;
     const status = random <= 2 ? 'falha' : 'sucesso';
-
-    this.statusStore.setStatus(notification.uuid, status);
     this.logger.log(`Notificação processada | ID: ${notification.uuid} | Status: ${status}`);
     return status;
   }
 
-  // 🔹 Publicar status em outra fila
-  private async publishStatus(messageId: string, status: string) {
-    const statusPayload = JSON.stringify({ messageId, status });
+  private async publishStatus(uuid: string, status: string) {
+    const statusPayload = JSON.stringify({ uuid, status });
     await this.channel.sendToQueue(this.statusQueue, Buffer.from(statusPayload), { persistent: true });
     this.logger.log(`Status publicado na fila: ${this.statusQueue} | ${statusPayload}`);
   }

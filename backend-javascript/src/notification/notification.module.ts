@@ -3,8 +3,7 @@ import { CreateNotificationController } from './infra/controllers/create/create.
 import { FindNotificationController } from './infra/controllers/find/find.notificarion.controller';
 import { ProducerNotificationService } from './domain/services/producer/producer.notification.service';
 import { ConsumerNotificationService } from './domain/services/consumer/consumer.notification.service';
-import { StoreNotificationService } from './domain/services/store/store.notification.service';
-import { CreateNotificationRepository } from './domain/repositories/notification/database/create/create.notification.repository';
+import { StoreNotificationRepository } from './domain/repositories/notification/database/store/store.notification.repository';
 import { DatabaseAdapter } from './infra/adapters/database/database.adapter';
 
 @Module({
@@ -12,12 +11,11 @@ import { DatabaseAdapter } from './infra/adapters/database/database.adapter';
   providers: [
     ProducerNotificationService, 
     ConsumerNotificationService, 
-    CreateNotificationRepository,
+    StoreNotificationRepository,
     {
       provide: 'IDatabaseAdapter',
       useClass: DatabaseAdapter,
     },
-    StoreNotificationService
   ],
   exports: [],
 })

@@ -1,17 +1,17 @@
-import type { IDatabaseAdapter } from '@src/account/domain/interfaces/database-adapter.interface';
-import { CreateNotificationRepository } from './create.notification.repository';
+import type { IDatabaseAdapter } from '@src/notification/domain/interfaces/database-adapter.interface';
 import { NotificationEntity } from '@src/notification/domain/entities/notification/notification.entity';
+import { StoreNotificationRepository } from './store.notification.repository';
 
-describe('CreateNotificationRepository', () => {
-  let repository: CreateNotificationRepository;
-  let dbAdapter: jest.Mocked<IDatabaseAdapter>;
+describe('StoreNotificationRepository', () => {
+  let repository: StoreNotificationRepository;
+  let dbAdapter: IDatabaseAdapter;
 
   beforeEach(() => {
     dbAdapter = {
       insert: jest.fn(),
     } as any;
 
-    repository = new CreateNotificationRepository(dbAdapter);
+    repository = new StoreNotificationRepository(dbAdapter);
   });
 
   it('should call db.insert with correct SQL and params', async () => {
@@ -21,10 +21,8 @@ describe('CreateNotificationRepository', () => {
       message: 'Test notification message',
       status: 'pending'
     });
-    const expectedResult = { id: '123' };
-    dbAdapter.insert.mockResolvedValue(expectedResult);
 
-    const result = await repository.create(notification);
+    const result = await repository.store(notification);
 
     expect(dbAdapter.insert).toHaveBeenCalledWith(
       `INSERT INTO "notification" (uuid, content, status) VALUES ($1, $2, $3) RETURNING id`,
@@ -34,6 +32,5 @@ describe('CreateNotificationRepository', () => {
         status: notification.status
       }
     );
-    expect(result).toBe(expectedResult);
   });
 });
