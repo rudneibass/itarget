@@ -1,10 +1,13 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger, Inject } from '@nestjs/common';
 import * as amqp from 'amqplib';
 import { NotificationEntity } from '@src/notification/domain/entities/notification/notification.entity';
 import { StoreNotificationRepository } from '@src/notification/domain/repositories/notification/database/store/store.notification.repository';
+import { WebSocketAdapter } from '@src/notification/infra/adapters/websocket/websocket.adapter';
+import type { WebSocketInterface } from '../../interfaces/websocket.interface';
 
 @Injectable()
 export class ConsumerNotificationService implements OnModuleInit, OnModuleDestroy {
+  private notification: NotificationEntity
   private connection: amqp.Connection;
   private channel: amqp.Channel;
   private readonly queue = 'fila.notificacao.entrada.rudnei';
@@ -12,7 +15,8 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
   private readonly logger = new Logger(ConsumerNotificationService.name);
 
   constructor(
-    private readonly storeNotificationRepository: StoreNotificationRepository
+    private readonly storeNotificationRepository: StoreNotificationRepository,
+    @Inject('WebSocketInterface') private readonly webSocketAdapter: WebSocketInterface
   ) {}
 
   async onModuleInit() {
@@ -53,8 +57,9 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
         const parsed = this.parseMessage(content);
         const notification = await this.persistNotification(parsed);
         const status = await this.processNotification(notification);
-
         await this.publishStatus(notification.uuid, status);
+        await this.webSocketAdapter.broadcast(notification.message);
+
         this.channel.ack(message);
       } catch (error) {
         this.logger.error(`Erro no processamento: ${error.message}`);
@@ -76,14 +81,14 @@ export class ConsumerNotificationService implements OnModuleInit, OnModuleDestro
   }
 
   private async persistNotification(parsed: { uuid: string; message: string }) {
-    const notification = new NotificationEntity({
+    this.notification = new NotificationEntity({
       uuid: parsed.uuid,
       message: parsed.message,
       status: 'pending',
     });
-
-    await this.storeNotificationRepository.store(notification);
-    return notification;
+    
+    await this.storeNotificationRepository.store(this.notification);
+    return this.notification;
   }
 
   private async processNotification(notification: NotificationEntity): Promise<string> {

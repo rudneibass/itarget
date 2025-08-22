@@ -1,4 +1,4 @@
-import type { IDatabaseAdapter } from '@src/notification/domain/interfaces/database-adapter.interface';
+import type { IDatabaseAdapter } from '@src/notification/domain/interfaces/database.interface';
 import { NotificationEntity } from '@src/notification/domain/entities/notification/notification.entity';
 import { StoreNotificationRepository } from './store.notification.repository';
 

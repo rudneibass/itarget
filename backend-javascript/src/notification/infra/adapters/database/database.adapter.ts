@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { IDatabaseAdapter } from '@src/account/domain/interfaces/database-adapter.interface';
+import type { IDatabaseAdapter } from '@src/notification/domain/interfaces/database.interface';
 import { Pool } from 'pg';
 
 @Injectable()
