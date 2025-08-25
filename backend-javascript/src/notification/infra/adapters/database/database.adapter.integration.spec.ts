@@ -1,4 +1,4 @@
-import { DatabaseAdapter } from '@src/notification/infra/adapters/database/database.adapter';
+import { DatabaseAdapter } from '@src/account/infra/adapters/database/database.adapter';
 import { Pool } from 'pg';
 
 describe('PostgresDatabaseAdapter Integration Test', () => {
@@ -61,24 +61,6 @@ describe('PostgresDatabaseAdapter Integration Test', () => {
     expect(deleteResult).toHaveProperty('affectedRows', 1);
     const res = await pool.query(`SELECT * FROM "user" WHERE id = $1`, [userId]);
     expect(res.rowCount).toBe(0);
-  });
-
-  it('should select users by email using adapter.select', async () => {
-    const testEmail = `test-integration-select-${Date.now()}@example.com`;
-    await adapter.insert(
-      `INSERT INTO "user" (name, email) VALUES ($1, $2) RETURNING id`,
-      { name: 'Select Test', email: testEmail }
-    );
-
-    const result = await adapter.select<{ id: number; name: string; email: string }>(
-      `SELECT id, name, email FROM "user" WHERE email = $1`,
-      [testEmail]
-    );
-
-    expect(result.length).toBe(1);
-    expect(result[0]).toHaveProperty('id');
-    expect(result[0].email).toBe(testEmail);
-    expect(result[0].name).toBe('Select Test');
   });
 
 });

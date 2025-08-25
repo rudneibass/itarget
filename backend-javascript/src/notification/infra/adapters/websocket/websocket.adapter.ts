@@ -9,8 +9,7 @@ export class WebSocketAdapter implements WebSocketInterface {
   private clients: Map<string, WebSocket> = new Map();
 
   constructor(private configService: ConfigService) {
-    const port = this.configService.get<number>('WEBSOCKET_PORT', 3001);
-    this.wss = new WebSocketServer({ port });
+    this.wss = new WebSocketServer({ port: this.configService.get<number>('WEBSOCKET_PORT', 3001) });
 
     this.wss.on("connection", (socket: WebSocket, req) => {
       const clientId = req.headers["sec-websocket-key"]?.toString() || "";

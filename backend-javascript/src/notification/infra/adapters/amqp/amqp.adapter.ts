@@ -1,17 +1,19 @@
-// src/notification/infra/adapters/message-broker/amqp.adapter.ts
 import * as amqp from 'amqplib';
+import { ConfigService } from '@nestjs/config';
 import { AmqpInterface } from '@src/notification/domain/interfaces/amqp.interface';
 
 export class AmqpAdapter implements AmqpInterface {
   private connection: amqp.Connection;
   private channel: amqp.Channel;
 
-  async connect() {
+  constructor(private readonly configService: ConfigService) {}
+
+  async connect(): Promise<void> {
     this.connection = await amqp.connect({
-      hostname: 'rabbitmq',
-      port: 5672,
-      username: 'admin',
-      password: 'admin',
+      hostname: this.configService.get<string>('RABBITMQ_HOST', 'rabbitmq'),
+      port: this.configService.get<number>('RABBITMQ_PORT', 5672),
+      username: this.configService.get<string>('RABBITMQ_USER', 'admin'),
+      password: this.configService.get<string>('RABBITMQ_PASS', 'admin'),
     });
 
     this.channel = await this.connection.createChannel();
