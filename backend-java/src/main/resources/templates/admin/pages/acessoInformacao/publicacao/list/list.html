@@ -1,0 +1,205 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-success btn-float section-actions-btn" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
+          <i class="fa fa-plus"></i>
+          <span class="btn-label">Novo</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+      <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra">
+        <i class="fa fa-search"></i>
+        <span class="btn-label">Pesquisar</span>
+      </button>
+    </div>
+</section>
+
+<section class="section-search-bar hide" id="section-search-bar">
+    <div class="row search-bar" id="search-bar">     
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success-light" ><span class="text-muted">Pesquisa Por...</span></div>
+                <div class="card-body">
+                    <form id="formSearch">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="c1"  id="c1" class="form-control" placeholder="Código">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="c2"  id="c2" class="form-control" placeholder="Nome">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="date" name="c3"  id="c3" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group mb3">
+                                    <input type="date" name="c4"  id="c4" class="form-control">
+                                </div>
+                            </div>
+                        </div>      
+                    </form>
+                </div>
+                <div class="modal-footer p-2 border-top-0">
+                    <button 
+                        type="button" 
+                        class="btn btn-success btn-sm" 
+                        id="btn-pesquisar" 
+                        onclick="publicacaoList.list({url: admin.baseUrl+endpoints.publicacao.list, formSearchId: publicacaoList.formSearchId })">
+                        <i class="fa fa-search"></i> Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+ 
+<section>
+    <div class="page-info-bar shadows-default" >
+        <small><i class="fa fa-file-text-o"></i></small>
+        <small>Publicações</small>
+    </div>
+</section>
+
+<section>
+    <div class="view-index-table-container">
+        <table class="table-sm  w-100">
+            <thead id="thead">
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="tab_1_alerts"></span>
+            <img class="loading mt-5" src="../img/loading-sm.svg" style="display: none">
+        </div>  
+    </div>
+    <div class="pagination-bar-default">
+        <div>
+            <small class="gray-default">Total:</small>
+            <small class="gray-default" id="total" ></small>
+            <small class="gray-default">registros</small>
+        </div>
+        <div>
+            <i class="fa fa-chevron-left gray-default" id="anterior" disabled></i>
+            &emsp;
+            <span class="gray-default" id="numeracao" ></span>
+            &emsp;
+            <i class="fa fa-chevron-right gray-default" id="proximo" disabled></i>
+        </div>
+    </div>
+</section>
+<script>
+  document.getElementById('btn-toggle-barra').addEventListener('click', () => {
+    const barra = document.getElementById('section-search-bar');
+    barra.classList.toggle('visible');
+  });
+
+  document.getElementById('btn-pesquisar').addEventListener('click', () => {
+    const barra = document.getElementById('section-search-bar');
+    barra.classList.toggle('visible');
+  });
+</script>
+<script>
+    var publicacaoList = {
+        formSearchId: 'formSearch',
+        list: ({ url, formSearchId }) => {
+            $("tr").remove();
+            $.ajax({
+                url: url,
+                cache: false,
+                type: 'GET',
+                data: $('#'+formSearchId).serialize(),
+                dataType: "json",
+                beforeSend: function () {
+                    $(".loading").show();
+                },
+                error: function () {
+                    $(".loading").hide();
+                    $("#alerts_feedback").html("Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.");
+                },
+                success: function (retorno) {
+                    $(".loading").hide();
+                    $("#alerts_feedback").empty();
+                    if(retorno.length === 0){
+                        $("#alerts_feedback").show()
+                        $("#alerts_feedback").html("Não há dados cadastrados.")
+                        return
+                    }
+                    var tamanhoPagina = 10;
+                    var pagina = 0;
+                    function paginar() {
+                        for (var i = pagina * tamanhoPagina; i < retorno.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                            $("#tbody")
+                            .append(
+                                $('<tr id="linha' + retorno[i].id + '">')
+                                .append($('<td class="px-0 pb-2">').append(`
+                                    <div class="card-default">
+                                        <div style="height: 50px; overflow-y:hidden">
+                                            <small><b>Cód./Desc: </b>${retorno[i].id} - ${retorno[i].descricao || '-'}</small><br/>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <small><b>Tipo: </b>${retorno[i].tipo}</small>&emsp;
+                                                <small><b>Exerc.: </b>${retorno[i].exercicio}</small>&emsp;
+                                                <small><b>Data: </b>${retorno[i].data_publicacao || '-'}</small>&emsp;
+                                            </div>
+                                            <div>
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="listarArquivos(' + retorno[i].id + ', \'publicacoes\',\'tbody_arquivos_modal\')"data-toggle="modal" data-target="#modal-files">
+                                                    <i class="fa fa-paperclip" style="color: var(--color-default)"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="admin.addTab({tabId:'form-publicacao', title: 'Editar Publicação', url: '${admin.baseUrl+endpoints.publicacao.form}', id: ${retorno[i].id}})" >
+                                                    <i class="fa fa-cog" style="color: var(--color-default)"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a style="text-decoration: none; color: gray" href="javascript:void(0)" onclick="deletar(' + retorno[i].id + ', 1)">
+                                                    <i class="fa fa-trash" style="color: var(--color-default)"></i>
+                                                </a>
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                `))
+                            );
+                        }
+                        $("#alerts_feedback").empty();
+                        $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
+                        $('#total').text(retorno.length)
+                    }
+                    function ajustarBotoes() {
+                        $('#proximo').prop('disabled', retorno.length <= tamanhoPagina || pagina >= Math.ceil(retorno.length / tamanhoPagina) - 1);
+                        $('#anterior').prop('disabled', retorno.length <= tamanhoPagina || pagina == 0);
+                    }
+                    $(function () {
+                        $('#proximo').click(function () {
+                            if (pagina < retorno.length / tamanhoPagina - 1) {
+                                $("tr").remove();
+                                pagina++;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        $('#anterior').click(function () {
+                            if (pagina >= 1) {
+                                $("tr").remove();
+                                pagina--;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        paginar();
+                        ajustarBotoes();
+                    });
+                }
+            });
+        }
+    }
+
+    publicacaoList.list({url: admin.baseUrl+endpoints.publicacao.list  })
+
+</script>

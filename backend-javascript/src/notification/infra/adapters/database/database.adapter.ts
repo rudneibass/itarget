@@ -1,0 +1,57 @@
+import { Injectable } from '@nestjs/common';
+import type { IDatabaseAdapter } from '@src/notification/domain/interfaces/database.interface';
+import { Pool } from 'pg';
+
+@Injectable()
+export class DatabaseAdapter implements IDatabaseAdapter {
+  private readonly pool: Pool;
+
+  constructor() {
+    this.pool = new Pool({
+      user: 'postgres',
+      host: 'postgres-backend-javascript',
+      database: 'backend_javascript',
+      password: 'postgres',
+      port: 5432,
+    });
+  }
+
+  async insert(query: string, data: Record<string, any>): Promise<{ id: string }> {
+    try {
+      const values = Object.values(data);
+      const result = await this.pool.query(query, values);
+      const id = result.rows[0]?.id;
+
+      if (!id) {
+        throw new Error('Falha ao recuperar o ID do registro inserido');
+      }
+
+      return { id };
+    } catch (error) {
+      console.error('Erro ao inserir no banco:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+
+  async delete(query: string, params: string[]): Promise<{ affectedRows: number }> {
+    try {
+      const result = await this.pool.query(query, params);
+      return { affectedRows: result.rowCount };
+    } catch (error) {
+      console.error('Database deletion error:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+    async select<T = any>(query: string, params: any[] = []): Promise<T[]> {
+    try {
+      const result = await this.pool.query(query, params);
+      return result.rows as T[];
+    } catch (error) {
+      console.error('Database selection error:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+}
