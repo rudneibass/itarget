@@ -33,22 +33,6 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     }
   }
 
-  /*async insert(query: string, data: Record<string, unknown>): Promise<{ id: string }> {
-    try {
-      const result = await this.pool.query(query, [data.name, data.email]);
-      const id = result.rows[0]?.id;
-
-      if (!id) {
-        throw new Error('Failed to retrieve inserted user ID');
-      }
-
-      return { id };
-    } catch (error) {
-      console.error('Database insertion error:', error);
-      throw new Error(`${error}`);
-    }
-  }*/
-
   async delete(query: string, params: string[]): Promise<{ affectedRows: number }> {
     try {
       const result = await this.pool.query(query, params);

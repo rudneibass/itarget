@@ -20,7 +20,7 @@ import { HashProviderAdapter } from './infra/adapters/hash/hash.provider.adapter
       useClass: DatabaseAdapter,
     },
     {
-      provide: 'HashProviderInterface',
+      provide: 'HashAdapterInterface',
       useClass: HashProviderAdapter,
     },
     CreateUserService,

@@ -3,12 +3,12 @@ import { UserDto } from '@src/account/domain/entities/user/user.dto';
 import { User } from '@src/account/domain/entities/user/user.entity';
 import { CreateUserRepository } from '@src/account/domain/repositories/user/database/create.user.repository';
 import { CreateUserServiceInputDto } from '@src/account/domain/services/user/create/create.user.service.input.dto';
-import type { HashProviderInterface } from '@src/account/domain/interfaces/hash.provider.interface';
+import type { HashAdapterInterface } from '@src/account/domain/interfaces/hash.adapter.interface';
 @Injectable()
 export class CreateUserService {
   constructor(
     private readonly repository: CreateUserRepository,
-    @Inject('HashProviderInterface') private readonly hashProvider: HashProviderInterface,
+    @Inject('HashAdapterInterface') private readonly hashProvider: HashAdapterInterface,
   ) {}
 
   async execute(createUserDto: CreateUserServiceInputDto){

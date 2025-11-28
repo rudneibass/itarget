@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { HashProviderInterface } from '@src/account/domain/interfaces/hash.provider.interface';
+import { HashAdapterInterface } from '@src/account/domain/interfaces/hash.adapter.interface';
 import bcrypt from 'bcryptjs';
 
 @Injectable()
-export class HashProviderAdapter implements HashProviderInterface {
+export class HashProviderAdapter implements HashAdapterInterface {
   private readonly saltRounds = 10;
 
   async hash(unhashed: string): Promise<string> {
