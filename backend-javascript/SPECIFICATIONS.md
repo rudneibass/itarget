@@ -1,12 +1,15 @@
 # ✅ CHECKLIST PARA CONSTRUÇÃO DE UM BACKEND DE SAAS
 
 ## 🔐 Autenticação & Autorização
-- [ ] Cadastro de usuário  
-- [ ] Login  
-- [ ] Logout / Invalidação de token  
+- [ ] Cadastro de usuário com senha criptografada
+- [ ] Envio de email de boas vindas após o cadastro
 - [ ] Recuperação de senha  
 - [ ] Reenvio de confirmação (opcional)  
-- [ ] Verificação de email  
+- [ ] Verificação de email
+
+- [ ] Login  
+- [ ] Logout / Invalidação de token  
+
 - [ ] Atualizar senha  
 - [ ] Atualizar email  
 - [ ] Autenticação JWT / Session  

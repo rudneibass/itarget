@@ -1,17 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './common/filters/http-exception.filter';
-import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { getSwaggerConfig, swaggerCustomOptions } from './config/swagger.config';
+import { AccountExceptionsFilter } from './account/infra/filters/account.exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
   
   // Filters
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new AccountExceptionsFilter());
   
   // Pipes
   //app.useGlobalPipes(new ValidationPipe({ transform: true }));

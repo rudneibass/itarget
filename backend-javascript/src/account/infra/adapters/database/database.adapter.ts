@@ -33,6 +33,18 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     }
   }
 
+  async select(query: string, data: Record<string, any>): Promise<Record<string, unknown>> {
+    try {
+      const values = Object.values(data);
+      const result = await this.pool.query(query, values);
+
+      return result;
+    } catch (error) {
+      console.error('Erro select no banco:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
   async delete(query: string, params: string[]): Promise<{ affectedRows: number }> {
     try {
       const result = await this.pool.query(query, params);

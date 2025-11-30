@@ -1,12 +1,10 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { User } from '@src/account/domain/entities/user/user.entity';
 import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/database.adapter.interface";
 
-@Injectable()
 export class CreateUserRepository {
-  constructor(@Inject('DatabaseAdapterInterface') private readonly db: DatabaseAdapterInterface) {}
+  constructor(private readonly db: DatabaseAdapterInterface) {}
 
-  async create(user: User): Promise< {id: string }> {
+  async handle(user: User): Promise< {id: string }> {
     return await 
     this.db.insert(
       `INSERT INTO "user" (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id`,
