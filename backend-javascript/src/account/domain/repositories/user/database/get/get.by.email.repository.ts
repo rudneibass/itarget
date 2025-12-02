@@ -1,7 +1,7 @@
 import { UserDto } from "@src/account/domain/entities/user/user.dto";
 import { User } from '@src/account/domain/entities/user/user.entity';
 import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/database.adapter.interface";
-import { DomainException } from "@src/common/exception/domain.exception";
+import { DomainException } from "@src/account/infra/exceptions/domain.exception";
 
 export class GetByEmailRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
@@ -20,6 +20,7 @@ export class GetByEmailRepository {
 
       return new User(
         new UserDto({
+          id: userRows[0]['id'],
           name: userRows[0]['name'],
           email: userRows[0]['email']
         })

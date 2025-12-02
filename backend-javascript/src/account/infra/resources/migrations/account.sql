@@ -78,3 +78,13 @@ CREATE TABLE public.workspace_user (
 -- Usuário não pode estar duas vezes no mesmo workspace
 CREATE UNIQUE INDEX idx_workspace_user_unique
     ON public.workspace_user(workspace_id, user_id);
+
+
+CREATE TABLE password_reset_token (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES "user"(id),
+  token_hash VARCHAR(255) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  used BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW()
+);

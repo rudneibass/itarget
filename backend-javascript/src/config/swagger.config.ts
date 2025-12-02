@@ -8,6 +8,7 @@ export const swaggerConfig = new DocumentBuilder()
   .addTag('Usuários', 'Endpoints relacionados a usuários')
   .addTag('Organizações', 'Endpoints relacionados a organizações')
   .addTag('Notificações', 'Endpoints relacionados a notificações')
+  .addTag('Recuperar Senha', 'Endpoints para recuperar senha.')
   .addBearerAuth(
     {
       type: 'http',
@@ -62,6 +63,7 @@ export const swaggerDevConfig = new DocumentBuilder()
   .addTag('Usuários', 'Endpoints relacionados a usuários')
   .addTag('Organizações', 'Endpoints relacionados a organizações')
   .addTag('Notificações', 'Endpoints relacionados a notificações')
+  .addTag('Recuperar Senha', 'Endpoints para recuperar senha.')
   .addBearerAuth()
   .addServer('http://localhost:3000', 'Servidor Local')
   .build();
@@ -74,6 +76,7 @@ export const swaggerProdConfig = new DocumentBuilder()
   .addTag('Usuários', 'Endpoints relacionados a usuários')
   .addTag('Organizações', 'Endpoints relacionados a organizações')
   .addTag('Notificações', 'Endpoints relacionados a notificações')
+  .addTag('Recuperar Senha', 'Endpoints para recuperar senha.')
   .addBearerAuth()
   .addServer('https://api.exemplo.com', 'Servidor de Produção')
   .build();

@@ -1,4 +1,4 @@
-import { DomainException } from "@src/common/exception/domain.exception";
+import { DomainException } from "@src/account/infra/exceptions/domain.exception";
 
 export class Email {
   private readonly value: string;

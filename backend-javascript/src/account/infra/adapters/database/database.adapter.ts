@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import type { DatabaseAdapterInterface } from '@src/account/domain/interfaces/database.adapter.interface';
-import { Pool } from 'pg';
+import { Pool, PoolClient, QueryResult  } from 'pg';
 
 @Injectable()
 export class DatabaseAdapter implements DatabaseAdapterInterface {
   private readonly pool: Pool;
+  private client?: PoolClient;
 
   constructor() {
     this.pool = new Pool({
@@ -55,4 +56,62 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     }
   }
 
+  async query(sql: string, params?: any[]): Promise<any[]> {
+    try {
+      const result = await this.pool.query(sql, params);
+      return result.rows;
+    } catch (error) {
+      console.error('Database query error:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+  async close(): Promise<void> {
+    try {
+      await this.pool.end();
+    } catch (error) {
+      console.error('Error closing pool:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+  async beginTransaction(): Promise<void> {
+    try {
+      if (!this.client) {
+        this.client = await this.pool.connect();
+      }
+      await this.client.query('BEGIN');
+    } catch (error) {
+      console.error('Error beginning transaction:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+  async commit(): Promise<void> {
+    try {
+      if (!this.client) {
+        throw new Error('No active transaction');
+      }
+      await this.client.query('COMMIT');
+      this.client.release();
+      this.client = undefined;
+    } catch (error) {
+      console.error('Error committing transaction:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+  async rollback(): Promise<void> {
+    try {
+      if (!this.client) {
+        throw new Error('No active transaction');
+      }
+      await this.client.query('ROLLBACK');
+      this.client.release();
+      this.client = undefined;
+    } catch (error) {
+      console.error('Error rolling back transaction:', error);
+      throw new Error(`${error}`);
+    }
+  }
 }

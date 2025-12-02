@@ -3,14 +3,14 @@ import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { getSwaggerConfig, swaggerCustomOptions } from './config/swagger.config';
-import { AccountExceptionsFilter } from './account/infra/filters/account.exceptions.filter';
+import { GlobalExceptionCatcher } from './global/global-exception-catcher';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
   
   // Filters
-  app.useGlobalFilters(new AccountExceptionsFilter());
+  app.useGlobalFilters(new GlobalExceptionCatcher());
   
   // Pipes
   //app.useGlobalPipes(new ValidationPipe({ transform: true }));

@@ -5,7 +5,7 @@ import { CreateUserServiceInputDto } from '@src/account/domain/services/user/cre
 import type { HashAdapterInterface } from '@src/account/domain/interfaces/hash.adapter.interface';
 import type { MailerAdapterInterface } from '@src/account/domain/interfaces/mailer.adapter.interface';
 import { UserRepository } from '@src/account/domain/repositories/user/database/user.repository';
-import { DomainException } from '@src/account/infra/exception/domain.exception';
+import { DomainException } from '@src/account/infra/exceptions/domain.exception';
 @Injectable()
 export class CreateUserService {
   private serviceName = 'criação de usuários'

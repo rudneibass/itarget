@@ -1,10 +1,10 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { DomainException } from '@src/account/infra/exception/domain.exception';
+import { DomainException } from '@src/account/infra/exceptions/domain.exception';
 
 @Catch()
-export class AccountExceptionsFilter implements ExceptionFilter {
-  private readonly logger = new Logger(AccountExceptionsFilter.name);
+export class GlobalExceptionCatcher implements ExceptionFilter {
+  private readonly logger = new Logger(GlobalExceptionCatcher.name);
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

@@ -1,7 +1,7 @@
 import { UserDto } from "@src/account/domain/entities/user/user.dto";
 import { User } from '@src/account/domain/entities/user/user.entity';
 import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/database.adapter.interface";
-import { RepositoryException } from "@src/common/exception/repository.exception";
+import { DomainException } from "@src/account/infra/exceptions/domain.exception";
 
 export class GetByIdRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
@@ -25,7 +25,7 @@ export class GetByIdRepository {
         })
       )
     } catch (error) {
-      throw new RepositoryException(`Failed to retrieve user by id "${id}". Error message: ${error.message}`);
+      throw new DomainException(`Failed to retrieve user by id "${id}". Error message: ${error.message}`);
     }  
   }
 }
