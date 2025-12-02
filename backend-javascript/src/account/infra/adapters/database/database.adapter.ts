@@ -46,6 +46,25 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     }
   }
 
+  async update(query: string, data: Record<string, any>): Promise<{ id: string }> {
+    try {
+      const values = Object.values(data);
+      const result = await this.pool.query(query, values);
+    
+      const id = result.rows[0]?.id;
+    
+      if (!id) {
+        throw new Error('Falha ao recuperar o ID do registro atualizado');
+      }
+    
+      return { id };
+    } catch (error) {
+      console.error('Erro ao fazer update no banco:', error);
+      throw new Error(`${error}`);
+    }
+  }
+
+
   async delete(query: string, params: string[]): Promise<{ affectedRows: number }> {
     try {
       const result = await this.pool.query(query, params);

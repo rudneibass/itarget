@@ -15,6 +15,8 @@ import { HashProviderAdapter } from './infra/adapters/hash/hash.provider.adapter
 import { MailerAdapter } from './infra/adapters/mailer/mailer.adapter';
 import { CreatePasswordResetTokenService } from './domain/services/password-reset-token/create.password.reset.token.service';
 import { PasswordResetTokenRepository } from './domain/repositories/password-reset-token/database/password.reset.token.repository';
+import { ResetPasswordController } from './infra/controllers/user/reset-password/reset.password.contrller';
+import { ResetPasswordService } from './domain/services/user/reset-password/reset.password.service';
 
 
 
@@ -23,7 +25,8 @@ import { PasswordResetTokenRepository } from './domain/repositories/password-res
   controllers: [ 
     CreateOrganizationController, 
     CreateUserController, 
-    CreatePasswordResetTokenController
+    CreatePasswordResetTokenController,
+    ResetPasswordController
   ],
   providers: [
     { provide: 'DatabaseAdapterInterface', useClass: DatabaseAdapter},
@@ -36,7 +39,8 @@ import { PasswordResetTokenRepository } from './domain/repositories/password-res
 
     CreateOrganizationService,
     CreateOrganizationRepository,
-    CreatePasswordResetTokenService
+    CreatePasswordResetTokenService,
+    ResetPasswordService,
   ],
 })
 export class AccountModule {}

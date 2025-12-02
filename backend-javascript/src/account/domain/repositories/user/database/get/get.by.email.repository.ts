@@ -9,7 +9,13 @@ export class GetByEmailRepository {
   async handle(email: string): Promise<User | null> {
     try {
       const result = await this.db.select(
-        `SELECT * FROM  "user" WHERE email = $1`,
+        `SELECT 
+        u.* 
+        ,prt.token_hash 
+        ,prt.expires_at
+        FROM  "user" u
+        LEFT JOIN password_reset_token prt ON prt.user_id = u.id
+        WHERE email = $1`,
         {email: email}
       );
       const userRows = result?.rows || []

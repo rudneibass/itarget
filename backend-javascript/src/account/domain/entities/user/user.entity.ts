@@ -3,9 +3,9 @@ import { UserDto } from '@src/account/domain/entities/user/user.dto';
 
 export class User {
   private readonly id?: number | null;
-  private readonly name: string;
-  private readonly email: Email;
-  private readonly passwordHash?: string;
+  private name: string;
+  private email: Email;
+  private passwordHash?: string;
 
   constructor(dto: UserDto) {
     this.id = dto.id || null;
@@ -28,5 +28,9 @@ export class User {
 
   getPasswordHash(): string | undefined {
     return this.passwordHash;
+  }
+
+  updatePasswordHash(newPasswordHash: string){
+    this.passwordHash = newPasswordHash
   }
 }
