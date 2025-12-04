@@ -24,7 +24,7 @@ export class FindByUserIdRepository {
           new PasswordResetTokenDto({
             id: row['id'],
             userId: row['user_id'],
-            tokenHash: row['token_hash'],
+            hashToken: row['token_hash'],
             expiresAt: row['expires_at'],
             used: row['used']
           })

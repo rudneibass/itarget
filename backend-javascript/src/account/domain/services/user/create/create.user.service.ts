@@ -38,7 +38,7 @@ export class CreateUserService {
   }
 
   async getById({id}){
-    const user = await this.repository.get(id)
+    const user = await this.repository.getById(id)
     return user
   }
 

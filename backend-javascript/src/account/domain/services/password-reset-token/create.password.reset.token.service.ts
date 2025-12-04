@@ -27,8 +27,8 @@ export class CreatePasswordResetTokenService {
     }
 
     const token = randomBytes(32).toString('hex');
-    const tokenHash = await this.hashAdapter.hash(token)
-    const urlToResetPassword = `https://plataforma.com/reset-password?token=${tokenHash}`
+    const hashToken = await this.hashAdapter.hash(token)
+    const urlToResetPassword = `https://plataforma.com/reset-password?token=${hashToken}`
     const userId = user.getId();
     if (!userId) {
       throw new DomainException('Usuário sem ID válido', 422);
@@ -39,13 +39,16 @@ export class CreatePasswordResetTokenService {
       new PasswordResetToken(
         new PasswordResetTokenDto({
         userId,
-        tokenHash: tokenHash,
+        hashToken: hashToken,
         expiresAt: new Date(Date.now() + 3600 * 1000).toString(),
       }))
     )
 
     this.sendPasswordResetTokenEmail({email: user.getEmail(), name: user.getName(), urlToResetPassword: urlToResetPassword });
-    return { resetUrl: urlToResetPassword };
+    return { 
+      success: true,
+      resetUrl: 'Enviamos uma url para redefinição de senha para seu email.' 
+    };
   }
 
 
@@ -60,5 +63,4 @@ export class CreatePasswordResetTokenService {
         `,
     });
   }
-
 }

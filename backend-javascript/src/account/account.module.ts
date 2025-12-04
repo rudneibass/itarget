@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 
 import { CreateUserController } from './infra/controllers/user/create/create.user.contrller';
 import { CreateOrganizationController } from './infra/controllers/organization/create/create.organization.contrller';
-import { CreatePasswordResetTokenController } from './infra/controllers/password-reset-token/create/create.password.reset.token.contrller';
 
 import { CreateUserService } from './domain/services/user/create/create.user.service';
 import { CreateOrganizationService } from './domain/services/organization/create/create.organization.service';
@@ -15,8 +14,10 @@ import { HashProviderAdapter } from './infra/adapters/hash/hash.provider.adapter
 import { MailerAdapter } from './infra/adapters/mailer/mailer.adapter';
 import { CreatePasswordResetTokenService } from './domain/services/password-reset-token/create.password.reset.token.service';
 import { PasswordResetTokenRepository } from './domain/repositories/password-reset-token/database/password.reset.token.repository';
-import { ResetPasswordController } from './infra/controllers/user/reset-password/reset.password.contrller';
+import { ResetPasswordController } from './infra/controllers/user/reset-password/reset.password.controller';
 import { ResetPasswordService } from './domain/services/user/reset-password/reset.password.service';
+import { ForgotPasswordController } from './infra/controllers/user/forgot-password/forgot-password.controller';
+import { RecoverPasswordController } from './infra/controllers/user/recover-password/recover.password.controller';
 
 
 
@@ -25,7 +26,8 @@ import { ResetPasswordService } from './domain/services/user/reset-password/rese
   controllers: [ 
     CreateOrganizationController, 
     CreateUserController, 
-    CreatePasswordResetTokenController,
+    ForgotPasswordController,
+    RecoverPasswordController,
     ResetPasswordController
   ],
   providers: [

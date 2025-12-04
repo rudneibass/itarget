@@ -1,4 +1,4 @@
-import { Body, Controller, Put } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResetPasswordService } from '@src/account/domain/services/user/reset-password/reset.password.service';
 import { ResetPasswordInputDto } from '@src/account/domain/services/user/reset-password/reset.password.input.dto';
@@ -8,7 +8,7 @@ import { ResetPasswordInputDto } from '@src/account/domain/services/user/reset-p
 export class ResetPasswordController {
   constructor(private readonly service: ResetPasswordService) {}
 
-  @Put('reset-password')
+  @Post('reset-password')
   @ApiOperation({ 
     summary: 'Redefinir senha',
     description: 'Redefinir senha'

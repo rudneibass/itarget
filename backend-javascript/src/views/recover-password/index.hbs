@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Redefinir Senha</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card-bg: #ffffff;
+      --text: #333;
+      --text-light: #666;
+      --primary: #4b7bec;
+      --primary-hover: #3867d6;
+      --secondary: #6d6d6d;
+      --secondary-hover: #555555;
+      --border: #e3e6eb;
+      --radius: 0px;
+      --shadow: 0px 4px 20px rgba(0,0,0,0.05);
+    }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+    body {
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .form-group {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: var(--secondary);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--secondary-hover);
+    }
+
+    #message, #success {
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    #message { color: red; }
+    #success { color: green; }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Redefinir Senha</h2>
+    <p>Crie uma nova senha forte para sua conta.</p>
+
+    <form id="resetForm" onsubmit="return false;">
+      <input type="hidden" id="token" value="{{token}}" />
+
+      <div class="form-group">
+        <label for="password">Nova Senha</label>
+        <input type="password" id="password" required minlength="6" placeholder="Digite sua nova senha">
+      </div>
+
+      <button type="button" onclick="resetPassword()">Salvar nova senha</button>
+
+      <div id="message"></div>
+      <div id="success"></div>
+    </form>
+
+    <div class="footer">© Todos os direitos reservados.</div>
+  </div>
+
+  <script>
+    async function resetPassword() {
+      const token = document.getElementById('token').value;
+      const password = document.getElementById('password').value;
+
+      const messageElem = document.getElementById('message');
+      const successElem = document.getElementById('success');
+      
+      messageElem.textContent = '';
+      successElem.textContent = '';
+
+      if (!password || password.length < 6) {
+        messageElem.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/user/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          messageElem.textContent = data.message || 'Erro ao redefinir a senha.';
+          return;
+        }
+
+        successElem.textContent = 'Senha redefinida com sucesso!';
+      } catch (err) {
+        messageElem.textContent = 'Erro ao conectar ao servidor.';
+      }
+    }
+  </script>
+
+</body>
+</html>

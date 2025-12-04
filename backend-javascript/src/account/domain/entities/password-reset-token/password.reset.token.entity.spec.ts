@@ -10,14 +10,14 @@ describe('PasswordResetToken', () => {
   it('deve criar uma instância válida de PasswordResetToken', () => {
     const dto: PasswordResetTokenDto = {
       userId: 10,
-      tokenHash: 'abcd1234hash',
+      hashToken: 'abcd1234hash',
       expiresAt: '2025-12-01 10:30:00',
     };
 
     const token = new PasswordResetToken(dto);
 
     expect(token.getUserId()).toBe(10);
-    expect(token.getTokenHash()).toBe('abcd1234hash');
+    expect(token.gethashToken()).toBe('abcd1234hash');
     expect(token.getExpiresAt()).toBe('2025-12-01 10:30:00');
   });
 
@@ -29,8 +29,9 @@ describe('PasswordResetToken', () => {
 
     const dto: PasswordResetTokenDto = {
       userId: 5,
-      tokenHash: 'hash5678',
-      expiresAt: date,
+      hashToken: 'hash5678',
+      expiresAt: date.toString(),
+      used: false
     };
 
     const token = new PasswordResetToken(dto);
@@ -44,8 +45,9 @@ describe('PasswordResetToken', () => {
   it('deve lançar erro se expiresAt for inválido', () => {
     const dto: PasswordResetTokenDto = {
       userId: 1,
-      tokenHash: 'invalidhash',
+      hashToken: 'invalidhash',
       expiresAt: 'data-invalida', // inválido
+      used: false
     };
 
     expect(() => new PasswordResetToken(dto)).toThrowError();
@@ -57,8 +59,9 @@ describe('PasswordResetToken', () => {
   it('deve criar expiresAt como uma instância de DateTime', () => {
     const dto: PasswordResetTokenDto = {
       userId: 9,
-      tokenHash: 'XYZ',
+      hashToken: 'XYZ',
       expiresAt: '2025-12-01 10:30:00',
+      used: false
     };
 
     const token = new PasswordResetToken(dto);
@@ -73,8 +76,9 @@ describe('PasswordResetToken', () => {
   it('deve converter corretamente para timestamp UTC', () => {
     const dto: PasswordResetTokenDto = {
       userId: 2,
-      tokenHash: 'precisao123',
+      hashToken: 'precisao123',
       expiresAt: '2025-01-15 08:05:30',
+      used: false
     };
 
     const token = new PasswordResetToken(dto);
@@ -88,8 +92,9 @@ describe('PasswordResetToken', () => {
   it('getExpiresAt deve retornar string imutável', () => {
     const dto: PasswordResetTokenDto = {
       userId: 3,
-      tokenHash: 'immutable',
+      hashToken: 'immutable',
       expiresAt: '2025-12-01 10:30:00',
+      used: false
     };
 
     const token = new PasswordResetToken(dto);

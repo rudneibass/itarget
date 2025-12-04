@@ -27,7 +27,7 @@ export class UserRepository {
     return this.createUserRepository.handle(user);
   }
 
-  async get(id: string): Promise<User | null> {
+  async getById(id: number): Promise<User | null> {
     return this.getByIdRepository.handle(id);
   }
   

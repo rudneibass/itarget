@@ -4,12 +4,15 @@ import { PasswordResetToken } from '@src/account/domain/entities/password-reset-
 import type { DatabaseAdapterInterface } from '@src/account/domain/interfaces/database.adapter.interface';
 import { FindByUserIdRepository } from './find/find.by.user.id.repository';
 import { UpdatePasswordResetTokenRepository } from './update/update.password.reset.token.repository';
+import { GetByHashTokenRepository } from './get/get.by.hash.token.repository';
+
 
 @Injectable()
 export class PasswordResetTokenRepository {
 
   private createRepository: CreateRepository
   private findByUserIdRepository: FindByUserIdRepository
+  private getByHashTokenRepository: GetByHashTokenRepository
   private updatePasswordResetTokenRepository: UpdatePasswordResetTokenRepository
 
   constructor(@Inject('DatabaseAdapterInterface') private readonly db: DatabaseAdapterInterface) {
@@ -23,6 +26,10 @@ export class PasswordResetTokenRepository {
 
   async findByUserId(userId: number): Promise<PasswordResetToken[]> {
     return this.findByUserIdRepository.handle(userId);
+  }
+
+  async getByHashToken(HashToken: string): Promise<PasswordResetToken | null> {
+    return this.getByHashTokenRepository.handle(HashToken);
   }
 
   async update(passwordResetToken: PasswordResetToken): Promise<{ id: string }>{

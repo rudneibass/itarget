@@ -4,11 +4,16 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { getSwaggerConfig, swaggerCustomOptions } from './config/swagger.config';
 import { GlobalExceptionCatcher } from './global/global-exception-catcher';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
   
+  // Servir templates
+  app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
+  app.setViewEngine('hbs');
+
   // Filters
   app.useGlobalFilters(new GlobalExceptionCatcher());
   
@@ -27,3 +32,4 @@ async function bootstrap() {
   console.log(`🌍 Environment: ${environment}`);
 }
 bootstrap();
+

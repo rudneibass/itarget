@@ -20,7 +20,7 @@ describe('CreateRepository - Integração (Postgres)', () => {
     new PasswordResetToken(
       new PasswordResetTokenDto({
           userId: 10,
-          tokenHash: "HASHED_123",
+          hashToken: "HASHED_123",
           expiresAt: "2035-01-01T00:00:00Z",
       })
     );

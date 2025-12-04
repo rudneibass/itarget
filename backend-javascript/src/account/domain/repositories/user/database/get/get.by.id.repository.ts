@@ -6,7 +6,7 @@ import { DomainException } from "@src/account/infra/exceptions/domain.exception"
 export class GetByIdRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
 
-  async handle(id: string): Promise<User | null> {
+  async handle(id: number): Promise<User | null> {
     try{  
       const result = await this.db.select(
         `SELECT * FROM  "user" WHERE id = $1`,

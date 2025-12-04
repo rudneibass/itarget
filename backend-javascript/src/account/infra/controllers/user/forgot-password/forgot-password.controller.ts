@@ -3,14 +3,14 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePasswordResetTokenService } from '@src/account/domain/services/password-reset-token/create.password.reset.token.service';
 import { CreatePasswordResetTokenInputDto } from '@src/account/domain/services/password-reset-token/create.password.reset.token.input.dto';
 
-@ApiTags('Recuperar Senha')
-@Controller('password-reset-token')
-export class CreatePasswordResetTokenController {
+@ApiTags('Usuários')
+@Controller('user')
+export class ForgotPasswordController {
   constructor(private readonly service: CreatePasswordResetTokenService) {}
 
-  @Post('create')
+  @Post('forgot-password')
   @ApiOperation({ 
-    summary: 'Redefinir senha',
+    summary: 'Solicitar recuperação de senha',
     description: 'Cria URL para redefinição de senha'
   })
   @ApiResponse({ 
@@ -19,9 +19,13 @@ export class CreatePasswordResetTokenController {
     schema: {
       type: 'object',
       properties: {
+        success: {
+          type: 'boolean',
+          description: 'true/false'
+        },
         resetUrl: {
           type: 'string',
-          description: 'URL para redefinir senha'
+          description: 'Enviamos uma url para redefinição de senha para seu email.'
         }
       }
     }

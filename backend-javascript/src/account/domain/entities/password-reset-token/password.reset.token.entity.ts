@@ -4,7 +4,7 @@ import { PasswordResetTokenDto } from './password.reset.token.dto';
 export class PasswordResetToken {
   private readonly id?: number | null;
   private readonly userId: number;
-  private readonly tokenHash: string;
+  private readonly hashToken: string;
   private readonly expiresAt: DateTime;
   private used?: boolean;
 
@@ -12,7 +12,7 @@ export class PasswordResetToken {
     this.id = dto.id || null;
     this.used = dto.used || false;
     this.userId = dto.userId;
-    this.tokenHash =  dto.tokenHash;
+    this.hashToken =  dto.hashToken;
     this.expiresAt = new DateTime(dto.expiresAt);
   }
 
@@ -24,8 +24,8 @@ export class PasswordResetToken {
     return this.userId;
   }
 
-  getTokenHash(): string {
-    return this.tokenHash;
+  gethashToken(): string {
+    return this.hashToken;
   }
 
   getExpiresAt(): string {

@@ -10,7 +10,7 @@ export class CreateRepository {
       `INSERT INTO "password_reset_token" (user_id, token_hash, expires_at) VALUES ($1, $2, $3) RETURNING id`,
       {
         userId: passwordResetToken.getUserId(), 
-        tokenHash: passwordResetToken.getTokenHash(), 
+        hashToken: passwordResetToken.gethashToken(), 
         expiresAt: passwordResetToken.getExpiresAt()
       }
     );
