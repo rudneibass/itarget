@@ -3,7 +3,7 @@ export class PasswordResetTokenDto {
   userId: number;
   hashToken: string;
   expiresAt: string;
-  used: boolean | null;
+  used?: boolean | null;
 
   constructor(data: { id?: number,  used?: boolean, userId: number; hashToken: string, expiresAt: string }) {
     this.id = data.id || null;

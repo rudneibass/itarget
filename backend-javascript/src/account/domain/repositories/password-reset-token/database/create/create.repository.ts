@@ -4,13 +4,13 @@ import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/da
 export class CreateRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
 
-  async handle(passwordResetToken: PasswordResetToken): Promise< {id: string }> {
+  async handle(passwordResetToken: PasswordResetToken): Promise<number> {
     return await 
     this.db.insert(
       `INSERT INTO "password_reset_token" (user_id, token_hash, expires_at) VALUES ($1, $2, $3) RETURNING id`,
       {
         userId: passwordResetToken.getUserId(), 
-        hashToken: passwordResetToken.gethashToken(), 
+        hashToken: passwordResetToken.getHashToken(), 
         expiresAt: passwordResetToken.getExpiresAt()
       }
     );

@@ -4,7 +4,7 @@ import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/da
 export class CreateUserRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
 
-  async handle(user: User): Promise< {id: string }> {
+  async handle(user: User): Promise<number> {
     return await 
     this.db.insert(
       `INSERT INTO "user" (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id`,

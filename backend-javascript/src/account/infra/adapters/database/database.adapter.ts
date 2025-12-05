@@ -17,17 +17,24 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     });
   }
 
-  async insert(query: string, data: Record<string, any>): Promise<{ id: string }> {
+  async insert(query: string, data: Record<string, any>): Promise<number> {
     try {
       const values = Object.values(data);
       const result = await this.pool.query(query, values);
-      const id = result.rows[0]?.id;
 
-      if (!id) {
+      const idString = result.rows[0]?.id;
+
+      if (!idString) {
         throw new Error('Falha ao recuperar o ID do registro inserido');
       }
 
-      return { id };
+      const id = Number(idString);
+      if (Number.isNaN(id)) {
+        throw new Error(`ID retornado pelo banco não é numérico: ${idString}`);
+      }
+
+      return id 
+
     } catch (error) {
       console.error('Erro ao inserir no banco:', error);
       throw new Error(`${error}`);
@@ -46,18 +53,24 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     }
   }
 
-  async update(query: string, data: Record<string, any>): Promise<{ id: string }> {
+  async update(query: string, data: Record<string, any>): Promise<number> {
     try {
       const values = Object.values(data);
       const result = await this.pool.query(query, values);
-    
-      const id = result.rows[0]?.id;
-    
-      if (!id) {
-        throw new Error('Falha ao recuperar o ID do registro atualizado');
+
+      const idString = result.rows[0]?.id;
+      
+      if (!idString) {
+        throw new Error('Falha ao recuperar o ID do registro inserido');
       }
-    
-      return { id };
+
+      const id = Number(idString);
+      if (Number.isNaN(id)) {
+        throw new Error(`ID retornado pelo banco não é numérico: ${idString}`);
+      }
+
+      return id 
+
     } catch (error) {
       console.error('Erro ao fazer update no banco:', error);
       throw new Error(`${error}`);
@@ -85,7 +98,7 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     }
   }
 
-  async close(): Promise<void> {
+  async disconnect(): Promise<void> {
     try {
       await this.pool.end();
     } catch (error) {

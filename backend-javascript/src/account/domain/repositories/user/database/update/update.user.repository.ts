@@ -4,7 +4,7 @@ import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/da
 export class UpdateUserRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
 
-  async handle(user: User): Promise< {id: string }> {
+  async handle(user: User): Promise<number> {
     return await this.db.update(
       `UPDATE "user" 
         SET name = $1

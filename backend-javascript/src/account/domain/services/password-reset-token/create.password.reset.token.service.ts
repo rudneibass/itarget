@@ -28,7 +28,7 @@ export class CreatePasswordResetTokenService {
 
     const token = randomBytes(32).toString('hex');
     const hashToken = await this.hashAdapter.hash(token)
-    const urlToResetPassword = `https://plataforma.com/reset-password?token=${hashToken}`
+    const urlToResetPassword = `http://localhost:3000/api/user/recover-password?token=${hashToken}`
     const userId = user.getId();
     if (!userId) {
       throw new DomainException('Usuário sem ID válido', 422);

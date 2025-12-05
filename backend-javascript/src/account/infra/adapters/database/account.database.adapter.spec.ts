@@ -21,45 +21,39 @@ describe('PostgresDatabaseAdapter Integration Test', () => {
     await pool.end();
   });
 
-  afterEach(async () => {
-    await pool.query(`DELETE FROM "user" WHERE email LIKE 'test-integration-%'`);
-  });
+  afterEach(async () => { await pool.query(`DELETE FROM "user" WHERE email LIKE 'test-integration-%'`) });
 
-  it('should insert a user and return its id', async () => {
+  it('Should insert a user and return its id', async () => {
     const testEmail = `test-integration-${Date.now()}@example.com`;
-    const result = await 
+    const testPasswordHash = `test-password-hash-${Date.now()}`;
+    const id = await 
     adapter.insert(
-       `INSERT INTO "user" (name, email) VALUES ($1, $2) RETURNING id`,
-      { 
-        name: 'Integration Test', 
-        email: testEmail 
-      }
+       `INSERT INTO "user" (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id`,
+      { name: 'Integration Test',  email: testEmail, passwordHash: testPasswordHash }
     );
-
-    expect(result).toHaveProperty('id');
-    expect(typeof result.id).toBe('number');
-
-    const res = await pool.query(`SELECT * FROM "user" WHERE id = $1`, [result.id]);
+    expect(typeof id).toBe('number');
+    const res = await pool.query(`SELECT * FROM "user" WHERE id = $1`, [id]);
     expect(res.rowCount).toBe(1);
     expect(res.rows[0].email).toBe(testEmail);
   });
 
 
-  it('should delete a user and return affectedRows = 1', async () => {
+  it('Should delete a user and return affectedRows = 1', async () => {
     const testEmail = `test-integration-delete-${Date.now()}@example.com`;
-    const insertResult = await adapter.insert(
-      `INSERT INTO "user" (name, email) VALUES ($1, $2) RETURNING id`,
-      { name: 'Delete Test', email: testEmail }
+    const testPasswordHash = `test-password-hash-${Date.now()}`;
+
+    const id = await adapter.insert(
+      `INSERT INTO "user" (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id`,
+      { name: 'Delete Test', email: testEmail, passwordHash: testPasswordHash }
     );
 
-    const userId = insertResult.id;
     const deleteResult = await adapter.delete(
       `DELETE FROM "user" WHERE id = $1`,
-      [userId]
+      [id.toString()]
     );
 
     expect(deleteResult).toHaveProperty('affectedRows', 1);
-    const res = await pool.query(`SELECT * FROM "user" WHERE id = $1`, [userId]);
+    const res = await pool.query(`SELECT * FROM "user" WHERE id = $1`, [id]);
     expect(res.rowCount).toBe(0);
   });
 

@@ -24,7 +24,7 @@ export class PasswordResetToken {
     return this.userId;
   }
 
-  gethashToken(): string {
+  getHashToken(): string {
     return this.hashToken;
   }
 

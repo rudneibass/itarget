@@ -5,7 +5,7 @@ import type { DatabaseAdapterInterface } from "@src/account/domain/interfaces/da
 export class UpdatePasswordResetTokenRepository {
   constructor(private readonly db: DatabaseAdapterInterface) {}
 
-  async handle(passwordResetToken: PasswordResetToken): Promise< {id: string }> {
+  async handle(passwordResetToken: PasswordResetToken): Promise<number> {
     return await this.db.update(
       `UPDATE "user" 
         SET used = $1

@@ -23,7 +23,7 @@ export class UserRepository {
     this.updateUserRepository = new UpdateUserRepository(this.db)
   }
 
-  async create(user: User): Promise<{ id: string }> {
+  async create(user: User): Promise<number> {
     return this.createUserRepository.handle(user);
   }
 
@@ -39,7 +39,7 @@ export class UserRepository {
     return this.findByEmailRepository.handle(email)
   }
 
-  async update(user: User): Promise<{id: string}> {
+  async update(user: User): Promise<number> {
     return this.updateUserRepository.handle(user)
   }
 }

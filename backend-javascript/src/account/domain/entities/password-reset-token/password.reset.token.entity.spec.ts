@@ -1,6 +1,7 @@
 import { PasswordResetToken } from './password.reset.token.entity';
 import { PasswordResetTokenDto } from './password.reset.token.dto';
 import { DateTime } from '../../value-objects/date-time/data.time.vo';
+import { DomainException } from '@src/account/infra/exceptions/domain.exception';
 
 describe('PasswordResetToken', () => {
 
@@ -17,7 +18,7 @@ describe('PasswordResetToken', () => {
     const token = new PasswordResetToken(dto);
 
     expect(token.getUserId()).toBe(10);
-    expect(token.gethashToken()).toBe('abcd1234hash');
+    expect(token.getHashToken()).toBe('abcd1234hash');
     expect(token.getExpiresAt()).toBe('2025-12-01 10:30:00');
   });
 
@@ -50,7 +51,7 @@ describe('PasswordResetToken', () => {
       used: false
     };
 
-    expect(() => new PasswordResetToken(dto)).toThrowError();
+    expect(() => new PasswordResetToken(dto)).rejects.toThrow(DomainException)
   });
 
   // -------------------------------------------------------
