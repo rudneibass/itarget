@@ -7,12 +7,12 @@ export class UpdatePasswordResetTokenRepository {
 
   async handle(passwordResetToken: PasswordResetToken): Promise<number> {
     return await this.db.update(
-      `UPDATE "user" 
+      `UPDATE password_reset_token 
         SET used = $1
         WHERE id = $2 
         RETURNING id`
       ,{
-        used: passwordResetToken.getUserId(),
+        used: passwordResetToken.getUsed(),
         id: passwordResetToken.getId()
       }
     );

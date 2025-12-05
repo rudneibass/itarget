@@ -20,8 +20,10 @@ export class GetByIdRepository {
 
       return new User(
         new UserDto({
+          id: userRows[0]['id'],
           name: userRows[0]['name'],
-          email: userRows[0]['email']
+          email: userRows[0]['email'],
+          passwordHash: userRows[0]['password_hash'],
         })
       )
     } catch (error) {

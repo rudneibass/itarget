@@ -8,7 +8,6 @@ import { UserRepository } from './domain/repositories/user/database/user.reposit
 import { PasswordResetTokenRepository } from './domain/repositories/password-reset-token/database/password.reset.token.repository';
 
 import { CreateUserService } from './domain/services/user/create/create.user.service';
-import { CreateOrganizationService } from './domain/services/organization/create/create.organization.service';
 import { CreatePasswordResetTokenService } from './domain/services/password-reset-token/create.password.reset.token.service';
 import { ResetPasswordService } from './domain/services/user/reset-password/reset.password.service';
 
@@ -37,7 +36,6 @@ import { RecoverPasswordController } from './infra/controllers/user/recover-pass
 
     CreateUserService,
     ResetPasswordService,
-    CreateOrganizationService,
     CreatePasswordResetTokenService,
   ],
 })

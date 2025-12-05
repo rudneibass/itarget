@@ -9,7 +9,7 @@ export class UpdateUserRepository {
       `UPDATE "user" 
         SET name = $1
         , email = $2
-        , password_token = $3
+        , password_hash = $3
         WHERE id = $4 
         RETURNING id`
       ,{

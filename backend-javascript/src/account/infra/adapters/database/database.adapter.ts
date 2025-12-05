@@ -57,7 +57,6 @@ export class DatabaseAdapter implements DatabaseAdapterInterface {
     try {
       const values = Object.values(data);
       const result = await this.pool.query(query, values);
-
       const idString = result.rows[0]?.id;
       
       if (!idString) {

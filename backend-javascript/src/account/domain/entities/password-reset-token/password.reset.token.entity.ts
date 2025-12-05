@@ -32,7 +32,12 @@ export class PasswordResetToken {
     return this.expiresAt.toTimestamp();
   }
 
+  getUsed(): boolean {
+    return this.used || false
+  }
+
   updateUsed(used: boolean){
     this.used = used
   }
+
 }
