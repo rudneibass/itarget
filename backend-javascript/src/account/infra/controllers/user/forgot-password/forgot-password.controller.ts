@@ -1,14 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreatePasswordResetTokenService } from '@src/account/domain/services/password-reset-token/create.password.reset.token.service';
-import { CreatePasswordResetTokenInputDto } from '@src/account/domain/services/password-reset-token/create.password.reset.token.input.dto';
-
+import { CreatePasswordResetTokenService } from '@src/account/domain/services/user/create-password-reset-token/create.password.reset.token.service';
+import { CreatePasswordResetTokenInputDto } from '@src/account/domain/services/user/create-password-reset-token/create.password.reset.token.input.dto';
+ 
 @ApiTags('Usuários')
 @Controller('user')
 export class ForgotPasswordController {
   constructor(private readonly service: CreatePasswordResetTokenService) {}
 
   @Post('forgot-password')
+  @UsePipes(new ValidationPipe())
   @ApiOperation({ 
     summary: 'Solicitar recuperação de senha',
     description: 'Cria URL para redefinição de senha'

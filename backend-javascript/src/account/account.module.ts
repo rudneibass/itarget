@@ -8,7 +8,7 @@ import { UserRepository } from './domain/repositories/user/database/user.reposit
 import { PasswordResetTokenRepository } from './domain/repositories/password-reset-token/database/password.reset.token.repository';
 
 import { CreateUserService } from './domain/services/user/create/create.user.service';
-import { CreatePasswordResetTokenService } from './domain/services/password-reset-token/create.password.reset.token.service';
+import { CreatePasswordResetTokenService } from './domain/services/user/create-password-reset-token/create.password.reset.token.service';
 import { ResetPasswordService } from './domain/services/user/reset-password/reset.password.service';
 
 import { ResetPasswordController } from './infra/controllers/user/reset-password/reset.password.controller';

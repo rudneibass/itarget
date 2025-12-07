@@ -1,4 +1,4 @@
-import { Email } from '@src/account/domain/value-objects/email/email.vo';
+import { Email } from '@src/account/domain/objects/email/email.vo';
 import { UserDto } from '@src/account/domain/entities/user/user.dto';
 
 export class User {

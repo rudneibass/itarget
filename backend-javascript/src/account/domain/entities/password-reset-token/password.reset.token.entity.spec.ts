@@ -1,6 +1,6 @@
 import { PasswordResetToken } from './password.reset.token.entity';
 import { PasswordResetTokenDto } from './password.reset.token.dto';
-import { DateTime } from '../../value-objects/date-time/data.time.vo';
+import { DateTime } from '../../objects/date-time/data.time.vo';
 import { DomainException } from '@src/account/infra/exceptions/domain.exception';
 
 describe('PasswordResetToken', () => {

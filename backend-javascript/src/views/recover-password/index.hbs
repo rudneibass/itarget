@@ -110,7 +110,7 @@
 
     #message { color: red; }
     #success { color: green; }
-
+,
     .footer {
       margin-top: 20px;
       font-size: 12px;
@@ -129,8 +129,8 @@
       <input type="hidden" id="token" value="{{token}}" />
 
       <div class="form-group">
-        <label for="password">Nova Senha</label>
-        <input type="password" id="password" required minlength="6" placeholder="Digite sua nova senha">
+        <label for="newPassword">Nova Senha</label>
+        <input type="newPassword" id="newPassword" required minlength="6" placeholder="Digite sua nova senha">
       </div>
 
       <button type="button" onclick="resetPassword()">Salvar nova senha</button>
@@ -145,7 +145,7 @@
   <script>
     async function resetPassword() {
       const token = document.getElementById('token').value;
-      const password = document.getElementById('password').value;
+      const newPassword = document.getElementById('newPassword').value;
 
       const messageElem = document.getElementById('message');
       const successElem = document.getElementById('success');
@@ -153,7 +153,7 @@
       messageElem.textContent = '';
       successElem.textContent = '';
 
-      if (!password || password.length < 6) {
+      if (!newPassword || newPassword.length < 6) {
         messageElem.textContent = 'A senha deve ter pelo menos 6 caracteres.';
         return;
       }
@@ -162,7 +162,7 @@
         const response = await fetch('/api/user/reset-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token, password })
+          body: JSON.stringify({ token, newPassword })
         });
 
         const data = await response.json();

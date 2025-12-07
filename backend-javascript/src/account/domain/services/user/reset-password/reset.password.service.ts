@@ -17,38 +17,26 @@ export class ResetPasswordService {
   ) {}
 
   async execute(input: ResetPasswordInputDto){
-    this.db.beginTransaction()
-    try {
-      const passwordResetToken = await this.passwordResetTokenRepository.getByHashToken(input.token)
-      if(!passwordResetToken){
-        throw new DomainException('Token inválido ou expirado', 422);
-      }
-
-      const user = await this.repository.getById(passwordResetToken.getUserId())
-      if(!user){
-        throw new DomainException('Usuário não encontrado', 422);
-      }
-
-      const hashedPassword = await this.hashProvider.hash(input.newPassword);
-
-      user.updatePasswordHash(hashedPassword)
-      await this.repository.update(user);
-
-      passwordResetToken.updateUsed(true)
-      await this.passwordResetTokenRepository.update(passwordResetToken);
-
-      this.db.commit()
-      return { 
-        success: true,
-        message: 'Senha atualizada com sucesso' 
-      };  
-    } catch (error) {
-      this.db.rollback()
-      return { 
-        success: false,
-        message: `Erro ao tentar redefinir a senha, tente mais tarde:`,
-        error: `${error}`
-      };  
+    const passwordResetToken = await this.passwordResetTokenRepository.getByHashToken(input.token)
+    if(!passwordResetToken){
+      throw new DomainException('Token inválido ou expirado', 422);
     }
+
+    const user = await this.repository.getById(passwordResetToken.getUserId())
+    if(!user){
+      throw new DomainException('Usuário não encontrado', 422);
+    }
+
+    const hashedPassword = await this.hashProvider.hash(input.newPassword)
+
+    user.updatePasswordHash(hashedPassword)
+    passwordResetToken.updateUsed(true)
+    this.repository.updateUserPassword(user, passwordResetToken)
+      
+    return { 
+      success: true,
+      message: 'Senha atualizada com sucesso' 
+    };  
+
   }
 }

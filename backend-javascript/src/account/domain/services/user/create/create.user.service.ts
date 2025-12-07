@@ -21,7 +21,10 @@ export class CreateUserService {
     const userId = await this.persist(createUserDto)
     const user = await this.getById(userId)
     if(user){ this.sendWelcomeEmail(user.getEmail(), user.getName()) }
-    return userId;
+    return {
+      id: userId,
+      message: "Usuário criado com sucesso" 
+    } 
   }
 
   async persist(createUserDto: CreateUserServiceInputDto){

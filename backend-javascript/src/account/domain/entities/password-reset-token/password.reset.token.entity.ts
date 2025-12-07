@@ -1,4 +1,4 @@
-import { DateTime } from '../../value-objects/date-time/data.time.vo';
+import { DateTime } from '../../objects/date-time/data.time.vo';
 import { PasswordResetTokenDto } from './password.reset.token.dto';
 
 export class PasswordResetToken {

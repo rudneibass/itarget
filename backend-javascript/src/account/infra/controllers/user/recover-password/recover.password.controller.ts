@@ -1,5 +1,7 @@
 import { Controller, Get, Query, Render } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Usuários')
 @Controller('user')
 export class RecoverPasswordController {
 
