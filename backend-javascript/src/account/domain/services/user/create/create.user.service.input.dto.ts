@@ -3,15 +3,15 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateUserServiceInputDto {
   
-  @IsNotEmpty()
   @ApiProperty({ example: 'João da Silva', description: 'Nome do usuário' })
+  @IsNotEmpty()
   name: string;
 
-  @IsNotEmpty()
   @ApiProperty({ example: 'joao@email.com', description: 'Email do usuário' })
-  email: string;
-
   @IsNotEmpty()
+  email: string;
+  
   @ApiProperty({ example: 'abc123', description: 'Senha do usuário' })
+  @IsNotEmpty()
   password: string;
 }

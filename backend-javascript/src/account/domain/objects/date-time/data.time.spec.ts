@@ -25,11 +25,11 @@ describe('DateTime Value Object', () => {
   // 2. Criação inválida
   // ----------------------------
   it('deve lançar erro ao criar com string inválida', () => {
-    expect(() => new DateTime('data-invalida')).toThrowError();
+    expect(() => new DateTime('data-invalida')).rejects.toThrow(Error)
   });
 
   it('deve lançar erro ao criar com Date inválida', () => {
-    expect(() => new DateTime(new Date('invalid'))).toThrowError();
+    expect(() => new DateTime(new Date('invalid'))).rejects.toThrow(Error)
   });
 
   // ----------------------------
