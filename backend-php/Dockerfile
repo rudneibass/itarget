@@ -1,74 +1,63 @@
 FROM php:8.1-apache
 
-# Atualizar os pacotes e instalar dependências necessárias
+# Instalar extensões do PHP no linux
 RUN apt-get update && apt-get install -y \
-    git \
-    libpq-dev \
-    libmcrypt-dev \
-    libxml2-dev \
-    libtidy-dev \
     libpng-dev \
-    freetds-bin \
-    freetds-dev \
-    freetds-common \
-    libct4 \
-    libsybdb5 \
-    tdsodbc \
-    libfreetype6-dev \
     libjpeg62-turbo-dev \
-    libldap2-dev \
-    zlib1g-dev \
-    libzip-dev \
-    libc-client-dev \
+    libfreetype6-dev \
     libonig-dev \
-    curl \
-    libcurl4-openssl-dev \ 
-    && ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/ \
-    && apt install --reinstall freetds-dev \
-    && docker-php-ext-install \
-    intl \
-    bcmath \
-    mbstring \
-    gd \
-    pgsql \
-    pdo \
-    pdo_pgsql \
-    soap \
-    tidy \
-    xml \
+    libxml2-dev \
+    libzip-dev \ 
     zip \
-    sockets \
-    curl
+    unzip \
+    git \
+    curl \
+    libpq-dev
 
-# Instalar a extensão MongoDB para PHP
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
+# Instalar extensões do docker para PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install xml 
+RUN docker-php-ext-install pdo 
+RUN docker-php-ext-install pdo_pgsql 
+RUN docker-php-ext-install pgsql 
+RUN docker-php-ext-install soap 
+RUN docker-php-ext-install mbstring 
+RUN docker-php-ext-install bcmath 
+RUN docker-php-ext-install zip 
 
-# Instalar o Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-    rm -rf composer-setup.php
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar o módulo de cabeçalhos do Apache
-RUN a2enmod headers
+# Habilitar mod_rewrite do Apache
+RUN a2enmod rewrite
 
-# Habilitar o módulo de reescrita do Apache e reiniciar o serviço Apache
-RUN a2enmod rewrite && service apache2 restart
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Expor a porta 8080
-EXPOSE 8080
-
-# Definir o diretório de trabalho
+# Definir diretório de trabalho
 WORKDIR /var/www
 
-# Copiar o código-fonte do projeto para dentro do container
+# Copiar arquivos do projeto
 COPY . /var/www
 
-# Definir permissões para as pastas storage e bootstrap
+# Dar permissões
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+
+# Definir permissões para as pastas /storage, /bootstrap e /database
 RUN chmod -R 777 /var/www /var/www/storage /var/www/bootstrap /var/www/public /var/www/database
+
+# Instalar dependências do Laravel
+RUN composer install --no-interaction --prefer-dist
+
+# Configurar DocumentRoot para a pasta public do Laravel
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Atualiza pacotes do projeto
 RUN composer update
 
 # Gera APP_KEY do projeto
 RUN php artisan key:generate
+
+EXPOSE 80

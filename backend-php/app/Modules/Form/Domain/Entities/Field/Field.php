@@ -10,11 +10,14 @@ class Field extends EntityBase {
     private string $formId;
     private string $name;
     private string $attributes;
-    private ?string $order = 'Não ordenado';
-    private ?string $rules;
     private ?string $id;
-    private ?string $isActive;
-    private ?string $displayName = '';
+    private ?string $order;
+    private ?string $rules;
+    private ?int $isActive;
+    private ?string $module;
+    private ?string $entity;
+    private ?array $options;
+    private ?string $displayName;
 
     public function __construct(FieldDto $dto) {
         $this->formId = $dto->formId;
@@ -24,7 +27,11 @@ class Field extends EntityBase {
         $this->id = $dto->id ?? null; 
         $this->rules = $dto->rules ?? null;
         $this->order = $dto->order ?? null;
-        $this->isActive = $dto->isActive ?? null;
+        $this->isActive = $dto->isActive ?? 1;
+
+        $this->module = $dto->module ?? null;
+        $this->entity = $dto->entity ?? null;
+        $this->options = $dto->options ?? null;
     }
     
     public function toArray() {
@@ -37,6 +44,9 @@ class Field extends EntityBase {
             'attributes' => $this->attributes,
             'rules' => $this->rules,
             'is_active' => $this->isActive,
+            'module' => $this->module,
+            'entity' => $this->entity,
+            'options' => $this->options
         ];
     }
 
@@ -99,5 +109,28 @@ class Field extends EntityBase {
 
     public function getIsActive(): ?string {
       return $this->isActive;
+    }
+
+    public function setOptions(array $options) {
+        $this->options = $options;
+    }
+
+    public function getOptions(): ?array {
+        return $this->options;
+    }
+
+    public function setModule(string $module) {
+        $this->module = $module;
+    }
+
+    public function getModule(): ?string {
+        return $this->module;
+    }
+
+    public function setEntity(string $entity) {
+        $this->entity = $entity;
+    }
+    public function getEntity(): ?string {
+        return $this->entity;
     }
 }

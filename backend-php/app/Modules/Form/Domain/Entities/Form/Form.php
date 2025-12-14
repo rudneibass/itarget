@@ -11,14 +11,14 @@ class Form extends EntityBase {
     const FORM_NAME = 'form';
     
     private string $name;
-    private string $attributes;
+    private array $attributes;
     private ?array $fields;
     private ?string $id;
     private ?string $isActive;
 
     public function __construct(FormDto $dto) {
         $this->name = $dto->name;
-        $this->attributes = $dto->attributes;
+        $this->attributes = json_decode($dto->attributes, true);
 
         $this->id= $dto->id ?? null; 
         $this->fields = $dto->fields ?? [];
@@ -49,12 +49,14 @@ class Form extends EntityBase {
         $this->displayName = ucfirst($name);
     }
     
-    public function setAttributes(string $attributes) {
-        if(!isset($attributes) || empty($attributes)){ throw new Exception('Attributes é obrigatório.'); }
+    public function setAttributes(array $attributes) {
+        if(!isset($attributes) || empty($attributes)){ 
+            throw new Exception('Attributes é obrigatório.'); 
+        }
         $this->attributes = $attributes;
     }
 
-    public function getAttributes(): string {
+    public function getAttributes(): ?array {
         return $this->attributes;
     }
     
