@@ -12,7 +12,7 @@ import { CreatePasswordResetTokenService } from './domain/services/user/create-p
 import { ResetPasswordService } from './domain/services/user/reset-password/reset.password.service';
 
 import { ResetPasswordController } from './infra/controllers/user/reset-password/reset.password.controller';
-import { CreateUserController } from './infra/controllers/user/create/create.user.contrller';
+import { CreateUserController } from './infra/controllers/user/create/create.user.controller';
 import { ForgotPasswordController } from './infra/controllers/user/forgot-password/forgot-password.controller';
 import { RecoverPasswordController } from './infra/controllers/user/recover-password/recover.password.controller';
 

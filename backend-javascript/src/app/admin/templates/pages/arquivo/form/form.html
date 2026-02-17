@@ -1,0 +1,137 @@
+<section>
+    <div class="row">
+        <div class="col-12">
+            <form id="form-upload" enctype="multipart/form-data">
+                <input type="hidden" name="idTabelaPai" id="idTabelaPai">
+                <input type="hidden" name="tabelaPai" id="tabelaPai">
+                <div class="custom-file mb-3">
+                    <input type="file" name="arquivos[]" id="selecionaArquivos" class="form-control" multiple/>
+                </div>
+            </form>
+            <div id="listaArquivosSelecionados"  style="height: 220px; overflow-y: scroll; overflow-x: hidden;">
+            </div>
+            <div id="progress" class="text-center"></div>
+        </div>
+    </div> 
+
+    <div class="modal-footer pb-0 px-0">
+      <button type="button" class="btn btn-sm btn-secondary" onclick="admin.hideModal({modalId: 'defaultModal'})">Voltar</button>
+      <button type="button" class="btn btn-sm btn-success" id="enviar"><i class="fa fa fa-cloud-upload"></i> Enviar</button>
+    </div>
+</section>
+
+<script>
+    admin.tooltipInit();
+
+    function formatBytes(bytes){
+      const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      if (bytes === 0) return '0 Bytes';        
+      const i = Math.floor(Math.log(bytes) / Math.log(1024));
+      const value = bytes / Math.pow(1024, i);
+      return `${value.toFixed(2)} ${units[i]}`;
+    };
+
+
+    document.getElementById('selecionaArquivos').addEventListener('change', (event) => {
+        const { files } = event.target;
+        const filesContainer = $('#listaArquivosSelecionados');
+        filesContainer.html('');
+
+        [...files].forEach((file, i) => {
+        const fileId = `arquivoSelecionado${i}`;
+        const isImage = file.type.startsWith('image/');
+
+        const row = $(`
+          <div class="p-2 d-flex width-100 justify-content-between border-bottom" id="${fileId}">
+            <div class="d-flex align-items-center justify-content-center flex-column">
+              <div class="px-3 py-1">
+                <i class="fa fa-paperclip gray-default"></i> &nbsp;
+                <span class="name_anexo gray-default">${file.name}</span><br />
+                &emsp;&nbsp;&nbsp;<small class="size_anexo gray-default">${formatBytes(file.size)}</small>
+                <small class="type_anexo gray-default">${file.type}</small>
+              </div>
+            </div>
+            ${isImage 
+            ? `<div class="d-flex align-items-center">
+                <img id="preview${i}" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                </div>` 
+            : ''}
+            <div class="d-flex align-items-center px-3">
+              <i  
+                class="fa fa-trash gray-default cursor-pointer" 
+                onclick="removerArquivoSelecionado(${i})"
+                data-bs-toggle="tooltip" 
+                data-bs-title="Remover arquivo selecionado"
+                data-bs-placement="top"
+                data-bs-trigger="hover"
+              ></i>
+            </div>
+          </div>
+        `);
+
+        filesContainer.append(row);
+
+        // Se for imagem, usa FileReader para mostrar o preview
+        if (isImage) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            $(`#preview${i}`).attr('src', e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    });
+
+    function removerArquivoSelecionado(indexParaRemover) {
+        $('#listaArquivosSelecionados').empty();
+        const input = document.getElementById('selecionaArquivos');
+        const dt = new DataTransfer();
+
+        [...input.files].forEach((file, index) => {
+          if (index !== indexParaRemover) {
+            dt.items.add(file);
+          }
+        });
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    }
+
+
+    $('#enviar').on('click', function () {
+
+      if (!$('#selecionaArquivos').val()) {
+        toastr["warning"]("<b>Atenção: </b> Selecione ao menos um aquivo!");
+        return;
+      }
+
+      const formElement = $('#form-upload')[0];
+      const formData = new FormData(formElement);
+
+      $.ajax({
+          url: admin.baseUrl + endpoints.arquivo.uploadLocalServer,
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function () {
+              toastr["info"]("Aguardando conexão com o servidor...");
+              $("#progress").html('<br/><span class="text-muted border-bottom">Enviando Arquivo </span><br/><progress class="mt-1"></progress>');
+          },
+          error: function () {
+              toastr["error"]("Não foi possível executar a ação desejada, favor entrar em contato com o administrador!");
+          },
+          success: function (data) {
+              $('.toast-info').hide();
+              $("#progress").empty();
+              toastr["success"]("Arquivos enviados com sucesso!");
+
+              if (tabelaPai === 'noticias') {
+                  listarImagens(idTabelaPai, tabelaPai);
+              }
+
+              listarArquivos(idTabelaPai, tabelaPai);
+          }
+      });
+  });
+
+</script>

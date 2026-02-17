@@ -1,0 +1,326 @@
+<section>
+    <div class="col-md-12 p-0">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tab-1">Cadastro</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab-2">Arquivos</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content bg-white border border-top-0" style="padding: .75rem; box-shadow: var(--shadows-default);" >
+            <div class="tab-pane active" id="tab-1">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-info-bar">
+                            <small><i class="fa fa-file-text-o"></i></small>
+                            <small>Dados Básicos</small>&nbsp;
+                            <img class="loading" src="/img/loading-sm.svg" alt="loading" style="display: none;"/>
+                        </div>
+                    </div>
+                </div>
+                <form id="tab-1-form-1">
+                    <input type="hidden" id="id" name="id" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Tipo</small>
+                                </label>	
+                                <select name="tipo" id="tipo" class="form-control">
+                                    <option value=''><span class='txtselect'></span></option>
+                                    <optgroup label="Tipo de Publicação" id="optgroup_tipo">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Número</small>
+                                </label>	
+                                <input type="text" name="numero" class="form-control" placeholder="Número" id="numero" value="" required/>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group mb-3">	
+                                <label>
+                                    <small class="text-muted">Exercício</small>
+                                </label>
+                                <input type="text" name=exercicio class="form-control" id="exercicio" value=""  required/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Competência</small>
+                                </label>				
+                                <select name="competencia" id="competencia"  class="form-control" required>
+                                    <option id='txtselect' value=''>Competência</option><option  value='1'>Janeiro</option><option  value='2'>Fevereiro</option><option  value='3'>Março</option><option  value='4'>Abril</option><option  value='5'>Maio</option><option  value='6'>Junho</option><option  value='7'>Julho</option><option  value='8'>Agosto</option><option  value='9'>Setembro</option><option  value='10'>Outubro</option><option  value='11'>Novembro</option><option  value='12'>Dezembro</option><option  value='13'>1º Bimestre</option><option  value='14'>2º Bimestre</option><option  value='15'>3º Bimestre</option><option  value='16'>4º Bimestre</option><option  value='17'>5º Bimestre</option><option  value='18'>6º Bimestre</option><option  value='19'>1° Quadrimestre</option><option  value='20'>2° Quadrimestre</option><option  value='21'>3° Quadrimestre</option><option  value='22'>1° Semestre</option><option  value='23'>2° Semestre</option><option  value='24'>Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Data</small>
+                                </label>	
+                                <input type="date" name="dataPublicacao" class="form-control" id="dataPublicacao" required/>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">	
+                                <label> 
+                                    <small class="text-muted">Titulo</small>
+                                </label>
+                                <input type="text" name="titulo" class="form-control" id="titulo" value=""  required/>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">	
+                                <label> 
+                                    <small class="text-muted">Descrição</small>
+                                </label>
+                                <textarea  name="descricao" class="form-control tinymce" id="descricao" value="" rows="4" required></textarea>
+                            </div>
+                        </div> 
+                    </div>
+                </form>
+
+                <section class="section-actions">
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-success btn-float section-actions-btn" onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'})">
+                          <i class="fa fa-plus"></i>
+                          <span class="btn-label">Novo</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-warning btn-float section-actions-btn">
+                          <i class="fa fa fa-pencil"></i>
+                          <span class="btn-label" onclick="publicacaoForm.edit('tab-1-form-1')">Editar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-danger btn-float section-actions-btn" onclick="publicacaoForm.cancel('tab-1-form-1')">
+                          <i class="fa fa fa-undo"></i>
+                          <span class="btn-label">Cancelar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button 
+                            class="btn btn-primary btn-float section-actions-btn" 
+                            onclick="publicacaoForm.save({ 
+                                url: admin.baseUrl+endpoints.publicacao.save, 
+                                formId: publicacaoForm.formId
+                            })"
+                        >
+                          <i class="fa fa fa-floppy-o"></i>
+                          <span class="btn-label">Salvar</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <div class="tab-pane fade" id="tab-2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-info-bar">
+                            <small><i class="fa fa-file-text-o"></i></small>
+                            <small>Arquivos</small>
+                        </div>
+                    </div>
+                </div>               
+                <form id="search-arquivos">
+                    <input type="hidden" name="id_tabela_pai"  id="id-tabela-pai-form-search-arquivos" value="">
+                    <div class="row" id="row-1">
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <input type="text" name="c1"  id="c1" class="form-control" placeholder="Nome">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <input type="date" name="c2"  id="c2" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <input type="date" name="c3"  id="c3" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="input-group mb-3">
+                                <button type="button" class="btn btn-secondary" id="pesquisar-arquivos" >
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>      
+                </form>
+                <section class="section-actions">
+                    <div class="section-actions-btn-parent">
+                        <button class="btn btn-success btn-float section-actions-btn">
+                          <i class="fa fa-search"></i>
+                          <span class="btn-label">Pesquisar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button 
+                            class="btn btn-info btn-float section-actions-btn" 
+                            onclick="admin.showModal({ 
+                                modalId: 'defaultModal', 
+                                title: 'Selecionar Arquivo(s)', 
+                                url: admin.baseUrl+endpoints.arquivo.form,
+                                data: { 
+                                    idTabelaPai: $('#id').val(),
+                                    tabelaPai: 'publicacao',
+                                }
+                            })"
+                        >
+                          <i class="fa fa fa-cloud-upload"></i>
+                          <span class="btn-label">Upload</span>
+                        </button>
+                    </div>
+                </section>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead id='thead-arquivos'>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id='tbody-arquivos'>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br/>
+</section> 
+
+<script>
+    var publicacaoForm = {
+        formId: 'tab-1-form-1',
+        tabId: 'form-publicacao',
+        edit: (formId) => {
+            $("#"+formId+' :input').prop("disabled", false);
+        },
+        cancel: (formId) => {
+            $("#"+formId+' :input').prop("disabled", true);
+        },
+        populateForm: ({ url, id = null }) => {
+            
+            if(!id){ return; }
+            $.ajax({
+                url: `${url}/${id}`,
+                type: 'GET',
+                dataType: "json",
+                beforeSend: function () {
+                    $(".loading").show()
+                    $("#tab-1-form-1 :input").prop("disabled", true);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.loading').hide();
+                    toastr["error"](jqXHR.responseText);
+                },
+                success: function (responseData) {
+                    $(".loading").hide()
+                    var responseData = jQuery.parseJSON(JSON.stringify(responseData));
+                    $.each(responseData, function (field, value) {
+                        
+                        if ($('#'+field).attr('type') == 'text'){
+                            $('#'+field).val(value);
+                        }
+
+                        if ($('#'+field).attr('type') == 'date'){
+                            $('#'+field).val(value);
+                        }
+
+                        if ($('#'+field).attr('type') == 'checkbox') {
+                            if ($('#'+field).val() == value) {
+                                $('input[type="checkbox"]#'+ field).prop('checked', true);
+                            } else {
+                                $('input[type="checkbox"]#'+ field).prop('checked', false);
+                            }
+                        }
+
+                        if ($('#'+field).attr('type') == 'radio') {
+                            if ($('#'+field).val() == value) {
+                                $('input[type="radio"]#'+field).prop('checked', true);
+                            } else {
+                                $('input[type="radio"]#'+field).prop('checked', false);
+                            }
+                        }
+                        
+                        if ($('#'+field).get(0) != undefined && $('#'+field).get(0).tagName === 'IMG') {
+                            if (value != '') {
+                                $(container + prefix_field + field).attr('src', value + '?' + new Date().getTime());
+                            }
+                        }
+
+                        if ($('#'+field).get(0) != undefined && $('#'+field).get(0).tagName === 'TEXTAREA'){
+                            $('#'+field).val(value);
+                        }
+
+                        if ($('#'+field).get(0) != undefined && $('#'+field).get(0).tagName === 'SELECT'){
+                            $('#'+field).val(value);
+                        }
+                    });
+                }
+            });
+        },
+        save: ({ url, formId }) => {
+            if($('#'+formId+' input').length === $('#'+formId+' input:disabled').length){
+                return;
+            }
+            if(!admin.validateForm(formId)){
+                toastr["error"]("Preencha os campos obrigatórios.");
+                return;
+            }
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify($('#'+formId).serializeArray().reduce(function(obj, item) {
+                    obj[item.name] = item.value;
+                    return obj;
+                }, {})),
+                beforeSend: function () {
+                    $('.loading').show();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('.loading').hide();
+                    toastr["error"](jqXHR.responseText);
+                },
+                success: function (responseData) {
+                    $('.loading').hide();
+                    if(typeof responseData == 'number'){
+                        toastr["success"]("Operação realizada com sucesso.");
+                        admin.addTab({ 
+                            title: 'Editar Publicação',
+                            id: responseData,
+                            tabId: publicacaoForm.tabId,  
+                            url: admin.baseUrl+endpoints.publicacao.form,
+                        });
+                        return;
+                    }
+                    toastr["error"](responseData.message)
+                }
+            });
+        }
+    }    
+
+    admin.validateInputs(publicacaoForm.formId);
+    //admin.tinymceInit();
+    //admin.tinymceTriggerSave();
+    publicacaoForm.populateForm({ 
+        url: admin.baseUrl+endpoints.publicacao.get, 
+        id: $("#id").val() 
+    });
+</script>
