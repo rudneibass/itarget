@@ -1,6 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { DomainException } from '@src/account/infra/exceptions/domain.exception';
 
 @Catch()
 export class GlobalExceptionCatcher implements ExceptionFilter {
@@ -20,10 +19,10 @@ export class GlobalExceptionCatcher implements ExceptionFilter {
       status = exception.getStatus();
       const resp = exception.getResponse();
       message = typeof resp === 'string' ? resp : (resp as any).message ?? resp;
-    } else if (exception instanceof DomainException) {
+    } else if (isDomainLikeException(exception)) {
       status = exception.statusCode ?? HttpStatus.UNPROCESSABLE_ENTITY;
       message = exception.message;
-      layer = exception.layer;
+      layer = exception.layer ?? layer;
     } else {
       message = (exception as any)?.message ?? message;
       layer = (exception as any)?.layer ?? detectLayerFromStack((exception as any)?.stack);
@@ -46,6 +45,16 @@ export class GlobalExceptionCatcher implements ExceptionFilter {
 
     response.status(status).json(body);
   }
+}
+
+type DomainLikeException = {
+  message?: string;
+  statusCode?: number;
+  layer?: string;
+};
+
+function isDomainLikeException(exception: unknown): exception is DomainLikeException {
+  return typeof exception === 'object' && exception !== null && ('statusCode' in exception || 'layer' in exception);
 }
 
 function detectLayerFromStack(stack?: string): string {

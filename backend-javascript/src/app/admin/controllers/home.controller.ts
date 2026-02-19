@@ -1,22 +1,10 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import type { Response } from 'express';
-import { join } from 'path';
+import { Controller, Get, Render } from '@nestjs/common';
 
 @Controller('admin')
 export class HomeController {
   @Get('home')
-  renderHome(@Res() response: Response) {
-    return response.sendFile(
-      join(
-        process.cwd(),
-        'src',
-        'app',
-        'admin',
-        'templates',
-        'pages',
-        'home',
-        'home.html',
-      ),
-    );
+  @Render('pages/home/home')
+  renderHome() {
+    return {};
   }
 }

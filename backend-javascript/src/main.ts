@@ -5,17 +5,31 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { getSwaggerConfig, swaggerCustomOptions } from './config/swagger.config';
 import { GlobalExceptionCatcher } from './global/global-exception-catcher';
 import { join } from 'path';
+import { readFileSync } from 'fs';
+import hbs from 'hbs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.setGlobalPrefix('api');
+  //app.setGlobalPrefix('api');
   
   // Servir templates
-  app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
+  const templatesPath = join(process.cwd(), 'src', 'app', 'admin', 'templates');
+  app.setBaseViewsDir(templatesPath);
   app.setViewEngine('hbs');
+  app.useStaticAssets(join(process.cwd(), 'src', 'app', 'admin', 'static'), {
+    prefix: '/admin/static/',
+  });
+  hbs.registerPartial(
+    'header',
+    readFileSync(join(templatesPath, 'partials', 'header.hbs'), 'utf8'),
+  );
+  hbs.registerPartial(
+    'aside',
+    readFileSync(join(templatesPath, 'partials', 'aside.hbs'), 'utf8'),
+  );
 
   // Filters
-  app.useGlobalFilters(new GlobalExceptionCatcher());
+  // app.useGlobalFilters(new GlobalExceptionCatcher());
   
   // Pipes
   //app.useGlobalPipes(new ValidationPipe({ transform: true }));
