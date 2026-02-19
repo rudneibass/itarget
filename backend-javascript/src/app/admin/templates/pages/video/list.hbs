@@ -1,0 +1,246 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button
+            class="btn btn-success btn-float section-actions-btn"
+            onclick="admin.addTab({tabId:'form-video', title: 'Novo Vídeo', url: '/admin/video/form'})"
+        >
+            <i class="fa fa-plus"></i>
+            <span class="btn-label">Novo</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra">
+            <i class="fa fa-search"></i>
+            <span class="btn-label">Pesquisar</span>
+        </button>
+    </div>
+</section>
+
+<section class="section-search-bar hide" id="section-search-bar">
+    <div class="row search-bar" id="search-bar">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-body">
+                    <form id="formSearch">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="id" id="id" class="form-control" placeholder="ID">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="titulo" id="titulo" class="form-control" placeholder="Título">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="date" name="data" id="data" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer p-2 border-top-0">
+                    <button type="button" class="btn btn-success btn-sm" id="btn-pesquisar">
+                        <i class="fa fa-search"></i> Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default">
+        <small><i class="fa fa-video-camera"></i></small>
+        <small>Vídeos</small>
+    </div>
+</section>
+
+<section>
+    <div class="view-index-table-container">
+        <table class="table table-sm table-striped table-hover width-100">
+            <thead id="thead"></thead>
+            <tbody id="tbody"></tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="alerts_feedback"></span>
+            <img class="loading mt-5" src="../img/loading-sm.svg" style="display: none" />
+        </div>
+    </div>
+    <div class="pagination-bar-default">
+        <div>
+            <small class="gray-default">Total:</small>
+            <small class="gray-default" id="total"></small>
+            <small class="gray-default">registros</small>
+        </div>
+        <div>
+            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior"></i>
+            &emsp;
+            <span class="gray-default" id="numeracao"></span>
+            &emsp;
+            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo"></i>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('btn-toggle-barra').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar');
+        barra.classList.toggle('visible');
+    });
+
+    document.getElementById('btn-pesquisar').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar');
+        barra.classList.toggle('visible');
+        videoList.list({
+            url: admin.baseUrl + endpoints.video.list,
+            formSearchId: videoList.formSearchId,
+        });
+    });
+
+    const videoList = {
+        formSearchId: 'formSearch',
+
+        async remove(id) {
+            if (!confirm('Deseja remover este vídeo?')) return;
+
+            try {
+                await $.ajax({
+                    url: `${admin.baseUrl}/video/${id}`,
+                    type: 'DELETE',
+                });
+
+                this.list({
+                    url: admin.baseUrl + endpoints.video.list,
+                    formSearchId: this.formSearchId,
+                });
+            } catch (error) {
+                $('#alerts_feedback').html('Não foi possível remover o vídeo.');
+            }
+        },
+
+        list: ({ url, formSearchId }) => {
+            $.ajax({
+                url,
+                cache: false,
+                type: 'GET',
+                data: $('#search').serialize(),
+                dataType: "json",
+                beforeSend: function () {
+                    $("tr").remove();
+                    $("#tab_1_alerts").empty()
+                    $(".loading").show()
+                },
+                error: function () {
+                    $("tr").remove();
+                    $(".loading").hide()
+                    $("#tab_1_alerts").empty()
+                    $("#tab_1_alerts").html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                },
+                success: function (retorno) {
+                    if (!retorno[0]) {
+                        $("tr").remove();
+                        $(".loading").hide()
+                        $("#tab_1_alerts").empty()
+                        $("#tab_1_alerts").html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                        return
+                    }
+                    $("tr").remove();
+                    $(".loading").hide()
+                    $("#tab_1_alerts").empty()
+            
+                    var tamanhoPagina = 10;
+                    var pagina = 0;
+
+                    function paginar() {
+                        for (var i = pagina * tamanhoPagina; i < retorno.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                            $("#tbody")
+                            .append(
+                                `<tr id="linha${retorno[i].id}">
+                                    <td class="p-3" style="width:90%; vertical-align: middle;">
+                                        <div>
+                                            <div>
+                                                <small>
+                                                    <b>Título: </b>${retorno[i].titulo} 
+                                                    ${retorno[i].publicado == 'S' ? '&emsp;<span class="badge badge-success">Publicado</span>' :'&emsp;<span class="badge badge-secondary">Despublicado</span>'}
+                                                </small>
+                                                <br/>
+                                                <small><b>Descrição: </b>${retorno[i].descricao}</small>
+                                            </div>
+                                            <div class="mt-3 d-flex">
+                                                <div class="width-100">
+                                                    <small><b>Data:</b> ${retorno[i].data }</small>
+                                                    &emsp;
+                                                    <small><b>Criado por:</b> ${retorno[i].criadoPor}</small>
+                                                    &emsp;
+                                                    <small><b>Código:</b> ${retorno[i].uuid}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 10%;">
+                                        <center>
+                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="videoList.vizualizar('${retorno[i].id}')" >
+                                                <i class="fa fa-pencil"></i> Editar
+                                            </button>
+                                            ${retorno[i].ativo == 'S' 
+                                                ? 
+                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.desativar(${retorno[i].id})">
+                                                        <i class="fa fa-download"></i> Desativar
+                                                    </button>` 
+                                                : 
+                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.ativar(${retorno[i].id})">
+                                                        <i class="fa fa-upload"></i> Ativar
+                                                    </button>` 
+                                            }
+                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="videoList.deletar(${retorno[i].id})">
+                                                <i class="fa fa-trash-o"></i>
+                                                <span> Excluir</span>
+                                            </button>
+                                        </center>
+                                    </td>
+                                </tr>`
+                            );
+                        }
+                        $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
+                        $('#total-registros').text('1 à '+tamanhoPagina+ ' registros por página ');
+                    }
+
+                    function ajustarBotoes() {
+                        $('#proximo').prop('disabled', retorno.length <= tamanhoPagina || pagina >= Math.ceil(retorno.length / tamanhoPagina) - 1);
+                        $('#anterior').prop('disabled', retorno.length <= tamanhoPagina || pagina == 0);
+                    }
+
+                    $(function () {
+                        $('#proximo').click(function () {
+                            if (pagina < retorno.length / tamanhoPagina - 1) {
+                                $("tr").remove();
+                                pagina++;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        $('#anterior').click(function () {
+                            if (pagina >= 1) {
+                                $("tr").remove();
+                                pagina--;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        paginar();
+                        ajustarBotoes();
+                    });
+                }
+            });
+        },
+    };
+
+    videoList.list({
+        url: admin.baseUrl + endpoints.video.list,
+        formSearchId: videoList.formSearchId,
+    });
+</script>

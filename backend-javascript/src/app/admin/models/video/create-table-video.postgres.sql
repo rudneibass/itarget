@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS video (
+  id SERIAL PRIMARY KEY,
+  uuid TEXT NOT NULL,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  alterao_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  criado_por VARCHAR(255),
+  alterado_por VARCHAR(255),
+  data DATE,
+  url TEXT,
+  titulo VARCHAR(255),
+  descricao TEXT NOT NULL,
+  imagem VARCHAR(200)
+);
