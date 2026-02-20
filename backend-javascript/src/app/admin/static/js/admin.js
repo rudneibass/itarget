@@ -67,7 +67,7 @@ admin = {
 
     // Criar conteúdo
     const newContent = $(`
-      <div class="tab-pane main-tab-pane p-2" id="${contentId}">
+      <div class="tab-pane main-tab-pane px-0" id="${contentId}">
         <div class="tab-container" id="${tabElementId}-container">
           Carregando...
         </div>
@@ -143,6 +143,81 @@ admin = {
       const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
       modalInstance.hide();
     }
+  },
+  loading: (active = true) => {
+    const main = document.querySelector('main');
+
+    if (!main) {
+      return;
+    }
+
+    const styleId = 'admin-main-loading-style';
+    let style = document.getElementById(styleId);
+
+    if (!style) {
+      style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        main.admin-main-loading {
+          position: relative;
+        }
+
+        main.admin-main-loading > *:not(#admin-main-loading-overlay) {
+          opacity: .35;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        #admin-main-loading-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          pointer-events: all;
+        }
+
+        #admin-main-loading-overlay .admin-main-spinner {
+          width: 48px;
+          height: 48px;
+          border: 4px solid rgba(0, 0, 0, .15);
+          border-top-color: rgba(0, 0, 0, .65);
+          border-radius: 50%;
+          animation: admin-main-spin .7s linear infinite;
+        }
+
+        @keyframes admin-main-spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const overlayId = 'admin-main-loading-overlay';
+    const currentOverlay = document.getElementById(overlayId);
+
+    if (!active) {
+      if (currentOverlay) {
+        currentOverlay.remove();
+      }
+      main.classList.remove('admin-main-loading');
+      return;
+    }
+
+    if (currentOverlay) {
+      return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = overlayId;
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML = '<div class="admin-main-spinner"></div>';
+
+    main.classList.add('admin-main-loading');
+    main.appendChild(overlay);
   },
   validateInputs: (formId) => {
     const $form = $('#'+formId);

@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { CreateVideoDto } from '../../dtos/video/create-video.dto';
 import { ListVideoQueryDto } from '../../dtos/video/list-video-query.dto';
@@ -14,8 +18,21 @@ export class VideoService {
   ) {}
 
   async create(createVideoDto: CreateVideoDto): Promise<Video> {
-    const video = this.videoRepository.create(createVideoDto);
-    return this.videoRepository.save(video);
+    try {
+
+      const payload = {
+        ...createVideoDto,
+        uuid: createVideoDto.uuid || randomUUID(),
+        criadoEm: new Date(),
+        alteracaoEm: new Date(),
+      };
+
+      const video = this.videoRepository.create(payload);
+      return this.videoRepository.save(video);
+
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   async findAll(query: ListVideoQueryDto): Promise<Video[]> {
@@ -40,24 +57,24 @@ export class VideoService {
     return queryBuilder.getMany();
   }
 
-  async findOne(id: number): Promise<Video> {
-    const video = await this.videoRepository.findOne({ where: { id } });
+  async get(uuid: string): Promise<Video> {
+    const video = await this.videoRepository.findOne({ where: { uuid } });
 
     if (!video) {
-      throw new NotFoundException(`Video com id ${id} não encontrado`);
+      throw new NotFoundException(`Video com uuid ${uuid} não encontrado`);
     }
 
     return video;
   }
 
-  async update(id: number, updateVideoDto: UpdateVideoDto): Promise<Video> {
-    const video = await this.findOne(id);
+  async update(uuid: string, updateVideoDto: UpdateVideoDto): Promise<Video> {
+    const video = await this.get(uuid);
     const updatedVideo = this.videoRepository.merge(video, updateVideoDto);
     return this.videoRepository.save(updatedVideo);
   }
 
-  async remove(id: number): Promise<void> {
-    const video = await this.findOne(id);
+  async remove(uuid: string): Promise<void> {
+    const video = await this.get(uuid);
     await this.videoRepository.remove(video);
   }
 }

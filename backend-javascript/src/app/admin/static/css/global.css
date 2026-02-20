@@ -103,8 +103,8 @@ input, textarea, select option{
 .width-320-px{
   width: 320px;
 }
-.width-70-px{
-  width: 70px!important;
+.width-65-px{
+  width: 65px!important;
 }
 .cursor-pointer{
   cursor: pointer;
@@ -121,8 +121,9 @@ input, textarea, select option{
   overflow: auto;
 }
 
-.view-index-table-container{
+.list-table-container{
   max-height: 65vh;
+  min-height: 65vh;
   overflow-y: auto;
 }
 .card-default{
@@ -176,4 +177,7 @@ input, textarea, select option{
 
 .visible {
   transform: translateX(-5%);
+}
+.modal-header, .modal-footer {
+  padding: 10px 15px !important;
 }

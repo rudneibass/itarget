@@ -43,7 +43,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-success btn-sm" id="btn-pesquisar">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -60,21 +60,18 @@
 </section>
 
 <section>
-    <div class="view-index-table-container">
+    <div class="list-table-container">
         <table class="table table-sm table-striped table-hover width-100">
             <thead id="thead"></thead>
             <tbody id="tbody"></tbody>
         </table>
         <div class="text-center">
-            <span class="pt-5" id="alerts_feedback"></span>
-            <img class="loading mt-5" src="../img/loading-sm.svg" style="display: none" />
+            <span class="pt-5" id="messages"></span>
         </div>
     </div>
     <div class="pagination-bar-default">
         <div>
-            <small class="gray-default">Total:</small>
             <small class="gray-default" id="total"></small>
-            <small class="gray-default">registros</small>
         </div>
         <div>
             <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior"></i>
@@ -91,7 +88,6 @@
         const barra = document.getElementById('section-search-bar');
         barra.classList.toggle('visible');
     });
-
     document.getElementById('btn-pesquisar').addEventListener('click', () => {
         const barra = document.getElementById('section-search-bar');
         barra.classList.toggle('visible');
@@ -100,123 +96,118 @@
             formSearchId: videoList.formSearchId,
         });
     });
+</script>
 
-    const videoList = {
+<script>
+    var videoList = {
         formSearchId: 'formSearch',
-
-        async remove(id) {
-            if (!confirm('Deseja remover este vídeo?')) return;
-
-            try {
-                await $.ajax({
-                    url: `${admin.baseUrl}/video/${id}`,
-                    type: 'DELETE',
-                });
-
-                this.list({
-                    url: admin.baseUrl + endpoints.video.list,
-                    formSearchId: this.formSearchId,
-                });
-            } catch (error) {
-                $('#alerts_feedback').html('Não foi possível remover o vídeo.');
-            }
-        },
-
         list: ({ url, formSearchId }) => {
             $.ajax({
                 url,
                 cache: false,
                 type: 'GET',
-                data: $('#search').serialize(),
+                data: $('#'+formSearchId).serialize(),
                 dataType: "json",
                 beforeSend: function () {
-                    $("tr").remove();
-                    $("#tab_1_alerts").empty()
-                    $(".loading").show()
+                    $("#messages").empty()
+                    admin.loading(true);
                 },
                 error: function () {
+                    admin.loading(false);
                     $("tr").remove();
-                    $(".loading").hide()
-                    $("#tab_1_alerts").empty()
-                    $("#tab_1_alerts").html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                    $("#messages").empty()
+                    $("#messages").html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
                 },
-                success: function (retorno) {
-                    if (!retorno[0]) {
+                success: function (response) {
+                    var data = response?.data || response;
+
+                    if (!data[0]) {
+                        admin.loading(false);
                         $("tr").remove();
-                        $(".loading").hide()
-                        $("#tab_1_alerts").empty()
-                        $("#tab_1_alerts").html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                        $("#messages").empty()
+                        $("#messages").html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
                         return
                     }
+                    admin.loading(false);
                     $("tr").remove();
-                    $(".loading").hide()
-                    $("#tab_1_alerts").empty()
+                    $("#messages").empty()
+
             
                     var tamanhoPagina = 10;
                     var pagina = 0;
 
                     function paginar() {
-                        for (var i = pagina * tamanhoPagina; i < retorno.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                        for (var i = pagina * tamanhoPagina; i < data.length && i < (pagina + 1) * tamanhoPagina; i++) {
                             $("#tbody")
                             .append(
-                                `<tr id="linha${retorno[i].id}">
+                                `<tr id="linha${data[i].id}">
                                     <td class="p-3" style="width:90%; vertical-align: middle;">
                                         <div>
                                             <div>
                                                 <small>
-                                                    <b>Título: </b>${retorno[i].titulo} 
-                                                    ${retorno[i].publicado == 'S' ? '&emsp;<span class="badge badge-success">Publicado</span>' :'&emsp;<span class="badge badge-secondary">Despublicado</span>'}
+                                                    <b>Título: </b>${data[i].titulo} 
+                                                    ${data[i].ativo == 'S' 
+                                                        ? '&emsp;<span class="badge bg-success">Ativo</span>' 
+                                                        :'&emsp;<span class="badge bg-secondary">Desativado</span>'
+                                                    }
                                                 </small>
                                                 <br/>
-                                                <small><b>Descrição: </b>${retorno[i].descricao}</small>
+                                                <small><b>Descrição: </b>${data[i].descricao}</small>
                                             </div>
                                             <div class="mt-3 d-flex">
                                                 <div class="width-100">
-                                                    <small><b>Data:</b> ${retorno[i].data }</small>
+                                                    <small><b>Data:</b> ${data[i].data }</small>
                                                     &emsp;
-                                                    <small><b>Criado por:</b> ${retorno[i].criadoPor}</small>
+                                                    <small><b>Criado por:</b> ${data[i].criadoPor}</small>
                                                     &emsp;
-                                                    <small><b>Código:</b> ${retorno[i].uuid}</small>
+                                                    <small><b>Código:</b> ${data[i].uuid}</small>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 8%; vertical-align: middle;">
                                         <center>
-                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="videoList.vizualizar('${retorno[i].id}')" >
+                                            <button 
+                                                class="btn btn-secondary btn-sm w-100 mb-2" 
+                                                onclick="admin.addTab({
+                                                    tabId:'form-video', 
+                                                    title: 'Editar Vídeo', 
+                                                    url: '/admin/video/form/uuid/${data[i].uuid}'
+                                                })" 
+                                            >
                                                 <i class="fa fa-pencil"></i> Editar
                                             </button>
-                                            ${retorno[i].ativo == 'S' 
+                                            ${data[i].ativo == 'S' 
                                                 ? 
-                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.desativar(${retorno[i].id})">
+                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.desativar('${data[i].uuid}')">
                                                         <i class="fa fa-download"></i> Desativar
                                                     </button>` 
                                                 : 
-                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.ativar(${retorno[i].id})">
+                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.ativar('${data[i].uuid}')">
                                                         <i class="fa fa-upload"></i> Ativar
                                                     </button>` 
                                             }
-                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="videoList.deletar(${retorno[i].id})">
+                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="videoList.remove('${data[i].uuid}')">
                                                 <i class="fa fa-trash-o"></i>
                                                 <span> Excluir</span>
-                                            </button>
+                                            </button>   
                                         </center>
                                     </td>
                                 </tr>`
                             );
                         }
-                        $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(retorno.length / tamanhoPagina));
-                        $('#total-registros').text('1 à '+tamanhoPagina+ ' registros por página ');
+                        $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
+                        $('#total').text('1 à '+tamanhoPagina+ ' registros por página ');
                     }
 
                     function ajustarBotoes() {
-                        $('#proximo').prop('disabled', retorno.length <= tamanhoPagina || pagina >= Math.ceil(retorno.length / tamanhoPagina) - 1);
-                        $('#anterior').prop('disabled', retorno.length <= tamanhoPagina || pagina == 0);
+                        $('#proximo').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
+                        $('#anterior').prop('disabled', data.length <= tamanhoPagina || pagina == 0);
                     }
 
                     $(function () {
                         $('#proximo').click(function () {
-                            if (pagina < retorno.length / tamanhoPagina - 1) {
+                            if (pagina < data.length / tamanhoPagina - 1) {
                                 $("tr").remove();
                                 pagina++;
                                 paginar();
@@ -233,6 +224,47 @@
                         });
                         paginar();
                         ajustarBotoes();
+                    });
+                }
+            });
+        },
+        remove: (uuid) => {
+            bootbox.confirm({
+                title: 'Atenção',
+                message: 'Tem certeza que deseja remover este registro?',
+                buttons: {
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmar',
+                        className: 'btn-sm btn-success'
+                    },
+                    cancel: {
+                        label: '<i class="fa fa-undo"></i> Cancelar',
+                        className: 'btn-sm btn-secondary'
+                    }
+                },
+                callback: function (result) {
+                    if (!result) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: `${admin.baseUrl}/video/${uuid}`,
+                        type: 'DELETE',
+                        beforeSend: function () {
+                            admin.loading(true);
+                        },
+                        success: function () {
+                            admin.loading(false);
+                            toastr["success"]("Vídeo removido com sucesso.");
+                            videoList.list({
+                                url: admin.baseUrl + endpoints.video.list,
+                                formSearchId: videoList.formSearchId,
+                            });
+                        },
+                        error: function () {
+                            admin.loading(false);
+                            toastr["error"]("Não foi possível remover o vídeo.");
+                        }
                     });
                 }
             });

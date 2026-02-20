@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
@@ -25,32 +27,72 @@ export class VideoController {
     return {};
   }
 
+  @Get('form')
+  @Render('pages/video/form')
+  renderForm() {
+    return {};
+  }
+
+  @Get('form/uuid/:uuid')
+  @Render('pages/video/form')
+  renderFormByUuid(@Param('uuid') uuid: string) {
+    return { uuid };
+  }
+
   @Post()
-  create(@Body() createVideoDto: CreateVideoDto) {
-    return this.videoService.create(createVideoDto);
+  async create(@Body() createVideoDto: CreateVideoDto) {
+    try {
+      return await this.videoService.create(createVideoDto);
+    } catch (error) {
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao criar vídeo',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Get('all')
-  findAll(@Query() query: ListVideoQueryDto) {
-    return this.videoService.findAll(query);
+  async findAll(@Query() query: ListVideoQueryDto) {
+    try {
+      const videos = await this.videoService.findAll(query);
+      return { data: videos };
+    } catch (error) {
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao listar vídeos',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.videoService.findOne(id);
+  @Get(':uuid')
+  async get(@Param('uuid') uuid: string) {
+    try {
+      const video = await this.videoService.get(uuid);
+      return { data: video };
+    } catch (error) {
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao buscar vídeo',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateVideoDto: UpdateVideoDto,
-  ) {
-    return this.videoService.update(id, updateVideoDto);
+  @Patch(':uuid')
+  async update(@Param('uuid') uuid: string, @Body() updateVideoDto: UpdateVideoDto) {
+    try {
+      const updatedVideo = await this.videoService.update(uuid, updateVideoDto);
+      return { data: updatedVideo };
+    } catch (error) {
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao atualizar vídeo',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    await this.videoService.remove(id);
+  @Delete(':uuid')
+  async remove(@Param('uuid') uuid: string) {
+    await this.videoService.remove(uuid);
     return { message: 'Video removido com sucesso' };
   }
 }
