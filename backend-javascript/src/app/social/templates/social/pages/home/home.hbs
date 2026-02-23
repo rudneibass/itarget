@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rede Social da Organizacao - Home</title>
+    <link rel="stylesheet" href="/social/static/css/social.css" />
+  </head>
+  <body>
+    <div class="social-shell">
+      <header class="social-header">
+        <div class="social-header-inner">
+          <div class="social-brand">
+            {{#if organization.logoUrl}}
+              <img class="org-logo" src="{{organization.logoUrl}}" alt="Logo de {{organization.nome}}" />
+            {{else}}
+              <span class="org-logo org-logo-default" aria-label="Logo padrão da organização">🏫</span>
+            {{/if}}
+            <span class="org-name">{{organization.nome}}</span>
+          </div>
+          <div class="social-header-right">
+            <div class="user-pill">
+              {{#if user.urlAvatar}}
+                <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{user.nome}}" />
+              {{else}}
+                <span class="user-avatar user-avatar-fallback">🙂</span>
+              {{/if}}
+              <span class="user-name">{{user.nome}}</span>
+            </div>
+            <div class="coin-badge">🪙 Moedas: {{moedas}}</div>
+          </div>
+        </div>
+      </header>
+
+      <nav class="social-nav">
+        <a class="active" href="/social/home">Home</a>
+        <a href="/social/profile">Perfil</a>
+        <a href="/social/activities">Atividades</a>
+        <a href="/social/games">Jogos</a>
+        <a href="/social/rewards">Recompensas</a>
+        <a href="/social/chat">Chat</a>
+      </nav>
+
+      <main class="home-main">
+        <section class="home-left">
+          {{#if timeline.length}}
+            {{#each timeline}}
+              <article class="timeline-item">
+                <header class="timeline-head">
+                  <div class="timeline-user">
+                    <span class="timeline-avatar">IG</span>
+                    @{{../user.nome}}
+                  </div>
+                  <span class="muted">{{tipo}}</span>
+                </header>
+
+                {{#if midiaUrl}}
+                  <div class="timeline-post-content timeline-post-content--media">
+                    {{#if isVideo}}
+                      <video class="timeline-media" controls preload="metadata">
+                        <source src="{{midiaUrl}}" type="video/mp4" />
+                        Seu navegador não suporta reprodução de vídeo.
+                      </video>
+                    {{else}}
+                      <img class="timeline-media" src="{{midiaUrl}}" alt="Mídia da postagem" />
+                    {{/if}}
+                  </div>
+                {{/if}}
+
+                {{#unless midiaUrl}}
+                  <div class="timeline-content{{#if isTextHighlight}} timeline-content--text-only{{/if}}">
+                    {{#if texto}}
+                      {{#if isTextHighlight}}
+                        <div class="timeline-text-highlight timeline-text-highlight--{{textHighlightVariant}}">
+                          <p>{{texto}}</p>
+                        </div>
+                      {{else}}
+                        <p>{{texto}}</p>
+                      {{/if}}
+                    {{/if}}
+                  </div>
+                {{/unless}}
+
+                <div class="timeline-actions" aria-label="Ações da postagem">
+                  {{#if urlRedirecionamento}}
+                    <a
+                      class="timeline-redirect-link"
+                      href="{{urlRedirecionamento}}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{#if tituloRedirecionamento}}
+                        {{tituloRedirecionamento}}
+                      {{else}}
+                        Abrir link da postagem
+                      {{/if}}
+                    </a>
+                  {{else}}
+                    <span class="action-item" aria-label="Curtir">
+                      <svg class="action-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 21s-6.7-4.3-9.4-8C.7 10.5 1.1 6.9 4 5.2c2.3-1.3 4.9-.5 6.3 1.2 1.4-1.7 4-2.5 6.3-1.2 2.9 1.7 3.3 5.3 1.4 7.8C18.7 16.7 12 21 12 21z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span class="action-total">{{likes}}</span>
+                    </span>
+                    <span class="action-item" aria-label="Comentar">
+                      <svg class="action-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M21 12c0 4.4-4 8-9 8-1.2 0-2.3-.2-3.4-.6L4 20l1.2-3.9C4.4 15 4 13.5 4 12c0-4.4 4-8 9-8s8 3.6 8 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span class="action-total">{{comments}}</span>
+                    </span>
+                    <span class="action-item" aria-label="Compartilhar">
+                      <svg class="action-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span class="action-total">{{compartilhars}}</span>
+                    </span>
+                  {{/if}}
+                </div>
+
+                {{#if midiaUrl}}
+                  {{#if texto}}
+                    <div class="timeline-caption">
+                      <p>{{texto}}</p>
+                    </div>
+                  {{/if}}
+                {{/if}}
+              </article>
+            {{/each}}
+          {{else}}
+            <section class="social-card">
+              <p class="muted">Nenhuma postagem ainda.</p>
+            </section>
+          {{/if}}
+        </section>
+
+        <aside class="home-right">
+          <section class="social-card">
+            <h3>Jogos</h3>
+            {{#if quickGames.length}}
+              <div class="icon-grid">
+                {{#each quickGames}}
+                  <button
+                    type="button"
+                    class="icon-tile game-open-button"
+                    data-game-name="{{nome}}"
+                    data-game-url="{{url}}"
+                    title="Abrir {{nome}}"
+                  >
+                    <span class="tile-emoji">🎮</span>
+                    <span class="tile-label">{{nome}}</span>
+                  </button>
+                {{/each}}
+              </div>
+            {{else}}
+              <p class="muted">Sem jogos no momento.</p>
+            {{/if}}
+          </section>
+
+          <section class="social-card">
+            <h3>Atividades</h3>
+            {{#if quickActivities.length}}
+              <div class="icon-grid">
+                {{#each quickActivities}}
+                  <a class="icon-tile" href="/social/activities" title="Abrir atividades">
+                    <span class="tile-emoji">📝</span>
+                    <span class="tile-label">{{titulo}}</span>
+                  </a>
+                {{/each}}
+              </div>
+            {{else}}
+              <p class="muted">Sem atividades no momento.</p>
+            {{/if}}
+          </section>
+        </aside>
+      </main>
+
+      <div class="game-modal" id="game-modal" aria-hidden="true">
+        <div class="game-modal-backdrop" data-close-modal="true"></div>
+        <section class="game-modal-content" role="dialog" aria-modal="true" aria-label="Jogo em execução">
+          <header class="game-modal-header">
+            <h3 id="game-modal-title">Jogo</h3>
+            <button type="button" class="game-modal-close" id="game-modal-close" aria-label="Fechar">✕</button>
+          </header>
+          <div class="game-modal-body">
+            <iframe id="game-modal-iframe" src="about:blank" title="Jogo" loading="lazy" allowfullscreen></iframe>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const modal = document.getElementById('game-modal');
+        const modalTitle = document.getElementById('game-modal-title');
+        const modalIframe = document.getElementById('game-modal-iframe');
+        const closeButton = document.getElementById('game-modal-close');
+        const openButtons = document.querySelectorAll('.game-open-button');
+
+        if (!modal || !modalTitle || !modalIframe || !closeButton || openButtons.length === 0) {
+          return;
+        }
+
+        const closeModal = () => {
+          modal.classList.remove('is-open');
+          modal.setAttribute('aria-hidden', 'true');
+          modalIframe.src = 'about:blank';
+        };
+
+        const openModal = (name, url) => {
+          modalTitle.textContent = name || 'Jogo';
+          modalIframe.src = url;
+          modal.classList.add('is-open');
+          modal.setAttribute('aria-hidden', 'false');
+        };
+
+        openButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const gameName = button.getAttribute('data-game-name');
+            const gameUrl = button.getAttribute('data-game-url');
+            if (!gameUrl) {
+              return;
+            }
+            openModal(gameName, gameUrl);
+          });
+        });
+
+        closeButton.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (event) => {
+          const target = event.target;
+          if (target instanceof HTMLElement && target.getAttribute('data-close-modal') === 'true') {
+            closeModal();
+          }
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+            closeModal();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

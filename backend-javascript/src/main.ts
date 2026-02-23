@@ -13,19 +13,23 @@ async function bootstrap() {
   //app.setGlobalPrefix('api');
   
   // Servir templates
-  const templatesPath = join(process.cwd(), 'src', 'app', 'admin', 'templates');
-  app.setBaseViewsDir(templatesPath);
+  const adminTemplatesPath = join(process.cwd(), 'src', 'app', 'admin', 'templates');
+  const socialTemplatesPath = join(process.cwd(), 'src', 'app', 'social', 'templates');
+  app.setBaseViewsDir([adminTemplatesPath, socialTemplatesPath]);
   app.setViewEngine('hbs');
   app.useStaticAssets(join(process.cwd(), 'src', 'app', 'admin', 'static'), {
     prefix: '/admin/static/',
   });
+  app.useStaticAssets(join(process.cwd(), 'src', 'app', 'social', 'static'), {
+    prefix: '/social/static/',
+  });
   hbs.registerPartial(
     'header',
-    readFileSync(join(templatesPath, 'partials', 'header.hbs'), 'utf8'),
+    readFileSync(join(adminTemplatesPath, 'partials', 'header.hbs'), 'utf8'),
   );
   hbs.registerPartial(
     'aside',
-    readFileSync(join(templatesPath, 'partials', 'aside.hbs'), 'utf8'),
+    readFileSync(join(adminTemplatesPath, 'partials', 'aside.hbs'), 'utf8'),
   );
 
   // Filters

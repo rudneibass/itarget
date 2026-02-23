@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './app/admin/admin.module';
+import { SocialModule } from './app/social/social.module';
 import { Video } from './app/admin/models/video/video.entity';
 
 @Module({
@@ -17,9 +18,11 @@ import { Video } from './app/admin/models/video/video.entity';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [Video],
+      autoLoadEntities: true,
       synchronize: false,
     }),
     AdminModule,
+    SocialModule,
   ],
 })
 export class AppModule {}

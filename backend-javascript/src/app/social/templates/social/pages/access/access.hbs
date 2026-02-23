@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rede Social da Organizacao - Acesso</title>
+    <link rel="stylesheet" href="/social/static/css/social.css" />
+  </head>
+  <body>
+    <main class="full-page-center">
+      <section class="access-card">
+        <h1>social</h1>
+        <p>Escaneie o QRCode pessoal para entrar com segurança.</p>
+        <p class="muted">Cada usuario possui um link exclusivo com hash do usuário e UUID da organizacao.</p>
+        {{#if erro}}
+          <p class="error-text">{{erro}}</p>
+        {{/if}}
+      </section>
+    </main>
+  </body>
+</html>
