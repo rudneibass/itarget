@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { UsuarioService } from '../../services/usuario/usuario.service';
 
-@Controller('admin/usuario')
+@Controller('admin/usuario-social')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 

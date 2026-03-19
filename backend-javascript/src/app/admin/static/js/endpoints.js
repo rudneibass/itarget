@@ -15,8 +15,8 @@ endpoints = {
         save: '/organizacao/save'
     },
     usuario: {
-        all: '/usuario/all',
-        organizacoes: '/usuario/organizacoes'
+        all: '/usuario-social/all',
+        organizacoes: '/usuario-social/organizacoes'
     },
     jogo: {
         all: '/jogo/all',

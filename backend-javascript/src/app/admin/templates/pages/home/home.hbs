@@ -41,32 +41,60 @@
             </li>
           </ul>
 
-          <div class="tab-content main-tab-content" id="tab-content">
-            <div class="tab-pane main-tab-pane active pt-3" id="home">
-              <h3 class="mb-4">Bem-vindo ao Admin</h3>
-              
-              <section class="section-actions mb-4">
-                <div class="section-actions-btn-parent">
-                  <button class="btn btn-success btn-float section-actions-btn" onclick="admin.addTab({tabId:'form-organizacao', title: 'Nova Organização', url: '/admin/organizacao/form'})">
-                    <i class="fa fa-plus"></i>
-                    <span class="btn-label">Criar Organização</span>
-                  </button>
-                </div>
-                <div class="section-actions-btn-parent">
-                  <button class="btn btn-primary btn-float section-actions-btn" onclick="admin.addTab({tabId:'list-organizacao', title: 'Minhas Organizações', url: '/admin/organizacao/list'})">
-                    <i class="fa fa-list"></i>
-                    <span class="btn-label">Minhas Organizações</span>
-                  </button>
-                </div>
-              </section>
 
-              <div class="alert alert-info" role="alert">
-                <h5><i class="fa fa-info-circle"></i> Instruções</h5>
-                <ul class="mb-0">
-                  <li>Clique em <strong>"Criar Organização"</strong> para cadastrar uma nova organização</li>
-                  <li>Você será automaticamente o <strong>Dono</strong> da organização</li>
-                  <li>Acesse <strong>"Minhas Organizações"</strong> para gerenciar suas organizações</li>
-                </ul>
+          <div class="tab-content main-tab-content" id="tab-content">
+            <div class="tab-pane main-tab-pane active pt-3 p-0" id="home">
+              <div class="container-fluid p-0">
+                <div class="row">
+                  <div class="col-3">
+                    <div
+                      class="card h-100 shadow-sm"
+                      role="button"
+                      style="cursor: pointer;"
+                      onclick="admin.addTab({tabId:'form-organizacao', title: 'Nova Organização', url: '/admin/organizacao/form'})"
+                    >
+                      <div class="card-body d-flex align-items-center gap-3">
+                        <i class="fa-solid fa-building fs-3 text-secondary"></i>
+                        <div>
+                          <h6 class="card-title mb-1">Organizações</h6>
+                          <small class="card-text text-muted mb-0">Clique para criar sua organização.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div
+                      class="card h-100 shadow-sm"
+                      role="button"
+                      style="cursor: pointer;"
+                      onclick="admin.addTab({tabId:'lista_usuarios', title: 'Colaboradores', url: '/admin/usuario/list'})"
+                    >
+                      <div class="card-body d-flex align-items-center gap-3">
+                        <i class="fa-solid fa-users fs-3 text-secondary"></i>
+                        <div>
+                          <h6 class="card-title mb-1">Colaboradores</h6>
+                          <small class="card-text text-muted mb-0">Clique para adicionar colaboradores.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div
+                      class="card h-100 shadow-sm"
+                      role="button"
+                      style="cursor: pointer;"
+                      onclick="admin.addTab({tabId:'meu-perfil', title: 'Meu Perfil', url: '/admin/usuario/me'})"
+                    >
+                      <div class="card-body d-flex align-items-center gap-3">
+                        <i class="fa-solid fa-circle-user fs-3 text-secondary"></i>
+                        <div>
+                          <h6 class="card-title mb-1">Meu Perfil</h6>
+                          <small class="card-text text-muted mb-0">Clique para visualizar seu perfil.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

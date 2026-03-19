@@ -1,10 +1,10 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Req } from '@nestjs/common';
 
 @Controller('admin')
 export class HomeController {
   @Get('home')
   @Render('pages/home/home')
-  renderHome() {
-    return {};
+  renderHome(@Req() req: any) {
+    return { usuarioUuid: req.adminSession?.usuario?.uuid || null };
   }
 }

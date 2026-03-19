@@ -5,6 +5,7 @@ import { HomeController } from './controllers/home/home.controller';
 import { JogoController } from './controllers/jogo/jogo.controller';
 import { OrganizacaoController } from './controllers/organizacao/organizacao.controller';
 import { RecompensaController } from './controllers/recompensa/recompensa.controller';
+import { UsuarioAdminController } from './controllers/usuario-admin/usuario-admin.controller';
 import { UsuarioController } from './controllers/usuario/usuario.controller';
 import { MiddlewareSessaoAdmin } from './middleware/admin-session.middleware';
 import { UsuarioAdmin } from './models/usuario-admin/usuario-admin.entity';
@@ -20,6 +21,7 @@ import { AdminSessionService } from './services/auth/admin-session.service';
 import { JogoService } from './services/jogo/jogo.service';
 import { OrganizacaoService } from './services/organizacao/organizacao.service';
 import { RecompensaService } from './services/recompensa/recompensa.service';
+import { UsuarioAdminService } from './services/usuario-admin/usuario-admin.service';
 import { UsuarioService } from './services/usuario/usuario.service';
 import { VideoService } from './services/video/video.service';
 
@@ -40,6 +42,7 @@ import { VideoService } from './services/video/video.service';
     HomeController,
     VideoController,
     OrganizacaoController,
+    UsuarioAdminController,
     UsuarioController,
     JogoController,
     RecompensaController,
@@ -47,6 +50,7 @@ import { VideoService } from './services/video/video.service';
   providers: [
     VideoService,
     OrganizacaoService,
+    UsuarioAdminService,
     UsuarioService,
     JogoService,
     RecompensaService,
@@ -63,6 +67,7 @@ export class AdminModule implements NestModule {
         HomeController,
         VideoController,
         OrganizacaoController,
+        UsuarioAdminController,
         UsuarioController,
         JogoController,
         RecompensaController,

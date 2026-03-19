@@ -116,7 +116,7 @@
         },
         loadOrganizations: (callback) => {
             $.ajax({
-                url: `${admin.baseUrl}/usuario/organizacoes`,
+                url: `${admin.baseUrl}/usuario-social/organizacoes`,
                 type: 'GET',
                 success: (response) => {
                     const list = response?.data || [];
@@ -189,7 +189,7 @@
             }
 
             const uuid = $('#uuid').val();
-            const url = uuid ? `${admin.baseUrl}/usuario/${uuid}` : `${admin.baseUrl}/usuario`;
+            const url = uuid ? `${admin.baseUrl}/usuario-social/${uuid}` : `${admin.baseUrl}/usuario-social`;
             const method = uuid ? 'PATCH' : 'POST';
 
             const formData = $('#' + formId).serializeArray().reduce(function (obj, item) {
@@ -238,7 +238,7 @@
     window.usuarioForm = usuarioForm;
 
     document.getElementById('btn-usuario-novo')?.addEventListener('click', () => {
-        admin.addTab({tabId:'form-usuario', title: 'Novo Usuário', url: '/admin/usuario/form'});
+        admin.addTab({tabId:'form-usuario', title: 'Novo Usuário', url: '/admin/usuario-social/form'});
     });
 
     document.getElementById('btn-usuario-editar')?.addEventListener('click', () => {
@@ -255,7 +255,7 @@
 
     usuarioForm.loadOrganizations(() => {
         usuarioForm.populateForm({
-            url: admin.baseUrl + '/usuario',
+            url: admin.baseUrl + '/usuario-social',
             uuid: '{{uuid}}'
         });
     });
