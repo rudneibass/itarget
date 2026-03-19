@@ -17,7 +17,7 @@ export class InicioController {
   @Render('social/pages/home/home')
   async renderizarInicio(@Req() req: any) {
     const session = req.socialSession;
-    const timeline = await this.feedService.listTimeline(session.organizacaoUuid);
+    const timeline = await this.feedService.listTimeline(session.organizacaoUuid, session.usuario.uuid);
     const activities = await this.activityService.listarAtividades(session.organizacaoUuid);
     const games = await this.economyService.listarJogos(session.organizacaoUuid);
 

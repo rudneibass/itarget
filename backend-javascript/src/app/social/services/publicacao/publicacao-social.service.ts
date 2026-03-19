@@ -1,13 +1,14 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CriarComentarioDto } from '../../dtos/publicacao/criar-comentario.dto';
 import { CriarPublicacaoDto } from '../../dtos/publicacao/criar-publicacao.dto';
 import { ComentarioPublicacao } from '../../models/comentario-publicacao/comentario-publicacao.entity';
 import { CurtidaPublicacao } from '../../models/curtida-publicacao/curtida-publicacao.entity';
 import { CompartilhamentoPublicacao } from '../../models/compartilhamento-publicacao/compartilhamento-publicacao.entity';
 import { Publicacao } from '../../models/publicacao/publicacao.entity';
+import { Usuario } from '../../models/usuario/usuario.entity';
 import { DadosSessaoSocial } from '../sessao/sessao-social.service';
 
 @Injectable()
@@ -21,17 +22,51 @@ export class PublicacaoService {
     private readonly likeRepository: Repository<CurtidaPublicacao>,
     @InjectRepository(CompartilhamentoPublicacao)
     private readonly compartilharRepository: Repository<CompartilhamentoPublicacao>,
+    @InjectRepository(Usuario)
+    private readonly userRepository: Repository<Usuario>,
   ) {}
 
-  async listTimeline(organizacaoUuid: string) {
+  async listTimeline(organizacaoUuid: string, usuarioUuid?: string) {
     const posts = await this.postRepository.find({
       where: { organizacaoUuid },
       order: { criadoEm: 'DESC' },
       take: 50,
     });
 
+    if (posts.length === 0) {
+      return [];
+    }
+
+    const authorUuids = Array.from(new Set(posts.map((post) => post.usuarioUuid)));
+    const authors = await this.userRepository.find({
+      where: { uuid: In(authorUuids) },
+      select: {
+        uuid: true,
+        nome: true,
+        apelido: true,
+        urlAvatar: true,
+      },
+    });
+    const authorByUuid = new Map(authors.map((author) => [author.uuid, author]));
+
+    const postUuids = posts.map((post) => post.uuid);
+    const userLikes = usuarioUuid
+      ? await this.likeRepository.find({
+          where: {
+            usuarioUuid,
+            publicacaoUuid: In(postUuids),
+          },
+          select: {
+            publicacaoUuid: true,
+          },
+        })
+      : [];
+    const likedPostUuids = new Set(userLikes.map((like) => like.publicacaoUuid));
+
     const withCounters = await Promise.all(
       posts.map(async (post, index) => {
+        const postAuthor = authorByUuid.get(post.usuarioUuid);
+        const authorName = postAuthor?.apelido || postAuthor?.nome || 'Usuário';
         const isTextHighlight = !post.midiaUrl && (post.tipo === 'texto' || post.tipo === 'emoji');
         const [likes, comments, compartilhars] = await Promise.all([
           this.likeRepository.count({ where: { publicacaoUuid: post.uuid } }),
@@ -41,9 +76,14 @@ export class PublicacaoService {
 
         return {
           ...post,
+          authorName,
+          authorAvatarUrl: postAuthor?.urlAvatar ?? null,
+          authorInitial: authorName.charAt(0).toUpperCase(),
+          isOwnPost: usuarioUuid ? post.usuarioUuid === usuarioUuid : false,
           isVideo: post.tipo === 'video',
           isTextHighlight,
           textHighlightVariant: isTextHighlight ? (index % 3) + 1 : null,
+          likedByCurrentUser: likedPostUuids.has(post.uuid),
           likes,
           comments,
           compartilhars,
@@ -98,6 +138,49 @@ export class PublicacaoService {
     return this.commentRepository.save(comment);
   }
 
+  async listarComentarios(session: DadosSessaoSocial, publicacaoUuid: string) {
+    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoUuid: session.organizacaoUuid } });
+    if (!post) {
+      throw new NotFoundException('Post não encontrado');
+    }
+
+    const comments = await this.commentRepository.find({
+      where: { publicacaoUuid },
+      order: { criadoEm: 'ASC' },
+    });
+
+    if (comments.length === 0) {
+      return [];
+    }
+
+    const authorUuids = Array.from(new Set(comments.map((comment) => comment.usuarioUuid)));
+    const authors = await this.userRepository.find({
+      where: { uuid: In(authorUuids) },
+      select: {
+        uuid: true,
+        nome: true,
+        apelido: true,
+        urlAvatar: true,
+      },
+    });
+    const authorByUuid = new Map(authors.map((author) => [author.uuid, author]));
+
+    return comments.map((comment) => {
+      const author = authorByUuid.get(comment.usuarioUuid);
+      const authorName = author?.apelido || author?.nome || 'Usuário';
+
+      return {
+        id: comment.id,
+        comentario: comment.comentario,
+        criadoEm: comment.criadoEm,
+        authorName,
+        authorAvatarUrl: author?.urlAvatar ?? null,
+        authorInitial: authorName.charAt(0).toUpperCase(),
+        isFromCurrentUser: comment.usuarioUuid === session.usuario.uuid,
+      };
+    });
+  }
+
   async alternarCurtida(session: DadosSessaoSocial, publicacaoUuid: string) {
     const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoUuid: session.organizacaoUuid } });
     if (!post) {
@@ -132,5 +215,29 @@ export class PublicacaoService {
         usuarioUuid: session.usuario.uuid,
       }),
     );
+  }
+
+  async excluirPublicacao(session: DadosSessaoSocial, publicacaoUuid: string) {
+    const post = await this.postRepository.findOne({
+      where: {
+        uuid: publicacaoUuid,
+        organizacaoUuid: session.organizacaoUuid,
+      },
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post não encontrado');
+    }
+
+    if (post.usuarioUuid !== session.usuario.uuid) {
+      throw new ForbiddenException('Você só pode excluir suas próprias postagens');
+    }
+
+    await this.commentRepository.delete({ publicacaoUuid });
+    await this.likeRepository.delete({ publicacaoUuid });
+    await this.compartilharRepository.delete({ publicacaoUuid });
+    await this.postRepository.delete({ uuid: publicacaoUuid });
+
+    return { deleted: true };
   }
 }

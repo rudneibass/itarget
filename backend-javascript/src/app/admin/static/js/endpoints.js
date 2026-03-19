@@ -7,6 +7,25 @@ endpoints = {
         edit: '/video/edit',
         save: '/video/save'
     },
+    organizacao: {
+        get: '/organizacao',
+        list: '/organizacao/all',
+        all: '/organizacao/all',
+        edit: '/organizacao/edit',
+        save: '/organizacao/save'
+    },
+    usuario: {
+        all: '/usuario/all',
+        organizacoes: '/usuario/organizacoes'
+    },
+    jogo: {
+        all: '/jogo/all',
+        organizacoes: '/jogo/organizacoes'
+    },
+    recompensa: {
+        all: '/recompensa/all',
+        organizacoes: '/recompensa/organizacoes'
+    },
     arquivo: {
         form: '/arquivo/form',
         uploadLocalServer: '/arquivo/upload-local-server',  

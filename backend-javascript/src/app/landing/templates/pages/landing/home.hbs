@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plataforma de Receita e Engajamento para Escolas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --bg: #f5f7fc;
+        --card: #ffffff;
+        --ink: #16213a;
+        --muted: #5d6780;
+        --brand: #3f5de8;
+        --brand-2: #6f84ff;
+        --line: #e4e9f6;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: radial-gradient(1200px 500px at 10% -10%, #e7edff 0%, transparent 50%), var(--bg);
+        color: var(--ink);
+      }
+      .topbar {
+        padding: 16px 0;
+      }
+      .brand {
+        font-weight: 800;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 1.02rem;
+      }
+      .hero {
+        padding: 56px 0 28px;
+      }
+      .hero h1 {
+        font-size: 2.6rem;
+        line-height: 1.14;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .hero p {
+        font-size: 1.08rem;
+        color: var(--muted);
+        max-width: 700px;
+      }
+      .badge-soft {
+        display: inline-block;
+        background: #e5ebff;
+        color: #3046b4;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: .8rem;
+        font-weight: 600;
+      }
+      .card-soft {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(22, 33, 58, .08);
+      }
+      .section-title {
+        font-size: 1.55rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .hero-card {
+        background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+      }
+      .btn-primary {
+        background-color: var(--brand);
+        border-color: var(--brand);
+      }
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background-color: #3552d9;
+        border-color: #3552d9;
+      }
+      .feature-item h5 {
+        font-size: 1.04rem;
+        margin-bottom: 8px;
+      }
+      .feature-item p {
+        color: var(--muted);
+        margin-bottom: 0;
+        line-height: 1.6;
+      }
+      .kpi {
+        text-align: center;
+        padding: 18px 14px;
+        border-radius: 12px;
+        background: #f7f9ff;
+        border: 1px solid var(--line);
+      }
+      .kpi strong {
+        display: block;
+        font-size: 1.15rem;
+        margin-bottom: 4px;
+        color: #253a9d;
+      }
+      .kpi small {
+        color: var(--muted);
+        font-size: .8rem;
+      }
+      .grid-value {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .proof-strip {
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 16px;
+      }
+      .proof-strip p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .pitch-section {
+        padding: 10px 0;
+      }
+      .objection-card,
+      .faq-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        padding: 16px;
+        height: 100%;
+      }
+      .objection-card h6,
+      .faq-card h6 {
+        margin-bottom: 8px;
+        font-size: .98rem;
+        font-weight: 700;
+      }
+      .objection-card p,
+      .faq-card p {
+        margin-bottom: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .demo-cta {
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
+        padding: 26px;
+      }
+      .demo-cta p {
+        color: var(--muted);
+        margin-bottom: 0;
+      }
+      .auth-card {
+        width: 100%;
+        max-width: 560px;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        box-shadow: 0 14px 34px rgba(22, 33, 58, .09);
+        padding: 26px;
+      }
+      .nav-tabs {
+        border-bottom-color: var(--line);
+      }
+      .nav-tabs .nav-link {
+        color: #5f6e8f;
+      }
+      .nav-tabs .nav-link.active {
+        font-weight: 600;
+        color: var(--brand);
+        border-color: var(--line) var(--line) #fff;
+      }
+      footer {
+        padding: 28px 0 38px;
+        color: #6a7691;
+      }
+      @media (max-width: 992px) {
+        .hero h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <div class="topbar d-flex justify-content-between align-items-center">
+        <a href="/landing" class="brand">School Social Commerce</a>
+        <a href="#acesso" class="btn btn-outline-primary btn-sm">Entrar no admin</a>
+      </div>
+
+      <section class="hero">
+        <span class="badge-soft mb-3">Plataforma para Escolas Particulares e Mantenedoras</span>
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-7">
+            <h1>Aumente captação e retenção com uma rede social privada gamificada e aumente sua receita com vendas online.</h1>
+            <p class="mt-3 mb-4">
+              Uma solução pensada para direção e mantenedora: mais valor percebido pelas famílias,
+              novos canais de monetização e maior engajamento de pais e alunos no dia a dia da escola.
+            </p>
+            <div class="d-flex gap-2 flex-wrap">
+              <a href="#acesso" class="btn btn-primary">Solicitar acesso</a>
+              <a href="#produto" class="btn btn-outline-primary">Ver proposta de valor</a>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="card-soft hero-card p-4">
+              <h5 class="mb-3">Resultados esperados</h5>
+              <div class="row g-2">
+                <div class="col-6"><div class="kpi"><strong>+Matrículas</strong><small>diferencial de inovação para atrair famílias</small></div></div>
+                <div class="col-6"><div class="kpi"><strong>+Receita</strong><small>loja virtual com itens digitais e físicos</small></div></div>
+                <div class="col-6"><div class="kpi"><strong>+Engajamento</strong><small>pais e alunos mais presentes na rotina escolar</small></div></div>
+                <div class="col-6"><div class="kpi"><strong>Eficiência</strong><small>mais digitalização e melhor custo operacional</small></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-3">
+        <div class="proof-strip">
+          <p><strong>Tese de crescimento:</strong> ao oferecer uma rede social privada, a escola aumenta valor percebido, fortalece retenção e ganha uma vantagem competitiva real no processo de captação.</p>
+        </div>
+      </section>
+
+      <section id="produto" class="py-4">
+        <div class="card-soft p-4 p-lg-5">
+          <h2 class="section-title mb-3">Proposta de valor do produto</h2>
+          <div class="row g-4">
+            <div class="col-md-6 feature-item">
+              <h5>Rede social privada da escola</h5>
+              <p>Ambiente exclusivo para relacionamento entre escola, pais e alunos, com governança e foco em comunidade escolar.</p>
+            </div>
+            <div class="col-md-6 feature-item">
+              <h5>Gamificação com moedas e recompensas</h5>
+              <p>Alunos ganham moedas ao interagir na plataforma e ao cumprir tarefas digitais e tarefas do dia a dia definidas pela escola.</p>
+            </div>
+            <div class="col-md-6 feature-item">
+              <h5>Loja virtual integrada</h5>
+              <p>Venda de moedas, insígnias, wallpapers e outros itens físicos ou digitais para abrir novas fontes de receita escolar.</p>
+            </div>
+            <div class="col-md-6 feature-item">
+              <h5>Visão de gestão para direção e mantenedora</h5>
+              <p>Mais previsibilidade de engajamento e monetização com operação digital, escalável e orientada a resultado.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pitch-section py-4">
+        <div class="card-soft p-4 p-lg-5">
+          <h2 class="section-title mb-3">Objeções comuns da direção escolar</h2>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="objection-card">
+                <h6>Isso aumenta trabalho da equipe?</h6>
+                <p>Não. A proposta é digitalizar rotinas, padronizar tarefas e concentrar comunicação em um canal próprio, reduzindo retrabalho operacional.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="objection-card">
+                <h6>Funciona para escolas pequenas?</h6>
+                <p>Sim. O modelo é escalável e funciona tanto em escolas menores quanto em redes com múltiplas unidades e mantenedoras.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="objection-card">
+                <h6>Pais e alunos vão realmente usar?</h6>
+                <p>A gamificação e as recompensas aumentam adesão. O engajamento cresce quando existe propósito claro e retorno para o aluno.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="objection-card">
+                <h6>Há retorno financeiro real?</h6>
+                <p>Além de retenção e captação, a loja virtual cria novas receitas com itens digitais e físicos definidos pela própria escola.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pitch-section py-2">
+        <div class="card-soft p-4 p-lg-5">
+          <h2 class="section-title mb-3">FAQ para decisão executiva</h2>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="faq-card">
+                <h6>Qual o objetivo estratégico da plataforma?</h6>
+                <p>Aumentar receita com mais engajamento e monetização, mantendo controle sobre custos operacionais.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="faq-card">
+                <h6>Como o aluno ganha moedas?</h6>
+                <p>Interagindo na rede social, concluindo tarefas digitais e cumprindo atividades do dia a dia configuradas pela escola.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="faq-card">
+                <h6>O que pode ser vendido na loja virtual?</h6>
+                <p>Moedas, insígnias, wallpapers e qualquer item físico ou digital que a escola queira ofertar.</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="faq-card">
+                <h6>Qual ganho institucional da marca escola?</h6>
+                <p>Uma rede social privada fortalece posicionamento de inovação, melhora relacionamento com famílias e aumenta atratividade de matrícula.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-4">
+        <div class="demo-cta d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
+          <div>
+            <h3 class="h4 mb-2">Agende uma demonstração estratégica</h3>
+            <p>Veja em 30 minutos como transformar engajamento escolar em crescimento de receita com eficiência operacional.</p>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <a href="#acesso" class="btn btn-primary">Quero uma demonstração</a>
+            <a href="mailto:comercial@schoolsocialcommerce.com" class="btn btn-outline-primary">Falar com comercial</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="acesso" class="py-5 d-flex justify-content-center">
+        <div class="auth-card">
+          <h4 class="mb-2">Comece sua operação</h4>
+          <p class="text-muted mb-3">Cadastre-se para criar sua organização e configurar o admin da sua escola.</p>
+
+          <ul class="nav nav-tabs" id="auth-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-pane" type="button" role="tab">Entrar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register-pane" type="button" role="tab">Cadastrar</button>
+            </li>
+          </ul>
+
+          <div class="tab-content pt-3">
+            <div class="tab-pane fade show active" id="login-pane" role="tabpanel">
+              <form id="form-login">
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" id="login-email" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Senha</label>
+                  <input type="password" class="form-control" id="login-senha" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Entrar</button>
+              </form>
+            </div>
+
+            <div class="tab-pane fade" id="register-pane" role="tabpanel">
+              <form id="form-register">
+                <div class="mb-3">
+                  <label class="form-label">Nome</label>
+                  <input type="text" class="form-control" id="register-nome" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" id="register-email" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Senha</label>
+                  <input type="password" class="form-control" id="register-senha" required />
+                </div>
+                <button type="submit" class="btn btn-success w-100">Cadastrar e entrar</button>
+              </form>
+            </div>
+          </div>
+
+          <div id="auth-message" class="mt-3 text-danger"></div>
+        </div>
+      </section>
+
+      <footer class="text-center">
+        <small>School Social Commerce • Engajamento, monetização e eficiência operacional para escolas particulares.</small>
+      </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      (() => {
+        const showError = (message) => {
+          $('#auth-message').text(message || 'Não foi possível concluir a operação.');
+        };
+
+        const redirectToAdmin = () => {
+          window.location.href = '/admin/home';
+        };
+
+        $('#form-login').on('submit', async (event) => {
+          event.preventDefault();
+          $('#auth-message').empty();
+
+          try {
+            await $.ajax({
+              url: '/admin/auth/login',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                email: $('#login-email').val(),
+                senha: $('#login-senha').val(),
+              }),
+            });
+            redirectToAdmin();
+          } catch (error) {
+            showError(error?.responseJSON?.message || error?.responseText || 'Credenciais inválidas.');
+          }
+        });
+
+        $('#form-register').on('submit', async (event) => {
+          event.preventDefault();
+          $('#auth-message').empty();
+
+          try {
+            await $.ajax({
+              url: '/admin/auth/register',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                nome: $('#register-nome').val(),
+                email: $('#register-email').val(),
+                senha: $('#register-senha').val(),
+              }),
+            });
+            redirectToAdmin();
+          } catch (error) {
+            showError(error?.responseJSON?.message || error?.responseText || 'Não foi possível cadastrar.');
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

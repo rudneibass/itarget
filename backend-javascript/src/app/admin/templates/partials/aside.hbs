@@ -1,30 +1,55 @@
 <aside class="width-65-px full-height">
     <div id="jquery-accordion-menu" class="jquery-accordion-menu">
-        <!--<div class="jquery-accordion-menu-header">Header </div> -->
+        <div class="jquery-accordion-menu-header">
+            <div class="org-brand" id="org-brand">
+                <div class="org-brand-avatar" id="org-brand-avatar" aria-label="Logo da organização">
+                    <img id="org-brand-logo" alt="Logo da organização" />
+                    <span id="org-brand-initials">OR</span>
+                </div>
+                <div class="org-brand-text">
+                    <small>Organização</small>
+                    <span id="org-brand-name">Organização</span>
+                </div>
+            </div>
+        </div>
         <ul>
-            <li><a href="./admin/home"><i class="fa fa-home"></i>Home </a></li>
-            <li><a href="#"><i class="fa fa-building"></i>Institucional </a>
+            <li><a href="/admin/home"><i class="fa fa-home"></i>Home </a></li>
+            <li><a href="#"><i class="fa fa-users"></i>Rede Social </a>
                 <ul class="submenu">
-                    <li><a href="../entidade/"><i class="fa fa-building"></i>Entidade </a></li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="admin.addTab({tabId:'lista_organizacoes', title: 'Organizações', url: '/admin/organizacao/list'})">
+                            <i class="fa fa-building-o"></i>
+                            Organizações
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="admin.addTab({tabId:'lista_jogos', title: 'Jogos', url: '/admin/jogo/list'})">
+                            <i class="fa fa-gamepad"></i>
+                            Jogos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="admin.addTab({tabId:'lista_recompensas', title: 'Recompensas', url: '/admin/recompensa/list'})">
+                            <i class="fa fa-gift"></i>
+                            Recompensas
+                        </a>
+                    </li>
                     <li>
                         <a href="javascript:void(0)" onclick="admin.addTab({tabId:'lista_videos', title: 'Vídeos', url: '/admin/video/list'})">
                             <i class="fa fa-video-camera"></i>
                             Vídeos 
                         </a>
                     </li>
+                    <li>
+                        <a href="javascript:void(0)" onclick="admin.addTab({tabId:'lista_usuarios', title: 'Usuários', url: '/admin/usuario/list'})">
+                            <i class="fa fa-users"></i>
+                            Usuários
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-cog"></i>Configurações </a>
-                <ul class="submenu">
-                    <li><a href="../aparencia/"><i class="fa fa-dashboard"></i>Aparência </a></li>
-                    <li><a href="../multimidia/"><i class="fa fa-files-o"></i>Arquivos</a></li>
-                    <li><a href="../menu/"><i class="fa fa-bars"></i>Menu do Site</a></li>
-                    <li><a href="../opcoes-tabelas-colunas/"><i class="fa fa-cogs"></i>Opções</a></li> 
-                </ul>
-            </li>
-            <li>
-                <a  href="javascript:void(0)">
+                <a href="/admin/logout">
                     <i class="fa fa-power-off"></i>Logout 
                 </a>
             </li>
@@ -59,7 +84,93 @@
         .colors .white{background: #fff;}
         .colors .black{background: #292929;}
         .jquery-accordion-menu{float:left;position:relative;}
-        .jquery-accordion-menu .jquery-accordion-menu-footer,.jquery-accordion-menu .jquery-accordion-menu-header{width:100%;height:50px;padding-left:22px;float:left;line-height:50px;font-weight:600;color:#f0f0f0;background:#414956}
+                .jquery-accordion-menu .jquery-accordion-menu-footer,.jquery-accordion-menu .jquery-accordion-menu-header{width:100%;height:50px;padding-left:22px;float:left;line-height:50px;font-weight:600;color:#f0f0f0;background:#414956}
+                .jquery-accordion-menu .jquery-accordion-menu-header{
+                    height: 72px;
+                    padding: 0 10px;
+                    line-height: normal;
+                    display: flex;
+                    align-items: center;
+                }
+                .org-brand{
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    overflow: hidden;
+                }
+                .org-brand-avatar{
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 100%;
+                    background: #3b424d;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    overflow: hidden;
+                    transition: width 200ms linear, height 200ms linear;
+                }
+                aside.width-320-px .org-brand-avatar,
+                aside:hover .org-brand-avatar{
+                    width: 46px;
+                    height: 46px;
+                }
+                #org-brand-logo{
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: none;
+                }
+                .org-brand-avatar.has-logo #org-brand-logo{
+                    display: block;
+                }
+                .org-brand-avatar.has-logo #org-brand-initials{
+                    display: none;
+                }
+                #org-brand-initials{
+                    font-size: 12px;
+                    font-weight: 700;
+                    color: #f0f0f0;
+                    letter-spacing: 0.4px;
+                    transition: font-size 200ms linear;
+                }
+                aside.width-320-px #org-brand-initials,
+                aside:hover #org-brand-initials{
+                    font-size: 15px;
+                }
+                .org-brand-text{
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                    max-width: 0;
+                    opacity: 0;
+                    transform: translateX(-6px);
+                    transition: max-width 200ms linear, opacity 200ms linear, transform 200ms linear;
+                    overflow: hidden;
+                }
+                aside.width-320-px .org-brand-text,
+                aside:hover .org-brand-text{
+                    max-width: 220px;
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                .org-brand-text small{
+                    font-size: 10px;
+                    line-height: 12px;
+                    color: #f0f0f0;
+                    opacity: .75;
+                    white-space: nowrap;
+                }
+                #org-brand-name{
+                    font-size: 13px;
+                    line-height: 16px;
+                    color: #f0f0f0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 190px;
+                }
         .jquery-accordion-menu ul{margin:0;padding:0;list-style:none}
         .jquery-accordion-menu ul li{width:100%;display:block;float:left;position:relative}
         .jquery-accordion-menu ul li a{width:100%;padding:14px 22px;float:left;text-decoration:none;color:#f0f0f0;font-size:14.5px;background:#414956;white-space:nowrap;position:relative;overflow:hidden;-o-transition:color .2s linear,background .2s linear;-moz-transition:color .2s linear,background .2s linear;-webkit-transition:color .2s linear,background .2s linear;transition:color .2s linear,background .2s linear}
@@ -107,6 +218,117 @@
     <script>
     $(document).ready(function () {
         jQuery(document).ready(function () {
+            const orgHeader = {
+                defaultName: 'Organização',
+                setOrganization: ({ nome, logoUrl }) => {
+                    const name = (nome || orgHeader.defaultName).trim();
+                    const initials = orgHeader.getInitials(name);
+                    const $avatar = jQuery('#org-brand-avatar');
+                    const $img = jQuery('#org-brand-logo');
+                    const $initials = jQuery('#org-brand-initials');
+                    const $name = jQuery('#org-brand-name');
+
+                    $name.text(name);
+                    $initials.text(initials);
+
+                    if (logoUrl) {
+                        $avatar.addClass('has-logo');
+                        $img
+                            .attr('src', logoUrl)
+                            .off('error')
+                            .on('error', function () {
+                                $avatar.removeClass('has-logo');
+                                $img.removeAttr('src');
+                            });
+                        return;
+                    }
+
+                    $avatar.removeClass('has-logo');
+                    $img.removeAttr('src');
+                },
+                getInitials: (name) => {
+                    const parts = (name || '')
+                        .trim()
+                        .split(/\s+/)
+                        .filter(Boolean);
+
+                    if (!parts.length) {
+                        return 'OR';
+                    }
+
+                    if (parts.length === 1) {
+                        return parts[0].slice(0, 2).toUpperCase();
+                    }
+
+                    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+                },
+                extractOrganization: (source) => {
+                    if (!source || typeof source !== 'object') {
+                        return null;
+                    }
+
+                    const direct = source.organizacao || source.organization || source.org;
+                    const candidate = direct || source;
+                    const nome = candidate.nome || candidate.name || candidate.razaoSocial;
+                    const logoUrl = candidate.logoUrl || candidate.logo || candidate.imagem || candidate.avatarUrl || candidate.foto;
+
+                    if (!nome && !logoUrl) {
+                        return null;
+                    }
+
+                    return { nome: nome || orgHeader.defaultName, logoUrl: logoUrl || null };
+                },
+                parseJSON: (value) => {
+                    if (!value) {
+                        return null;
+                    }
+                    try {
+                        return JSON.parse(value);
+                    } catch (error) {
+                        return null;
+                    }
+                },
+                findOrganizationInStorage: () => {
+                    const storageKeys = ['session', 'socialSession', 'dadosSessao', 'user', 'usuario', 'auth'];
+
+                    for (let i = 0; i < storageKeys.length; i += 1) {
+                        const raw = window.localStorage.getItem(storageKeys[i]);
+                        const parsed = orgHeader.parseJSON(raw);
+                        const found = orgHeader.extractOrganization(parsed);
+                        if (found) {
+                            return found;
+                        }
+                    }
+
+                    return null;
+                },
+                fetchOrganization: () => {
+                    return new Promise((resolve) => {
+                        jQuery.ajax({
+                            url: `${admin.baseUrl}/organizacao/all`,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: (response) => {
+                                const list = response?.data || [];
+                                const active = list.find((item) => item?.ativo === true) || list[0];
+                                resolve(orgHeader.extractOrganization(active));
+                            },
+                            error: () => resolve(null),
+                        });
+                    });
+                },
+                init: async () => {
+                    const fromStorage = orgHeader.findOrganizationInStorage();
+                    if (fromStorage) {
+                        orgHeader.setOrganization(fromStorage);
+                        return;
+                    }
+
+                    const fromApi = await orgHeader.fetchOrganization();
+                    orgHeader.setOrganization(fromApi || { nome: orgHeader.defaultName, logoUrl: null });
+                },
+            };
+
             jQuery("#jquery-accordion-menu").jqueryAccordionMenu();
             jQuery('.submenu li a').on('click', function() {
                 const $aside = $('.submenu').css("display", "none");
@@ -120,6 +342,8 @@
                     $("#jquery-accordion-menu").addClass("jquery-accordion-menu");
                 }
             });
+
+            orgHeader.init();
             
         });
     });

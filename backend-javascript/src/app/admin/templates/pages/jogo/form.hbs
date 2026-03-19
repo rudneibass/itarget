@@ -1,0 +1,249 @@
+<section>
+    <div class="col-md-12 p-0">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tab-1">Cadastro</a>
+            </li>
+        </ul>
+        <div class="tab-content bg-white border border-top-0" style="padding: .75rem; box-shadow: var(--shadows-default);" >
+            <div class="tab-pane active" id="tab-1">
+                <form id="tab-1-form-1">
+                    <input type="hidden" id="uuid" name="uuid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Organização</small>
+                                </label>
+                                <select name="organizacaoUuid" class="form-select" id="organizacaoUuid" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Nome</small>
+                                </label>
+                                <input type="text" name="nome" class="form-control" id="nome" maxlength="150" required />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Descrição</small>
+                                </label>
+                                <textarea name="descricao" class="form-control" id="descricao" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">URL</small>
+                                </label>
+                                <input type="url" name="url" class="form-control" id="url" required />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Custo moedas</small>
+                                </label>
+                                <input type="number" min="0" name="custoMoedas" class="form-control" id="custoMoedas" value="0" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked />
+                                <label class="form-check-label" for="ativo">Ativo</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <section class="section-actions">
+                    <div class="section-actions-btn-parent">
+                        <button type="button" id="btn-jogo-novo" class="btn btn-success btn-float section-actions-btn">
+                            <i class="fa fa-plus"></i>
+                            <span class="btn-label">Novo</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button type="button" id="btn-jogo-editar" class="btn btn-warning btn-float section-actions-btn">
+                            <i class="fa fa fa-pencil"></i>
+                            <span class="btn-label">Editar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button type="button" id="btn-jogo-cancelar" class="btn btn-danger btn-float section-actions-btn">
+                            <i class="fa fa fa-undo"></i>
+                            <span class="btn-label">Cancelar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button type="button" id="btn-jogo-salvar" class="btn btn-primary btn-float section-actions-btn">
+                            <i class="fa fa fa-floppy-o"></i>
+                            <span class="btn-label">Salvar</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <br/>
+</section>
+
+<script>
+    (() => {
+    const jogoForm = {
+        formId: 'tab-1-form-1',
+        tabId: 'tab-form-jogo-content',
+        edit: () => {
+            $(`#${jogoForm.formId} :input`).prop('disabled', false);
+        },
+        cancel: () => {
+            $(`#${jogoForm.formId} :input`).prop('disabled', true);
+        },
+        loadOrganizations: (callback) => {
+            $.ajax({
+                url: `${admin.baseUrl}/jogo/organizacoes`,
+                type: 'GET',
+                success: (response) => {
+                    const list = response?.data || [];
+                    const $select = $('#organizacaoUuid');
+                    $select.empty();
+                    $select.append('<option value="">Selecione...</option>');
+                    list.forEach((item) => {
+                        $select.append(`<option value="${item.uuid}">${item.nome}</option>`);
+                    });
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                },
+                error: () => toastr['error']('Erro ao carregar organizações.'),
+            });
+        },
+        populateForm: ({ url, uuid = null }) => {
+            if (!uuid) { return; }
+            $.ajax({
+                url: `${url}/${uuid}`,
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function () {
+                    admin.loading(true);
+                    $(`#${jogoForm.formId} :input`).prop('disabled', true);
+                },
+                error: function () {
+                    admin.loading(false);
+                    toastr['error']('Não foi possível carregar o registro.');
+                },
+                success: function (response) {
+                    admin.loading(false);
+                    var data = response?.data || {};
+                    var $form = $('#' + jogoForm.formId);
+
+                    $.each(data, function (field, value) {
+                        var $field = $form.find('[name="' + field + '"]');
+                        if (!$field.length) {
+                            $field = $form.find('#' + field);
+                        }
+                        if (!$field.length) {
+                            return;
+                        }
+
+                        var fieldType = ($field.attr('type') || '').toLowerCase();
+                        var tagName = ($field.get(0)?.tagName || '').toLowerCase();
+
+                        if (fieldType === 'checkbox') {
+                            $field.prop('checked', !!value);
+                            return;
+                        }
+
+                        if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'url' || fieldType === 'number' || fieldType === 'hidden') {
+                            $field.val(value ?? '');
+                            return;
+                        }
+
+                        $field.val(value ?? '');
+                    });
+                }
+            });
+        },
+        save: ({ formId }) => {
+            if ($('#' + formId + ' input').length === $('#' + formId + ' input:disabled').length) {
+                return;
+            }
+            if (!admin.validateForm(formId)) {
+                toastr['error']('Preencha os campos obrigatórios.');
+                return;
+            }
+
+            const uuid = $('#uuid').val();
+            const url = uuid ? `${admin.baseUrl}/jogo/${uuid}` : `${admin.baseUrl}/jogo`;
+            const method = uuid ? 'PATCH' : 'POST';
+
+            const formData = $('#' + formId).serializeArray().reduce(function (obj, item) {
+                if (item.name === 'id') {
+                    return obj;
+                }
+                if (item.name === 'uuid' && !item.value) {
+                    return obj;
+                }
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+
+            formData.ativo = $('#ativo').is(':checked');
+            formData.custoMoedas = Number(formData.custoMoedas || 0);
+
+            $.ajax({
+                url,
+                type: method,
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                beforeSend: function () {
+                    admin.loading(true);
+                },
+                error: function (jqXHR) {
+                    admin.loading(false);
+                    toastr['error'](jqXHR?.responseText || 'Não foi possível salvar o registro.');
+                },
+                success: function (responseData) {
+                    admin.loading(false);
+                    var payload = responseData?.data || responseData;
+
+                    if (payload?.uuid && !uuid) {
+                        $('#uuid').val(payload.uuid);
+                    }
+
+                    toastr['success']('Operação realizada com sucesso.');
+                }
+            });
+        }
+    };
+
+    window.jogoForm = jogoForm;
+
+    document.getElementById('btn-jogo-novo')?.addEventListener('click', () => {
+        admin.addTab({tabId:'form-jogo', title: 'Novo Jogo', url: '/admin/jogo/form'});
+    });
+
+    document.getElementById('btn-jogo-editar')?.addEventListener('click', () => {
+        jogoForm.edit('tab-1-form-1');
+    });
+
+    document.getElementById('btn-jogo-cancelar')?.addEventListener('click', () => {
+        jogoForm.cancel('tab-1-form-1');
+    });
+
+    document.getElementById('btn-jogo-salvar')?.addEventListener('click', () => {
+        jogoForm.save({ formId: jogoForm.formId });
+    });
+
+    jogoForm.loadOrganizations(() => {
+        jogoForm.populateForm({
+            url: admin.baseUrl + '/jogo',
+            uuid: '{{uuid}}'
+        });
+    });
+    })();
+</script>

@@ -14,14 +14,18 @@ async function bootstrap() {
   
   // Servir templates
   const adminTemplatesPath = join(process.cwd(), 'src', 'app', 'admin', 'templates');
+  const landingTemplatesPath = join(process.cwd(), 'src', 'app', 'landing', 'templates');
   const socialTemplatesPath = join(process.cwd(), 'src', 'app', 'social', 'templates');
-  app.setBaseViewsDir([adminTemplatesPath, socialTemplatesPath]);
+  app.setBaseViewsDir([adminTemplatesPath, landingTemplatesPath, socialTemplatesPath]);
   app.setViewEngine('hbs');
   app.useStaticAssets(join(process.cwd(), 'src', 'app', 'admin', 'static'), {
     prefix: '/admin/static/',
   });
   app.useStaticAssets(join(process.cwd(), 'src', 'app', 'social', 'static'), {
     prefix: '/social/static/',
+  });
+  app.useStaticAssets(join(process.cwd(), 'uploads', 'social'), {
+    prefix: '/social/uploads/',
   });
   hbs.registerPartial(
     'header',

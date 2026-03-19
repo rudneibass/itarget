@@ -1,0 +1,313 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button
+            class="btn btn-success btn-float section-actions-btn"
+            onclick="admin.addTab({tabId:'form-usuario', title: 'Novo Usuário', url: '/admin/usuario/form'})"
+        >
+            <i class="fa fa-plus"></i>
+            <span class="btn-label">Novo</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-usuario">
+            <i class="fa fa-search"></i>
+            <span class="btn-label">Pesquisar</span>
+        </button>
+    </div>
+</section>
+
+<section class="section-search-bar hide" id="section-search-bar-usuario">
+    <div class="row search-bar" id="search-bar-usuario">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-body">
+                    <form id="formSearchUsuario">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="nome" id="nome" class="form-control" placeholder="Nome">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="apelido" id="apelido" class="form-control" placeholder="Apelido">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <select name="ativo" id="ativo" class="form-select">
+                                        <option value="">Status</option>
+                                        <option value="true">Ativo</option>
+                                        <option value="false">Inativo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer p-2 border-top-0">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-usuario">
+                        <i class="fa fa-search"></i> Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default">
+        <small><i class="fa fa-user"></i></small>
+        <small>Usuários</small>
+    </div>
+</section>
+
+<section>
+    <div class="list-table-container">
+        <table class="table table-sm table-striped table-hover width-100">
+            <thead id="thead-usuario"></thead>
+            <tbody id="tbody-usuario"></tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="messages-usuario"></span>
+        </div>
+    </div>
+    <div class="pagination-bar-default">
+        <div>
+            <small class="gray-default" id="total-usuario"></small>
+        </div>
+        <div>
+            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior-usuario"></i>
+            &emsp;
+            <span class="gray-default" id="numeracao-usuario"></span>
+            &emsp;
+            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo-usuario"></i>
+        </div>
+    </div>
+</section>
+
+<script>
+    (() => {
+    const usuarioList = {
+        formSearchId: 'formSearchUsuario',
+        list: ({ url, formSearchId }) => {
+            $.ajax({
+                url,
+                cache: false,
+                type: 'GET',
+                data: $('#' + formSearchId).serialize(),
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#messages-usuario').empty();
+                    $('#tbody-usuario').empty();
+                    admin.loading(true);
+                },
+                error: function () {
+                    admin.loading(false);
+                    $('#tbody-usuario').empty();
+                    $('#messages-usuario').empty();
+                    $('#messages-usuario').html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                },
+                success: function (response) {
+                    var source = response?.data || response || [];
+                    var filters = $('#' + formSearchId).serializeArray().reduce((obj, item) => {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+
+                    var data = source.filter((item) => {
+                        const byNome = !filters.nome || String(item.nome || '').toLowerCase().includes(String(filters.nome).toLowerCase());
+                        const byApelido = !filters.apelido || String(item.apelido || '').toLowerCase().includes(String(filters.apelido).toLowerCase());
+                        const byAtivo = !filters.ativo || String(!!item.ativo) === String(filters.ativo);
+                        return byNome && byApelido && byAtivo;
+                    });
+
+                    if (!data[0]) {
+                        admin.loading(false);
+                        $('#tbody-usuario').empty();
+                        $('#messages-usuario').empty();
+                        $('#messages-usuario').html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                        return;
+                    }
+
+                    admin.loading(false);
+                    $('#tbody-usuario').empty();
+                    $('#messages-usuario').empty();
+
+                    var tamanhoPagina = 10;
+                    var pagina = 0;
+
+                    function paginar() {
+                        for (var i = pagina * tamanhoPagina; i < data.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                            const permissions = [
+                                data[i].podePostarMidia ? 'Mídia' : null,
+                                data[i].podePostarLink ? 'Link' : null,
+                            ].filter(Boolean).join(' / ') || 'Nenhuma';
+
+                            $('#tbody-usuario').append(
+                                `<tr>
+                                    <td class="p-3" style="width:90%; vertical-align: middle;">
+                                        <div>
+                                            <small>
+                                                <b>Nome:</b> ${data[i].nome || ''}
+                                                ${data[i].ativo
+                                                    ? '&emsp;<span class="badge bg-success">Ativo</span>'
+                                                    : '&emsp;<span class="badge bg-secondary">Inativo</span>'
+                                                }
+                                            </small>
+                                            <br/>
+                                            <small><b>Apelido:</b> ${data[i].apelido || '-'}</small>
+                                            <br/>
+                                            <small><b>Moedas:</b> ${data[i].moedas ?? 0}</small>
+                                            <br/>
+                                            <small><b>Permissões:</b> ${permissions}</small>
+                                            <br/>
+                                            <small><b>Código:</b> ${data[i].uuid || ''}</small>
+                                        </div>
+                                    </td>
+                                    <td style="width: 8%; vertical-align: middle;">
+                                        <center>
+                                            <button
+                                                class="btn btn-secondary btn-sm w-100 mb-2"
+                                                onclick="admin.addTab({tabId:'form-usuario', title: 'Editar Usuário', url: '/admin/usuario/form/uuid/${data[i].uuid}'})"
+                                            >
+                                                <i class="fa fa-pencil"></i> Editar
+                                            </button>
+                                            ${data[i].ativo
+                                                ? `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="usuarioList.toggleAtivo('${data[i].uuid}', false)">
+                                                    <i class="fa fa-download"></i> Desativar
+                                                </button>`
+                                                : `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="usuarioList.toggleAtivo('${data[i].uuid}', true)">
+                                                    <i class="fa fa-upload"></i> Ativar
+                                                </button>`
+                                            }
+                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="usuarioList.remove('${data[i].uuid}')">
+                                                <i class="fa fa-trash-o"></i>
+                                                <span> Excluir</span>
+                                            </button>
+                                        </center>
+                                    </td>
+                                </tr>`
+                            );
+                        }
+                        $('#numeracao-usuario').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
+                        $('#total-usuario').text('1 à ' + tamanhoPagina + ' registros por página ');
+                    }
+
+                    function ajustarBotoes() {
+                        $('#proximo-usuario').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
+                        $('#anterior-usuario').prop('disabled', data.length <= tamanhoPagina || pagina === 0);
+                    }
+
+                    $(function () {
+                        $('#proximo-usuario').off('click').on('click', function () {
+                            if (pagina < data.length / tamanhoPagina - 1) {
+                                $('#tbody-usuario').empty();
+                                pagina++;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        $('#anterior-usuario').off('click').on('click', function () {
+                            if (pagina >= 1) {
+                                $('#tbody-usuario').empty();
+                                pagina--;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        paginar();
+                        ajustarBotoes();
+                    });
+                },
+            });
+        },
+        toggleAtivo: (uuid, ativo) => {
+            $.ajax({
+                url: `${admin.baseUrl}/usuario/${uuid}`,
+                type: 'PATCH',
+                contentType: 'application/json',
+                data: JSON.stringify({ ativo }),
+                beforeSend: function () {
+                    admin.loading(true);
+                },
+                success: function () {
+                    admin.loading(false);
+                    toastr['success']('Status atualizado com sucesso.');
+                    usuarioList.list({
+                        url: admin.baseUrl + endpoints.usuario.all,
+                        formSearchId: usuarioList.formSearchId,
+                    });
+                },
+                error: function () {
+                    admin.loading(false);
+                    toastr['error']('Não foi possível atualizar o status.');
+                },
+            });
+        },
+        remove: (uuid) => {
+            bootbox.confirm({
+                title: 'Atenção',
+                message: 'Tem certeza que deseja remover este registro?',
+                buttons: {
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmar',
+                        className: 'btn-sm btn-success',
+                    },
+                    cancel: {
+                        label: '<i class="fa fa-undo"></i> Cancelar',
+                        className: 'btn-sm btn-secondary',
+                    },
+                },
+                callback: function (result) {
+                    if (!result) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: `${admin.baseUrl}/usuario/${uuid}`,
+                        type: 'DELETE',
+                        beforeSend: function () {
+                            admin.loading(true);
+                        },
+                        success: function () {
+                            admin.loading(false);
+                            toastr['success']('Usuário removido com sucesso.');
+                            usuarioList.list({
+                                url: admin.baseUrl + endpoints.usuario.all,
+                                formSearchId: usuarioList.formSearchId,
+                            });
+                        },
+                        error: function () {
+                            admin.loading(false);
+                            toastr['error']('Não foi possível remover o usuário.');
+                        },
+                    });
+                },
+            });
+        },
+    };
+
+    window.usuarioList = usuarioList;
+
+    document.getElementById('btn-toggle-barra-usuario').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-usuario');
+        barra.classList.toggle('visible');
+    });
+
+    document.getElementById('btn-pesquisar-usuario').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-usuario');
+        barra.classList.toggle('visible');
+        usuarioList.list({
+            url: admin.baseUrl + endpoints.usuario.all,
+            formSearchId: usuarioList.formSearchId,
+        });
+    });
+
+    usuarioList.list({
+        url: admin.baseUrl + endpoints.usuario.all,
+        formSearchId: usuarioList.formSearchId,
+    });
+    })();
+</script>

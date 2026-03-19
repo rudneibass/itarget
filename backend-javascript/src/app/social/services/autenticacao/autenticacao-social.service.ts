@@ -49,6 +49,7 @@ export class AutenticacaoService {
       usuario: {
         uuid: user.uuid,
         nome: user.nome,
+        apelido: user.apelido,
         urlAvatar: user.urlAvatar,
         moedas: user.moedas,
         podePostarMidia: permission?.podePostarMidia ?? false,

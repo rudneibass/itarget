@@ -21,11 +21,11 @@
           <div class="social-header-right">
             <div class="user-pill">
               {{#if user.urlAvatar}}
-                <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{user.nome}}" />
+                <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}" />
               {{else}}
                 <span class="user-avatar user-avatar-fallback">🙂</span>
               {{/if}}
-              <span class="user-name">{{user.nome}}</span>
+              <span class="user-name">{{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}</span>
             </div>
             <div class="coin-badge">🪙 Moedas: {{moedas}}</div>
           </div>
@@ -43,15 +43,123 @@
 
       <main class="home-main">
         <section class="home-left">
+          <section class="social-card post-composer-card">
+            <h3>Criar postagem</h3>
+            <form
+              id="create-post-form"
+              class="post-composer-form"
+              data-can-post-media="{{#if user.podePostarMidia}}true{{else}}false{{/if}}"
+              data-can-post-link="{{#if user.podePostarLink}}true{{else}}false{{/if}}"
+            >
+              <textarea
+                id="create-post-text"
+                maxlength="2000"
+                placeholder="No que você está pensando?"
+              ></textarea>
+
+              {{#if user.podePostarMidia}}
+                <div class="post-composer-field-group" id="create-post-media-group">
+                  <label for="create-post-media-file">Mídia do dispositivo (imagem ou vídeo)</label>
+                  <input
+                    type="file"
+                    id="create-post-media-file"
+                    accept="image/*,video/*"
+                  />
+                </div>
+
+                <div class="post-composer-preview is-hidden" id="create-post-preview">
+                  <p class="post-composer-preview-label">Prévia da mídia</p>
+                  <img id="create-post-preview-image" class="post-composer-preview-media" alt="Prévia da imagem da postagem" hidden />
+                  <br/>
+                  <video id="create-post-preview-video" class="post-composer-preview-media" controls preload="metadata" hidden></video>
+                  <p id="create-post-preview-hint" class="muted post-composer-preview-hint is-hidden">Selecione um arquivo de mídia para visualizar a prévia.</p>
+                </div>
+              {{else}}
+                <p class="muted post-composer-hint">Seu perfil pode publicar apenas textos.</p>
+              {{/if}}
+
+              {{#if user.podePostarLink}}
+                <label class="post-composer-link-toggle" for="create-post-link-enabled">
+                  <input type="checkbox" id="create-post-link-enabled" />
+                  Adicionar link de redirecionamento
+                </label>
+
+                <div class="post-composer-field-group is-hidden" id="create-post-link-group">
+                  <label for="create-post-link-url">URL do link</label>
+                  <input type="url" id="create-post-link-url" placeholder="https://..." />
+
+                  <label for="create-post-link-title">Título do link (opcional)</label>
+                  <input type="text" id="create-post-link-title" maxlength="120" placeholder="Ex.: Acessar atividade" />
+                </div>
+              {{/if}}
+
+              <p id="create-post-feedback" class="post-composer-feedback muted" aria-live="polite"></p>
+
+              <div class="post-composer-actions">
+                <div class="post-composer-actions-left">
+                  <div class="emoji-picker-wrap">
+                    <button
+                      type="button"
+                      class="emoji-toggle-button"
+                      id="create-post-emoji-toggle"
+                      aria-label="Abrir emojis"
+                      aria-expanded="false"
+                    >😊</button>
+                    <div class="emoji-picker" id="create-post-emoji-picker" hidden>
+                      <button type="button" class="emoji-option" data-emoji="😀">😀</button>
+                      <button type="button" class="emoji-option" data-emoji="😂">😂</button>
+                      <button type="button" class="emoji-option" data-emoji="😍">😍</button>
+                      <button type="button" class="emoji-option" data-emoji="🥰">🥰</button>
+                      <button type="button" class="emoji-option" data-emoji="🤩">🤩</button>
+                      <button type="button" class="emoji-option" data-emoji="😎">😎</button>
+                      <button type="button" class="emoji-option" data-emoji="🤗">🤗</button>
+                      <button type="button" class="emoji-option" data-emoji="😅">😅</button>
+                      <button type="button" class="emoji-option" data-emoji="🙌">🙌</button>
+                      <button type="button" class="emoji-option" data-emoji="👏">👏</button>
+                      <button type="button" class="emoji-option" data-emoji="🔥">🔥</button>
+                      <button type="button" class="emoji-option" data-emoji="✨">✨</button>
+                      <button type="button" class="emoji-option" data-emoji="🎉">🎉</button>
+                      <button type="button" class="emoji-option" data-emoji="🫶">🫶</button>
+                      <button type="button" class="emoji-option" data-emoji="❤️">❤️</button>
+                      <button type="button" class="emoji-option" data-emoji="💙">💙</button>
+                      <button type="button" class="emoji-option" data-emoji="💜">💜</button>
+                      <button type="button" class="emoji-option" data-emoji="🌟">🌟</button>
+                      <button type="button" class="emoji-option" data-emoji="😮">😮</button>
+                      <button type="button" class="emoji-option" data-emoji="😢">😢</button>
+                      <button type="button" class="emoji-option" data-emoji="😡">😡</button>
+                      <button type="button" class="emoji-option" data-emoji="🤔">🤔</button>
+                      <button type="button" class="emoji-option" data-emoji="👍">👍</button>
+                      <button type="button" class="emoji-option" data-emoji="👎">👎</button>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" id="create-post-submit" class="post-composer-submit">Publicar</button>
+              </div>
+            </form>
+          </section>
+
           {{#if timeline.length}}
             {{#each timeline}}
-              <article class="timeline-item">
+              <article class="timeline-item" data-post-uuid="{{uuid}}">
                 <header class="timeline-head">
                   <div class="timeline-user">
-                    <span class="timeline-avatar">IG</span>
-                    @{{../user.nome}}
+                    {{#if authorAvatarUrl}}
+                      <img class="timeline-avatar timeline-avatar-image" src="{{authorAvatarUrl}}" alt="Avatar de {{authorName}}" />
+                    {{else}}
+                      <span class="timeline-avatar">{{authorInitial}}</span>
+                    {{/if}}
+                    @{{authorName}}
                   </div>
-                  <span class="muted">{{tipo}}</span>
+                  {{#if isOwnPost}}
+                    <button
+                      type="button"
+                      class="timeline-delete-button"
+                      data-delete-post-button="true"
+                      data-publicacao-uuid="{{uuid}}"
+                    >
+                      Excluir
+                    </button>
+                  {{/if}}
                 </header>
 
                 {{#if midiaUrl}}
@@ -96,18 +204,30 @@
                       {{/if}}
                     </a>
                   {{else}}
-                    <span class="action-item" aria-label="Curtir">
+                    <button
+                      type="button"
+                      class="action-item action-like-button{{#if likedByCurrentUser}} is-liked{{/if}}"
+                      aria-label="Curtir"
+                      data-like-button="true"
+                      data-publicacao-uuid="{{uuid}}"
+                    >
                       <svg class="action-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M12 21s-6.7-4.3-9.4-8C.7 10.5 1.1 6.9 4 5.2c2.3-1.3 4.9-.5 6.3 1.2 1.4-1.7 4-2.5 6.3-1.2 2.9 1.7 3.3 5.3 1.4 7.8C18.7 16.7 12 21 12 21z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6 6 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
-                      <span class="action-total">{{likes}}</span>
-                    </span>
-                    <span class="action-item" aria-label="Comentar">
+                      <span class="action-total" data-like-total>{{likes}}</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="action-item action-comment-button"
+                      aria-label="Comentar"
+                      data-comment-button="true"
+                      data-publicacao-uuid="{{uuid}}"
+                    >
                       <svg class="action-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M21 12c0 4.4-4 8-9 8-1.2 0-2.3-.2-3.4-.6L4 20l1.2-3.9C4.4 15 4 13.5 4 12c0-4.4 4-8 9-8s8 3.6 8 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
-                      <span class="action-total">{{comments}}</span>
-                    </span>
+                      <span class="action-total" data-comment-total>{{comments}}</span>
+                    </button>
                     <span class="action-item" aria-label="Compartilhar">
                       <svg class="action-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -187,6 +307,65 @@
           </div>
         </section>
       </div>
+
+      <div class="comment-modal" id="comment-modal" aria-hidden="true">
+        <div class="comment-modal-backdrop" data-close-comments-modal="true"></div>
+        <section class="comment-modal-content" role="dialog" aria-modal="true" aria-label="Comentários da postagem">
+          <header class="comment-modal-header">
+            <h3>Comentários</h3>
+            <button type="button" class="comment-modal-close" id="comment-modal-close" aria-label="Fechar">✕</button>
+          </header>
+
+          <div class="comment-modal-body">
+            <section class="comment-modal-post" id="comment-modal-post"></section>
+
+            <section class="comment-modal-side">
+              <div class="comment-list" id="comment-list"></div>
+              <form class="comment-form" id="comment-form">
+                <textarea id="comment-input" maxlength="600" placeholder="Escreva um comentário..." required></textarea>
+                <div class="comment-form-actions">
+                  <div class="emoji-picker-wrap">
+                    <button
+                      type="button"
+                      class="emoji-toggle-button"
+                      id="comment-emoji-toggle"
+                      aria-label="Abrir emojis"
+                      aria-expanded="false"
+                    >😊</button>
+                    <div class="emoji-picker" id="comment-emoji-picker" hidden>
+                      <button type="button" class="emoji-option" data-emoji="😀">😀</button>
+                      <button type="button" class="emoji-option" data-emoji="😂">😂</button>
+                      <button type="button" class="emoji-option" data-emoji="😍">😍</button>
+                      <button type="button" class="emoji-option" data-emoji="🥰">🥰</button>
+                      <button type="button" class="emoji-option" data-emoji="🤩">🤩</button>
+                      <button type="button" class="emoji-option" data-emoji="😎">😎</button>
+                      <button type="button" class="emoji-option" data-emoji="🤗">🤗</button>
+                      <button type="button" class="emoji-option" data-emoji="😅">😅</button>
+                      <button type="button" class="emoji-option" data-emoji="🙌">🙌</button>
+                      <button type="button" class="emoji-option" data-emoji="👏">👏</button>
+                      <button type="button" class="emoji-option" data-emoji="🔥">🔥</button>
+                      <button type="button" class="emoji-option" data-emoji="✨">✨</button>
+                      <button type="button" class="emoji-option" data-emoji="🎉">🎉</button>
+                      <button type="button" class="emoji-option" data-emoji="🫶">🫶</button>
+                      <button type="button" class="emoji-option" data-emoji="❤️">❤️</button>
+                      <button type="button" class="emoji-option" data-emoji="💙">💙</button>
+                      <button type="button" class="emoji-option" data-emoji="💜">💜</button>
+                      <button type="button" class="emoji-option" data-emoji="🌟">🌟</button>
+                      <button type="button" class="emoji-option" data-emoji="😮">😮</button>
+                      <button type="button" class="emoji-option" data-emoji="😢">😢</button>
+                      <button type="button" class="emoji-option" data-emoji="😡">😡</button>
+                      <button type="button" class="emoji-option" data-emoji="🤔">🤔</button>
+                      <button type="button" class="emoji-option" data-emoji="👍">👍</button>
+                      <button type="button" class="emoji-option" data-emoji="👎">👎</button>
+                    </div>
+                  </div>
+                  <button type="submit" id="comment-submit">Enviar</button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </section>
+      </div>
     </div>
 
     <script>
@@ -197,48 +376,858 @@
         const closeButton = document.getElementById('game-modal-close');
         const openButtons = document.querySelectorAll('.game-open-button');
 
-        if (!modal || !modalTitle || !modalIframe || !closeButton || openButtons.length === 0) {
-          return;
+        if (modal && modalTitle && modalIframe && closeButton) {
+          const closeModal = () => {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            modalIframe.src = 'about:blank';
+          };
+
+          const openModal = (name, url) => {
+            modalTitle.textContent = name || 'Jogo';
+            modalIframe.src = url;
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+          };
+
+          openButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+              const gameName = button.getAttribute('data-game-name');
+              const gameUrl = button.getAttribute('data-game-url');
+              if (!gameUrl) {
+                return;
+              }
+              openModal(gameName, gameUrl);
+            });
+          });
+
+          closeButton.addEventListener('click', closeModal);
+
+          modal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target instanceof HTMLElement && target.getAttribute('data-close-modal') === 'true') {
+              closeModal();
+            }
+          });
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+              closeModal();
+            }
+          });
         }
 
-        const closeModal = () => {
-          modal.classList.remove('is-open');
-          modal.setAttribute('aria-hidden', 'true');
-          modalIframe.src = 'about:blank';
-        };
+        const likeButtons = document.querySelectorAll('[data-like-button="true"]');
 
-        const openModal = (name, url) => {
-          modalTitle.textContent = name || 'Jogo';
-          modalIframe.src = url;
-          modal.classList.add('is-open');
-          modal.setAttribute('aria-hidden', 'false');
-        };
+        likeButtons.forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) {
+            return;
+          }
 
-        openButtons.forEach((button) => {
-          button.addEventListener('click', () => {
-            const gameName = button.getAttribute('data-game-name');
-            const gameUrl = button.getAttribute('data-game-url');
-            if (!gameUrl) {
+          button.addEventListener('animationend', () => {
+            button.classList.remove('is-animating');
+          });
+
+          button.addEventListener('click', async () => {
+            const publicacaoUuid = button.getAttribute('data-publicacao-uuid');
+            if (!publicacaoUuid || button.disabled) {
               return;
             }
-            openModal(gameName, gameUrl);
+
+            button.classList.remove('is-animating');
+            // força reflow para reiniciar a animação em cliques consecutivos
+            void button.offsetWidth;
+            button.classList.add('is-animating');
+
+            const currentlyLiked = button.classList.contains('is-liked');
+            button.disabled = true;
+
+            try {
+              const response = await fetch(`/social/feed/post/${encodeURIComponent(publicacaoUuid)}/like`, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error('Falha ao curtir postagem');
+              }
+
+              const payload = await response.json();
+              const liked = Boolean(payload?.data?.liked);
+              button.classList.toggle('is-liked', liked);
+
+              const likeTotal = button.querySelector('[data-like-total]');
+              if (likeTotal instanceof HTMLElement) {
+                const current = Number.parseInt(likeTotal.textContent || '0', 10);
+                if (!Number.isNaN(current) && liked !== currentlyLiked) {
+                  likeTotal.textContent = String(liked ? current + 1 : Math.max(0, current - 1));
+                }
+              }
+            } catch (error) {
+              console.error(error);
+            } finally {
+              button.disabled = false;
+            }
           });
         });
 
-        closeButton.addEventListener('click', closeModal);
+        const createPostForm = document.getElementById('create-post-form');
+        const createPostText = document.getElementById('create-post-text');
+        const createPostMediaGroup = document.getElementById('create-post-media-group');
+        const createPostMediaFile = document.getElementById('create-post-media-file');
+        const createPostPreview = document.getElementById('create-post-preview');
+        const createPostPreviewImage = document.getElementById('create-post-preview-image');
+        const createPostPreviewVideo = document.getElementById('create-post-preview-video');
+        const createPostPreviewHint = document.getElementById('create-post-preview-hint');
+        const createPostLinkEnabled = document.getElementById('create-post-link-enabled');
+        const createPostLinkGroup = document.getElementById('create-post-link-group');
+        const createPostLinkUrl = document.getElementById('create-post-link-url');
+        const createPostLinkTitle = document.getElementById('create-post-link-title');
+        const createPostEmojiToggle = document.getElementById('create-post-emoji-toggle');
+        const createPostEmojiPicker = document.getElementById('create-post-emoji-picker');
+        const createPostSubmit = document.getElementById('create-post-submit');
+        const createPostFeedback = document.getElementById('create-post-feedback');
 
-        modal.addEventListener('click', (event) => {
-          const target = event.target;
-          if (target instanceof HTMLElement && target.getAttribute('data-close-modal') === 'true') {
-            closeModal();
+        if (
+          createPostForm instanceof HTMLFormElement &&
+          createPostText instanceof HTMLTextAreaElement &&
+          createPostSubmit instanceof HTMLButtonElement &&
+          createPostFeedback instanceof HTMLElement
+        ) {
+          const canPostMedia = createPostForm.getAttribute('data-can-post-media') === 'true';
+          const canPostLink = createPostForm.getAttribute('data-can-post-link') === 'true';
+          let currentPreviewUrl = null;
+
+          const closeCreatePostEmojiPicker = () => {
+            if (!(createPostEmojiPicker instanceof HTMLElement) || !(createPostEmojiToggle instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            createPostEmojiPicker.setAttribute('hidden', 'true');
+            createPostEmojiToggle.setAttribute('aria-expanded', 'false');
+          };
+
+          const openCreatePostEmojiPicker = () => {
+            if (!(createPostEmojiPicker instanceof HTMLElement) || !(createPostEmojiToggle instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            createPostEmojiPicker.removeAttribute('hidden');
+            createPostEmojiToggle.setAttribute('aria-expanded', 'true');
+          };
+
+          const setComposerFeedback = (message, isError = false) => {
+            createPostFeedback.textContent = message;
+            createPostFeedback.classList.toggle('is-error', isError);
+            createPostFeedback.classList.toggle('is-success', !isError && Boolean(message));
+          };
+
+          const syncMediaPreview = () => {
+            if (
+              !canPostMedia ||
+              !(createPostMediaFile instanceof HTMLInputElement) ||
+              !(createPostPreview instanceof HTMLElement) ||
+              !(createPostPreviewImage instanceof HTMLImageElement) ||
+              !(createPostPreviewVideo instanceof HTMLVideoElement) ||
+              !(createPostPreviewHint instanceof HTMLElement)
+            ) {
+              return;
+            }
+
+            const defaultPreviewHint = 'Selecione um arquivo de mídia para visualizar a prévia.';
+            const errorPreviewHint = 'Não foi possível carregar a mídia selecionada.';
+
+            const setPreviewHint = (message, isError = false) => {
+              createPostPreviewHint.textContent = message;
+              createPostPreviewHint.classList.remove('is-hidden');
+              createPostPreviewHint.classList.toggle('is-error', isError);
+            };
+
+            const clearPreviewHint = () => {
+              createPostPreviewHint.classList.add('is-hidden');
+              createPostPreviewHint.classList.remove('is-error');
+            };
+
+            const resetPreviewMedia = () => {
+              if (currentPreviewUrl) {
+                URL.revokeObjectURL(currentPreviewUrl);
+                currentPreviewUrl = null;
+              }
+
+              createPostPreview.classList.remove('is-image', 'is-video');
+
+              createPostPreviewImage.setAttribute('hidden', 'true');
+              createPostPreviewImage.removeAttribute('src');
+              createPostPreviewVideo.setAttribute('hidden', 'true');
+              createPostPreviewVideo.removeAttribute('src');
+              createPostPreviewVideo.load();
+            };
+
+            const detectMediaKind = (file) => {
+              const mime = (file.type || '').toLowerCase();
+              if (mime.startsWith('image/')) {
+                return 'image';
+              }
+
+              if (mime.startsWith('video/')) {
+                return 'video';
+              }
+
+              const name = (file.name || '').toLowerCase();
+              if (/(\.png|\.jpe?g|\.gif|\.webp|\.bmp|\.svg)$/.test(name)) {
+                return 'image';
+              }
+
+              if (/(\.mp4|\.webm|\.ogg|\.mov|\.m4v)$/.test(name)) {
+                return 'video';
+              }
+
+              return 'unknown';
+            };
+
+            const file = createPostMediaFile.files?.[0];
+
+            if (!file) {
+              createPostPreview.classList.add('is-hidden');
+              resetPreviewMedia();
+              setPreviewHint(defaultPreviewHint);
+              clearPreviewHint();
+              return;
+            }
+
+            createPostPreview.classList.remove('is-hidden');
+
+            const mediaKind = detectMediaKind(file);
+            const isImage = mediaKind === 'image';
+            const isVideo = mediaKind === 'video';
+
+            if (!isImage && !isVideo) {
+              resetPreviewMedia();
+              setPreviewHint(errorPreviewHint, true);
+              return;
+            }
+
+            currentPreviewUrl = URL.createObjectURL(file);
+
+            clearPreviewHint();
+
+            if (isImage) {
+              createPostPreview.classList.remove('is-video');
+              createPostPreview.classList.add('is-image');
+
+              createPostPreviewImage.onload = () => {
+                clearPreviewHint();
+              };
+
+              createPostPreviewImage.onerror = () => {
+                createPostPreviewImage.setAttribute('hidden', 'true');
+                createPostPreviewImage.removeAttribute('src');
+                setPreviewHint(errorPreviewHint, true);
+              };
+
+              createPostPreviewImage.src = currentPreviewUrl;
+              createPostPreviewImage.removeAttribute('hidden');
+              createPostPreviewVideo.setAttribute('hidden', 'true');
+              createPostPreviewVideo.removeAttribute('src');
+              createPostPreviewVideo.load();
+              return;
+            }
+
+            createPostPreview.classList.remove('is-image');
+            createPostPreview.classList.add('is-video');
+
+            createPostPreviewVideo.onloadeddata = () => {
+              clearPreviewHint();
+            };
+
+            createPostPreviewVideo.onerror = () => {
+              createPostPreviewVideo.setAttribute('hidden', 'true');
+              createPostPreviewVideo.removeAttribute('src');
+              createPostPreviewVideo.load();
+              setPreviewHint(errorPreviewHint, true);
+            };
+
+            createPostPreviewVideo.src = currentPreviewUrl;
+            createPostPreviewVideo.removeAttribute('hidden');
+            createPostPreviewImage.setAttribute('hidden', 'true');
+            createPostPreviewImage.removeAttribute('src');
+          };
+
+          const syncLinkFields = () => {
+            if (!canPostLink || !(createPostLinkEnabled instanceof HTMLInputElement) || !createPostLinkGroup) {
+              return;
+            }
+
+            createPostLinkGroup.classList.toggle('is-hidden', !createPostLinkEnabled.checked);
+          };
+
+          if (canPostMedia && createPostMediaGroup instanceof HTMLElement && createPostMediaFile instanceof HTMLInputElement) {
+            createPostMediaGroup.classList.remove('is-hidden');
+            createPostMediaFile.addEventListener('change', syncMediaPreview);
+            syncMediaPreview();
           }
+
+          if (createPostEmojiToggle instanceof HTMLButtonElement && createPostEmojiPicker instanceof HTMLElement) {
+            createPostEmojiToggle.addEventListener('click', () => {
+              if (createPostEmojiPicker.hasAttribute('hidden')) {
+                openCreatePostEmojiPicker();
+                return;
+              }
+
+              closeCreatePostEmojiPicker();
+            });
+
+            createPostEmojiPicker.addEventListener('click', (event) => {
+              const target = event.target;
+              if (!(target instanceof HTMLElement)) {
+                return;
+              }
+
+              const button = target.closest('.emoji-option');
+              if (!(button instanceof HTMLButtonElement)) {
+                return;
+              }
+
+              const emoji = button.getAttribute('data-emoji');
+              if (!emoji) {
+                return;
+              }
+
+              const start = createPostText.selectionStart ?? createPostText.value.length;
+              const end = createPostText.selectionEnd ?? createPostText.value.length;
+              const current = createPostText.value;
+              createPostText.value = `${current.slice(0, start)}${emoji}${current.slice(end)}`;
+              const cursor = start + emoji.length;
+              createPostText.focus();
+              createPostText.setSelectionRange(cursor, cursor);
+
+              closeCreatePostEmojiPicker();
+            });
+
+            document.addEventListener('click', (event) => {
+              const target = event.target;
+              if (!(target instanceof Node)) {
+                return;
+              }
+
+              if (
+                !createPostEmojiPicker.hasAttribute('hidden') &&
+                !createPostEmojiPicker.contains(target) &&
+                !createPostEmojiToggle.contains(target)
+              ) {
+                closeCreatePostEmojiPicker();
+              }
+            });
+          }
+
+          if (createPostLinkEnabled instanceof HTMLInputElement) {
+            createPostLinkEnabled.addEventListener('change', syncLinkFields);
+            syncLinkFields();
+          }
+
+          createPostForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const texto = createPostText.value.trim();
+            const mediaFile = canPostMedia && createPostMediaFile instanceof HTMLInputElement ? createPostMediaFile.files?.[0] : null;
+
+            if (!texto && !mediaFile) {
+              setComposerFeedback('Digite um texto ou selecione uma mídia para publicar.', true);
+              return;
+            }
+
+            const payload = {
+              tipo: 'texto',
+              texto: texto || undefined,
+              midiaUrl: undefined,
+              urlRedirecionamento: undefined,
+              tituloRedirecionamento: undefined,
+            };
+
+            if (mediaFile) {
+              const isImage = mediaFile.type.startsWith('image/');
+              const isVideo = mediaFile.type.startsWith('video/');
+              if (!isImage && !isVideo) {
+                setComposerFeedback('Selecione uma imagem ou vídeo válido.', true);
+                return;
+              }
+            }
+
+            if (canPostLink && createPostLinkEnabled instanceof HTMLInputElement && createPostLinkEnabled.checked) {
+              const linkUrl = createPostLinkUrl instanceof HTMLInputElement ? createPostLinkUrl.value.trim() : '';
+              const linkTitle = createPostLinkTitle instanceof HTMLInputElement ? createPostLinkTitle.value.trim() : '';
+
+              if (!linkUrl) {
+                setComposerFeedback('Informe a URL do link de redirecionamento.', true);
+                return;
+              }
+
+              payload.urlRedirecionamento = linkUrl;
+              payload.tituloRedirecionamento = linkTitle || undefined;
+            }
+
+            createPostSubmit.disabled = true;
+            createPostText.disabled = true;
+            setComposerFeedback('Publicando...');
+            closeCreatePostEmojiPicker();
+
+            if (createPostEmojiToggle instanceof HTMLButtonElement) {
+              createPostEmojiToggle.disabled = true;
+            }
+
+            if (createPostMediaFile instanceof HTMLInputElement) {
+              createPostMediaFile.disabled = true;
+            }
+
+            if (createPostLinkEnabled instanceof HTMLInputElement) {
+              createPostLinkEnabled.disabled = true;
+            }
+
+            if (createPostLinkUrl instanceof HTMLInputElement) {
+              createPostLinkUrl.disabled = true;
+            }
+
+            if (createPostLinkTitle instanceof HTMLInputElement) {
+              createPostLinkTitle.disabled = true;
+            }
+
+            try {
+              if (mediaFile) {
+                const mediaForm = new FormData();
+                mediaForm.append('file', mediaFile);
+
+                const uploadResponse = await fetch('/social/feed/upload-media', {
+                  method: 'POST',
+                  body: mediaForm,
+                });
+
+                if (!uploadResponse.ok) {
+                  throw new Error('Falha ao enviar mídia');
+                }
+
+                const uploadPayload = await uploadResponse.json();
+                const uploadedUrl = uploadPayload?.data?.midiaUrl;
+                const uploadedTipo = uploadPayload?.data?.tipo;
+
+                if (!uploadedUrl || (uploadedTipo !== 'imagem' && uploadedTipo !== 'video')) {
+                  throw new Error('Resposta inválida do upload de mídia');
+                }
+
+                payload.midiaUrl = uploadedUrl;
+                payload.tipo = uploadedTipo;
+              }
+
+              const response = await fetch('/social/feed/post', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+
+              if (!response.ok) {
+                throw new Error('Falha ao criar postagem');
+              }
+
+              setComposerFeedback('Postagem publicada com sucesso!');
+              window.location.reload();
+            } catch (error) {
+              console.error(error);
+              setComposerFeedback('Não foi possível publicar agora. Tente novamente.', true);
+            } finally {
+              createPostSubmit.disabled = false;
+              createPostText.disabled = false;
+
+              if (createPostMediaFile instanceof HTMLInputElement) {
+                createPostMediaFile.disabled = false;
+              }
+
+              if (createPostLinkEnabled instanceof HTMLInputElement) {
+                createPostLinkEnabled.disabled = false;
+              }
+
+              if (createPostLinkUrl instanceof HTMLInputElement) {
+                createPostLinkUrl.disabled = false;
+              }
+
+              if (createPostLinkTitle instanceof HTMLInputElement) {
+                createPostLinkTitle.disabled = false;
+              }
+
+              if (createPostEmojiToggle instanceof HTMLButtonElement) {
+                createPostEmojiToggle.disabled = false;
+              }
+            }
+          });
+        }
+
+        const deletePostButtons = document.querySelectorAll('[data-delete-post-button="true"]');
+
+        deletePostButtons.forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) {
+            return;
+          }
+
+          button.addEventListener('click', async () => {
+            const publicacaoUuid = button.getAttribute('data-publicacao-uuid');
+            if (!publicacaoUuid || button.disabled) {
+              return;
+            }
+
+            const shouldDelete = window.confirm('Deseja excluir esta postagem?');
+            if (!shouldDelete) {
+              return;
+            }
+
+            button.disabled = true;
+
+            try {
+              const response = await fetch(`/social/feed/post/${encodeURIComponent(publicacaoUuid)}`, {
+                method: 'DELETE',
+                headers: {
+                  Accept: 'application/json',
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error('Falha ao excluir postagem');
+              }
+
+              const article = button.closest('.timeline-item');
+              if (article instanceof HTMLElement) {
+                article.remove();
+              }
+            } catch (error) {
+              console.error(error);
+              button.disabled = false;
+            }
+          });
         });
 
-        document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape' && modal.classList.contains('is-open')) {
-            closeModal();
-          }
-        });
+        const commentModal = document.getElementById('comment-modal');
+        const commentModalClose = document.getElementById('comment-modal-close');
+        const commentModalPost = document.getElementById('comment-modal-post');
+        const commentList = document.getElementById('comment-list');
+        const commentForm = document.getElementById('comment-form');
+        const commentInput = document.getElementById('comment-input');
+        const commentSubmit = document.getElementById('comment-submit');
+        const emojiToggle = document.getElementById('comment-emoji-toggle');
+        const emojiPicker = document.getElementById('comment-emoji-picker');
+        const commentButtons = document.querySelectorAll('[data-comment-button="true"]');
+
+        if (
+          commentModal &&
+          commentModalClose &&
+          commentModalPost &&
+          commentList &&
+          commentForm &&
+          commentInput &&
+          commentSubmit &&
+          emojiToggle &&
+          emojiPicker
+        ) {
+          let currentCommentPostUuid = null;
+
+          const closeEmojiPicker = () => {
+            emojiPicker.setAttribute('hidden', 'true');
+            emojiToggle.setAttribute('aria-expanded', 'false');
+          };
+
+          const openEmojiPicker = () => {
+            emojiPicker.removeAttribute('hidden');
+            emojiToggle.setAttribute('aria-expanded', 'true');
+          };
+
+          const insertEmojiAtCursor = (emoji) => {
+            if (!(commentInput instanceof HTMLTextAreaElement)) {
+              return;
+            }
+
+            const start = commentInput.selectionStart ?? commentInput.value.length;
+            const end = commentInput.selectionEnd ?? commentInput.value.length;
+            const current = commentInput.value;
+            const nextValue = `${current.slice(0, start)}${emoji}${current.slice(end)}`;
+
+            commentInput.value = nextValue;
+            const cursor = start + emoji.length;
+            commentInput.focus();
+            commentInput.setSelectionRange(cursor, cursor);
+          };
+
+          const updateCommentTotal = (publicacaoUuid, total) => {
+            const article = document.querySelector(`.timeline-item[data-post-uuid="${publicacaoUuid}"]`);
+            if (!(article instanceof HTMLElement)) {
+              return;
+            }
+
+            const totalEl = article.querySelector('[data-comment-total]');
+            if (totalEl instanceof HTMLElement) {
+              totalEl.textContent = String(total);
+            }
+          };
+
+          const renderPostPreview = (publicacaoUuid) => {
+            commentModalPost.innerHTML = '';
+
+            const article = document.querySelector(`.timeline-item[data-post-uuid="${publicacaoUuid}"]`);
+            if (!(article instanceof HTMLElement)) {
+              return;
+            }
+
+            const preview = document.createElement('article');
+            preview.className = 'comment-modal-post-preview';
+
+            const head = article.querySelector('.timeline-head');
+            const postContent = article.querySelector('.timeline-post-content');
+            const content = article.querySelector('.timeline-content');
+            const caption = article.querySelector('.timeline-caption');
+
+            [head, postContent, content, caption].forEach((section) => {
+              if (section instanceof HTMLElement) {
+                preview.appendChild(section.cloneNode(true));
+              }
+            });
+
+            commentModalPost.appendChild(preview);
+          };
+
+          const formatCommentDate = (value) => {
+            try {
+              return new Intl.DateTimeFormat('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              }).format(new Date(value));
+            } catch {
+              return '';
+            }
+          };
+
+          const renderComments = (comments) => {
+            commentList.innerHTML = '';
+
+            if (!Array.isArray(comments) || comments.length === 0) {
+              const empty = document.createElement('p');
+              empty.className = 'comment-empty';
+              empty.textContent = 'Ainda não há comentários nesta postagem.';
+              commentList.appendChild(empty);
+              return;
+            }
+
+            comments.forEach((comment) => {
+              const item = document.createElement('article');
+              item.className = `comment-item${comment?.isFromCurrentUser ? ' is-own' : ''}`;
+
+              const avatarWrap = document.createElement('span');
+              avatarWrap.className = 'comment-avatar-wrap';
+
+              if (comment?.authorAvatarUrl) {
+                const avatarImg = document.createElement('img');
+                avatarImg.className = 'comment-avatar';
+                avatarImg.src = comment.authorAvatarUrl;
+                avatarImg.alt = `Avatar de ${comment.authorName || 'Usuário'}`;
+                avatarWrap.appendChild(avatarImg);
+              } else {
+                const avatarFallback = document.createElement('span');
+                avatarFallback.className = 'comment-avatar comment-avatar-fallback';
+                avatarFallback.textContent = comment?.authorInitial || 'U';
+                avatarWrap.appendChild(avatarFallback);
+              }
+
+              const body = document.createElement('div');
+              body.className = 'comment-item-body';
+
+              const head = document.createElement('div');
+              head.className = 'comment-item-head';
+
+              const author = document.createElement('span');
+              author.className = 'comment-author';
+              author.textContent = `@${comment?.authorName || 'Usuário'}`;
+
+              const date = document.createElement('time');
+              date.className = 'comment-date';
+              date.textContent = formatCommentDate(comment?.criadoEm);
+
+              const text = document.createElement('p');
+              text.className = 'comment-text';
+              text.textContent = comment?.comentario || '';
+
+              head.appendChild(author);
+              head.appendChild(date);
+              body.appendChild(head);
+              body.appendChild(text);
+
+              item.appendChild(avatarWrap);
+              item.appendChild(body);
+              commentList.appendChild(item);
+            });
+          };
+
+          const loadComments = async (publicacaoUuid) => {
+            commentList.innerHTML = '<p class="comment-empty">Carregando comentários...</p>';
+
+            const response = await fetch(`/social/feed/post/${encodeURIComponent(publicacaoUuid)}/comments`, {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+              },
+            });
+
+            if (!response.ok) {
+              throw new Error('Falha ao carregar comentários');
+            }
+
+            const payload = await response.json();
+            const comments = Array.isArray(payload?.data) ? payload.data : [];
+            renderComments(comments);
+            updateCommentTotal(publicacaoUuid, comments.length);
+          };
+
+          const closeCommentsModal = () => {
+            commentModal.classList.remove('is-open');
+            commentModal.setAttribute('aria-hidden', 'true');
+            currentCommentPostUuid = null;
+            commentModalPost.innerHTML = '';
+            commentList.innerHTML = '';
+            commentInput.value = '';
+            closeEmojiPicker();
+          };
+
+          const openCommentsModal = async (publicacaoUuid) => {
+            currentCommentPostUuid = publicacaoUuid;
+            closeEmojiPicker();
+            renderPostPreview(publicacaoUuid);
+            commentModal.classList.add('is-open');
+            commentModal.setAttribute('aria-hidden', 'false');
+
+            try {
+              await loadComments(publicacaoUuid);
+            } catch (error) {
+              console.error(error);
+              commentList.innerHTML = '<p class="comment-empty">Não foi possível carregar os comentários.</p>';
+            }
+          };
+
+          commentButtons.forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            button.addEventListener('click', () => {
+              const publicacaoUuid = button.getAttribute('data-publicacao-uuid');
+              if (!publicacaoUuid) {
+                return;
+              }
+
+              openCommentsModal(publicacaoUuid);
+            });
+          });
+
+          commentModalClose.addEventListener('click', closeCommentsModal);
+
+          emojiToggle.addEventListener('click', () => {
+            if (emojiPicker.hasAttribute('hidden')) {
+              openEmojiPicker();
+              return;
+            }
+
+            closeEmojiPicker();
+          });
+
+          emojiPicker.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) {
+              return;
+            }
+
+            const button = target.closest('.emoji-option');
+            if (!(button instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            const emoji = button.getAttribute('data-emoji');
+            if (!emoji) {
+              return;
+            }
+
+            insertEmojiAtCursor(emoji);
+            closeEmojiPicker();
+          });
+
+          commentModal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target instanceof HTMLElement && target.getAttribute('data-close-comments-modal') === 'true') {
+              closeCommentsModal();
+            }
+          });
+
+          document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Node)) {
+              return;
+            }
+
+            if (!emojiPicker.hasAttribute('hidden') && !emojiPicker.contains(target) && !emojiToggle.contains(target)) {
+              closeEmojiPicker();
+            }
+          });
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && commentModal.classList.contains('is-open')) {
+              closeCommentsModal();
+            }
+          });
+
+          commentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (!currentCommentPostUuid || !(commentInput instanceof HTMLTextAreaElement)) {
+              return;
+            }
+
+            const comentario = commentInput.value.trim();
+            if (!comentario) {
+              return;
+            }
+
+            commentSubmit.setAttribute('disabled', 'true');
+            commentInput.setAttribute('disabled', 'true');
+            emojiToggle.setAttribute('disabled', 'true');
+            closeEmojiPicker();
+
+            try {
+              const response = await fetch(
+                `/social/feed/post/${encodeURIComponent(currentCommentPostUuid)}/comment`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                  },
+                  body: JSON.stringify({ comentario }),
+                },
+              );
+
+              if (!response.ok) {
+                throw new Error('Falha ao enviar comentário');
+              }
+
+              commentInput.value = '';
+              await loadComments(currentCommentPostUuid);
+            } catch (error) {
+              console.error(error);
+            } finally {
+              commentSubmit.removeAttribute('disabled');
+              commentInput.removeAttribute('disabled');
+              emojiToggle.removeAttribute('disabled');
+              commentInput.focus();
+            }
+          });
+        }
       })();
     </script>
   </body>

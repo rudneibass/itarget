@@ -9,20 +9,20 @@
         </button>
     </div>
     <div class="section-actions-btn-parent">
-        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-video">
             <i class="fa fa-search"></i>
             <span class="btn-label">Pesquisar</span>
         </button>
     </div>
 </section>
 
-<section class="section-search-bar hide" id="section-search-bar">
-    <div class="row search-bar" id="search-bar">
+<section class="section-search-bar hide" id="section-search-bar-video">
+    <div class="row search-bar" id="search-bar-video">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
                 <div class="card-body">
-                    <form id="formSearch">
+                    <form id="formSearchVideo">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="input-group mb-3">
@@ -43,7 +43,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-video">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -62,45 +62,31 @@
 <section>
     <div class="list-table-container">
         <table class="table table-sm table-striped table-hover width-100">
-            <thead id="thead"></thead>
-            <tbody id="tbody"></tbody>
+            <thead id="thead-video"></thead>
+            <tbody id="tbody-video"></tbody>
         </table>
         <div class="text-center">
-            <span class="pt-5" id="messages"></span>
+            <span class="pt-5" id="messages-video"></span>
         </div>
     </div>
     <div class="pagination-bar-default">
         <div>
-            <small class="gray-default" id="total"></small>
+            <small class="gray-default" id="total-video"></small>
         </div>
         <div>
-            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior"></i>
+            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior-video"></i>
             &emsp;
-            <span class="gray-default" id="numeracao"></span>
+            <span class="gray-default" id="numeracao-video"></span>
             &emsp;
-            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo"></i>
+            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo-video"></i>
         </div>
     </div>
 </section>
 
 <script>
-    document.getElementById('btn-toggle-barra').addEventListener('click', () => {
-        const barra = document.getElementById('section-search-bar');
-        barra.classList.toggle('visible');
-    });
-    document.getElementById('btn-pesquisar').addEventListener('click', () => {
-        const barra = document.getElementById('section-search-bar');
-        barra.classList.toggle('visible');
-        videoList.list({
-            url: admin.baseUrl + endpoints.video.list,
-            formSearchId: videoList.formSearchId,
-        });
-    });
-</script>
-
-<script>
-    var videoList = {
-        formSearchId: 'formSearch',
+    (() => {
+    const videoList = {
+        formSearchId: 'formSearchVideo',
         list: ({ url, formSearchId }) => {
             $.ajax({
                 url,
@@ -109,28 +95,28 @@
                 data: $('#'+formSearchId).serialize(),
                 dataType: "json",
                 beforeSend: function () {
-                    $("#messages").empty()
+                    $("#messages-video").empty()
                     admin.loading(true);
                 },
                 error: function () {
                     admin.loading(false);
-                    $("tr").remove();
-                    $("#messages").empty()
-                    $("#messages").html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                    $("#tbody-video").empty();
+                    $("#messages-video").empty()
+                    $("#messages-video").html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
                 },
                 success: function (response) {
                     var data = response?.data || response;
 
                     if (!data[0]) {
                         admin.loading(false);
-                        $("tr").remove();
-                        $("#messages").empty()
-                        $("#messages").html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                        $("#tbody-video").empty();
+                        $("#messages-video").empty()
+                        $("#messages-video").html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
                         return
                     }
                     admin.loading(false);
-                    $("tr").remove();
-                    $("#messages").empty()
+                    $("#tbody-video").empty();
+                    $("#messages-video").empty()
 
             
                     var tamanhoPagina = 10;
@@ -138,7 +124,7 @@
 
                     function paginar() {
                         for (var i = pagina * tamanhoPagina; i < data.length && i < (pagina + 1) * tamanhoPagina; i++) {
-                            $("#tbody")
+                            $("#tbody-video")
                             .append(
                                 `<tr id="linha${data[i].id}">
                                     <td class="p-3" style="width:90%; vertical-align: middle;">
@@ -196,27 +182,27 @@
                                 </tr>`
                             );
                         }
-                        $('#numeracao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
-                        $('#total').text('1 à '+tamanhoPagina+ ' registros por página ');
+                        $('#numeracao-video').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
+                        $('#total-video').text('1 à '+tamanhoPagina+ ' registros por página ');
                     }
 
                     function ajustarBotoes() {
-                        $('#proximo').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
-                        $('#anterior').prop('disabled', data.length <= tamanhoPagina || pagina == 0);
+                        $('#proximo-video').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
+                        $('#anterior-video').prop('disabled', data.length <= tamanhoPagina || pagina == 0);
                     }
 
                     $(function () {
-                        $('#proximo').click(function () {
+                        $('#proximo-video').off('click').on('click', function () {
                             if (pagina < data.length / tamanhoPagina - 1) {
-                                $("tr").remove();
+                                $("#tbody-video").empty();
                                 pagina++;
                                 paginar();
                                 ajustarBotoes();
                             }
                         });
-                        $('#anterior').click(function () {
+                        $('#anterior-video').off('click').on('click', function () {
                             if (pagina >= 1) {
-                                $("tr").remove();
+                                $("#tbody-video").empty();
                                 pagina--;
                                 paginar();
                                 ajustarBotoes();
@@ -271,8 +257,24 @@
         },
     };
 
+    window.videoList = videoList;
+
+    document.getElementById('btn-toggle-barra-video').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-video');
+        barra.classList.toggle('visible');
+    });
+    document.getElementById('btn-pesquisar-video').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-video');
+        barra.classList.toggle('visible');
+        videoList.list({
+            url: admin.baseUrl + endpoints.video.list,
+            formSearchId: videoList.formSearchId,
+        });
+    });
+
     videoList.list({
         url: admin.baseUrl + endpoints.video.list,
         formSearchId: videoList.formSearchId,
     });
+    })();
 </script>

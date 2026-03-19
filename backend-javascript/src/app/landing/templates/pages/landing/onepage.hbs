@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One-Page Executiva • School Social Commerce</title>
+    <style>
+      :root {
+        --ink: #142038;
+        --muted: #5a6682;
+        --brand: #2f4fd6;
+        --line: #dfe5f3;
+        --bg: #f4f7fc;
+        --card: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", Arial, sans-serif;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 12px auto;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12mm;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+      }
+
+      .brand {
+        font-weight: 800;
+        color: var(--ink);
+        font-size: 15px;
+      }
+
+      .tag {
+        font-size: 11px;
+        font-weight: 700;
+        color: #2a439f;
+        background: #e6ecff;
+        padding: 5px 10px;
+        border-radius: 999px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 26px;
+        line-height: 1.15;
+      }
+
+      .subtitle {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .section {
+        margin-top: 14px;
+      }
+
+      .section h2 {
+        font-size: 14px;
+        margin: 0 0 8px;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: #2e3f6e;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .kpi {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+        background: #f8faff;
+      }
+
+      .kpi strong {
+        display: block;
+        font-size: 18px;
+        color: #2a43ad;
+      }
+
+      .kpi small {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .box {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 9px;
+      }
+
+      .box h3 {
+        margin: 0 0 6px;
+        font-size: 13px;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 16px;
+      }
+
+      li {
+        margin-bottom: 5px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      .step h4 {
+        margin: 0 0 4px;
+        font-size: 12px;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .cta {
+        margin-top: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        background: linear-gradient(135deg, #ffffff 0%, #edf2ff 100%);
+      }
+
+      .cta p {
+        margin: 2px 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .cta strong {
+        color: var(--ink);
+      }
+
+      .footer {
+        margin-top: 10px;
+        font-size: 10px;
+        color: #7b879e;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 10px;
+      }
+
+      .footer-qrs {
+        display: flex;
+        gap: 8px;
+      }
+
+      .footer-meta {
+        text-align: right;
+        flex: 1;
+      }
+
+      .qr-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      #qrcode-landing {
+        width: 72px;
+        height: 72px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 4px;
+      }
+
+      #qrcode-reuniao {
+        width: 72px;
+        height: 72px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 4px;
+      }
+
+      .qr-label {
+        font-size: 9px;
+        color: #748099;
+        line-height: 1.2;
+      }
+
+      .qr-help {
+        margin-top: 2px;
+        font-size: 9px;
+        color: #7f8ba4;
+        text-align: center;
+      }
+
+      .actions {
+        width: 210mm;
+        margin: 8px auto 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        border-radius: 6px;
+        font-size: 12px;
+        padding: 7px 10px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .btn.primary {
+        background: var(--brand);
+        border-color: var(--brand);
+        color: #fff;
+      }
+
+      @media print {
+        body {
+          background: #fff;
+        }
+
+        .actions {
+          display: none;
+        }
+
+        .page {
+          margin: 0;
+          width: 100%;
+          min-height: auto;
+          border: 0;
+          border-radius: 0;
+          padding: 10mm;
+          box-shadow: none;
+          page-break-inside: avoid;
+        }
+
+        @page {
+          size: A4 portrait;
+          margin: 8mm;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="actions">
+      <a href="/landing/reuniao" class="btn">Voltar para versão reunião</a>
+      <button class="btn primary" onclick="window.print()">Imprimir / Salvar em PDF</button>
+    </div>
+
+    <main class="page">
+      <header class="header">
+        <div class="brand">School Social Commerce</div>
+        <div class="tag">One-Page Executiva</div>
+      </header>
+
+      <section>
+        <h1>Engajamento escolar convertido em receita, com eficiência operacional.</h1>
+        <p class="subtitle">
+          Plataforma para escolas particulares com rede social privada gamificada, tarefas digitais e do dia a dia,
+          e loja virtual para novas receitas.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Impacto de Negócio</h2>
+        <div class="kpis">
+          <div class="kpi"><strong>+Matrículas</strong><small>Diferencial de inovação e atração de famílias.</small></div>
+          <div class="kpi"><strong>+Receita</strong><small>Loja virtual com itens digitais e físicos.</small></div>
+          <div class="kpi"><strong>+Retenção</strong><small>Maior vínculo de pais e alunos com a escola.</small></div>
+          <div class="kpi"><strong>+Eficiência</strong><small>Mais digitalização e menos retrabalho.</small></div>
+        </div>
+      </section>
+
+      <section class="section cols">
+        <div class="box">
+          <h3>Alavancas de crescimento</h3>
+          <ul>
+            <li>Rede social privada para a comunidade escolar.</li>
+            <li>Gamificação com moedas por tarefas e interações.</li>
+            <li>Recompensas para reforçar comportamento e engajamento.</li>
+            <li>Loja virtual para monetização recorrente.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Por que direção e mantenedora aprovam</h3>
+          <ul>
+            <li>Amplia receita sem necessidade de expansão estrutural proporcional.</li>
+            <li>Fortalece marca e percepção de valor da escola.</li>
+            <li>Cria canal proprietário de relacionamento com famílias.</li>
+            <li>Permite operação escalável e orientada a indicadores.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Plano de 90 dias</h2>
+        <div class="timeline">
+          <div class="step">
+            <h4>0-30 dias • Setup</h4>
+            <p>Configuração da organização, regras e comunicação de lançamento.</p>
+          </div>
+          <div class="step">
+            <h4>31-60 dias • Piloto</h4>
+            <p>Ativação com turmas iniciais, acompanhamento e ajuste fino.</p>
+          </div>
+          <div class="step">
+            <h4>61-90 dias • Escala</h4>
+            <p>Expansão para toda escola e ativação plena da loja virtual.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <p><strong>Próximo passo:</strong> reunião executiva de 30 minutos para diagnóstico de ROI por unidade.</p>
+        <p>Contato comercial: comercial@schoolsocialcommerce.com</p>
+      </section>
+
+      <div class="footer">
+        <div class="footer-qrs">
+          <div class="qr-wrap">
+            <div id="qrcode-landing" aria-label="QR Code da landing completa"></div>
+            <div class="qr-label">Landing completa</div>
+            <div class="qr-help">Use a câmera do celular</div>
+          </div>
+          <div class="qr-wrap">
+            <div id="qrcode-reuniao" aria-label="QR Code da versão reunião"></div>
+            <div class="qr-label">Versão reunião</div>
+            <div class="qr-help">Use a câmera do celular</div>
+          </div>
+        </div>
+        <div class="footer-meta">Documento executivo • School Social Commerce</div>
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous"></script>
+    <script>
+      (() => {
+        const targetLanding = `${window.location.origin}/landing`;
+        const targetReuniao = `${window.location.origin}/landing/reuniao`;
+        const landingElement = document.getElementById('qrcode-landing');
+        const reuniaoElement = document.getElementById('qrcode-reuniao');
+        if (!landingElement || !reuniaoElement || typeof QRCode === 'undefined') {
+          return;
+        }
+
+        new QRCode(landingElement, {
+          text: targetLanding,
+          width: 64,
+          height: 64,
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+
+        new QRCode(reuniaoElement, {
+          text: targetReuniao,
+          width: 64,
+          height: 64,
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+      })();
+    </script>
+  </body>
+</html>

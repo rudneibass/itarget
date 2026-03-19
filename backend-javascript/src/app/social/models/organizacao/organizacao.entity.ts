@@ -12,7 +12,7 @@ import { Publicacao } from '../publicacao/publicacao.entity';
 import { Recompensa } from '../recompensa/recompensa.entity';
 import { Usuario } from '../usuario/usuario.entity';
 
-@Entity({ schema: 'social', name: 'organizacao' })
+@Entity({ schema: 'public', name: 'organizacao' })
 export class Organizacao {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;

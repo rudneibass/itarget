@@ -1,0 +1,296 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button
+            class="btn btn-success btn-float section-actions-btn"
+            onclick="admin.addTab({tabId:'form-organizacao', title: 'Nova Organização', url: '/admin/organizacao/form'})"
+        >
+            <i class="fa fa-plus"></i>
+            <span class="btn-label">Novo</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-organizacao">
+            <i class="fa fa-search"></i>
+            <span class="btn-label">Pesquisar</span>
+        </button>
+    </div>
+</section>
+
+<section class="section-search-bar hide" id="section-search-bar-organizacao">
+    <div class="row search-bar" id="search-bar-organizacao">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-body">
+                    <form id="formSearchOrganizacao">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="uuid" id="uuid" class="form-control" placeholder="Código">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="nome" id="nome" class="form-control" placeholder="Nome">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <select name="ativo" id="ativo" class="form-select">
+                                        <option value="">Status</option>
+                                        <option value="true">Ativa</option>
+                                        <option value="false">Inativa</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer p-2 border-top-0">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-organizacao">
+                        <i class="fa fa-search"></i> Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default">
+        <small><i class="fa fa-building"></i></small>
+        <small>Organizações</small>
+    </div>
+</section>
+
+<section>
+    <div class="list-table-container">
+        <table class="table table-sm table-striped table-hover width-100">
+            <thead id="thead-organizacao"></thead>
+            <tbody id="tbody-organizacao"></tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="messages-organizacao"></span>
+        </div>
+    </div>
+    <div class="pagination-bar-default">
+        <div>
+            <small class="gray-default" id="total-organizacao"></small>
+        </div>
+        <div>
+            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior-organizacao"></i>
+            &emsp;
+            <span class="gray-default" id="numeracao-organizacao"></span>
+            &emsp;
+            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo-organizacao"></i>
+        </div>
+    </div>
+</section>
+
+<script>
+    (() => {
+        const organizacaoList = {
+            formSearchId: 'formSearchOrganizacao',
+            list: ({ url, formSearchId }) => {
+                $.ajax({
+                    url,
+                    cache: false,
+                    type: 'GET',
+                    data: $('#' + formSearchId).serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('#messages-organizacao').empty();
+                        $('#tbody-organizacao').empty();
+                        admin.loading(true);
+                    },
+                    error: function () {
+                        admin.loading(false);
+                        $('#tbody-organizacao').empty();
+                        $('#messages-organizacao').empty();
+                        $('#messages-organizacao').html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                    },
+                    success: function (response) {
+                        var source = response?.data || response || [];
+                        var filters = $('#' + formSearchId).serializeArray().reduce((obj, item) => {
+                            obj[item.name] = item.value;
+                            return obj;
+                        }, {});
+                        var data = source.filter((item) => {
+                            const byUuid = !filters.uuid || String(item.uuid || '').toLowerCase().includes(String(filters.uuid).toLowerCase());
+                            const byNome = !filters.nome || String(item.nome || '').toLowerCase().includes(String(filters.nome).toLowerCase());
+                            const byAtivo = !filters.ativo || String(!!item.ativo) === String(filters.ativo);
+                            return byUuid && byNome && byAtivo;
+                        });
+                        if (!data[0]) {
+                            admin.loading(false);
+                            $('#tbody-organizacao').empty();
+                            $('#messages-organizacao').empty();
+                            $('#messages-organizacao').html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                            return;
+                        }
+                        admin.loading(false);
+                        $('#tbody-organizacao').empty();
+                        $('#messages-organizacao').empty();
+                        var tamanhoPagina = 10;
+                        var pagina = 0;
+                        function paginar() {
+                            for (var i = pagina * tamanhoPagina; i < data.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                                $('#tbody-organizacao').append(
+                                    `<tr>
+                                        <td class="p-3" style="width:90%; vertical-align: middle;">
+                                            <div>
+                                                <small>
+                                                    <b>Nome:</b> ${data[i].nome || ''}
+                                                    ${data[i].ativo
+                                                        ? '&emsp;<span class="badge bg-success">Ativa</span>'
+                                                        : '&emsp;<span class="badge bg-secondary">Inativa</span>'
+                                                    }
+                                                </small>
+                                                <br/>
+                                                <small><b>Slug:</b> ${data[i].slug || '-'}</small>
+                                                <br/>
+                                                <small><b>Código:</b> ${data[i].uuid || ''}</small>
+                                            </div>
+                                        </td>
+                                        <td style="width: 8%; vertical-align: middle;">
+                                            <center>
+                                                <button
+                                                    class="btn btn-secondary btn-sm w-100 mb-2"
+                                                    onclick="admin.addTab({tabId:'form-organizacao', title: 'Editar Organização', url: '/admin/organizacao/form/uuid/${data[i].uuid}'})"
+                                                >
+                                                    <i class="fa fa-pencil"></i> Editar
+                                                </button>
+                                                ${data[i].ativo
+                                                    ? `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="organizacaoList.toggleAtivo('${data[i].uuid}', false)">
+                                                        <i class="fa fa-download"></i> Desativar
+                                                    </button>`
+                                                    : `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="organizacaoList.toggleAtivo('${data[i].uuid}', true)">
+                                                        <i class="fa fa-upload"></i> Ativar
+                                                    </button>`
+                                                }
+                                                <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="organizacaoList.remove('${data[i].uuid}')">
+                                                    <i class="fa fa-trash-o"></i>
+                                                    <span> Excluir</span>
+                                                </button>
+                                            </center>
+                                        </td>
+                                    </tr>`
+                                );
+                            }
+                            $('#numeracao-organizacao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
+                            $('#total-organizacao').text('1 à ' + tamanhoPagina + ' registros por página ');
+                        }
+                        function ajustarBotoes() {
+                            $('#proximo-organizacao').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
+                            $('#anterior-organizacao').prop('disabled', data.length <= tamanhoPagina || pagina === 0);
+                        }
+                        $(function () {
+                            $('#proximo-organizacao').off('click').on('click', function () {
+                                if (pagina < data.length / tamanhoPagina - 1) {
+                                    $('#tbody-organizacao').empty();
+                                    pagina++;
+                                    paginar();
+                                    ajustarBotoes();
+                                }
+                            });
+                            $('#anterior-organizacao').off('click').on('click', function () {
+                                if (pagina >= 1) {
+                                    $('#tbody-organizacao').empty();
+                                    pagina--;
+                                    paginar();
+                                    ajustarBotoes();
+                                }
+                            });
+                            paginar();
+                            ajustarBotoes();
+                        });
+                    },
+                });
+            },
+            toggleAtivo: (uuid, ativo) => {
+                $.ajax({
+                    url: `${admin.baseUrl}/organizacao/${uuid}`,
+                    type: 'PATCH',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ ativo }),
+                    beforeSend: function () {
+                        admin.loading(true);
+                    },
+                    success: function () {
+                        admin.loading(false);
+                        toastr['success']('Status atualizado com sucesso.');
+                        organizacaoList.list({
+                            url: admin.baseUrl + endpoints.organizacao.all,
+                            formSearchId: organizacaoList.formSearchId,
+                        });
+                    },
+                    error: function () {
+                        admin.loading(false);
+                        toastr['error']('Não foi possível atualizar o status.');
+                    },
+                });
+            },
+            remove: (uuid) => {
+                bootbox.confirm({
+                    title: 'Atenção',
+                    message: 'Tem certeza que deseja remover este registro?',
+                    buttons: {
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Confirmar',
+                            className: 'btn-sm btn-success',
+                        },
+                        cancel: {
+                            label: '<i class="fa fa-undo"></i> Cancelar',
+                            className: 'btn-sm btn-secondary',
+                        },
+                    },
+                    callback: function (result) {
+                        if (!result) {
+                            return;
+                        }
+                        $.ajax({
+                            url: `${admin.baseUrl}/organizacao/${uuid}`,
+                            type: 'DELETE',
+                            beforeSend: function () {
+                                admin.loading(true);
+                            },
+                            success: function () {
+                                admin.loading(false);
+                                toastr['success']('Organização removida com sucesso.');
+                                organizacaoList.list({
+                                    url: admin.baseUrl + endpoints.organizacao.all,
+                                    formSearchId: organizacaoList.formSearchId,
+                                });
+                            },
+                            error: function () {
+                                admin.loading(false);
+                                toastr['error']('Não foi possível remover a organização.');
+                            },
+                        });
+                    },
+                });
+            },
+        };
+
+        window.organizacaoList = organizacaoList;
+
+        document.getElementById('btn-toggle-barra-organizacao').addEventListener('click', () => {
+            const barra = document.getElementById('section-search-bar-organizacao');
+            barra.classList.toggle('visible');
+        });
+
+        document.getElementById('btn-pesquisar-organizacao').addEventListener('click', () => {
+            const barra = document.getElementById('section-search-bar-organizacao');
+            barra.classList.toggle('visible');
+            organizacaoList.list({
+                url: admin.baseUrl + endpoints.organizacao.all,
+                formSearchId: organizacaoList.formSearchId,
+            });
+        });
+
+        organizacaoList.list({
+            url: admin.baseUrl + endpoints.organizacao.all,
+            formSearchId: organizacaoList.formSearchId,
+        });
+    })();
+</script>

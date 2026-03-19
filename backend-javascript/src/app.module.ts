@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './app/admin/admin.module';
+import { LandingModule } from './app/landing/landing.module';
 import { SocialModule } from './app/social/social.module';
 import { Video } from './app/admin/models/video/video.entity';
 
@@ -21,6 +22,7 @@ import { Video } from './app/admin/models/video/video.entity';
       autoLoadEntities: true,
       synchronize: false,
     }),
+    LandingModule,
     AdminModule,
     SocialModule,
   ],

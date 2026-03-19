@@ -11,6 +11,7 @@ export interface DadosSessaoSocial {
   usuario: {
     uuid: string;
     nome: string;
+    apelido: string | null;
     urlAvatar: string | null;
     moedas: number;
     podePostarMidia: boolean;
