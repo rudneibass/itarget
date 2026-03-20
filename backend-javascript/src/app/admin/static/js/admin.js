@@ -76,7 +76,7 @@ admin = {
 
     // Remover estados de outras abas
     $('#tabs .nav-link').removeClass('active').attr('aria-selected', 'false');
-    $('#tab-content .tab-pane').removeClass('active show');
+    $('#tab-content > .tab-pane').removeClass('active show');
 
     // Adicionar nova aba e conteúdo
     $('#tabs').append(newTab);

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateOrganizacaoDto } from '../../dtos/organizacao/create-organizacao.dto';
 import { UpdateOrganizacaoDto } from '../../dtos/organizacao/update-organizacao.dto';
 import { UsuarioAdmin } from '../../models/usuario-admin/usuario-admin.entity';
+import { UsuarioOrganizacao } from '../../models/usuario-organizacao/usuario-organizacao.entity';
 import { Organizacao } from '../../../social/models/organizacao/organizacao.entity';
 
 @Injectable()
@@ -14,6 +15,8 @@ export class OrganizacaoService {
     private readonly organizacaoRepository: Repository<Organizacao>,
     @InjectRepository(UsuarioAdmin)
     private readonly usuarioAdminRepository: Repository<UsuarioAdmin>,
+    @InjectRepository(UsuarioOrganizacao)
+    private readonly usuarioOrganizacaoRepository: Repository<UsuarioOrganizacao>,
   ) {}
 
   private async getOwnerUser(ownerUuid: string) {
@@ -25,14 +28,34 @@ export class OrganizacaoService {
     return user;
   }
 
+  private async getOwnedOrganizationByUserId(usuarioId: number) {
+    const vinculo = await this.usuarioOrganizacaoRepository.findOne({
+      where: {
+        usuarioId,
+        papel: 'DONO',
+        ativo: true,
+      },
+      order: { id: 'DESC' },
+    });
+
+    if (!vinculo) {
+      return null;
+    }
+
+    const organizacao = await this.organizacaoRepository.findOne({ where: { id: vinculo.organizacaoId } });
+    return organizacao ?? null;
+  }
+
+  async getOwnedOrganizationUuid(ownerUuid: string) {
+    const owner = await this.getOwnerUser(ownerUuid);
+    const organizacao = await this.getOwnedOrganizationByUserId(owner.id);
+    return organizacao?.uuid ?? null;
+  }
+
   async findAll(ownerUuid: string) {
     const owner = await this.getOwnerUser(ownerUuid);
 
-    if (!owner.organizacaoUuid) {
-      return [];
-    }
-
-    const organizacao = await this.organizacaoRepository.findOne({ where: { uuid: owner.organizacaoUuid } });
+    const organizacao = await this.getOwnedOrganizationByUserId(owner.id);
     if (!organizacao) {
       return [];
     }
@@ -43,16 +66,12 @@ export class OrganizacaoService {
   async get(ownerUuid: string, uuid?: string) {
     const owner = await this.getOwnerUser(ownerUuid);
 
-    if (!owner.organizacaoUuid) {
-      throw new NotFoundException('Organização não encontrada');
-    }
-
-    if (uuid && owner.organizacaoUuid !== uuid) {
-      throw new NotFoundException('Organização não encontrada');
-    }
-
-    const organizacao = await this.organizacaoRepository.findOne({ where: { uuid: owner.organizacaoUuid } });
+    const organizacao = await this.getOwnedOrganizationByUserId(owner.id);
     if (!organizacao) {
+      throw new NotFoundException('Organização não encontrada');
+    }
+
+    if (uuid && organizacao.uuid !== uuid) {
       throw new NotFoundException('Organização não encontrada');
     }
 
@@ -60,28 +79,42 @@ export class OrganizacaoService {
   }
 
   async create(ownerUuid: string, createOrganizacaoDto: CreateOrganizacaoDto): Promise<Organizacao> {
-    try {
-      const owner = await this.getOwnerUser(ownerUuid);
+    const owner = await this.getOwnerUser(ownerUuid);
 
-      if (owner.organizacaoUuid) {
-        throw new BadRequestException('Este usuário já possui uma organização.');
-      }
+    const ownedOrganization = await this.getOwnedOrganizationByUserId(owner.id);
+    if (ownedOrganization) {
+      throw new BadRequestException('Este usuário já possui uma organização.');
+    }
 
-      const organizacao = this.organizacaoRepository.create({
+    return this.organizacaoRepository.manager.transaction(async (entityManager) => {
+      const organizacaoRepository = entityManager.getRepository(Organizacao);
+      const usuarioAdminRepository = entityManager.getRepository(UsuarioAdmin);
+      const usuarioOrganizacaoRepository = entityManager.getRepository(UsuarioOrganizacao);
+
+      const organizacao = organizacaoRepository.create({
         uuid: randomUUID(),
         nome: createOrganizacaoDto.nome,
         slug: createOrganizacaoDto.slug || null,
         ativo: createOrganizacaoDto.ativo ?? true,
       });
 
-      const saved = await this.organizacaoRepository.save(organizacao);
+      const saved = await organizacaoRepository.save(organizacao);
+
+      const vinculo = usuarioOrganizacaoRepository.create({
+        usuarioId: owner.id,
+        organizacaoId: saved.id,
+        papel: 'DONO',
+        criadoPorUsuarioId: owner.id,
+        ativo: true,
+      });
+
+      await usuarioOrganizacaoRepository.save(vinculo);
+
       owner.organizacaoUuid = saved.uuid;
-      await this.usuarioAdminRepository.save(owner);
+      await usuarioAdminRepository.save(owner);
 
       return saved;
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   async update(ownerUuid: string, uuid: string, updateOrganizacaoDto: UpdateOrganizacaoDto): Promise<Organizacao> {

@@ -1,13 +1,74 @@
 <section>
+    <style>
+        .usuario-admin-form-tab-content {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            padding: .75rem;
+            box-shadow: var(--shadows-default);
+        }
+
+        .usuario-admin-form-tab-pane {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+        }
+
+        .usuario-admin-form-main {
+            flex: 1;
+        }
+
+        .usuario-admin-form-actions {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            top: auto;
+            right: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            gap: .5rem;
+            margin-top: auto;
+            padding-top: .75rem;
+            border-top: 1px solid var(--border-color-default);
+            background-color: #fff;
+        }
+
+        .usuario-admin-form-actions .section-actions-btn-parent {
+            width: auto;
+        }
+
+        .usuario-admin-form-actions .btn {
+            width: 150px;
+            height: auto;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            gap: .45rem;
+            border-radius: 3px !important;
+        }
+
+        @media (max-width: 767px) {
+            .usuario-admin-form-tab-content {
+                min-height: calc(100vh - 130px);
+            }
+
+            .usuario-admin-form-actions {
+                flex-wrap: wrap;
+                justify-content: start;
+            }
+        }
+    </style>
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" href="#tab-1">Cadastro</a>
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-1">Cadastro</a>
             </li>
         </ul>
-        <div class="tab-content bg-white border border-top-0" style="padding: .75rem; box-shadow: var(--shadows-default);" >
-            <div class="tab-pane active" id="tab-1">
-                <form id="tab-1-form-usuario-admin">
+        <div class="tab-content bg-white border border-top-0 usuario-admin-form-tab-content">
+            <div class="tab-pane active usuario-admin-form-tab-pane" id="tab-1">
+                <form id="tab-1-form-usuario-admin" class="usuario-admin-form-main">
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
                         <div class="col-md-6">
@@ -53,27 +114,15 @@
                     </div>
                 </form>
 
-                <section class="section-actions">
+                <section class="section-actions usuario-admin-form-actions">
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-admin-novo" class="btn btn-success btn-float section-actions-btn">
-                            <i class="fa fa-plus"></i>
-                            <span class="btn-label">Novo</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-admin-editar" class="btn btn-warning btn-float section-actions-btn">
+                        <button type="button" id="btn-usuario-admin-editar" class="btn btn-secondary btn-float">
                             <i class="fa fa fa-pencil"></i>
                             <span class="btn-label">Editar</span>
                         </button>
                     </div>
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-admin-cancelar" class="btn btn-danger btn-float section-actions-btn">
-                            <i class="fa fa fa-undo"></i>
-                            <span class="btn-label">Cancelar</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-admin-salvar" class="btn btn-primary btn-float section-actions-btn">
+                        <button type="button" id="btn-usuario-admin-salvar" class="btn btn-success btn-float">
                             <i class="fa fa fa-floppy-o"></i>
                             <span class="btn-label">Salvar</span>
                         </button>
@@ -87,131 +136,124 @@
 
 <script>
     (() => {
-    const usuarioAdminForm = {
-        formId: 'tab-1-form-usuario-admin',
-        edit: () => {
-            $(`#${usuarioAdminForm.formId} :input`).prop('disabled', false);
-        },
-        cancel: () => {
-            $(`#${usuarioAdminForm.formId} :input`).prop('disabled', true);
-        },
-        loadOrganizations: (callback) => {
-            $.ajax({
-                url: `${admin.baseUrl}/usuario-social/organizacoes`,
-                type: 'GET',
-                success: (response) => {
-                    const list = response?.data || [];
-                    const $select = $('#organizacaoUuid');
-                    $select.empty();
-                    $select.append('<option value="">Sem organização</option>');
-                    list.forEach((item) => {
-                        $select.append(`<option value="${item.uuid}">${item.nome}</option>`);
-                    });
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
-                },
-                error: () => toastr['error']('Erro ao carregar organizações.'),
-            });
-        },
-        populateForm: (uuid = null) => {
-            if (!uuid) {
-                return;
-            }
-
-            $.ajax({
-                url: `${admin.baseUrl}/usuario/${uuid}`,
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function () {
-                    admin.loading(true);
-                    $(`#${usuarioAdminForm.formId} :input`).prop('disabled', true);
-                },
-                error: function () {
-                    admin.loading(false);
-                    toastr['error']('Não foi possível carregar o registro.');
-                },
-                success: function (response) {
-                    admin.loading(false);
-                    const data = response?.data || {};
-                    $('#uuid').val(data.uuid || '');
-                    $('#nome').val(data.nome || '');
-                    $('#email').val(data.email || '');
-                    $('#organizacaoUuid').val(data.organizacaoUuid || '');
-                    $('#ativo').prop('checked', !!data.ativo);
-                    $('#senha').val('');
+        const usuarioAdminForm = {
+            formId: 'tab-1-form-usuario-admin',
+            edit: () => {
+                $(`#${usuarioAdminForm.formId} :input`).prop('disabled', false);
+            },
+            cancel: () => {
+                $(`#${usuarioAdminForm.formId} :input`).prop('disabled', true);
+            },
+            loadOrganizations: (callback) => {
+                $.ajax({
+                    url: `${admin.baseUrl}/usuario-social/organizacoes`,
+                    type: 'GET',
+                    success: (response) => {
+                        const list = response?.data || [];
+                        const $select = $('#organizacaoUuid');
+                        $select.empty();
+                        $select.append('<option value="">Sem organização</option>');
+                        list.forEach((item) => {
+                            $select.append(`<option value="${item.uuid}">${item.nome}</option>`);
+                        });
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    },
+                    error: () => toastr['error']('Erro ao carregar organizações.'),
+                });
+            },
+            populateForm: (uuid = null) => {
+                if (!uuid) {
+                    return;
                 }
-            });
-        },
-        save: () => {
-            const uuid = $('#uuid').val();
-            const url = uuid ? `${admin.baseUrl}/usuario/${uuid}` : `${admin.baseUrl}/usuario`;
-            const method = uuid ? 'PATCH' : 'POST';
-            const senha = $('#senha').val();
-
-            const payload = {
-                nome: $('#nome').val(),
-                email: $('#email').val(),
-                organizacaoUuid: $('#organizacaoUuid').val() || null,
-                ativo: $('#ativo').is(':checked'),
-            };
-
-            if (senha) {
-                payload.senha = senha;
-            }
-
-            if (!uuid && !payload.senha) {
-                toastr['error']('Informe uma senha para criar o usuário admin.');
-                return;
-            }
-
-            $.ajax({
-                url,
-                type: method,
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify(payload),
-                beforeSend: function () {
-                    admin.loading(true);
-                },
-                error: function (jqXHR) {
-                    admin.loading(false);
-                    const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Não foi possível salvar o registro.';
-                    toastr['error'](Array.isArray(message) ? message.join(', ') : message);
-                },
-                success: function (responseData) {
-                    admin.loading(false);
-                    const data = responseData?.data || {};
-                    if (data?.uuid) {
-                        $('#uuid').val(data.uuid);
+    
+                $.ajax({
+                    url: `${admin.baseUrl}/usuario/${uuid}`,
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        admin.loading(true);
+                        $(`#${usuarioAdminForm.formId} :input`).prop('disabled', true);
+                    },
+                    error: function () {
+                        admin.loading(false);
+                        toastr['error']('Não foi possível carregar o registro.');
+                    },
+                    success: function (response) {
+                        admin.loading(false);
+                        const data = response?.data || {};
+                        $('#uuid').val(data.uuid || '');
+                        $('#nome').val(data.nome || '');
+                        $('#email').val(data.email || '');
+                        $('#organizacaoUuid').val(data.organizacaoUuid || '');
+                        $('#ativo').prop('checked', !!data.ativo);
+                        $('#senha').val('');
                     }
-                    $('#senha').val('');
-                    toastr['success']('Operação realizada com sucesso.');
+                });
+            },
+            save: () => {
+                const uuid = $('#uuid').val();
+                const url = uuid ? `${admin.baseUrl}/usuario/${uuid}` : `${admin.baseUrl}/usuario`;
+                const method = uuid ? 'PATCH' : 'POST';
+                const senha = $('#senha').val();
+    
+                const payload = {
+                    nome: $('#nome').val(),
+                    email: $('#email').val(),
+                    organizacaoUuid: $('#organizacaoUuid').val() || null,
+                    ativo: $('#ativo').is(':checked'),
+                };
+    
+                if (senha) {
+                    payload.senha = senha;
                 }
-            });
-        }
-    };
+    
+                if (!uuid && !payload.senha) {
+                    toastr['error']('Informe uma senha para criar o usuário admin.');
+                    return;
+                }
+    
+                $.ajax({
+                    url,
+                    type: method,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    beforeSend: function () {
+                        admin.loading(true);
+                    },
+                    error: function (jqXHR) {
+                        admin.loading(false);
+                        const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Não foi possível salvar o registro.';
+                        toastr['error'](Array.isArray(message) ? message.join(', ') : message);
+                    },
+                    success: function (responseData) {
+                        admin.loading(false);
+                        const data = responseData?.data || {};
+                        if (data?.uuid) {
+                            $('#uuid').val(data.uuid);
+                        }
+                        $('#senha').val('');
+                        toastr['success']('Operação realizada com sucesso.');
+                        usuarioAdminForm.edit();
+                    }
+                });
+            }
+        };
 
-    window.usuarioAdminForm = usuarioAdminForm;
+        window.usuarioAdminForm = usuarioAdminForm;
 
-    document.getElementById('btn-usuario-admin-novo')?.addEventListener('click', () => {
-        admin.addTab({tabId:'form-usuario-admin', title: 'Novo Usuário Admin', url: '/admin/usuario/form'});
-    });
+        document.getElementById('btn-usuario-admin-editar')?.addEventListener('click', () => {
+            usuarioAdminForm.edit();
+        });
 
-    document.getElementById('btn-usuario-admin-editar')?.addEventListener('click', () => {
-        usuarioAdminForm.edit();
-    });
+        document.getElementById('btn-usuario-admin-salvar')?.addEventListener('click', () => {
+            usuarioAdminForm.save();
+        });
 
-    document.getElementById('btn-usuario-admin-cancelar')?.addEventListener('click', () => {
-        usuarioAdminForm.cancel();
-    });
-
-    document.getElementById('btn-usuario-admin-salvar')?.addEventListener('click', () => {
-        usuarioAdminForm.save();
-    });
-
-    usuarioAdminForm.loadOrganizations(() => {
-        usuarioAdminForm.populateForm('{{uuid}}');
-    });
+        usuarioAdminForm.loadOrganizations(() => {
+            usuarioAdminForm.populateForm('{{uuid}}');
+        });
     })();
 </script>

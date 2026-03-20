@@ -34,13 +34,21 @@ export class OrganizacaoController {
   @Get('form')
   @Render('pages/organizacao/form')
   async renderForm(@Req() req: any) {
-    return { uuid: req.adminSession?.usuario?.organizacaoUuid || null };
+    const ownerUuid = req.adminSession?.usuario?.uuid;
+    const uuid = ownerUuid ? await this.organizacaoService.getOwnedOrganizationUuid(ownerUuid) : null;
+    return { uuid };
   }
 
   @Get('form/uuid/:uuid')
   @Render('pages/organizacao/form')
-  async renderFormByUuid(@Req() req: any) {
-    return { uuid: req.adminSession?.usuario?.organizacaoUuid || null };
+  async renderFormByUuid(@Req() req: any, @Param('uuid') uuid: string) {
+    const ownerUuid = req.adminSession?.usuario?.uuid;
+    if (!ownerUuid) {
+      return { uuid: null };
+    }
+
+    const ownedUuid = await this.organizacaoService.getOwnedOrganizationUuid(ownerUuid);
+    return { uuid: ownedUuid === uuid ? ownedUuid : null };
   }
 
   @Get('all')

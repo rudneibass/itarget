@@ -9,6 +9,7 @@ import { UsuarioAdminController } from './controllers/usuario-admin/usuario-admi
 import { UsuarioController } from './controllers/usuario/usuario.controller';
 import { MiddlewareSessaoAdmin } from './middleware/admin-session.middleware';
 import { UsuarioAdmin } from './models/usuario-admin/usuario-admin.entity';
+import { UsuarioOrganizacao } from './models/usuario-organizacao/usuario-organizacao.entity';
 import { VideoController } from './controllers/video/video.controller';
 import { Video } from './models/video/video.entity';
 import { Jogo } from '../social/models/jogo/jogo.entity';
@@ -35,6 +36,7 @@ import { VideoService } from './services/video/video.service';
       Jogo,
       Recompensa,
       UsuarioAdmin,
+      UsuarioOrganizacao,
     ]),
   ],
   controllers: [
