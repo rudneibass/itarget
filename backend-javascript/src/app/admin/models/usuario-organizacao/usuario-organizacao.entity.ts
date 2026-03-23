@@ -18,7 +18,7 @@ export class UsuarioOrganizacao {
   organizacaoId: number;
 
   @Column({ type: 'varchar', length: 20, default: 'COLABORADOR' })
-  papel: string;
+  tipo: string;
 
   @Column({ name: 'criado_por_usuario_id', type: 'int', nullable: true })
   criadoPorUsuarioId: number | null;

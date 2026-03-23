@@ -66,6 +66,10 @@ input, textarea, select option{
   color: var(--gray-default)!important;
 }
 
+td, th{
+  padding: 10px;
+}
+
 ::-webkit-scrollbar {
   width: 4px; 
   height: 12px; 

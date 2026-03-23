@@ -5,7 +5,6 @@ import { HomeController } from './controllers/home/home.controller';
 import { JogoController } from './controllers/jogo/jogo.controller';
 import { OrganizacaoController } from './controllers/organizacao/organizacao.controller';
 import { RecompensaController } from './controllers/recompensa/recompensa.controller';
-import { UsuarioAdminController } from './controllers/usuario-admin/usuario-admin.controller';
 import { UsuarioController } from './controllers/usuario/usuario.controller';
 import { MiddlewareSessaoAdmin } from './middleware/admin-session.middleware';
 import { UsuarioAdmin } from './models/usuario-admin/usuario-admin.entity';
@@ -44,7 +43,6 @@ import { VideoService } from './services/video/video.service';
     HomeController,
     VideoController,
     OrganizacaoController,
-    UsuarioAdminController,
     UsuarioController,
     JogoController,
     RecompensaController,
@@ -69,7 +67,6 @@ export class AdminModule implements NestModule {
         HomeController,
         VideoController,
         OrganizacaoController,
-        UsuarioAdminController,
         UsuarioController,
         JogoController,
         RecompensaController,

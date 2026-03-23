@@ -16,6 +16,7 @@ endpoints = {
     },
     usuario: {
         all: '/usuario-social/all',
+        colaboradores: '/usuario-social/colaboradores',
         organizacoes: '/usuario-social/organizacoes'
     },
     jogo: {

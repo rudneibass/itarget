@@ -54,24 +54,8 @@
                       <div class="card-body d-flex align-items-center gap-3">
                         <i class="fa-solid fa-building fs-3 text-secondary"></i>
                         <div>
-                          <h6 class="card-title mb-1">Organizações</h6>
+                          <h6 class="card-title mb-1">Organização</h6>
                           <small class="card-text text-muted mb-0">Clique para criar sua organização.</small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div
-                      class="card h-100 shadow-sm"
-                      role="button"
-                      style="cursor: pointer;"
-                      onclick="admin.addTab({tabId:'lista_usuarios', title: 'Colaboradores', url: '/admin/usuario/list'})"
-                    >
-                      <div class="card-body d-flex align-items-center gap-3">
-                        <i class="fa-solid fa-users fs-3 text-secondary"></i>
-                        <div>
-                          <h6 class="card-title mb-1">Colaboradores</h6>
-                          <small class="card-text text-muted mb-0">Clique para adicionar colaboradores.</small>
                         </div>
                       </div>
                     </div>
@@ -100,5 +84,37 @@
         </main>
       </div>
     </div>
+    <script>
+      (() => {
+        const homePage = {
+          openColaboradores: () => {
+            $.ajax({
+              url: admin.baseUrl + endpoints.usuario.colaboradores,
+              type: 'GET',
+              dataType: 'json',
+              beforeSend: function () {
+                admin.loading(true);
+              },
+              success: function (response) {
+                admin.loading(false);
+                const data = response?.data || [];
+                if (!Array.isArray(data) || data.length === 0) {
+                  admin.addTab({tabId:'form-usuario', title: 'Novo Usuário', url: '/admin/usuario-social/form'});
+                  return;
+                }
+
+                admin.addTab({tabId:'lista_usuarios', title: 'Colaboradores', url: '/admin/usuario-social/list'});
+              },
+              error: function () {
+                admin.loading(false);
+                toastr['error']('Não foi possível consultar colaboradores.');
+              },
+            });
+          },
+        };
+
+        window.homePage = homePage;
+      })();
+    </script>
   </body>
 </html>

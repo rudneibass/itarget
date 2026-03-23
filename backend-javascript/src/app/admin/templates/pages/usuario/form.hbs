@@ -1,98 +1,119 @@
 <section>
+    <style>
+        .perfil-form-tab-content {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            padding: .75rem;
+            box-shadow: var(--shadows-default);
+        }
+
+        .perfil-form-tab-pane {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+        }
+
+        .perfil-form-main {
+            flex: 1;
+        }
+
+        .perfil-form-actions {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            top: auto;
+            right: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            gap: .5rem;
+            margin-top: auto;
+            padding-top: .75rem;
+            border-top: 1px solid var(--border-color-default);
+            background-color: #fff;
+        }
+
+        .perfil-form-actions .section-actions-btn-parent {
+            width: auto;
+        }
+
+        .perfil-form-actions .btn {
+            width: 150px;
+            height: auto;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            gap: .45rem;
+            border-radius: 3px !important;
+        }
+
+        @media (max-width: 767px) {
+            .perfil-form-tab-content {
+                min-height: calc(100vh - 130px);
+            }
+
+            .perfil-form-actions {
+                flex-wrap: wrap;
+                justify-content: start;
+            }
+        }
+    </style>
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-1">Cadastro</a>
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-meu-perfil">Meu Perfil</a>
             </li>
         </ul>
-        <div class="tab-content bg-white border border-top-0" style="padding: .75rem; box-shadow: var(--shadows-default);" >
-            <div class="tab-pane active" id="tab-1">
-                <form id="tab-1-form-1">
+        <div class="tab-content bg-white border border-top-0 perfil-form-tab-content">
+            <div class="tab-pane active perfil-form-tab-pane" id="tab-meu-perfil">
+                <form id="form-meu-perfil" class="perfil-form-main">
                     <input type="hidden" id="uuid" name="uuid" />
+
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">Organização</small>
-                                </label>
-                                <select name="organizacaoUuid" class="form-select" id="organizacaoUuid" required></select>
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label>
                                     <small class="text-muted">Nome</small>
                                 </label>
-                                <input type="text" name="nome" class="form-control" id="nome" maxlength="150" required />
+                                <input type="text" name="nome" class="form-control" id="nome" maxlength="255" required />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">Apelido</small>
+                                    <small class="text-muted">Email</small>
                                 </label>
-                                <input type="text" name="apelido" class="form-control" id="apelido" maxlength="120" />
+                                <input type="email" name="email" class="form-control" id="email" maxlength="255" required />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">URL do avatar</small>
+                                    <small class="text-muted">Senha</small>
                                 </label>
-                                <input type="url" name="urlAvatar" class="form-control" id="urlAvatar" />
+                                <input type="password" name="senha" class="form-control" id="senha" minlength="6" placeholder="Preencha apenas se quiser alterar" />
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">Moedas</small>
-                                </label>
-                                <input type="number" min="0" name="moedas" class="form-control" id="moedas" value="0" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked />
-                                <label class="form-check-label" for="ativo">Ativo</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" id="podePostarMidia" name="podePostarMidia" />
-                                <label class="form-check-label" for="podePostarMidia">Pode postar mídia</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" id="podePostarLink" name="podePostarLink" />
-                                <label class="form-check-label" for="podePostarLink">Pode postar link</label>
+                        <div class="col-md-12">
+                            <div class="form-text text-muted">
+                                A senha sera atualizada somente se um novo valor for informado.
                             </div>
                         </div>
                     </div>
                 </form>
 
-                <section class="section-actions">
+                <section class="section-actions perfil-form-actions">
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-novo" class="btn btn-success btn-float section-actions-btn">
-                            <i class="fa fa-plus"></i>
-                            <span class="btn-label">Novo</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-editar" class="btn btn-warning btn-float section-actions-btn">
-                            <i class="fa fa fa-pencil"></i>
+                        <button type="button" id="btn-perfil-editar" class="btn btn-secondary btn-float">
+                            <i class="fa fa-lock"></i>
                             <span class="btn-label">Editar</span>
                         </button>
                     </div>
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-cancelar" class="btn btn-danger btn-float section-actions-btn">
-                            <i class="fa fa fa-undo"></i>
-                            <span class="btn-label">Cancelar</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-usuario-salvar" class="btn btn-primary btn-float section-actions-btn">
-                            <i class="fa fa fa-floppy-o"></i>
+                        <button type="button" id="btn-perfil-salvar" class="btn btn-success btn-float">
+                            <i class="fa fa-floppy-o"></i>
                             <span class="btn-label">Salvar</span>
                         </button>
                     </div>
@@ -105,159 +126,108 @@
 
 <script>
     (() => {
-    const usuarioForm = {
-        formId: 'tab-1-form-1',
-        tabId: 'tab-form-usuario-content',
-        edit: () => {
-            $(`#${usuarioForm.formId} :input`).prop('disabled', false);
-        },
-        cancel: () => {
-            $(`#${usuarioForm.formId} :input`).prop('disabled', true);
-        },
-        loadOrganizations: (callback) => {
-            $.ajax({
-                url: `${admin.baseUrl}/usuario-social/organizacoes`,
-                type: 'GET',
-                success: (response) => {
-                    const list = response?.data || [];
-                    const $select = $('#organizacaoUuid');
-                    $select.empty();
-                    $select.append('<option value="">Selecione...</option>');
-                    list.forEach((item) => {
-                        $select.append(`<option value="${item.uuid}">${item.nome}</option>`);
-                    });
-                    if (typeof callback === 'function') {
-                        callback();
+        const meuPerfilForm = {
+            formId: 'form-meu-perfil',
+            profileUuid: '{{uuid}}',
+            edit: () => {
+                $(`#${meuPerfilForm.formId} :input`).prop('disabled', false);
+            },
+            disable: () => {
+                $(`#${meuPerfilForm.formId} :input`).prop('disabled', true);
+            },
+            load: () => {
+                if (!meuPerfilForm.profileUuid) {
+                    toastr['error']('Nao foi possivel identificar o usuario logado.');
+                    meuPerfilForm.disable();
+                    return;
+                }
+
+                $.ajax({
+                    url: `${admin.baseUrl}/usuario/${meuPerfilForm.profileUuid}`,
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function () {
+                        admin.loading(true);
+                        meuPerfilForm.disable();
+                    },
+                    error: function () {
+                        admin.loading(false);
+                        toastr['error']('Nao foi possivel carregar o perfil do usuario logado.');
+                    },
+                    success: function (response) {
+                        admin.loading(false);
+                        const data = response?.data || {};
+                        $('#uuid').val(data.uuid || '');
+                        $('#nome').val(data.nome || '');
+                        $('#email').val(data.email || '');
+                        $('#senha').val('');
                     }
-                },
-                error: () => toastr['error']('Erro ao carregar organizações.'),
-            });
-        },
-        populateForm: ({ url, uuid = null }) => {
-            if (!uuid) { return; }
-            $.ajax({
-                url: `${url}/${uuid}`,
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function () {
-                    admin.loading(true);
-                    $(`#${usuarioForm.formId} :input`).prop('disabled', true);
-                },
-                error: function () {
-                    admin.loading(false);
-                    toastr['error']('Não foi possível carregar o registro.');
-                },
-                success: function (response) {
-                    admin.loading(false);
-                    var data = response?.data || {};
-                    var $form = $('#' + usuarioForm.formId);
-
-                    $.each(data, function (field, value) {
-                        var $field = $form.find('[name="' + field + '"]');
-                        if (!$field.length) {
-                            $field = $form.find('#' + field);
-                        }
-                        if (!$field.length) {
-                            return;
-                        }
-
-                        var fieldType = ($field.attr('type') || '').toLowerCase();
-                        var tagName = ($field.get(0)?.tagName || '').toLowerCase();
-
-                        if (fieldType === 'checkbox') {
-                            $field.prop('checked', !!value);
-                            return;
-                        }
-
-                        if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'url' || fieldType === 'number' || fieldType === 'hidden') {
-                            $field.val(value ?? '');
-                            return;
-                        }
-
-                        $field.val(value ?? '');
-                    });
+                });
+            },
+            save: () => {
+                if ($(`#${meuPerfilForm.formId} :input`).first().is(':disabled')) {
+                    return;
                 }
-            });
-        },
-        save: ({ formId }) => {
-            if ($('#' + formId + ' input').length === $('#' + formId + ' input:disabled').length) {
-                return;
-            }
-            if (!admin.validateForm(formId)) {
-                toastr['error']('Preencha os campos obrigatórios.');
-                return;
-            }
 
-            const uuid = $('#uuid').val();
-            const url = uuid ? `${admin.baseUrl}/usuario-social/${uuid}` : `${admin.baseUrl}/usuario-social`;
-            const method = uuid ? 'PATCH' : 'POST';
-
-            const formData = $('#' + formId).serializeArray().reduce(function (obj, item) {
-                if (item.name === 'id') {
-                    return obj;
+                if (!meuPerfilForm.profileUuid) {
+                    toastr['error']('Nao foi possivel identificar o usuario logado.');
+                    return;
                 }
-                if (item.name === 'uuid' && !item.value) {
-                    return obj;
+
+                const payload = {
+                    nome: $('#nome').val(),
+                    email: $('#email').val(),
+                };
+
+                const senha = $('#senha').val();
+                if (senha) {
+                    payload.senha = senha;
                 }
-                obj[item.name] = item.value;
-                return obj;
-            }, {});
 
-            formData.ativo = $('#ativo').is(':checked');
-            formData.podePostarMidia = $('#podePostarMidia').is(':checked');
-            formData.podePostarLink = $('#podePostarLink').is(':checked');
-            formData.moedas = Number(formData.moedas || 0);
+                if (!payload.nome || !payload.email) {
+                    toastr['error']('Nome e email sao obrigatorios.');
+                    return;
+                }
 
-            $.ajax({
-                url,
-                type: method,
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify(formData),
-                beforeSend: function () {
-                    admin.loading(true);
-                },
-                error: function (jqXHR) {
-                    admin.loading(false);
-                    toastr['error'](jqXHR?.responseText || 'Não foi possível salvar o registro.');
-                },
-                success: function (responseData) {
-                    admin.loading(false);
-                    var payload = responseData?.data || responseData;
-
-                    if (payload?.uuid && !uuid) {
-                        $('#uuid').val(payload.uuid);
+                $.ajax({
+                    url: `${admin.baseUrl}/usuario/${meuPerfilForm.profileUuid}`,
+                    type: 'PATCH',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    beforeSend: function () {
+                        admin.loading(true);
+                    },
+                    error: function (jqXHR) {
+                        admin.loading(false);
+                        const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Nao foi possivel atualizar o perfil.';
+                        toastr['error'](Array.isArray(message) ? message.join(', ') : message);
+                    },
+                    success: function (responseData) {
+                        admin.loading(false);
+                        const data = responseData?.data || {};
+                        if (data?.uuid) {
+                            $('#uuid').val(data.uuid);
+                        }
+                        $('#senha').val('');
+                        toastr['success']('Perfil atualizado com sucesso.');
+                        meuPerfilForm.disable();
+                        meuPerfilForm.load();
                     }
+                });
+            }
+        };
 
-                    toastr['success']('Operação realizada com sucesso.');
-                }
-            });
-        }
-    };
+        window.meuPerfilForm = meuPerfilForm;
 
-    window.usuarioForm = usuarioForm;
-
-    document.getElementById('btn-usuario-novo')?.addEventListener('click', () => {
-        admin.addTab({tabId:'form-usuario', title: 'Novo Usuário', url: '/admin/usuario-social/form'});
-    });
-
-    document.getElementById('btn-usuario-editar')?.addEventListener('click', () => {
-        usuarioForm.edit('tab-1-form-1');
-    });
-
-    document.getElementById('btn-usuario-cancelar')?.addEventListener('click', () => {
-        usuarioForm.cancel('tab-1-form-1');
-    });
-
-    document.getElementById('btn-usuario-salvar')?.addEventListener('click', () => {
-        usuarioForm.save({ formId: usuarioForm.formId });
-    });
-
-    usuarioForm.loadOrganizations(() => {
-        usuarioForm.populateForm({
-            url: admin.baseUrl + '/usuario-social',
-            uuid: '{{uuid}}'
+        document.getElementById('btn-perfil-editar')?.addEventListener('click', () => {
+            meuPerfilForm.edit();
         });
-    });
+
+        document.getElementById('btn-perfil-salvar')?.addEventListener('click', () => {
+            meuPerfilForm.save();
+        });
+
+        meuPerfilForm.load();
     })();
 </script>

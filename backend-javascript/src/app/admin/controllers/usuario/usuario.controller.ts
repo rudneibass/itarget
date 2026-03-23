@@ -9,12 +9,15 @@ import {
   Patch,
   Post,
   Render,
+  Req,
 } from '@nestjs/common';
-import { UsuarioService } from '../../services/usuario/usuario.service';
+import { CreateUsuarioAdminDto } from '../../dtos/usuario-admin/create-usuario-admin.dto';
+import { UpdateUsuarioAdminDto } from '../../dtos/usuario-admin/update-usuario-admin.dto';
+import { UsuarioAdminService } from '../../services/usuario-admin/usuario-admin.service';
 
-@Controller('admin/usuario-social')
+@Controller('admin/usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(private readonly usuarioAdminService: UsuarioAdminService) {}
 
   @Get('list')
   @Render('pages/usuario/list')
@@ -25,7 +28,7 @@ export class UsuarioController {
   @Get('form')
   @Render('pages/usuario/form')
   renderForm() {
-    return {};
+    return { uuid: null };
   }
 
   @Get('form/uuid/:uuid')
@@ -34,43 +37,61 @@ export class UsuarioController {
     return { uuid };
   }
 
-  @Get('organizacoes')
-  async listOrganizations() {
-    const data = await this.usuarioService.listOrganizations();
-    return { data };
+  @Get('me')
+  @Render('pages/usuario/form')
+  renderMe(@Req() req: any) {
+    const uuid = req.adminSession?.usuario?.uuid || null;
+    return { uuid };
   }
 
   @Get('all')
   async findAll() {
-    const data = await this.usuarioService.findAll();
+    const data = await this.usuarioAdminService.findAll();
     return { data };
   }
 
   @Get(':uuid')
   async get(@Param('uuid') uuid: string) {
-    const data = await this.usuarioService.get(uuid);
+    const data = await this.usuarioAdminService.get(uuid);
     return { data };
   }
 
   @Post()
-  async create(@Body() payload: any) {
+  async create(@Body() payload: CreateUsuarioAdminDto) {
     try {
-      const data = await this.usuarioService.create(payload);
+      const data = await this.usuarioAdminService.create(payload);
       return { data };
     } catch (error) {
-      throw new HttpException(error instanceof Error ? error.message : 'Erro ao criar usuário', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao criar usuário admin',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Patch(':uuid')
-  async update(@Param('uuid') uuid: string, @Body() payload: any) {
-    const data = await this.usuarioService.update(uuid, payload);
-    return { data };
+  async update(@Param('uuid') uuid: string, @Body() payload: UpdateUsuarioAdminDto) {
+    try {
+      const data = await this.usuarioAdminService.update(uuid, payload);
+      return { data };
+    } catch (error) {
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao atualizar usuário admin',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Delete(':uuid')
   async remove(@Param('uuid') uuid: string) {
-    await this.usuarioService.remove(uuid);
-    return { message: 'Usuário removido com sucesso' };
+    try {
+      await this.usuarioAdminService.remove(uuid);
+      return { message: 'Usuário admin removido com sucesso' };
+    } catch (error) {
+      throw new HttpException(
+        error instanceof Error ? error.message : 'Erro ao remover usuário admin',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
