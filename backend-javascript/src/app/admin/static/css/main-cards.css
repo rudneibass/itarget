@@ -1,0 +1,12 @@
+.main-card {
+  color: var(--color-default);
+  text-decoration: none;
+  background-color: var(--color-default-light);
+  border-color: var(--border-color-default);
+  border-top: 2px solid var(--color-default);
+  box-shadow: var(--shadows-default);
+}
+
+.main-card .card-body i{
+  color: var(--color-default);
+}
