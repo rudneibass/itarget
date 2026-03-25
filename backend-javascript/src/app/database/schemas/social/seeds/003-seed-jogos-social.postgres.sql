@@ -34,7 +34,7 @@ INSERT INTO social.jogo (
 SELECT
   '44444444-4444-4444-4444-444444444442',
   '11111111-1111-1111-1111-111111111111',
-  'Memória Criativa',
+  'Hextris',
   'Encontre pares e ganhe pontos de memória.',
   'https://hextris.io/',
   20,

@@ -157,10 +157,11 @@
                     success: function (response) {
                         admin.loading(false);
                         const data = response?.data || {};
-                        $('#uuid').val(data.uuid || '');
-                        $('#nome').val(data.nome || '');
-                        $('#email').val(data.email || '');
-                        $('#senha').val('');
+                        const $form = $('#' + meuPerfilForm.formId);
+                        $form.find('[name="uuid"]').val(data.uuid || '');
+                        $form.find('[name="nome"]').val(data.nome || '');
+                        $form.find('[name="email"]').val(data.email || '');
+                        $form.find('[name="senha"]').val('');
                     }
                 });
             },
@@ -174,12 +175,13 @@
                     return;
                 }
 
+                const $form = $('#' + meuPerfilForm.formId);
                 const payload = {
-                    nome: $('#nome').val(),
-                    email: $('#email').val(),
+                    nome: $form.find('[name="nome"]').val(),
+                    email: $form.find('[name="email"]').val(),
                 };
 
-                const senha = $('#senha').val();
+                const senha = $form.find('[name="senha"]').val();
                 if (senha) {
                     payload.senha = senha;
                 }
@@ -207,9 +209,9 @@
                         admin.loading(false);
                         const data = responseData?.data || {};
                         if (data?.uuid) {
-                            $('#uuid').val(data.uuid);
+                            $form.find('[name="uuid"]').val(data.uuid);
                         }
-                        $('#senha').val('');
+                        $form.find('[name="senha"]').val('');
                         toastr['success']('Perfil atualizado com sucesso.');
                         meuPerfilForm.disable();
                         meuPerfilForm.load();

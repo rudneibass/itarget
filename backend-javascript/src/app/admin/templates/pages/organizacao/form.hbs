@@ -148,7 +148,8 @@
                 organizacaoForm.setMode('edit');
             },
             cancel: () => {
-                if ($('#uuid').val()) {
+                const uuid = ($(`#${organizacaoForm.formId} [name="uuid"]`).val() || '').toString().trim();
+                if (uuid) {
                     organizacaoForm.setMode('view');
                     return;
                 }
@@ -208,10 +209,11 @@
                     toastr['error']('Preencha os campos obrigatórios.');
                     return;
                 }
-                const uuid = $('#uuid').val();
+                const $form = $('#' + formId);
+                const uuid = ($form.find('[name="uuid"]').val() || '').toString().trim();
                 const url = uuid ? `${admin.baseUrl}/organizacao/${uuid}` : `${admin.baseUrl}/organizacao`;
                 const method = uuid ? 'PATCH' : 'POST';
-                const formData = $('#' + formId).serializeArray().reduce(function (obj, item) {
+                const formData = $form.serializeArray().reduce(function (obj, item) {
                     if (item.name === 'id') {
                         return obj;
                     }
@@ -221,7 +223,7 @@
                     obj[item.name] = item.value;
                     return obj;
                 }, {});
-                formData.ativo = $('#ativo').is(':checked');
+                formData.ativo = $form.find('[name="ativo"]').is(':checked');
                 $.ajax({
                     url,
                     type: method,
@@ -239,7 +241,7 @@
                         admin.loading(false);
                         var payload = responseData?.data || responseData;
                         if (payload?.uuid && !uuid) {
-                            $('#uuid').val(payload.uuid);
+                            $form.find('[name="uuid"]').val(payload.uuid);
                         }
                         toastr['success']('Operação realizada com sucesso.');
                         organizacaoForm.cancel('form-organizacao');

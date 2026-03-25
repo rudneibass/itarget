@@ -1,17 +1,73 @@
 <section>
+    <style>
+        .video-form-tab-content {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            padding: .75rem;
+            box-shadow: var(--shadows-default);
+        }
+        .video-form-tab-pane {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+        }
+        .video-form-main {
+            flex: 1;
+        }
+        .video-form-actions {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            top: auto;
+            right: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            gap: .5rem;
+            margin-top: auto;
+            padding-top: .75rem;
+            border-top: 1px solid var(--border-color-default);
+            background-color: #fff;
+        }
+        .video-form-actions .section-actions-btn-parent {
+            width: auto;
+        }
+        .video-form-actions .btn {
+            width: 150px;
+            height: auto;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            gap: .45rem;
+            border-radius: 3px!important;
+        }
+
+        @media (max-width: 767px) {
+            .video-form-tab-content {
+                min-height: calc(100vh - 130px);
+            }
+
+            .video-form-actions {
+                flex-wrap: wrap;
+                justify-content: start;
+            }
+        }
+    </style>
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-1">Cadastro</a>
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-video">Cadastro</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#tab-2">Arquivos</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#tab-video-arquivos">Arquivos</a>
             </li>
         </ul>
         <!-- Tab panes -->
-        <div class="tab-content bg-white border border-top-0" style="padding: .75rem; box-shadow: var(--shadows-default);" >
-            <div class="tab-pane active" id="tab-1">
-                <form id="tab-1-form-1">
+        <div class="tab-content bg-white border border-top-0 video-form-tab-content">
+            <div class="tab-pane active video-form-tab-pane" id="tab-form-video">
+                <form id="form-video" class="video-form-main">
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
                         <div class="col-md-4">
@@ -57,27 +113,15 @@
                     </div>
                 </form>
 
-                <section class="section-actions">
+                <section class="section-actions video-form-actions">
                     <div class="section-actions-btn-parent">
-                                                <button type="button" id="btn-video-novo" class="btn btn-success btn-float section-actions-btn">
-                          <i class="fa fa-plus"></i>
-                          <span class="btn-label">Novo</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                                                <button type="button" id="btn-video-editar" class="btn btn-warning btn-float section-actions-btn">
+                        <button type="button" id="btn-video-editar" class="btn btn-secondary btn-float">
                           <i class="fa fa fa-pencil"></i>
-                                                    <span class="btn-label">Editar</span>
+                          <span class="btn-label">Editar</span>
                         </button>
                     </div>
                     <div class="section-actions-btn-parent">
-                                                <button type="button" id="btn-video-cancelar" class="btn btn-danger btn-float section-actions-btn">
-                          <i class="fa fa fa-undo"></i>
-                          <span class="btn-label">Cancelar</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                                                <button type="button" id="btn-video-salvar" class="btn btn-primary btn-float section-actions-btn">
+                        <button type="button" id="btn-video-salvar" class="btn btn-success btn-float">
                           <i class="fa fa fa-floppy-o"></i>
                           <span class="btn-label">Salvar</span>
                         </button>
@@ -85,7 +129,7 @@
                 </section>
             </div>
 
-            <div class="tab-pane fade" id="tab-2">
+            <div class="tab-pane fade" id="tab-video-arquivos">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="page-info-bar">
@@ -150,33 +194,67 @@
             </div>
         </div>
     </div>
-    <br/>
 </section> 
 
 <script>
     (() => {
     const videoForm = {
-        formId: 'tab-1-form-1',
-        tabId: 'tab-form-video-content',
+        formId: 'form-video',
+        tabId: 'tab-form-video',
+        setMode: (mode) => {
+            const $editButtonParent = $('#btn-video-editar').closest('.section-actions-btn-parent');
+            const $saveLabel = $('#btn-video-salvar .btn-label');
+            const $saveIcon = $('#btn-video-salvar i');
+
+            if (mode === 'create') {
+                $editButtonParent.hide();
+                $saveLabel.text('Cadastrar');
+                $saveIcon.attr('class', 'fa fa-plus-circle');
+                $(`#${videoForm.formId} :input`).prop('disabled', false);
+                return;
+            }
+
+            if (mode === 'edit') {
+                $editButtonParent.show();
+                $saveLabel.text('Salvar');
+                $saveIcon.attr('class', 'fa fa-floppy-o');
+                $(`#${videoForm.formId} :input`).prop('disabled', false);
+                return;
+            }
+
+            $editButtonParent.show();
+            $saveLabel.text('Salvar');
+            $saveIcon.attr('class', 'fa fa-floppy-o');
+            $(`#${videoForm.formId} :input`).prop('disabled', true);
+        },
         edit: () => {
-            $(`#${videoForm.formId} :input`).prop("disabled", false);
+            videoForm.setMode('edit');
         },
         cancel: () => {
-            $(`#${videoForm.formId} :input`).prop("disabled", true);
+            const uuid = ($(`#${videoForm.formId} [name="uuid"]`).val() || '').toString().trim();
+            if (uuid) {
+                videoForm.setMode('view');
+                return;
+            }
+            videoForm.setMode('create');
         },
         populateForm: ({ url, uuid = null }) => {
-            if(!uuid){ return; }
+            if(!uuid){
+                videoForm.setMode('create');
+                return;
+            }
             $.ajax({
                 url: `${url}/${uuid}`,
                 type: 'GET',
                 dataType: "json",
                 beforeSend: function () {
                     admin.loading(true);
-                    $(`#${videoForm.formId} :input`).prop("disabled", true);
+                    videoForm.setMode('view');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     admin.loading(false);
                     toastr["error"](jqXHR.responseText);
+                    videoForm.setMode('create');
                 },
                 success: function (response) {
                     admin.loading(false);
@@ -215,7 +293,7 @@
                         }
 
                         if (fieldType === 'checkbox') {
-                            $field.prop('checked', $field.val() == value);
+                            $field.prop('checked', !!value);
                             return;
                         }
 
@@ -252,6 +330,8 @@
                             $field.val(value ?? '');
                         }
                     });
+
+                    videoForm.setMode('view');
                 }
             });
         },
@@ -264,7 +344,8 @@
                 return;
             }
 
-            const uuid = $('#uuid').val();
+            const $form = $('#' + formId);
+            const uuid = ($form.find('[name="uuid"]').val() || '').toString().trim();
             const url = uuid ? `${admin.baseUrl}/video/${uuid}` : `${admin.baseUrl}/video`;
             const method = uuid ? 'PATCH' : 'POST';
 
@@ -273,7 +354,7 @@
                 type: method,
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify($('#'+formId).serializeArray().reduce(function(obj, item) {
+                data: JSON.stringify($form.serializeArray().reduce(function(obj, item) {
                     if (item.name === 'id') {
                         return obj;
                     }
@@ -297,10 +378,11 @@
                     var payload = responseData?.data || responseData;
 
                     if(payload?.uuid && !uuid){
-                        $('#uuid').val(payload.uuid);
+                        $form.find('[name="uuid"]').val(payload.uuid);
                     }
 
                     toastr["success"]("Operação realizada com sucesso.");
+                    videoForm.cancel('form-video');
                 }
             });
         }
@@ -308,16 +390,8 @@
 
     window.videoForm = videoForm;
 
-    document.getElementById('btn-video-novo')?.addEventListener('click', () => {
-        admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacoes/form'});
-    });
-
     document.getElementById('btn-video-editar')?.addEventListener('click', () => {
-        videoForm.edit('tab-1-form-1');
-    });
-
-    document.getElementById('btn-video-cancelar')?.addEventListener('click', () => {
-        videoForm.cancel('tab-1-form-1');
+        videoForm.edit('form-video');
     });
 
     document.getElementById('btn-video-salvar')?.addEventListener('click', () => {
@@ -325,12 +399,13 @@
     });
 
     document.getElementById('btn-video-upload-arquivo')?.addEventListener('click', () => {
+        const uuid = ($(`#${videoForm.formId} [name="uuid"]`).val() || '').toString().trim();
         admin.showModal({
             modalId: 'defaultModal',
             title: 'Selecionar Arquivo(s)',
             url: admin.baseUrl + endpoints.arquivo.form,
             data: {
-                idTabelaPai: $('#id').val(),
+                idTabelaPai: uuid,
                 tabelaPai: 'publicacao',
             }
         });

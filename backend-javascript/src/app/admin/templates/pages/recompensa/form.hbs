@@ -1,13 +1,69 @@
 <section>
+    <style>
+        .recompensa-form-tab-content {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            padding: .75rem;
+            box-shadow: var(--shadows-default);
+        }
+        .recompensa-form-tab-pane {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+        }
+        .recompensa-form-main {
+            flex: 1;
+        }
+        .recompensa-form-actions {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            top: auto;
+            right: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            gap: .5rem;
+            margin-top: auto;
+            padding-top: .75rem;
+            border-top: 1px solid var(--border-color-default);
+            background-color: #fff;
+        }
+        .recompensa-form-actions .section-actions-btn-parent {
+            width: auto;
+        }
+        .recompensa-form-actions .btn {
+            width: 150px;
+            height: auto;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            gap: .45rem;
+            border-radius: 3px!important;
+        }
+
+        @media (max-width: 767px) {
+            .recompensa-form-tab-content {
+                min-height: calc(100vh - 130px);
+            }
+
+            .recompensa-form-actions {
+                flex-wrap: wrap;
+                justify-content: start;
+            }
+        }
+    </style>
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-1">Cadastro</a>
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-recompensa">Cadastro</a>
             </li>
         </ul>
-        <div class="tab-content bg-white border border-top-0" style="padding: .75rem; box-shadow: var(--shadows-default);" >
-            <div class="tab-pane active" id="tab-1">
-                <form id="tab-1-form-1">
+        <div class="tab-content bg-white border border-top-0 recompensa-form-tab-content">
+            <div class="tab-pane active recompensa-form-tab-pane" id="tab-form-recompensa">
+                <form id="form-recompensa" class="recompensa-form-main">
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
                         <div class="col-md-6">
@@ -59,27 +115,15 @@
                     </div>
                 </form>
 
-                <section class="section-actions">
+                <section class="section-actions recompensa-form-actions">
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-recompensa-novo" class="btn btn-success btn-float section-actions-btn">
-                            <i class="fa fa-plus"></i>
-                            <span class="btn-label">Novo</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-recompensa-editar" class="btn btn-warning btn-float section-actions-btn">
+                        <button type="button" id="btn-recompensa-editar" class="btn btn-secondary btn-float">
                             <i class="fa fa fa-pencil"></i>
                             <span class="btn-label">Editar</span>
                         </button>
                     </div>
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-recompensa-cancelar" class="btn btn-danger btn-float section-actions-btn">
-                            <i class="fa fa fa-undo"></i>
-                            <span class="btn-label">Cancelar</span>
-                        </button>
-                    </div>
-                    <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-recompensa-salvar" class="btn btn-primary btn-float section-actions-btn">
+                        <button type="button" id="btn-recompensa-salvar" class="btn btn-success btn-float">
                             <i class="fa fa fa-floppy-o"></i>
                             <span class="btn-label">Salvar</span>
                         </button>
@@ -88,19 +132,49 @@
             </div>
         </div>
     </div>
-    <br/>
 </section>
 
 <script>
     (() => {
     const recompensaForm = {
-        formId: 'tab-1-form-1',
-        tabId: 'tab-form-recompensa-content',
+        formId: 'form-recompensa',
+        tabId: 'tab-form-recompensa',
+        setMode: (mode) => {
+            const $editButtonParent = $('#btn-recompensa-editar').closest('.section-actions-btn-parent');
+            const $saveLabel = $('#btn-recompensa-salvar .btn-label');
+            const $saveIcon = $('#btn-recompensa-salvar i');
+
+            if (mode === 'create') {
+                $editButtonParent.hide();
+                $saveLabel.text('Cadastrar');
+                $saveIcon.attr('class', 'fa fa-plus-circle');
+                $(`#${recompensaForm.formId} :input`).prop('disabled', false);
+                return;
+            }
+
+            if (mode === 'edit') {
+                $editButtonParent.show();
+                $saveLabel.text('Salvar');
+                $saveIcon.attr('class', 'fa fa-floppy-o');
+                $(`#${recompensaForm.formId} :input`).prop('disabled', false);
+                return;
+            }
+
+            $editButtonParent.show();
+            $saveLabel.text('Salvar');
+            $saveIcon.attr('class', 'fa fa-floppy-o');
+            $(`#${recompensaForm.formId} :input`).prop('disabled', true);
+        },
         edit: () => {
-            $(`#${recompensaForm.formId} :input`).prop('disabled', false);
+            recompensaForm.setMode('edit');
         },
         cancel: () => {
-            $(`#${recompensaForm.formId} :input`).prop('disabled', true);
+            const uuid = ($(`#${recompensaForm.formId} [name="uuid"]`).val() || '').toString().trim();
+            if (uuid) {
+                recompensaForm.setMode('view');
+                return;
+            }
+            recompensaForm.setMode('create');
         },
         loadOrganizations: (callback) => {
             $.ajax({
@@ -108,7 +182,7 @@
                 type: 'GET',
                 success: (response) => {
                     const list = response?.data || [];
-                    const $select = $('#organizacaoUuid');
+                    const $select = $(`#${recompensaForm.formId} [name="organizacaoUuid"]`);
                     $select.empty();
                     $select.append('<option value="">Selecione...</option>');
                     list.forEach((item) => {
@@ -122,18 +196,22 @@
             });
         },
         populateForm: ({ url, uuid = null }) => {
-            if (!uuid) { return; }
+            if (!uuid) {
+                recompensaForm.setMode('create');
+                return;
+            }
             $.ajax({
                 url: `${url}/${uuid}`,
                 type: 'GET',
                 dataType: 'json',
                 beforeSend: function () {
                     admin.loading(true);
-                    $(`#${recompensaForm.formId} :input`).prop('disabled', true);
+                    recompensaForm.setMode('view');
                 },
                 error: function () {
                     admin.loading(false);
                     toastr['error']('Não foi possível carregar o registro.');
+                    recompensaForm.setMode('create');
                 },
                 success: function (response) {
                     admin.loading(false);
@@ -164,6 +242,8 @@
 
                         $field.val(value ?? '');
                     });
+
+                    recompensaForm.setMode('view');
                 }
             });
         },
@@ -176,11 +256,12 @@
                 return;
             }
 
-            const uuid = $('#uuid').val();
+            const $form = $('#' + formId);
+            const uuid = ($form.find('[name="uuid"]').val() || '').toString().trim();
             const url = uuid ? `${admin.baseUrl}/recompensa/${uuid}` : `${admin.baseUrl}/recompensa`;
             const method = uuid ? 'PATCH' : 'POST';
 
-            const formData = $('#' + formId).serializeArray().reduce(function (obj, item) {
+            const formData = $form.serializeArray().reduce(function (obj, item) {
                 if (item.name === 'id') {
                     return obj;
                 }
@@ -191,7 +272,7 @@
                 return obj;
             }, {});
 
-            formData.ativo = $('#ativo').is(':checked');
+            formData.ativo = $form.find('[name="ativo"]').is(':checked');
             formData.custoMoedas = Number(formData.custoMoedas || 0);
 
             $.ajax({
@@ -212,10 +293,11 @@
                     var payload = responseData?.data || responseData;
 
                     if (payload?.uuid && !uuid) {
-                        $('#uuid').val(payload.uuid);
+                        $form.find('[name="uuid"]').val(payload.uuid);
                     }
 
                     toastr['success']('Operação realizada com sucesso.');
+                    recompensaForm.cancel('form-recompensa');
                 }
             });
         }
@@ -223,16 +305,8 @@
 
     window.recompensaForm = recompensaForm;
 
-    document.getElementById('btn-recompensa-novo')?.addEventListener('click', () => {
-        admin.addTab({tabId:'form-recompensa', title: 'Nova Recompensa', url: '/admin/recompensa/form'});
-    });
-
     document.getElementById('btn-recompensa-editar')?.addEventListener('click', () => {
-        recompensaForm.edit('tab-1-form-1');
-    });
-
-    document.getElementById('btn-recompensa-cancelar')?.addEventListener('click', () => {
-        recompensaForm.cancel('tab-1-form-1');
+        recompensaForm.edit('form-recompensa');
     });
 
     document.getElementById('btn-recompensa-salvar')?.addEventListener('click', () => {
