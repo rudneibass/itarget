@@ -6,10 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Atividade } from '../atividade/atividade.entity';
 import { Jogo } from '../jogo/jogo.entity';
 import { Publicacao } from '../publicacao/publicacao.entity';
-import { Recompensa } from '../recompensa/recompensa.entity';
 import { Usuario } from '../usuario/usuario.entity';
 
 @Entity({ schema: 'public', name: 'organizacao' })
@@ -37,12 +35,6 @@ export class Organizacao {
 
   @OneToMany(() => Usuario, (usuario) => usuario.organizacao)
   usuarios: Usuario[];
-
-  @OneToMany(() => Recompensa, (recompensa) => recompensa.organizacao)
-  recompensas: Recompensa[];
-
-  @OneToMany(() => Atividade, (atividade) => atividade.organizacao)
-  atividades: Atividade[];
 
   @OneToMany(() => Jogo, (jogo) => jogo.organizacao)
   jogos: Jogo[];

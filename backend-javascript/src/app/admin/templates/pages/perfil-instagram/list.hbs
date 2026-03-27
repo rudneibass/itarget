@@ -2,44 +2,49 @@
     <div class="section-actions-btn-parent">
         <button
             class="btn btn-success btn-float section-actions-btn"
-            onclick="admin.addTab({tabId:'form-recompensa', title: 'Nova Recompensa', url: '/admin/recompensa/form'})"
+            onclick="admin.addTab({tabId:'form-perfil-instagram', title: 'Novo Perfil Instagram', url: '/admin/perfil-instagram/form'})"
         >
             <i class="fa fa-plus"></i>
             <span class="btn-label">Novo</span>
         </button>
     </div>
     <div class="section-actions-btn-parent">
-        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-recompensa">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-perfil-instagram">
             <i class="fa fa-search"></i>
             <span class="btn-label">Pesquisar</span>
         </button>
     </div>
 </section>
 
-<section class="section-search-bar hide" id="section-search-bar-recompensa">
-    <div class="row search-bar" id="search-bar-recompensa">
+<section class="section-search-bar hide" id="section-search-bar-perfil-instagram">
+    <div class="row search-bar" id="search-bar-perfil-instagram">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
                 <div class="card-body">
-                    <form id="formSearchRecompensa">
+                    <form id="formSearchPerfilInstagram">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group mb-3">
-                                    <input type="text" name="titulo" id="titulo" class="form-control" placeholder="Título">
+                                    <input type="text" name="uuid" id="uuid" class="form-control" placeholder="Código">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group mb-3">
-                                    <input type="text" name="tipo" id="tipo" class="form-control" placeholder="Tipo">
+                                    <input type="text" name="perfil" id="perfil" class="form-control" placeholder="Perfil">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="categoria" id="categoria" class="form-control" placeholder="Categoria">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="input-group mb-3">
                                     <select name="ativo" id="ativo" class="form-select">
                                         <option value="">Status</option>
-                                        <option value="true">Ativa</option>
-                                        <option value="false">Inativa</option>
+                                        <option value="true">Ativo</option>
+                                        <option value="false">Inativo</option>
                                     </select>
                                 </div>
                             </div>
@@ -47,7 +52,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-recompensa">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-perfil-instagram">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -58,39 +63,39 @@
 
 <section>
     <div class="page-info-bar shadows-default">
-        <small><i class="fa fa-gift"></i></small>
-        <small>Recompensas</small>
+        <small><i class="fa fa-instagram"></i></small>
+        <small>Perfis Instagram</small>
     </div>
 </section>
 
 <section>
     <div class="list-table-container">
         <table class="table table-sm table-striped table-hover width-100">
-            <thead id="thead-recompensa"></thead>
-            <tbody id="tbody-recompensa"></tbody>
+            <thead id="thead-perfil-instagram"></thead>
+            <tbody id="tbody-perfil-instagram"></tbody>
         </table>
         <div class="text-center">
-            <span class="pt-5" id="messages-recompensa"></span>
+            <span class="pt-5" id="messages-perfil-instagram"></span>
         </div>
     </div>
     <div class="pagination-bar-default">
         <div>
-            <small class="gray-default" id="total-recompensa"></small>
+            <small class="gray-default" id="total-perfil-instagram"></small>
         </div>
         <div>
-            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior-recompensa"></i>
+            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior-perfil-instagram"></i>
             &emsp;
-            <span class="gray-default" id="numeracao-recompensa"></span>
+            <span class="gray-default" id="numeracao-perfil-instagram"></span>
             &emsp;
-            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo-recompensa"></i>
+            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo-perfil-instagram"></i>
         </div>
     </div>
 </section>
 
 <script>
     (() => {
-    const recompensaList = {
-        formSearchId: 'formSearchRecompensa',
+    const perfilInstagramList = {
+        formSearchId: 'formSearchPerfilInstagram',
         list: ({ url, formSearchId }) => {
             $.ajax({
                 url,
@@ -99,15 +104,15 @@
                 data: $('#' + formSearchId).serialize(),
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#messages-recompensa').empty();
-                    $('#tbody-recompensa').empty();
+                    $('#messages-perfil-instagram').empty();
+                    $('#tbody-perfil-instagram').empty();
                     admin.loading(true);
                 },
                 error: function () {
                     admin.loading(false);
-                    $('#tbody-recompensa').empty();
-                    $('#messages-recompensa').empty();
-                    $('#messages-recompensa').html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                    $('#tbody-perfil-instagram').empty();
+                    $('#messages-perfil-instagram').empty();
+                    $('#messages-perfil-instagram').html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
                 },
                 success: function (response) {
                     var source = response?.data || response || [];
@@ -117,46 +122,43 @@
                     }, {});
 
                     var data = source.filter((item) => {
-                        const byTitulo = !filters.titulo || String(item.titulo || '').toLowerCase().includes(String(filters.titulo).toLowerCase());
-                        const byTipo = !filters.tipo || String(item.tipo || '').toLowerCase().includes(String(filters.tipo).toLowerCase());
+                        const byUuid = !filters.uuid || String(item.uuid || '').toLowerCase().includes(String(filters.uuid).toLowerCase());
+                        const byPerfil = !filters.perfil || String(item.perfil || '').toLowerCase().includes(String(filters.perfil).toLowerCase());
+                        const byCategoria = !filters.categoria || String(item.categoria || '').toLowerCase().includes(String(filters.categoria).toLowerCase());
                         const byAtivo = !filters.ativo || String(!!item.ativo) === String(filters.ativo);
-                        return byTitulo && byTipo && byAtivo;
+                        return byUuid && byPerfil && byCategoria && byAtivo;
                     });
 
                     if (!data[0]) {
                         admin.loading(false);
-                        $('#tbody-recompensa').empty();
-                        $('#messages-recompensa').empty();
-                        $('#messages-recompensa').html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                        $('#tbody-perfil-instagram').empty();
+                        $('#messages-perfil-instagram').empty();
+                        $('#messages-perfil-instagram').html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
                         return;
                     }
 
                     admin.loading(false);
-                    $('#tbody-recompensa').empty();
-                    $('#messages-recompensa').empty();
+                    $('#tbody-perfil-instagram').empty();
+                    $('#messages-perfil-instagram').empty();
 
                     var tamanhoPagina = 10;
                     var pagina = 0;
 
                     function paginar() {
                         for (var i = pagina * tamanhoPagina; i < data.length && i < (pagina + 1) * tamanhoPagina; i++) {
-                            $('#tbody-recompensa').append(
+                            $('#tbody-perfil-instagram').append(
                                 `<tr>
                                     <td class="p-3" style="width:90%; vertical-align: middle;">
                                         <div>
                                             <small>
-                                                <b>Título:</b> ${data[i].titulo || ''}
+                                                <b>Perfil:</b> @${data[i].perfil || ''}
                                                 ${data[i].ativo
-                                                    ? '&emsp;<span class="badge bg-success">Ativa</span>'
-                                                    : '&emsp;<span class="badge bg-secondary">Inativa</span>'
+                                                    ? '&emsp;<span class="badge bg-success">Ativo</span>'
+                                                    : '&emsp;<span class="badge bg-secondary">Inativo</span>'
                                                 }
                                             </small>
                                             <br/>
-                                            <small><b>Descrição:</b> ${data[i].descricao || '-'}</small>
-                                            <br/>
-                                            <small><b>Tipo:</b> ${data[i].tipo || '-'}</small>
-                                            <br/>
-                                            <small><b>Custo em moedas:</b> ${data[i].custoMoedas ?? 0}</small>
+                                            <small><b>Categoria:</b> ${data[i].categoria || '-'}</small>
                                             <br/>
                                             <small><b>Código:</b> ${data[i].uuid || ''}</small>
                                         </div>
@@ -165,19 +167,19 @@
                                         <center>
                                             <button
                                                 class="btn btn-secondary btn-sm w-100 mb-2"
-                                                onclick="admin.addTab({tabId:'form-recompensa', title: 'Editar Recompensa', url: '/admin/recompensa/form/uuid/${data[i].uuid}'})"
+                                                onclick="admin.addTab({tabId:'form-perfil-instagram', title: 'Editar Perfil Instagram', url: '/admin/perfil-instagram/form/uuid/${data[i].uuid}'})"
                                             >
                                                 <i class="fa fa-pencil"></i> Editar
                                             </button>
                                             ${data[i].ativo
-                                                ? `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="recompensaList.toggleAtivo('${data[i].uuid}', false)">
+                                                ? `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.toggleAtivo('${data[i].uuid}', false)">
                                                     <i class="fa fa-download"></i> Desativar
                                                 </button>`
-                                                : `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="recompensaList.toggleAtivo('${data[i].uuid}', true)">
+                                                : `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.toggleAtivo('${data[i].uuid}', true)">
                                                     <i class="fa fa-upload"></i> Ativar
                                                 </button>`
                                             }
-                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="recompensaList.remove('${data[i].uuid}')">
+                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.remove('${data[i].uuid}')">
                                                 <i class="fa fa-trash-o"></i>
                                                 <span> Excluir</span>
                                             </button>
@@ -186,27 +188,27 @@
                                 </tr>`
                             );
                         }
-                        $('#numeracao-recompensa').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
-                        $('#total-recompensa').text('1 à ' + tamanhoPagina + ' registros por página ');
+                        $('#numeracao-perfil-instagram').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
+                        $('#total-perfil-instagram').text('1 à ' + tamanhoPagina + ' registros por página ');
                     }
 
                     function ajustarBotoes() {
-                        $('#proximo-recompensa').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
-                        $('#anterior-recompensa').prop('disabled', data.length <= tamanhoPagina || pagina === 0);
+                        $('#proximo-perfil-instagram').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
+                        $('#anterior-perfil-instagram').prop('disabled', data.length <= tamanhoPagina || pagina === 0);
                     }
 
                     $(function () {
-                        $('#proximo-recompensa').off('click').on('click', function () {
+                        $('#proximo-perfil-instagram').off('click').on('click', function () {
                             if (pagina < data.length / tamanhoPagina - 1) {
-                                $('#tbody-recompensa').empty();
+                                $('#tbody-perfil-instagram').empty();
                                 pagina++;
                                 paginar();
                                 ajustarBotoes();
                             }
                         });
-                        $('#anterior-recompensa').off('click').on('click', function () {
+                        $('#anterior-perfil-instagram').off('click').on('click', function () {
                             if (pagina >= 1) {
-                                $('#tbody-recompensa').empty();
+                                $('#tbody-perfil-instagram').empty();
                                 pagina--;
                                 paginar();
                                 ajustarBotoes();
@@ -220,7 +222,7 @@
         },
         toggleAtivo: (uuid, ativo) => {
             $.ajax({
-                url: `${admin.baseUrl}/recompensa/${uuid}`,
+                url: `${admin.baseUrl}/perfil-instagram/${uuid}`,
                 type: 'PATCH',
                 contentType: 'application/json',
                 data: JSON.stringify({ ativo }),
@@ -230,9 +232,9 @@
                 success: function () {
                     admin.loading(false);
                     toastr['success']('Status atualizado com sucesso.');
-                    recompensaList.list({
-                        url: admin.baseUrl + endpoints.recompensa.all,
-                        formSearchId: recompensaList.formSearchId,
+                    perfilInstagramList.list({
+                        url: admin.baseUrl + endpoints.perfilInstagram.all,
+                        formSearchId: perfilInstagramList.formSearchId,
                     });
                 },
                 error: function () {
@@ -261,22 +263,22 @@
                     }
 
                     $.ajax({
-                        url: `${admin.baseUrl}/recompensa/${uuid}`,
+                        url: `${admin.baseUrl}/perfil-instagram/${uuid}`,
                         type: 'DELETE',
                         beforeSend: function () {
                             admin.loading(true);
                         },
                         success: function () {
                             admin.loading(false);
-                            toastr['success']('Recompensa removida com sucesso.');
-                            recompensaList.list({
-                                url: admin.baseUrl + endpoints.recompensa.all,
-                                formSearchId: recompensaList.formSearchId,
+                            toastr['success']('Perfil removido com sucesso.');
+                            perfilInstagramList.list({
+                                url: admin.baseUrl + endpoints.perfilInstagram.all,
+                                formSearchId: perfilInstagramList.formSearchId,
                             });
                         },
                         error: function () {
                             admin.loading(false);
-                            toastr['error']('Não foi possível remover a recompensa.');
+                            toastr['error']('Não foi possível remover o perfil.');
                         },
                     });
                 },
@@ -284,25 +286,25 @@
         },
     };
 
-    window.recompensaList = recompensaList;
+    window.perfilInstagramList = perfilInstagramList;
 
-    document.getElementById('btn-toggle-barra-recompensa').addEventListener('click', () => {
-        const barra = document.getElementById('section-search-bar-recompensa');
+    document.getElementById('btn-toggle-barra-perfil-instagram').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-perfil-instagram');
         barra.classList.toggle('visible');
     });
 
-    document.getElementById('btn-pesquisar-recompensa').addEventListener('click', () => {
-        const barra = document.getElementById('section-search-bar-recompensa');
+    document.getElementById('btn-pesquisar-perfil-instagram').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-perfil-instagram');
         barra.classList.toggle('visible');
-        recompensaList.list({
-            url: admin.baseUrl + endpoints.recompensa.all,
-            formSearchId: recompensaList.formSearchId,
+        perfilInstagramList.list({
+            url: admin.baseUrl + endpoints.perfilInstagram.all,
+            formSearchId: perfilInstagramList.formSearchId,
         });
     });
 
-    recompensaList.list({
-        url: admin.baseUrl + endpoints.recompensa.all,
-        formSearchId: recompensaList.formSearchId,
+    perfilInstagramList.list({
+        url: admin.baseUrl + endpoints.perfilInstagram.all,
+        formSearchId: perfilInstagramList.formSearchId,
     });
     })();
 </script>

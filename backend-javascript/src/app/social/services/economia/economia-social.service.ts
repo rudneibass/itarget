@@ -3,13 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AcessoJogo } from '../../models/acesso-jogo/acesso-jogo.entity';
 import { Jogo } from '../../models/jogo/jogo.entity';
-import { ResgateRecompensa } from '../../models/resgate-recompensa/resgate-recompensa.entity';
-import { Recompensa } from '../../models/recompensa/recompensa.entity';
 import { PermissaoUsuario } from '../../models/permissao-usuario/permissao-usuario.entity';
 import { Usuario } from '../../models/usuario/usuario.entity';
-import { SalvarRecompensaDto } from '../../dtos/admin/salvar-recompensa.dto';
 import { AtualizarPermissaoUsuarioDto } from '../../dtos/admin/atualizar-permissao-usuario.dto';
-import { randomUUID } from 'node:crypto';
 import { DadosSessaoSocial, SessaoService } from '../sessao/sessao-social.service';
 
 @Injectable()
@@ -19,10 +15,6 @@ export class EconomiaService {
     private readonly gameRepository: Repository<Jogo>,
     @InjectRepository(AcessoJogo)
     private readonly gameAccessRepository: Repository<AcessoJogo>,
-    @InjectRepository(Recompensa)
-    private readonly rewardRepository: Repository<Recompensa>,
-    @InjectRepository(ResgateRecompensa)
-    private readonly redemptionRepository: Repository<ResgateRecompensa>,
     @InjectRepository(Usuario)
     private readonly userRepository: Repository<Usuario>,
     @InjectRepository(PermissaoUsuario)
@@ -31,15 +23,25 @@ export class EconomiaService {
   ) {}
 
   async listarJogos(organizacaoUuid: string) {
+    const organizacao = await this.userRepository.query('SELECT id FROM public.organizacao WHERE uuid = $1', [organizacaoUuid]);
+    if (!organizacao?.[0]?.id) {
+      return [];
+    }
+
     return this.gameRepository.find({
-      where: { organizacaoUuid, ativo: true },
+      where: { organizacaoId: Number(organizacao[0].id), ativo: true },
       order: { criadoEm: 'DESC' },
     });
   }
 
   async liberarJogo(session: DadosSessaoSocial, jogoUuid: string) {
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuario não encontrado');
+    }
+
     const game = await this.gameRepository.findOne({
-      where: { uuid: jogoUuid, organizacaoUuid: session.organizacaoUuid, ativo: true },
+      where: { uuid: jogoUuid, organizacaoId: user.organizacaoId, ativo: true },
     });
 
     if (!game) {
@@ -47,16 +49,11 @@ export class EconomiaService {
     }
 
     const jaLiberado = await this.gameAccessRepository.findOne({
-      where: { jogoUuid, usuarioUuid: session.usuario.uuid },
+      where: { jogoId: game.id, usuarioId: user.id },
     });
 
     if (jaLiberado) {
       return { liberado: true, jaLiberado: true };
-    }
-
-    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
-    if (!user) {
-      throw new NotFoundException('Usuario não encontrado');
     }
 
     if (user.moedas < game.custoMoedas) {
@@ -69,81 +66,13 @@ export class EconomiaService {
 
     await this.gameAccessRepository.save(
       this.gameAccessRepository.create({
-        jogoUuid,
-        usuarioUuid: user.uuid,
+        jogoId: game.id,
+        usuarioId: user.id,
         custoMoedas: game.custoMoedas,
       }),
     );
 
     return { liberado: true, moedasTotais: user.moedas };
-  }
-
-  async listarRecompensas(organizacaoUuid: string) {
-    return this.rewardRepository.find({
-      where: { organizacaoUuid, ativo: true },
-      order: { criadoEm: 'DESC' },
-    });
-  }
-
-  async resgatarRecompensa(session: DadosSessaoSocial, recompensaUuid: string) {
-    const reward = await this.rewardRepository.findOne({
-      where: { uuid: recompensaUuid, organizacaoUuid: session.organizacaoUuid, ativo: true },
-    });
-
-    if (!reward) {
-      throw new NotFoundException('Recompensa não encontrada');
-    }
-
-    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
-    if (!user) {
-      throw new NotFoundException('Usuario não encontrado');
-    }
-
-    if (user.moedas < reward.custoMoedas) {
-      throw new ForbiddenException('Moedas insuficientes para resgatar recompensa');
-    }
-
-    user.moedas -= reward.custoMoedas;
-    await this.userRepository.save(user);
-    this.sessionService.atualizarMoedas(session.sessaoId, user.moedas);
-
-    const redemption = await this.redemptionRepository.save(
-      this.redemptionRepository.create({
-        recompensaUuid,
-        usuarioUuid: user.uuid,
-        custoMoedas: reward.custoMoedas,
-        status: 'pendente',
-      }),
-    );
-
-    return {
-      redemption,
-      moedasTotais: user.moedas,
-    };
-  }
-
-  async upsertReward(organizacaoUuid: string, dto: SalvarRecompensaDto) {
-    const reward = this.rewardRepository.create({
-      uuid: randomUUID(),
-      organizacaoUuid,
-      titulo: dto.titulo,
-      descricao: dto.descricao,
-      tipo: dto.tipo,
-      custoMoedas: dto.custoMoedas,
-      ativo: dto.ativo ?? true,
-    });
-
-    return this.rewardRepository.save(reward);
-  }
-
-  async toggleReward(recompensaUuid: string, ativo: boolean) {
-    const reward = await this.rewardRepository.findOne({ where: { uuid: recompensaUuid } });
-    if (!reward) {
-      throw new NotFoundException('Recompensa não encontrada');
-    }
-
-    reward.ativo = ativo;
-    return this.rewardRepository.save(reward);
   }
 
   async updateUserPermission(usuarioUuid: string, dto: AtualizarPermissaoUsuarioDto) {
@@ -152,11 +81,11 @@ export class EconomiaService {
       throw new NotFoundException('Usuario não encontrado');
     }
 
-    const currentPermission = await this.permissionRepository.findOne({ where: { usuarioUuid } });
+    const currentPermission = await this.permissionRepository.findOne({ where: { usuarioId: user.id } });
     if (!currentPermission) {
       return this.permissionRepository.save(
         this.permissionRepository.create({
-          usuarioUuid,
+          usuarioId: user.id,
           podePostarMidia: dto.podePostarMidia,
           podePostarLink: dto.podePostarLink,
         }),
@@ -169,6 +98,11 @@ export class EconomiaService {
   }
 
   async listUsersByOrganization(organizacaoUuid: string) {
-    return this.userRepository.find({ where: { organizacaoUuid, ativo: true }, order: { nome: 'ASC' } });
+    const organizacao = await this.userRepository.query('SELECT id FROM public.organizacao WHERE uuid = $1', [organizacaoUuid]);
+    if (!organizacao?.[0]?.id) {
+      return [];
+    }
+
+    return this.userRepository.find({ where: { organizacaoId: Number(organizacao[0].id), ativo: true }, order: { nome: 'ASC' } });
   }
 }

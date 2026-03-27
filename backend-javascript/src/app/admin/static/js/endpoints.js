@@ -23,9 +23,11 @@ endpoints = {
         all: '/jogo/all',
         organizacoes: '/jogo/organizacoes'
     },
-    recompensa: {
-        all: '/recompensa/all',
-        organizacoes: '/recompensa/organizacoes'
+    perfilInstagram: {
+        all: '/perfil-instagram/all'
+    },
+    publicacao: {
+        all: '/publicacao/all'
     },
     arquivo: {
         form: '/arquivo/form',

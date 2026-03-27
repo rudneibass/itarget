@@ -31,9 +31,15 @@ export class JogoService {
     if (!organizacaoUuid) {
       throw new BadRequestException('Você precisa criar uma organização antes de cadastrar um jogo.');
     }
+
+    const orgRows = await this.jogoRepository.query('SELECT id FROM public.organizacao WHERE uuid = $1', [organizacaoUuid]);
+    if (!orgRows?.[0]?.id) {
+      throw new BadRequestException('Organização não encontrada para o usuário atual.');
+    }
+
     const jogo = this.jogoRepository.create({
       uuid: randomUUID(),
-      organizacaoUuid,
+      organizacaoId: Number(orgRows[0].id),
       nome: payload.nome,
       descricao: payload.descricao || null,
       url: payload.url,

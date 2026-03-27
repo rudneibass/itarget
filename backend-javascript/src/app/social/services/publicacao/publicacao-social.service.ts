@@ -26,9 +26,45 @@ export class PublicacaoService {
     private readonly userRepository: Repository<Usuario>,
   ) {}
 
+  private normalizeInstagramUrl(url?: string | null) {
+    if (!url) {
+      return null;
+    }
+
+    try {
+      const parsed = new URL(url);
+      if (!parsed.hostname.toLowerCase().includes('instagram.com')) {
+        return null;
+      }
+
+      const pathname = parsed.pathname.endsWith('/') ? parsed.pathname : `${parsed.pathname}/`;
+      return `${parsed.protocol}//${parsed.hostname}${pathname}`;
+    } catch {
+      return null;
+    }
+  }
+
+  private buildInstagramEmbedUrl(url?: string | null) {
+    const normalizedUrl = this.normalizeInstagramUrl(url);
+    if (!normalizedUrl) {
+      return null;
+    }
+
+    return normalizedUrl.endsWith('/embed/')
+      ? normalizedUrl
+      : `${normalizedUrl}embed/`;
+  }
+
   async listTimeline(organizacaoUuid: string, usuarioUuid?: string) {
+    const organizacao = await this.userRepository.query('SELECT id FROM public.organizacao WHERE uuid = $1', [organizacaoUuid]);
+    if (!organizacao?.[0]?.id) {
+      return [];
+    }
+
+    const currentUser = usuarioUuid ? await this.userRepository.findOne({ where: { uuid: usuarioUuid } }) : null;
+
     const posts = await this.postRepository.find({
-      where: { organizacaoUuid },
+      where: { organizacaoId: Number(organizacao[0].id) },
       order: { criadoEm: 'DESC' },
       take: 50,
     });
@@ -37,41 +73,45 @@ export class PublicacaoService {
       return [];
     }
 
-    const authorUuids = Array.from(new Set(posts.map((post) => post.usuarioUuid)));
+    const authorIds = Array.from(new Set(posts.map((post) => post.usuarioId)));
     const authors = await this.userRepository.find({
-      where: { uuid: In(authorUuids) },
+      where: { id: In(authorIds) },
       select: {
+        id: true,
         uuid: true,
         nome: true,
         apelido: true,
         urlAvatar: true,
       },
     });
-    const authorByUuid = new Map(authors.map((author) => [author.uuid, author]));
+    const authorById = new Map(authors.map((author) => [author.id, author]));
 
-    const postUuids = posts.map((post) => post.uuid);
-    const userLikes = usuarioUuid
+    const postIds = posts.map((post) => post.id);
+    const userLikes = currentUser
       ? await this.likeRepository.find({
           where: {
-            usuarioUuid,
-            publicacaoUuid: In(postUuids),
+            usuarioId: currentUser.id,
+            publicacaoId: In(postIds),
           },
           select: {
-            publicacaoUuid: true,
+            publicacaoId: true,
           },
         })
       : [];
-    const likedPostUuids = new Set(userLikes.map((like) => like.publicacaoUuid));
+    const likedPostIds = new Set(userLikes.map((like) => like.publicacaoId));
 
     const withCounters = await Promise.all(
       posts.map(async (post, index) => {
-        const postAuthor = authorByUuid.get(post.usuarioUuid);
+        const postAuthor = authorById.get(post.usuarioId);
         const authorName = postAuthor?.apelido || postAuthor?.nome || 'Usuário';
-        const isTextHighlight = !post.midiaUrl && (post.tipo === 'texto' || post.tipo === 'emoji');
+        const instagramSourceUrl = this.normalizeInstagramUrl(post.urlRedirecionamento || post.midiaUrl);
+        const isInstagram = post.tipo === 'instagram' || Boolean(instagramSourceUrl);
+        const instagramEmbedUrl = isInstagram ? this.buildInstagramEmbedUrl(post.urlRedirecionamento || post.midiaUrl) : null;
+        const isTextHighlight = !post.midiaUrl && !isInstagram && (post.tipo === 'texto' || post.tipo === 'emoji');
         const [likes, comments, compartilhars] = await Promise.all([
-          this.likeRepository.count({ where: { publicacaoUuid: post.uuid } }),
-          this.commentRepository.count({ where: { publicacaoUuid: post.uuid } }),
-          this.compartilharRepository.count({ where: { publicacaoUuid: post.uuid } }),
+          this.likeRepository.count({ where: { publicacaoId: post.id } }),
+          this.commentRepository.count({ where: { publicacaoId: post.id } }),
+          this.compartilharRepository.count({ where: { publicacaoId: post.id } }),
         ]);
 
         return {
@@ -79,11 +119,13 @@ export class PublicacaoService {
           authorName,
           authorAvatarUrl: postAuthor?.urlAvatar ?? null,
           authorInitial: authorName.charAt(0).toUpperCase(),
-          isOwnPost: usuarioUuid ? post.usuarioUuid === usuarioUuid : false,
+          isOwnPost: currentUser ? post.usuarioId === currentUser.id : false,
+          isInstagram,
+          instagramEmbedUrl,
           isVideo: post.tipo === 'video',
           isTextHighlight,
           textHighlightVariant: isTextHighlight ? (index % 3) + 1 : null,
-          likedByCurrentUser: likedPostUuids.has(post.uuid),
+          likedByCurrentUser: likedPostIds.has(post.id),
           likes,
           comments,
           compartilhars,
@@ -109,10 +151,15 @@ export class PublicacaoService {
       throw new ForbiddenException('Posts de imagem ou vídeo precisam de midiaUrl');
     }
 
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
     const payload = this.postRepository.create({
       uuid: randomUUID(),
-      organizacaoUuid: session.organizacaoUuid,
-      usuarioUuid: session.usuario.uuid,
+      organizacaoId: user.organizacaoId,
+      usuarioId: user.id,
       tipo,
       texto: dto.texto || null,
       midiaUrl: dto.midiaUrl || null,
@@ -124,14 +171,19 @@ export class PublicacaoService {
   }
 
   async adicionarComentario(session: DadosSessaoSocial, publicacaoUuid: string, dto: CriarComentarioDto) {
-    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoUuid: session.organizacaoUuid } });
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoId: user.organizacaoId } });
     if (!post) {
       throw new NotFoundException('Post não encontrado');
     }
 
     const comment = this.commentRepository.create({
-      publicacaoUuid,
-      usuarioUuid: session.usuario.uuid,
+      publicacaoId: post.id,
+      usuarioId: user.id,
       comentario: dto.comentario,
     });
 
@@ -139,13 +191,18 @@ export class PublicacaoService {
   }
 
   async listarComentarios(session: DadosSessaoSocial, publicacaoUuid: string) {
-    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoUuid: session.organizacaoUuid } });
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoId: user.organizacaoId } });
     if (!post) {
       throw new NotFoundException('Post não encontrado');
     }
 
     const comments = await this.commentRepository.find({
-      where: { publicacaoUuid },
+      where: { publicacaoId: post.id },
       order: { criadoEm: 'ASC' },
     });
 
@@ -153,20 +210,21 @@ export class PublicacaoService {
       return [];
     }
 
-    const authorUuids = Array.from(new Set(comments.map((comment) => comment.usuarioUuid)));
+    const authorIds = Array.from(new Set(comments.map((comment) => comment.usuarioId)));
     const authors = await this.userRepository.find({
-      where: { uuid: In(authorUuids) },
+      where: { id: In(authorIds) },
       select: {
+        id: true,
         uuid: true,
         nome: true,
         apelido: true,
         urlAvatar: true,
       },
     });
-    const authorByUuid = new Map(authors.map((author) => [author.uuid, author]));
+    const authorById = new Map(authors.map((author) => [author.id, author]));
 
     return comments.map((comment) => {
-      const author = authorByUuid.get(comment.usuarioUuid);
+      const author = authorById.get(comment.usuarioId);
       const authorName = author?.apelido || author?.nome || 'Usuário';
 
       return {
@@ -176,18 +234,23 @@ export class PublicacaoService {
         authorName,
         authorAvatarUrl: author?.urlAvatar ?? null,
         authorInitial: authorName.charAt(0).toUpperCase(),
-        isFromCurrentUser: comment.usuarioUuid === session.usuario.uuid,
+        isFromCurrentUser: comment.usuarioId === user.id,
       };
     });
   }
 
   async alternarCurtida(session: DadosSessaoSocial, publicacaoUuid: string) {
-    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoUuid: session.organizacaoUuid } });
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoId: user.organizacaoId } });
     if (!post) {
       throw new NotFoundException('Post não encontrado');
     }
 
-    const existing = await this.likeRepository.findOne({ where: { publicacaoUuid, usuarioUuid: session.usuario.uuid } });
+    const existing = await this.likeRepository.findOne({ where: { publicacaoId: post.id, usuarioId: user.id } });
     if (existing) {
       await this.likeRepository.remove(existing);
       return { liked: false };
@@ -195,8 +258,8 @@ export class PublicacaoService {
 
     await this.likeRepository.save(
       this.likeRepository.create({
-        publicacaoUuid,
-        usuarioUuid: session.usuario.uuid,
+        publicacaoId: post.id,
+        usuarioId: user.id,
       }),
     );
 
@@ -204,24 +267,34 @@ export class PublicacaoService {
   }
 
   async compartilhar(session: DadosSessaoSocial, publicacaoUuid: string) {
-    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoUuid: session.organizacaoUuid } });
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const post = await this.postRepository.findOne({ where: { uuid: publicacaoUuid, organizacaoId: user.organizacaoId } });
     if (!post) {
       throw new NotFoundException('Post não encontrado');
     }
 
     return this.compartilharRepository.save(
       this.compartilharRepository.create({
-        publicacaoUuid,
-        usuarioUuid: session.usuario.uuid,
+        publicacaoId: post.id,
+        usuarioId: user.id,
       }),
     );
   }
 
   async excluirPublicacao(session: DadosSessaoSocial, publicacaoUuid: string) {
+    const user = await this.userRepository.findOne({ where: { uuid: session.usuario.uuid } });
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
     const post = await this.postRepository.findOne({
       where: {
         uuid: publicacaoUuid,
-        organizacaoUuid: session.organizacaoUuid,
+        organizacaoId: user.organizacaoId,
       },
     });
 
@@ -229,13 +302,13 @@ export class PublicacaoService {
       throw new NotFoundException('Post não encontrado');
     }
 
-    if (post.usuarioUuid !== session.usuario.uuid) {
+    if (post.usuarioId !== user.id) {
       throw new ForbiddenException('Você só pode excluir suas próprias postagens');
     }
 
-    await this.commentRepository.delete({ publicacaoUuid });
-    await this.likeRepository.delete({ publicacaoUuid });
-    await this.compartilharRepository.delete({ publicacaoUuid });
+    await this.commentRepository.delete({ publicacaoId: post.id });
+    await this.likeRepository.delete({ publicacaoId: post.id });
+    await this.compartilharRepository.delete({ publicacaoId: post.id });
     await this.postRepository.delete({ uuid: publicacaoUuid });
 
     return { deleted: true };

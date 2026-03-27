@@ -14,18 +14,18 @@ export class ComentarioPublicacao {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column({ name: 'publicacao_uuid', type: 'text' })
-  publicacaoUuid: string;
+  @Column({ name: 'publicacao_id', type: 'int' })
+  publicacaoId: number;
 
   @ManyToOne(() => Publicacao)
-  @JoinColumn({ name: 'publicacao_uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'publicacao_id', referencedColumnName: 'id' })
   publicacao: Publicacao;
 
-  @Column({ name: 'usuario_uuid', type: 'text' })
-  usuarioUuid: string;
+  @Column({ name: 'usuario_id', type: 'int' })
+  usuarioId: number;
 
   @ManyToOne(() => Usuario)
-  @JoinColumn({ name: 'usuario_uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'usuario_id', referencedColumnName: 'id' })
   usuario: Usuario;
 
   @Column({ type: 'text' })

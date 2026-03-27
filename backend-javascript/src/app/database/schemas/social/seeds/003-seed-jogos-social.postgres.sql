@@ -3,7 +3,7 @@
 
 INSERT INTO social.jogo (
   uuid,
-  organizacao_uuid,
+  organizacao_id,
   nome,
   descricao,
   url,
@@ -12,7 +12,7 @@ INSERT INTO social.jogo (
 )
 SELECT
   '44444444-4444-4444-4444-444444444441',
-  '11111111-1111-1111-1111-111111111111',
+  (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   'Quiz Relâmpago',
   'Jogo rápido de perguntas e respostas.',
   'https://play2048.co/',
@@ -24,7 +24,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO social.jogo (
   uuid,
-  organizacao_uuid,
+  organizacao_id,
   nome,
   descricao,
   url,
@@ -33,7 +33,7 @@ INSERT INTO social.jogo (
 )
 SELECT
   '44444444-4444-4444-4444-444444444442',
-  '11111111-1111-1111-1111-111111111111',
+  (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   'Hextris',
   'Encontre pares e ganhe pontos de memória.',
   'https://hextris.io/',
@@ -45,7 +45,7 @@ WHERE NOT EXISTS (
 
 INSERT INTO social.jogo (
   uuid,
-  organizacao_uuid,
+  organizacao_id,
   nome,
   descricao,
   url,
@@ -54,7 +54,7 @@ INSERT INTO social.jogo (
 )
 SELECT
   '44444444-4444-4444-4444-444444444443',
-  '11111111-1111-1111-1111-111111111111',
+  (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   'Desafio Matemático',
   'Resolva operações em tempo recorde.',
   'https://chromedino.com/',
@@ -66,7 +66,7 @@ WHERE NOT EXISTS (
 
 UPDATE social.jogo
 SET
-  organizacao_uuid = '11111111-1111-1111-1111-111111111111',
+  organizacao_id = (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   nome = 'Quiz Relâmpago',
   descricao = 'Jogo rápido de perguntas e respostas.',
   url = 'https://play2048.co/',
@@ -76,7 +76,7 @@ WHERE uuid = '44444444-4444-4444-4444-444444444441';
 
 UPDATE social.jogo
 SET
-  organizacao_uuid = '11111111-1111-1111-1111-111111111111',
+  organizacao_id = (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   nome = 'Memória Criativa',
   descricao = 'Encontre pares e ganhe pontos de memória.',
   url = 'https://hextris.io/',
@@ -86,7 +86,7 @@ WHERE uuid = '44444444-4444-4444-4444-444444444442';
 
 UPDATE social.jogo
 SET
-  organizacao_uuid = '11111111-1111-1111-1111-111111111111',
+  organizacao_id = (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   nome = 'Desafio Matemático',
   descricao = 'Resolva operações em tempo recorde.',
   url = 'https://chromedino.com/',

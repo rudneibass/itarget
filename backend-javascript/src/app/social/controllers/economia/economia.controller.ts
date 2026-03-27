@@ -16,16 +16,4 @@ export class EconomiaController {
     const data = await this.economyService.liberarJogo(req.socialSession, jogoUuid);
     return { data };
   }
-
-  @Get('rewards')
-  async rewards(@Req() req: any) {
-    const data = await this.economyService.listarRecompensas(req.socialSession.organizacaoUuid);
-    return { data };
-  }
-
-  @Post('rewards/:recompensaUuid/redeem')
-  async resgatarRecompensa(@Req() req: any, @Param('recompensaUuid') recompensaUuid: string) {
-    const data = await this.economyService.resgatarRecompensa(req.socialSession, recompensaUuid);
-    return { data };
-  }
 }

@@ -46,8 +46,24 @@
           {{#if timeline.length}}
             {{#each timeline}}
               <article class="shorts-card timeline-item" data-post-uuid="{{uuid}}" data-created-at="{{criadoEm}}">
-                <div class="shorts-stage{{#unless midiaUrl}} shorts-stage--text-only{{/unless}}">
-                  {{#if midiaUrl}}
+                <div class="shorts-stage{{#if isInstagram}} shorts-stage--instagram{{else}}{{#unless midiaUrl}} shorts-stage--text-only{{/unless}}{{/if}}">
+                  {{#if isInstagram}}
+                    <div class="shorts-media-wrap shorts-media-wrap--instagram">
+                      {{#if instagramEmbedUrl}}
+                        <iframe
+                          src="{{instagramEmbedUrl}}"
+                          class="shorts-instagram-frame"
+                          scrolling="no"
+                          frameborder="0"
+                          allowtransparency="true"
+                          allow="encrypted-media"
+                          title="Instagram embed"
+                        ></iframe>
+                      {{else}}
+                        <p class="muted">Embed do Instagram não disponível</p>
+                      {{/if}}
+                    </div>
+                  {{else if midiaUrl}}
                     <div class="shorts-media-wrap">
                       {{#if isVideo}}
                         <video class="shorts-media shorts-media-video" playsinline muted loop preload="metadata" poster="{{midiaUrl}}">
@@ -66,94 +82,96 @@
                     </div>
                   {{/if}}
 
-                  <div class="shorts-overlay">
-                    <div class="shorts-meta">
-                      {{#if urlRedirecionamento}}
-                        <a class="shorts-link-chip" href="{{urlRedirecionamento}}" target="_blank" rel="noopener noreferrer">
-                          ↗
-                          {{#if tituloRedirecionamento}}
-                            {{tituloRedirecionamento}}
-                          {{else}}
-                            Abrir link
+                  {{#unless isInstagram}}
+                    <div class="shorts-overlay">
+                      <div class="shorts-meta">
+                        {{#if urlRedirecionamento}}
+                          <a class="shorts-link-chip" href="{{urlRedirecionamento}}" target="_blank" rel="noopener noreferrer">
+                            ↗
+                            {{#if tituloRedirecionamento}}
+                              {{tituloRedirecionamento}}
+                            {{else}}
+                              Abrir link
+                            {{/if}}
+                          </a>
+                        {{/if}}
+
+                        {{#if isOwnPost}}
+                          <button
+                            type="button"
+                            class="shorts-delete"
+                            data-delete-post-button="true"
+                            data-publicacao-uuid="{{uuid}}"
+                          >
+                            Excluir postagem
+                          </button>
+                        {{/if}}
+
+                        {{#if texto}}
+                          {{#if midiaUrl}}
+                            <p class="shorts-caption">{{texto}}</p>
                           {{/if}}
-                        </a>
-                      {{/if}}
-
-                      {{#if isOwnPost}}
-                        <button
-                          type="button"
-                          class="shorts-delete"
-                          data-delete-post-button="true"
-                          data-publicacao-uuid="{{uuid}}"
-                        >
-                          Excluir postagem
-                        </button>
-                      {{/if}}
-
-                      {{#if texto}}
-                        {{#if midiaUrl}}
-                          <p class="shorts-caption">{{texto}}</p>
                         {{/if}}
-                      {{/if}}
 
-                      <div class="shorts-author-row">
-                        {{#if authorAvatarUrl}}
-                          <img class="shorts-avatar-image" src="{{authorAvatarUrl}}" alt="Avatar de {{authorName}}" />
-                        {{else}}
-                          <span class="shorts-avatar">{{authorInitial}}</span>
-                        {{/if}}
-                        <div class="shorts-author-meta">
-                          <span class="shorts-author-name">@{{authorName}}</span>
-                          <time class="shorts-author-time" data-post-timestamp="true"></time>
+                        <div class="shorts-author-row">
+                          {{#if authorAvatarUrl}}
+                            <img class="shorts-avatar-image" src="{{authorAvatarUrl}}" alt="Avatar de {{authorName}}" />
+                          {{else}}
+                            <span class="shorts-avatar">{{authorInitial}}</span>
+                          {{/if}}
+                          <div class="shorts-author-meta">
+                            <span class="shorts-author-name">@{{authorName}}</span>
+                            <time class="shorts-author-time" data-post-timestamp="true"></time>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="shorts-rail" aria-label="Ações da postagem">
+                        <div class="shorts-action-stack">
+                          <button
+                            type="button"
+                            class="shorts-action action-like-button{{#if likedByCurrentUser}} is-liked{{/if}}"
+                            data-like-button="true"
+                            data-publicacao-uuid="{{uuid}}"
+                            aria-label="Curtir"
+                          >
+                            <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6 6 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+                          <span class="shorts-action-total" data-like-total>{{likes}}</span>
+                          <span class="shorts-action-label">Curtir</span>
+                        </div>
+
+                        <div class="shorts-action-stack">
+                          <button
+                            type="button"
+                            class="shorts-action action-comment-button"
+                            data-comment-button="true"
+                            data-publicacao-uuid="{{uuid}}"
+                            aria-label="Comentar"
+                          >
+                            <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                              <path d="M21 12c0 4.4-4 8-9 8-1.2 0-2.3-.2-3.4-.6L4 20l1.2-3.9C4.4 15 4 13.5 4 12c0-4.4 4-8 9-8s8 3.6 8 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+                          <span class="shorts-action-total" data-comment-total>{{comments}}</span>
+                          <span class="shorts-action-label">Comentários</span>
+                        </div>
+
+                        <div class="shorts-action-stack">
+                          <span class="shorts-action" aria-hidden="true">
+                            <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none">
+                              <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                          <span class="shorts-action-total">{{compartilhars}}</span>
+                          <span class="shorts-action-label">Impulsos</span>
                         </div>
                       </div>
                     </div>
-
-                    <div class="shorts-rail" aria-label="Ações da postagem">
-                      <div class="shorts-action-stack">
-                        <button
-                          type="button"
-                          class="shorts-action action-like-button{{#if likedByCurrentUser}} is-liked{{/if}}"
-                          data-like-button="true"
-                          data-publicacao-uuid="{{uuid}}"
-                          aria-label="Curtir"
-                        >
-                          <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6 6 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </button>
-                        <span class="shorts-action-total" data-like-total>{{likes}}</span>
-                        <span class="shorts-action-label">Curtir</span>
-                      </div>
-
-                      <div class="shorts-action-stack">
-                        <button
-                          type="button"
-                          class="shorts-action action-comment-button"
-                          data-comment-button="true"
-                          data-publicacao-uuid="{{uuid}}"
-                          aria-label="Comentar"
-                        >
-                          <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M21 12c0 4.4-4 8-9 8-1.2 0-2.3-.2-3.4-.6L4 20l1.2-3.9C4.4 15 4 13.5 4 12c0-4.4 4-8 9-8s8 3.6 8 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </button>
-                        <span class="shorts-action-total" data-comment-total>{{comments}}</span>
-                        <span class="shorts-action-label">Comentários</span>
-                      </div>
-
-                      <div class="shorts-action-stack">
-                        <span class="shorts-action" aria-hidden="true">
-                          <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none">
-                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </span>
-                        <span class="shorts-action-total">{{compartilhars}}</span>
-                        <span class="shorts-action-label">Impulsos</span>
-                      </div>
-                    </div>
-                  </div>
+                  {{/unless}}
                 </div>
               </article>
             {{/each}}

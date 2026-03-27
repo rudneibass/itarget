@@ -83,10 +83,10 @@ export class UsuarioService {
     });
 
     const permissions = await this.permissaoRepository.find();
-    const permissionMap = new Map(permissions.map((item) => [item.usuarioUuid, item]));
+    const permissionMap = new Map(permissions.map((item) => [item.usuarioId, item]));
 
     return usuarios.map((user) => {
-      const permission = permissionMap.get(user.uuid);
+      const permission = permissionMap.get(user.id);
       return {
         ...user,
         podePostarMidia: permission?.podePostarMidia ?? false,
@@ -98,10 +98,10 @@ export class UsuarioService {
   async findAll() {
     const users = await this.usuarioRepository.find({ order: { id: 'DESC' } });
     const permissions = await this.permissaoRepository.find();
-    const permissionMap = new Map(permissions.map((item) => [item.usuarioUuid, item]));
+    const permissionMap = new Map(permissions.map((item) => [item.usuarioId, item]));
 
     return users.map((user) => {
-      const permission = permissionMap.get(user.uuid);
+      const permission = permissionMap.get(user.id);
       return {
         ...user,
         podePostarMidia: permission?.podePostarMidia ?? false,
@@ -116,7 +116,7 @@ export class UsuarioService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    const permission = await this.permissaoRepository.findOne({ where: { usuarioUuid: uuid } });
+    const permission = await this.permissaoRepository.findOne({ where: { usuarioId: user.id } });
     return {
       ...user,
       podePostarMidia: permission?.podePostarMidia ?? false,
@@ -139,7 +139,7 @@ export class UsuarioService {
 
       const user = usuarioRepository.create({
         uuid: randomUUID(),
-        organizacaoUuid,
+        organizacaoId: ownerOrganization.id,
         nome: payload.nome,
         apelido: payload.apelido || null,
         urlAvatar: payload.urlAvatar || null,
@@ -151,7 +151,7 @@ export class UsuarioService {
       const persisted = await usuarioRepository.save(user);
 
       const permission = permissaoRepository.create({
-        usuarioUuid: persisted.uuid,
+        usuarioId: persisted.id,
         podePostarMidia: Boolean(payload.podePostarMidia),
         podePostarLink: Boolean(payload.podePostarLink),
       });
@@ -182,9 +182,17 @@ export class UsuarioService {
     const ownerOrganization = ownerUuid ? await this.getOwnedOrganization(ownerUuid) : null;
 
     if (ownerOrganization) {
-      user.organizacaoUuid = ownerOrganization.uuid;
+      user.organizacaoId = ownerOrganization.id;
     } else {
-      user.organizacaoUuid = payload.organizacaoUuid ?? user.organizacaoUuid;
+      const organizacaoUuid = payload.organizacaoUuid;
+      if (payload.organizacaoId !== undefined) {
+        user.organizacaoId = payload.organizacaoId;
+      } else if (organizacaoUuid) {
+        const organizacao = await this.organizacaoRepository.findOne({ where: { uuid: organizacaoUuid } });
+        if (organizacao) {
+          user.organizacaoId = organizacao.id;
+        }
+      }
     }
     user.nome = payload.nome ?? user.nome;
     user.apelido = payload.apelido ?? user.apelido;
@@ -216,10 +224,10 @@ export class UsuarioService {
       }
     }
 
-    const existingPermission = await this.permissaoRepository.findOne({ where: { usuarioUuid: uuid } });
+    const existingPermission = await this.permissaoRepository.findOne({ where: { usuarioId: user.id } });
     if (!existingPermission) {
       const newPermission = this.permissaoRepository.create({
-        usuarioUuid: uuid,
+        usuarioId: user.id,
         podePostarMidia: Boolean(payload.podePostarMidia),
         podePostarLink: Boolean(payload.podePostarLink),
       });
@@ -239,7 +247,7 @@ export class UsuarioService {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    await this.permissaoRepository.delete({ usuarioUuid: uuid });
+    await this.permissaoRepository.delete({ usuarioId: user.id });
     await this.usuarioRepository.remove(user);
   }
 }

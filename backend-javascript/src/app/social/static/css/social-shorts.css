@@ -101,6 +101,14 @@ body.shorts-body {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(38, 56, 87, 0.2) 45%, rgba(38, 56, 87, 0.48) 100%);
 }
 
+.shorts-stage--instagram {
+  box-shadow: none;
+}
+
+.shorts-stage--instagram::before {
+  display: none;
+}
+
 .shorts-media-wrap,
 .shorts-text-wrap {
   position: absolute;

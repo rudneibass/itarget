@@ -5,7 +5,8 @@ import { ArquivoController } from './controllers/arquivo/arquivo.controller';
 import { HomeController } from './controllers/home/home.controller';
 import { JogoController } from './controllers/jogo/jogo.controller';
 import { OrganizacaoController } from './controllers/organizacao/organizacao.controller';
-import { RecompensaController } from './controllers/recompensa/recompensa.controller';
+import { PerfilInstagramController } from './controllers/perfil-instagram/perfil-instagram.controller';
+import { PublicacaoController } from './controllers/publicacao/publicacao.controller';
 import { UsuarioController } from './controllers/usuario/usuario.controller';
 import { MiddlewareSessaoAdmin } from './middleware/admin-session.middleware';
 import { UsuarioAdmin } from './models/usuario-admin/usuario-admin.entity';
@@ -16,14 +17,16 @@ import { Video } from './models/video/video.entity';
 import { Jogo } from '../social/models/jogo/jogo.entity';
 import { Organizacao } from '../social/models/organizacao/organizacao.entity';
 import { PermissaoUsuario } from '../social/models/permissao-usuario/permissao-usuario.entity';
-import { Recompensa } from '../social/models/recompensa/recompensa.entity';
+import { PerfilInstagram } from '../social/models/perfil-instagram/perfil-instagram.entity';
+import { Publicacao } from '../social/models/publicacao/publicacao.entity';
 import { Usuario } from '../social/models/usuario/usuario.entity';
 import { AdminAuthService } from './services/auth/admin-auth.service';
 import { AdminSessionService } from './services/auth/admin-session.service';
 import { ArquivoService } from './services/arquivo/arquivo.service';
 import { JogoService } from './services/jogo/jogo.service';
 import { OrganizacaoService } from './services/organizacao/organizacao.service';
-import { RecompensaService } from './services/recompensa/recompensa.service';
+import { PerfilInstagramService } from './services/perfil-instagram/perfil-instagram.service';
+import { PublicacaoAdminService } from './services/publicacao/publicacao.service';
 import { UsuarioAdminService } from './services/usuario-admin/usuario-admin.service';
 import { UsuarioService } from './services/usuario/usuario.service';
 import { VideoService } from './services/video/video.service';
@@ -37,7 +40,8 @@ import { VideoService } from './services/video/video.service';
       Usuario,
       PermissaoUsuario,
       Jogo,
-      Recompensa,
+      Publicacao,
+      PerfilInstagram,
       UsuarioAdmin,
       UsuarioOrganizacao,
     ]),
@@ -50,7 +54,8 @@ import { VideoService } from './services/video/video.service';
     OrganizacaoController,
     UsuarioController,
     JogoController,
-    RecompensaController,
+    PerfilInstagramController,
+    PublicacaoController,
   ],
   providers: [
     VideoService,
@@ -59,7 +64,8 @@ import { VideoService } from './services/video/video.service';
     UsuarioAdminService,
     UsuarioService,
     JogoService,
-    RecompensaService,
+    PerfilInstagramService,
+    PublicacaoAdminService,
     AdminSessionService,
     AdminAuthService,
     MiddlewareSessaoAdmin,
@@ -76,7 +82,8 @@ export class AdminModule implements NestModule {
         OrganizacaoController,
         UsuarioController,
         JogoController,
-        RecompensaController,
+        PerfilInstagramController,
+        PublicacaoController,
       );
   }
 }

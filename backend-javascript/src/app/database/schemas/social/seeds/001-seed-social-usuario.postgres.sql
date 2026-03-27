@@ -4,7 +4,7 @@
 
 INSERT INTO social.usuario (
   uuid,
-  organizacao_uuid,
+  organizacao_id,
   nome,
   apelido,
   url_avatar,
@@ -14,7 +14,7 @@ INSERT INTO social.usuario (
 )
 SELECT
   '22222222-2222-2222-2222-222222222222',
-  '11111111-1111-1111-1111-111111111111',
+  (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   'Usuario Demo Social',
   'Demo',
   NULL,
@@ -27,7 +27,7 @@ WHERE NOT EXISTS (
 
 UPDATE social.usuario
 SET
-  organizacao_uuid = '11111111-1111-1111-1111-111111111111',
+  organizacao_id = (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
   nome = 'Usuario Demo Social',
   apelido = 'Demo',
   url_avatar = NULL,
@@ -37,20 +37,20 @@ SET
 WHERE uuid = '22222222-2222-2222-2222-222222222222';
 
 INSERT INTO social.permissao_usuario (
-  usuario_uuid,
+  usuario_id,
   pode_postar_midia,
   pode_postar_link
 )
 SELECT
-  '22222222-2222-2222-2222-222222222222',
+  (SELECT id FROM social.usuario WHERE uuid = '22222222-2222-2222-2222-222222222222'),
   TRUE,
   TRUE
 WHERE NOT EXISTS (
-  SELECT 1 FROM social.permissao_usuario WHERE usuario_uuid = '22222222-2222-2222-2222-222222222222'
+  SELECT 1 FROM social.permissao_usuario WHERE usuario_id = (SELECT id FROM social.usuario WHERE uuid = '22222222-2222-2222-2222-222222222222')
 );
 
 UPDATE social.permissao_usuario
 SET
   pode_postar_midia = TRUE,
   pode_postar_link = TRUE
-WHERE usuario_uuid = '22222222-2222-2222-2222-222222222222';
+WHERE usuario_id = (SELECT id FROM social.usuario WHERE uuid = '22222222-2222-2222-2222-222222222222');

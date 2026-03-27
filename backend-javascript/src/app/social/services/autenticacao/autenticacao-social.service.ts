@@ -26,7 +26,7 @@ export class AutenticacaoService {
 
     const user = await this.userRepository.findOne({
       where: {
-        organizacaoUuid,
+        organizacaoId: school.id,
         hashQr: userHash,
         ativo: true,
       },
@@ -37,7 +37,7 @@ export class AutenticacaoService {
     }
 
     const permission = await this.permissionRepository.findOne({
-      where: { usuarioUuid: user.uuid },
+      where: { usuarioId: user.id },
     });
 
     return this.sessionService.create({

@@ -1,22 +1,22 @@
 <section>
     <style>
-        .recompensa-form-tab-content {
+        .perfil-instagram-form-tab-content {
             min-height: calc(100vh - 160px);
             display: flex;
             flex-direction: column;
             padding: .75rem;
             box-shadow: var(--shadows-default);
         }
-        .recompensa-form-tab-pane {
+        .perfil-instagram-form-tab-pane {
             display: flex;
             flex-direction: column;
             flex: 1;
             position: relative;
         }
-        .recompensa-form-main {
+        .perfil-instagram-form-main {
             flex: 1;
         }
-        .recompensa-form-actions {
+        .perfil-instagram-form-actions {
             position: absolute;
             width: 100%;
             bottom: 0;
@@ -32,10 +32,10 @@
             border-top: 1px solid var(--border-color-default);
             background-color: #fff;
         }
-        .recompensa-form-actions .section-actions-btn-parent {
+        .perfil-instagram-form-actions .section-actions-btn-parent {
             width: auto;
         }
-        .recompensa-form-actions .btn {
+        .perfil-instagram-form-actions .btn {
             width: 150px;
             height: auto;
             border-radius: .375rem;
@@ -45,11 +45,11 @@
         }
 
         @media (max-width: 767px) {
-            .recompensa-form-tab-content {
+            .perfil-instagram-form-tab-content {
                 min-height: calc(100vh - 130px);
             }
 
-            .recompensa-form-actions {
+            .perfil-instagram-form-actions {
                 flex-wrap: wrap;
                 justify-content: start;
             }
@@ -58,72 +58,54 @@
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-recompensa">Cadastro</a>
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-perfil-instagram">Cadastro</a>
             </li>
         </ul>
-        <div class="tab-content bg-white border border-top-0 recompensa-form-tab-content">
-            <div class="tab-pane active recompensa-form-tab-pane" id="tab-form-recompensa">
-                <form id="form-recompensa" class="recompensa-form-main">
+        <div class="tab-content bg-white border border-top-0 perfil-instagram-form-tab-content">
+            <div class="tab-pane active perfil-instagram-form-tab-pane" id="tab-form-perfil-instagram">
+                <form id="form-perfil-instagram" class="perfil-instagram-form-main">
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">Organização</small>
-                                </label>
-                                <select name="organizacaoUuid" class="form-select" id="organizacaoUuid" required></select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">Título</small>
-                                </label>
-                                <input type="text" name="titulo" class="form-control" id="titulo" maxlength="150" required />
-                            </div>
-                        </div>
                         <div class="col-md-8">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">Descrição</small>
+                                    <small class="text-muted">Perfil Instagram</small>
                                 </label>
-                                <textarea name="descricao" class="form-control" id="descricao" rows="3" required></textarea>
+                                <input type="text" name="perfil" class="form-control" id="perfil" maxlength="120" placeholder="ex: nasa" required />
+                                <small class="text-muted">Sem @ (o sistema normaliza automaticamente).</small>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">Tipo</small>
+                                    <small class="text-muted">Status</small>
                                 </label>
-                                <input type="text" name="tipo" class="form-control" id="tipo" required />
+                                <select name="ativo" class="form-select" id="ativo" required>
+                                    <option value="true">Ativo</option>
+                                    <option value="false">Inativo</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-12">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">Custo moedas</small>
+                                    <small class="text-muted">Categoria</small>
                                 </label>
-                                <input type="number" min="0" name="custoMoedas" class="form-control" id="custoMoedas" value="0" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked />
-                                <label class="form-check-label" for="ativo">Ativa</label>
+                                <input type="text" name="categoria" class="form-control" id="categoria" maxlength="120" placeholder="Ex: Música" />
                             </div>
                         </div>
                     </div>
                 </form>
 
-                <section class="section-actions recompensa-form-actions">
+                <section class="section-actions perfil-instagram-form-actions">
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-recompensa-editar" class="btn btn-secondary btn-float">
+                        <button type="button" id="btn-perfil-instagram-editar" class="btn btn-secondary btn-float">
                             <i class="fa fa fa-pencil"></i>
                             <span class="btn-label">Editar</span>
                         </button>
                     </div>
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-recompensa-salvar" class="btn btn-success btn-float">
+                        <button type="button" id="btn-perfil-instagram-salvar" class="btn btn-success btn-float">
                             <i class="fa fa fa-floppy-o"></i>
                             <span class="btn-label">Salvar</span>
                         </button>
@@ -136,19 +118,19 @@
 
 <script>
     (() => {
-    const recompensaForm = {
-        formId: 'form-recompensa',
-        tabId: 'tab-form-recompensa',
+    const perfilInstagramForm = {
+        formId: 'form-perfil-instagram',
+        tabId: 'tab-form-perfil-instagram',
         setMode: (mode) => {
-            const $editButtonParent = $('#btn-recompensa-editar').closest('.section-actions-btn-parent');
-            const $saveLabel = $('#btn-recompensa-salvar .btn-label');
-            const $saveIcon = $('#btn-recompensa-salvar i');
+            const $editButtonParent = $('#btn-perfil-instagram-editar').closest('.section-actions-btn-parent');
+            const $saveLabel = $('#btn-perfil-instagram-salvar .btn-label');
+            const $saveIcon = $('#btn-perfil-instagram-salvar i');
 
             if (mode === 'create') {
                 $editButtonParent.hide();
                 $saveLabel.text('Cadastrar');
                 $saveIcon.attr('class', 'fa fa-plus-circle');
-                $(`#${recompensaForm.formId} :input`).prop('disabled', false);
+                $(`#${perfilInstagramForm.formId} :input`).prop('disabled', false);
                 return;
             }
 
@@ -156,48 +138,29 @@
                 $editButtonParent.show();
                 $saveLabel.text('Salvar');
                 $saveIcon.attr('class', 'fa fa-floppy-o');
-                $(`#${recompensaForm.formId} :input`).prop('disabled', false);
+                $(`#${perfilInstagramForm.formId} :input`).prop('disabled', false);
                 return;
             }
 
             $editButtonParent.show();
             $saveLabel.text('Salvar');
             $saveIcon.attr('class', 'fa fa-floppy-o');
-            $(`#${recompensaForm.formId} :input`).prop('disabled', true);
+            $(`#${perfilInstagramForm.formId} :input`).prop('disabled', true);
         },
         edit: () => {
-            recompensaForm.setMode('edit');
+            perfilInstagramForm.setMode('edit');
         },
         cancel: () => {
-            const uuid = ($(`#${recompensaForm.formId} [name="uuid"]`).val() || '').toString().trim();
+            const uuid = ($(`#${perfilInstagramForm.formId} [name="uuid"]`).val() || '').toString().trim();
             if (uuid) {
-                recompensaForm.setMode('view');
+                perfilInstagramForm.setMode('view');
                 return;
             }
-            recompensaForm.setMode('create');
-        },
-        loadOrganizations: (callback) => {
-            $.ajax({
-                url: `${admin.baseUrl}/recompensa/organizacoes`,
-                type: 'GET',
-                success: (response) => {
-                    const list = response?.data || [];
-                    const $select = $(`#${recompensaForm.formId} [name="organizacaoUuid"]`);
-                    $select.empty();
-                    $select.append('<option value="">Selecione...</option>');
-                    list.forEach((item) => {
-                        $select.append(`<option value="${item.uuid}">${item.nome}</option>`);
-                    });
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
-                },
-                error: () => toastr['error']('Erro ao carregar organizações.'),
-            });
+            perfilInstagramForm.setMode('create');
         },
         populateForm: ({ url, uuid = null }) => {
             if (!uuid) {
-                recompensaForm.setMode('create');
+                perfilInstagramForm.setMode('create');
                 return;
             }
             $.ajax({
@@ -206,17 +169,17 @@
                 dataType: 'json',
                 beforeSend: function () {
                     admin.loading(true);
-                    recompensaForm.setMode('view');
+                    perfilInstagramForm.setMode('view');
                 },
                 error: function () {
                     admin.loading(false);
                     toastr['error']('Não foi possível carregar o registro.');
-                    recompensaForm.setMode('create');
+                    perfilInstagramForm.setMode('create');
                 },
                 success: function (response) {
                     admin.loading(false);
                     var data = response?.data || {};
-                    var $form = $('#' + recompensaForm.formId);
+                    var $form = $('#' + perfilInstagramForm.formId);
 
                     $.each(data, function (field, value) {
                         var $field = $form.find('[name="' + field + '"]');
@@ -224,6 +187,11 @@
                             $field = $form.find('#' + field);
                         }
                         if (!$field.length) {
+                            return;
+                        }
+
+                        if (field === 'ativo') {
+                            $field.val(String(!!value));
                             return;
                         }
 
@@ -235,7 +203,7 @@
                             return;
                         }
 
-                        if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'number' || fieldType === 'hidden') {
+                        if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'url' || fieldType === 'number' || fieldType === 'hidden') {
                             $field.val(value ?? '');
                             return;
                         }
@@ -243,7 +211,7 @@
                         $field.val(value ?? '');
                     });
 
-                    recompensaForm.setMode('view');
+                    perfilInstagramForm.setMode('view');
                 }
             });
         },
@@ -258,7 +226,7 @@
 
             const $form = $('#' + formId);
             const uuid = ($form.find('[name="uuid"]').val() || '').toString().trim();
-            const url = uuid ? `${admin.baseUrl}/recompensa/${uuid}` : `${admin.baseUrl}/recompensa`;
+            const url = uuid ? `${admin.baseUrl}/perfil-instagram/${uuid}` : `${admin.baseUrl}/perfil-instagram`;
             const method = uuid ? 'PATCH' : 'POST';
 
             const formData = $form.serializeArray().reduce(function (obj, item) {
@@ -268,12 +236,13 @@
                 if (item.name === 'uuid' && !item.value) {
                     return obj;
                 }
+                if (item.name === 'ativo') {
+                    obj[item.name] = String(item.value) === 'true';
+                    return obj;
+                }
                 obj[item.name] = item.value;
                 return obj;
             }, {});
-
-            formData.ativo = $form.find('[name="ativo"]').is(':checked');
-            formData.custoMoedas = Number(formData.custoMoedas || 0);
 
             $.ajax({
                 url,
@@ -286,7 +255,8 @@
                 },
                 error: function (jqXHR) {
                     admin.loading(false);
-                    toastr['error'](jqXHR?.responseText || 'Não foi possível salvar o registro.');
+                    const msg = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Não foi possível salvar o registro.';
+                    toastr['error'](msg);
                 },
                 success: function (responseData) {
                     admin.loading(false);
@@ -297,27 +267,25 @@
                     }
 
                     toastr['success']('Operação realizada com sucesso.');
-                    recompensaForm.cancel('form-recompensa');
+                    perfilInstagramForm.cancel('form-perfil-instagram');
                 }
             });
         }
     };
 
-    window.recompensaForm = recompensaForm;
+    window.perfilInstagramForm = perfilInstagramForm;
 
-    document.getElementById('btn-recompensa-editar')?.addEventListener('click', () => {
-        recompensaForm.edit('form-recompensa');
+    document.getElementById('btn-perfil-instagram-editar')?.addEventListener('click', () => {
+        perfilInstagramForm.edit('form-perfil-instagram');
     });
 
-    document.getElementById('btn-recompensa-salvar')?.addEventListener('click', () => {
-        recompensaForm.save({ formId: recompensaForm.formId });
+    document.getElementById('btn-perfil-instagram-salvar')?.addEventListener('click', () => {
+        perfilInstagramForm.save({ formId: perfilInstagramForm.formId });
     });
 
-    recompensaForm.loadOrganizations(() => {
-        recompensaForm.populateForm({
-            url: admin.baseUrl + '/recompensa',
-            uuid: '{{uuid}}'
-        });
+    perfilInstagramForm.populateForm({
+        url: admin.baseUrl + '/perfil-instagram',
+        uuid: '{{uuid}}'
     });
     })();
 </script>

@@ -1,0 +1,312 @@
+<section>
+    <style>
+        .publicacao-form-tab-content {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            padding: .75rem;
+            box-shadow: var(--shadows-default);
+        }
+        .publicacao-form-tab-pane {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+        }
+        .publicacao-form-main {
+            flex: 1;
+        }
+        .publicacao-form-actions {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            top: auto;
+            right: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            gap: .5rem;
+            margin-top: auto;
+            padding-top: .75rem;
+            border-top: 1px solid var(--border-color-default);
+            background-color: #fff;
+        }
+        .publicacao-form-actions .section-actions-btn-parent {
+            width: auto;
+        }
+        .publicacao-form-actions .btn {
+            width: 150px;
+            height: auto;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            gap: .45rem;
+            border-radius: 3px!important;
+        }
+
+        @media (max-width: 767px) {
+            .publicacao-form-tab-content {
+                min-height: calc(100vh - 130px);
+            }
+
+            .publicacao-form-actions {
+                flex-wrap: wrap;
+                justify-content: start;
+            }
+        }
+    </style>
+    <div class="col-md-12 p-0">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-publicacao">Cadastro</a>
+            </li>
+        </ul>
+        <div class="tab-content bg-white border border-top-0 publicacao-form-tab-content">
+            <div class="tab-pane active publicacao-form-tab-pane" id="tab-form-publicacao">
+                <form id="form-publicacao" class="publicacao-form-main">
+                    <input type="hidden" id="uuid" name="uuid" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Tipo</small>
+                                </label>
+                                <select name="tipo" class="form-select" id="tipo" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="texto">Texto</option>
+                                    <option value="imagem">Imagem</option>
+                                    <option value="video">Vídeo</option>
+                                    <option value="link">Link</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Usuário ID (opcional)</small>
+                                </label>
+                                <input type="number" min="1" name="usuarioId" class="form-control" id="usuarioId" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Título Redirecionamento</small>
+                                </label>
+                                <input type="text" name="tituloRedirecionamento" class="form-control" id="tituloRedirecionamento" maxlength="255" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Texto</small>
+                                </label>
+                                <textarea name="texto" class="form-control" id="texto" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">URL da Mídia</small>
+                                </label>
+                                <input type="url" name="midiaUrl" class="form-control" id="midiaUrl" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">URL de Redirecionamento</small>
+                                </label>
+                                <input type="url" name="urlRedirecionamento" class="form-control" id="urlRedirecionamento" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <section class="section-actions publicacao-form-actions">
+                    <div class="section-actions-btn-parent">
+                        <button type="button" id="btn-publicacao-editar" class="btn btn-secondary btn-float">
+                            <i class="fa fa fa-pencil"></i>
+                            <span class="btn-label">Editar</span>
+                        </button>
+                    </div>
+                    <div class="section-actions-btn-parent">
+                        <button type="button" id="btn-publicacao-salvar" class="btn btn-success btn-float">
+                            <i class="fa fa fa-floppy-o"></i>
+                            <span class="btn-label">Salvar</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (() => {
+    const publicacaoForm = {
+        formId: 'form-publicacao',
+        tabId: 'tab-form-publicacao',
+        setMode: (mode) => {
+            const $editButtonParent = $('#btn-publicacao-editar').closest('.section-actions-btn-parent');
+            const $saveLabel = $('#btn-publicacao-salvar .btn-label');
+            const $saveIcon = $('#btn-publicacao-salvar i');
+
+            if (mode === 'create') {
+                $editButtonParent.hide();
+                $saveLabel.text('Cadastrar');
+                $saveIcon.attr('class', 'fa fa-plus-circle');
+                $(`#${publicacaoForm.formId} :input`).prop('disabled', false);
+                return;
+            }
+
+            if (mode === 'edit') {
+                $editButtonParent.show();
+                $saveLabel.text('Salvar');
+                $saveIcon.attr('class', 'fa fa-floppy-o');
+                $(`#${publicacaoForm.formId} :input`).prop('disabled', false);
+                return;
+            }
+
+            $editButtonParent.show();
+            $saveLabel.text('Salvar');
+            $saveIcon.attr('class', 'fa fa-floppy-o');
+            $(`#${publicacaoForm.formId} :input`).prop('disabled', true);
+        },
+        edit: () => {
+            publicacaoForm.setMode('edit');
+        },
+        cancel: () => {
+            const uuid = ($(`#${publicacaoForm.formId} [name="uuid"]`).val() || '').toString().trim();
+            if (uuid) {
+                publicacaoForm.setMode('view');
+                return;
+            }
+            publicacaoForm.setMode('create');
+        },
+        populateForm: ({ url, uuid = null }) => {
+            if (!uuid) {
+                publicacaoForm.setMode('create');
+                return;
+            }
+            $.ajax({
+                url: `${url}/${uuid}`,
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function () {
+                    admin.loading(true);
+                    publicacaoForm.setMode('view');
+                },
+                error: function () {
+                    admin.loading(false);
+                    toastr['error']('Não foi possível carregar o registro.');
+                    publicacaoForm.setMode('create');
+                },
+                success: function (response) {
+                    admin.loading(false);
+                    var data = response?.data || {};
+                    var $form = $('#' + publicacaoForm.formId);
+
+                    $.each(data, function (field, value) {
+                        var $field = $form.find('[name="' + field + '"]');
+                        if (!$field.length) {
+                            $field = $form.find('#' + field);
+                        }
+                        if (!$field.length) {
+                            return;
+                        }
+
+                        var fieldType = ($field.attr('type') || '').toLowerCase();
+                        var tagName = ($field.get(0)?.tagName || '').toLowerCase();
+
+                        if (fieldType === 'checkbox') {
+                            $field.prop('checked', !!value);
+                            return;
+                        }
+
+                        if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'url' || fieldType === 'number' || fieldType === 'hidden') {
+                            $field.val(value ?? '');
+                            return;
+                        }
+
+                        $field.val(value ?? '');
+                    });
+
+                    publicacaoForm.setMode('view');
+                }
+            });
+        },
+        save: ({ formId }) => {
+            if ($('#' + formId + ' input').length === $('#' + formId + ' input:disabled').length) {
+                return;
+            }
+            if (!admin.validateForm(formId)) {
+                toastr['error']('Preencha os campos obrigatórios.');
+                return;
+            }
+
+            const $form = $('#' + formId);
+            const uuid = ($form.find('[name="uuid"]').val() || '').toString().trim();
+            const url = uuid ? `${admin.baseUrl}/publicacao/${uuid}` : `${admin.baseUrl}/publicacao`;
+            const method = uuid ? 'PATCH' : 'POST';
+
+            const formData = $form.serializeArray().reduce(function (obj, item) {
+                if (item.name === 'id') {
+                    return obj;
+                }
+                if (item.name === 'uuid' && !item.value) {
+                    return obj;
+                }
+                if (item.name === 'usuarioId' && item.value) {
+                    obj[item.name] = Number(item.value);
+                    return obj;
+                }
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+
+            $.ajax({
+                url,
+                type: method,
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                beforeSend: function () {
+                    admin.loading(true);
+                },
+                error: function (jqXHR) {
+                    admin.loading(false);
+                    const msg = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Não foi possível salvar o registro.';
+                    toastr['error'](msg);
+                },
+                success: function (responseData) {
+                    admin.loading(false);
+                    var payload = responseData?.data || responseData;
+
+                    if (payload?.uuid && !uuid) {
+                        $form.find('[name="uuid"]').val(payload.uuid);
+                    }
+
+                    toastr['success']('Operação realizada com sucesso.');
+                    publicacaoForm.cancel('form-publicacao');
+                }
+            });
+        }
+    };
+
+    window.publicacaoForm = publicacaoForm;
+
+    document.getElementById('btn-publicacao-editar')?.addEventListener('click', () => {
+        publicacaoForm.edit('form-publicacao');
+    });
+
+    document.getElementById('btn-publicacao-salvar')?.addEventListener('click', () => {
+        publicacaoForm.save({ formId: publicacaoForm.formId });
+    });
+
+    publicacaoForm.populateForm({
+        url: admin.baseUrl + '/publicacao',
+        uuid: '{{uuid}}'
+    });
+    })();
+</script>

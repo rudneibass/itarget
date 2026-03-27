@@ -88,7 +88,7 @@
                   <input type="url" id="create-post-link-url" placeholder="https://..." />
 
                   <label for="create-post-link-title">Título do link (opcional)</label>
-                  <input type="text" id="create-post-link-title" maxlength="120" placeholder="Ex.: Acessar atividade" />
+                  <input type="text" id="create-post-link-title" maxlength="120" placeholder="Ex.: Acessar página" />
                 </div>
               {{/if}}
 
@@ -161,32 +161,56 @@
                   {{/if}}
                 </header>
 
-                {{#if midiaUrl}}
-                  <div class="timeline-post-content timeline-post-content--media">
-                    {{#if isVideo}}
-                      <video class="timeline-media" controls preload="metadata">
-                        <source src="{{midiaUrl}}" type="video/mp4" />
-                        Seu navegador não suporta reprodução de vídeo.
-                      </video>
+                {{#if isInstagram}}
+                  <div class="timeline-post-content timeline-post-content--instagram">
+                    {{#if instagramEmbedUrl}}
+                      <div class="timeline-instagram-embed" data-instagram-embed="true">
+                        <iframe
+                          class="timeline-instagram-frame"
+                          src="{{instagramEmbedUrl}}"
+                          title="Publicação do Instagram"
+                          loading="lazy"
+                          allowtransparency="true"
+                          frameborder="0"
+                          scrolling="no"
+                        ></iframe>
+                      </div>
                     {{else}}
-                      <img class="timeline-media" src="{{midiaUrl}}" alt="Mídia da postagem" />
-                    {{/if}}
-                  </div>
-                {{/if}}
-
-                {{#unless midiaUrl}}
-                  <div class="timeline-content{{#if isTextHighlight}} timeline-content--text-only{{/if}}">
-                    {{#if texto}}
-                      {{#if isTextHighlight}}
-                        <div class="timeline-text-highlight timeline-text-highlight--{{textHighlightVariant}}">
+                      <div class="timeline-content">
+                        {{#if texto}}
                           <p>{{texto}}</p>
-                        </div>
-                      {{else}}
-                        <p>{{texto}}</p>
-                      {{/if}}
+                        {{/if}}
+                      </div>
                     {{/if}}
                   </div>
-                {{/unless}}
+                {{else}}
+                  {{#if midiaUrl}}
+                    <div class="timeline-post-content timeline-post-content--media">
+                      {{#if isVideo}}
+                        <video class="timeline-media" controls preload="metadata">
+                          <source src="{{midiaUrl}}" type="video/mp4" />
+                          Seu navegador não suporta reprodução de vídeo.
+                        </video>
+                      {{else}}
+                        <img class="timeline-media" src="{{midiaUrl}}" alt="Mídia da postagem" />
+                      {{/if}}
+                    </div>
+                  {{/if}}
+
+                  {{#unless midiaUrl}}
+                    <div class="timeline-content{{#if isTextHighlight}} timeline-content--text-only{{/if}}">
+                      {{#if texto}}
+                        {{#if isTextHighlight}}
+                          <div class="timeline-text-highlight timeline-text-highlight--{{textHighlightVariant}}">
+                            <p>{{texto}}</p>
+                          </div>
+                        {{else}}
+                          <p>{{texto}}</p>
+                        {{/if}}
+                      {{/if}}
+                    </div>
+                  {{/unless}}
+                {{/if}}
 
                 <div class="timeline-actions" aria-label="Ações da postagem">
                   {{#if urlRedirecionamento}}
@@ -239,9 +263,11 @@
 
                 {{#if midiaUrl}}
                   {{#if texto}}
-                    <div class="timeline-caption">
-                      <p>{{texto}}</p>
-                    </div>
+                    {{#unless isInstagram}}
+                      <div class="timeline-caption">
+                        <p>{{texto}}</p>
+                      </div>
+                    {{/unless}}
                   {{/if}}
                 {{/if}}
               </article>
@@ -253,45 +279,6 @@
           {{/if}}
         </section>
 
-        <aside class="home-right">
-          <section class="social-card">
-            <h3>Jogos</h3>
-            {{#if quickGames.length}}
-              <div class="icon-grid">
-                {{#each quickGames}}
-                  <button
-                    type="button"
-                    class="icon-tile game-open-button"
-                    data-game-name="{{nome}}"
-                    data-game-url="{{url}}"
-                    title="Abrir {{nome}}"
-                  >
-                    <span class="tile-emoji">🎮</span>
-                    <span class="tile-label">{{nome}}</span>
-                  </button>
-                {{/each}}
-              </div>
-            {{else}}
-              <p class="muted">Sem jogos no momento.</p>
-            {{/if}}
-          </section>
-
-          <section class="social-card">
-            <h3>Atividades</h3>
-            {{#if quickActivities.length}}
-              <div class="icon-grid">
-                {{#each quickActivities}}
-                  <a class="icon-tile" href="/social/activities" title="Abrir atividades">
-                    <span class="tile-emoji">📝</span>
-                    <span class="tile-label">{{titulo}}</span>
-                  </a>
-                {{/each}}
-              </div>
-            {{else}}
-              <p class="muted">Sem atividades no momento.</p>
-            {{/if}}
-          </section>
-        </aside>
       </main>
 
       <div class="game-modal" id="game-modal" aria-hidden="true">

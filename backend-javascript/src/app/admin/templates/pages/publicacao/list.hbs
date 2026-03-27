@@ -1,0 +1,312 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button
+            class="btn btn-success btn-float section-actions-btn"
+            onclick="admin.addTab({tabId:'form-publicacao', title: 'Nova Publicação', url: '/admin/publicacao/form'})"
+        >
+            <i class="fa fa-plus"></i>
+            <span class="btn-label">Novo</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-publicacao">
+            <i class="fa fa-search"></i>
+            <span class="btn-label">Pesquisar</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-info btn-float section-actions-btn" id="btn-sync-instagram-publicacao">
+            <i class="fa fa-instagram"></i>
+            <span class="btn-label">Sync Instagram</span>
+        </button>
+    </div>
+</section>
+
+<section class="section-search-bar hide" id="section-search-bar-publicacao">
+    <div class="row search-bar" id="search-bar-publicacao">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-body">
+                    <form id="formSearchPublicacao">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="uuid" id="uuid" class="form-control" placeholder="Código">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="tipo" id="tipo" class="form-control" placeholder="Tipo">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="texto" id="texto" class="form-control" placeholder="Texto">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="usuarioId" id="usuarioId" class="form-control" placeholder="Usuário ID">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer p-2 border-top-0">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-publicacao">
+                        <i class="fa fa-search"></i> Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default">
+        <small><i class="fa fa-newspaper-o"></i></small>
+        <small>Publicações</small>
+    </div>
+</section>
+
+<section>
+    <div class="list-table-container">
+        <table class="table table-sm table-striped table-hover width-100">
+            <thead id="thead-publicacao"></thead>
+            <tbody id="tbody-publicacao"></tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="messages-publicacao"></span>
+        </div>
+    </div>
+    <div class="pagination-bar-default">
+        <div>
+            <small class="gray-default" id="total-publicacao"></small>
+        </div>
+        <div>
+            <i class="fa fa-chevron-left gray-default cursor-pointer" id="anterior-publicacao"></i>
+            &emsp;
+            <span class="gray-default" id="numeracao-publicacao"></span>
+            &emsp;
+            <i class="fa fa-chevron-right gray-default cursor-pointer" id="proximo-publicacao"></i>
+        </div>
+    </div>
+</section>
+
+<script>
+    (() => {
+    const publicacaoList = {
+        formSearchId: 'formSearchPublicacao',
+        list: ({ url, formSearchId }) => {
+            $.ajax({
+                url,
+                cache: false,
+                type: 'GET',
+                data: $('#' + formSearchId).serialize(),
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#messages-publicacao').empty();
+                    $('#tbody-publicacao').empty();
+                    admin.loading(true);
+                },
+                error: function () {
+                    admin.loading(false);
+                    $('#tbody-publicacao').empty();
+                    $('#messages-publicacao').empty();
+                    $('#messages-publicacao').html("<h6 class='text-muted text-center'>Não foi possivel executar a ação desejada, favor entrar em contato com o administrador.</h6>");
+                },
+                success: function (response) {
+                    var source = response?.data || response || [];
+                    var filters = $('#' + formSearchId).serializeArray().reduce((obj, item) => {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+
+                    var data = source.filter((item) => {
+                        const byUuid = !filters.uuid || String(item.uuid || '').toLowerCase().includes(String(filters.uuid).toLowerCase());
+                        const byTipo = !filters.tipo || String(item.tipo || '').toLowerCase().includes(String(filters.tipo).toLowerCase());
+                        const byTexto = !filters.texto || String(item.texto || '').toLowerCase().includes(String(filters.texto).toLowerCase());
+                        const byUsuarioId = !filters.usuarioId || String(item.usuarioId || '') === String(filters.usuarioId);
+                        return byUuid && byTipo && byTexto && byUsuarioId;
+                    });
+
+                    if (!data[0]) {
+                        admin.loading(false);
+                        $('#tbody-publicacao').empty();
+                        $('#messages-publicacao').empty();
+                        $('#messages-publicacao').html("<br/><br/><h6 class='text-muted text-center'>Consulta não obteve resultados.</h6>");
+                        return;
+                    }
+
+                    admin.loading(false);
+                    $('#tbody-publicacao').empty();
+                    $('#messages-publicacao').empty();
+
+                    var tamanhoPagina = 10;
+                    var pagina = 0;
+
+                    function paginar() {
+                        for (var i = pagina * tamanhoPagina; i < data.length && i < (pagina + 1) * tamanhoPagina; i++) {
+                            $('#tbody-publicacao').append(
+                                `<tr>
+                                    <td class="p-3" style="width:90%; vertical-align: middle;">
+                                        <div>
+                                            <small>
+                                                <b>Tipo:</b> ${data[i].tipo || '-'}
+                                                &emsp;
+                                                <b>Usuário ID:</b> ${data[i].usuarioId || '-'}
+                                            </small>
+                                            <br/>
+                                            <small><b>Texto:</b> ${data[i].texto || '-'}</small>
+                                            <br/>
+                                            <small><b>URL Mídia:</b> ${data[i].midiaUrl || '-'}</small>
+                                            <br/>
+                                            <small><b>URL Redirecionamento:</b> ${data[i].urlRedirecionamento || '-'}</small>
+                                            <br/>
+                                            <small><b>Título Redirecionamento:</b> ${data[i].tituloRedirecionamento || '-'}</small>
+                                            <br/>
+                                            <small><b>Código:</b> ${data[i].uuid || ''}</small>
+                                        </div>
+                                    </td>
+                                    <td style="width: 8%; vertical-align: middle;">
+                                        <center>
+                                            <button
+                                                class="btn btn-secondary btn-sm w-100 mb-2"
+                                                onclick="admin.addTab({tabId:'form-publicacao', title: 'Editar Publicação', url: '/admin/publicacao/form/uuid/${data[i].uuid}'})"
+                                            >
+                                                <i class="fa fa-pencil"></i> Editar
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="publicacaoList.remove('${data[i].uuid}')">
+                                                <i class="fa fa-trash-o"></i>
+                                                <span> Excluir</span>
+                                            </button>
+                                        </center>
+                                    </td>
+                                </tr>`
+                            );
+                        }
+                        $('#numeracao-publicacao').text('Página ' + (pagina + 1) + ' de ' + Math.ceil(data.length / tamanhoPagina));
+                        $('#total-publicacao').text('1 à ' + tamanhoPagina + ' registros por página ');
+                    }
+
+                    function ajustarBotoes() {
+                        $('#proximo-publicacao').prop('disabled', data.length <= tamanhoPagina || pagina >= Math.ceil(data.length / tamanhoPagina) - 1);
+                        $('#anterior-publicacao').prop('disabled', data.length <= tamanhoPagina || pagina === 0);
+                    }
+
+                    $(function () {
+                        $('#proximo-publicacao').off('click').on('click', function () {
+                            if (pagina < data.length / tamanhoPagina - 1) {
+                                $('#tbody-publicacao').empty();
+                                pagina++;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        $('#anterior-publicacao').off('click').on('click', function () {
+                            if (pagina >= 1) {
+                                $('#tbody-publicacao').empty();
+                                pagina--;
+                                paginar();
+                                ajustarBotoes();
+                            }
+                        });
+                        paginar();
+                        ajustarBotoes();
+                    });
+                },
+            });
+        },
+        remove: (uuid) => {
+            bootbox.confirm({
+                title: 'Atenção',
+                message: 'Tem certeza que deseja remover este registro?',
+                buttons: {
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmar',
+                        className: 'btn-sm btn-success',
+                    },
+                    cancel: {
+                        label: '<i class="fa fa-undo"></i> Cancelar',
+                        className: 'btn-sm btn-secondary',
+                    },
+                },
+                callback: function (result) {
+                    if (!result) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: `${admin.baseUrl}/publicacao/${uuid}`,
+                        type: 'DELETE',
+                        beforeSend: function () {
+                            admin.loading(true);
+                        },
+                        success: function () {
+                            admin.loading(false);
+                            toastr['success']('Publicação removida com sucesso.');
+                            publicacaoList.list({
+                                url: admin.baseUrl + endpoints.publicacao.all,
+                                formSearchId: publicacaoList.formSearchId,
+                            });
+                        },
+                        error: function () {
+                            admin.loading(false);
+                            toastr['error']('Não foi possível remover a publicação.');
+                        },
+                    });
+                },
+            });
+        },
+        syncInstagram: () => {
+            $.ajax({
+                url: `${admin.baseUrl}/publicacao/sync-instagram`,
+                type: 'POST',
+                beforeSend: function () {
+                    admin.loading(true);
+                },
+                success: function (response) {
+                    admin.loading(false);
+                    const data = response?.data || {};
+                    toastr['success'](`Sync concluído: ${data.totalCreated || 0} criadas, ${data.totalSkipped || 0} ignoradas.`);
+                    publicacaoList.list({
+                        url: admin.baseUrl + endpoints.publicacao.all,
+                        formSearchId: publicacaoList.formSearchId,
+                    });
+                },
+                error: function (jqXHR) {
+                    admin.loading(false);
+                    const msg = jqXHR?.responseJSON?.message || 'Não foi possível sincronizar com o Instagram.';
+                    toastr['error'](msg);
+                },
+            });
+        },
+    };
+
+    window.publicacaoList = publicacaoList;
+
+    document.getElementById('btn-toggle-barra-publicacao').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-publicacao');
+        barra.classList.toggle('visible');
+    });
+
+    document.getElementById('btn-pesquisar-publicacao').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-publicacao');
+        barra.classList.toggle('visible');
+        publicacaoList.list({
+            url: admin.baseUrl + endpoints.publicacao.all,
+            formSearchId: publicacaoList.formSearchId,
+        });
+    });
+
+    document.getElementById('btn-sync-instagram-publicacao').addEventListener('click', () => {
+        publicacaoList.syncInstagram();
+    });
+
+    publicacaoList.list({
+        url: admin.baseUrl + endpoints.publicacao.all,
+        formSearchId: publicacaoList.formSearchId,
+    });
+    })();
+</script>

@@ -19,11 +19,11 @@ export class Usuario {
   @Column({ type: 'text', unique: true })
   uuid: string;
 
-  @Column({ name: 'organizacao_uuid', type: 'text' })
-  organizacaoUuid: string;
+  @Column({ name: 'organizacao_id', type: 'int' })
+  organizacaoId: number;
 
   @ManyToOne(() => Organizacao, (organizacao) => organizacao.usuarios, { eager: false })
-  @JoinColumn({ name: 'organizacao_uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'organizacao_id', referencedColumnName: 'id' })
   organizacao: Organizacao;
 
   @Column({ type: 'varchar', length: 255 })

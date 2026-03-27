@@ -17,18 +17,18 @@ export class Publicacao {
   @Column({ type: 'text', unique: true })
   uuid: string;
 
-  @Column({ name: 'organizacao_uuid', type: 'text' })
-  organizacaoUuid: string;
+  @Column({ name: 'organizacao_id', type: 'int' })
+  organizacaoId: number;
 
   @ManyToOne(() => Organizacao, (organizacao) => organizacao.publicacoes)
-  @JoinColumn({ name: 'organizacao_uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'organizacao_id', referencedColumnName: 'id' })
   organizacao: Organizacao;
 
-  @Column({ name: 'usuario_uuid', type: 'text' })
-  usuarioUuid: string;
+  @Column({ name: 'usuario_id', type: 'int' })
+  usuarioId: number;
 
   @ManyToOne(() => Usuario)
-  @JoinColumn({ name: 'usuario_uuid', referencedColumnName: 'uuid' })
+  @JoinColumn({ name: 'usuario_id', referencedColumnName: 'id' })
   usuario: Usuario;
 
   @Column({ type: 'varchar', length: 30 })
