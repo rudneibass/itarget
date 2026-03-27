@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Render,
+  Req,
 } from '@nestjs/common';
 import { JogoService } from '../../services/jogo/jogo.service';
 
@@ -34,12 +35,6 @@ export class JogoController {
     return { uuid };
   }
 
-  @Get('organizacoes')
-  async listOrganizations() {
-    const data = await this.jogoService.listOrganizations();
-    return { data };
-  }
-
   @Get('all')
   async findAll() {
     const data = await this.jogoService.findAll();
@@ -53,9 +48,10 @@ export class JogoController {
   }
 
   @Post()
-  async create(@Body() payload: any) {
+  async create(@Req() req: any, @Body() payload: any) {
     try {
-      const data = await this.jogoService.create(payload);
+      const ownerUuid = req.adminSession.usuario.uuid;
+      const data = await this.jogoService.create(ownerUuid, payload);
       return { data };
     } catch (error) {
       throw new HttpException(error instanceof Error ? error.message : 'Erro ao criar jogo', HttpStatus.BAD_REQUEST);

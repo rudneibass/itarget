@@ -31,6 +31,20 @@ export class InicioController {
     };
   }
 
+  @Get('shorts')
+  @Render('social/pages/shorts/shorts')
+  async renderizarShorts(@Req() req: any) {
+    const session = req.socialSession;
+    const timeline = await this.feedService.listTimeline(session.organizacaoUuid, session.usuario.uuid);
+
+    return {
+      user: session.usuario,
+      organization: session.organizacao,
+      timeline,
+      moedas: session.usuario.moedas,
+    };
+  }
+
   @Get('profile')
   @Render('social/pages/profile/profile')
   renderizarPerfil(@Req() req: any) {

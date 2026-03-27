@@ -5,6 +5,197 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rede Social da Organizacao - Jogos</title>
     <link rel="stylesheet" href="/social/static/css/social.css" />
+    <style>
+      body {
+        background: transparent;
+      }
+
+      .icon-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 4px;
+      }
+
+      .games-icon-tile {
+        min-height: 132px;
+        padding: 10px 8px;
+        display: grid;
+        justify-items: center;
+        align-content: center;
+        gap: 8px;
+        text-align: center;
+        border: 2px solid #ffd3e3;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #fff9fd 0%, #fff8ef 100%);
+        box-shadow: 0 6px 14px rgba(255, 120, 170, 0.16);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      }
+
+      .games-icon-tile:nth-child(4n + 1) {
+        border-color: #ffc8dc;
+      }
+
+      .games-icon-tile:nth-child(4n + 2) {
+        border-color: #ffd79f;
+      }
+
+      .games-icon-tile:nth-child(4n + 3) {
+        border-color: #bff0d3;
+      }
+
+      .games-icon-tile:nth-child(4n + 4) {
+        border-color: #cdd8ff;
+      }
+
+      .games-icon-tile:hover {
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 12px 22px rgba(152, 98, 255, 0.2);
+      }
+
+      .games-icon-tile:focus-visible {
+        outline: 3px solid #ff7fb6;
+        outline-offset: 2px;
+      }
+
+      .games-catalog {
+        margin-top: 10px;
+      }
+
+      .games-catalog h3 {
+        margin: 0 0 12px;
+        color: #3c4f8f;
+        font-size: 1rem;
+      }
+
+      .game-cover {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 2px solid #ffffff;
+        box-shadow: 0 8px 18px rgba(255, 147, 195, 0.28);
+      }
+
+      .game-fallback-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        background: linear-gradient(135deg, #ff92be 0%, #ffc76b 52%, #7ad7ff 100%);
+        color: #fff;
+        box-shadow: 0 10px 18px rgba(255, 128, 181, 0.3);
+      }
+
+      .game-tile-meta {
+        display: grid;
+        gap: 3px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .games-icon-tile .tile-label {
+        font-size: 0.92rem;
+        letter-spacing: 0.2px;
+        color: #3e3363;
+      }
+
+      .game-cost {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #6c5a9f;
+      }
+
+      .cost-alert {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1500;
+      }
+
+      .cost-alert.is-open {
+        display: flex;
+      }
+
+      .cost-alert-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(40, 20, 75, 0.4);
+        backdrop-filter: blur(2px);
+      }
+
+      .cost-alert-content {
+        position: relative;
+        width: min(92vw, 380px);
+        padding: 18px;
+        border-radius: 18px;
+        border: 2px solid #ffc7dd;
+        background: linear-gradient(180deg, #fff8fd 0%, #fff8ef 100%);
+        box-shadow: 0 18px 34px rgba(100, 66, 161, 0.26);
+        text-align: center;
+      }
+
+      .cost-alert-emoji {
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .cost-alert-title {
+        margin: 8px 0 6px;
+        font-size: 1.05rem;
+        color: #47306e;
+      }
+
+      .cost-alert-text {
+        margin: 0 0 14px;
+        color: #5c4a87;
+        font-size: 0.92rem;
+      }
+
+      .cost-alert-actions {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .cost-alert-button {
+        border: 0;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .cost-alert-button.cancel {
+        background: #efe8ff;
+        color: #5f4b8d;
+      }
+
+      .cost-alert-button.confirm {
+        background: linear-gradient(135deg, #ff8db7 0%, #ffbe6f 100%);
+        color: #fff;
+      }
+
+      @media (max-width: 900px) {
+        .icon-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .icon-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .games-icon-tile {
+          min-height: 120px;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="social-shell">
@@ -19,41 +210,216 @@
             <span class="org-name">{{organization.nome}}</span>
           </div>
           <div class="social-header-right">
-            <div class="user-pill">
-              {{#if user.urlAvatar}}
-                <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{user.nome}}" />
-              {{else}}
-                <span class="user-avatar user-avatar-fallback">🙂</span>
-              {{/if}}
-              <span class="user-name">{{user.nome}}</span>
-            </div>
             <div class="coin-badge">🪙 Moedas: {{moedas}}</div>
+            <a class="user-pill-link" href="/social/profile">
+              <div class="user-pill">
+                {{#if user.urlAvatar}}
+                  <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{user.nome}}" />
+                {{else}}
+                  <span class="user-avatar user-avatar-fallback">🙂</span>
+                {{/if}}
+                <span class="user-name">{{user.nome}}</span>
+              </div>
+            </a>
           </div>
         </div>
       </header>
       <nav class="social-nav">
         <a href="/social/home">Home</a>
-        <a href="/social/profile">Perfil</a>
-        <a href="/social/activities">Atividades</a>
+        <a href="/social/shorts">Shorts</a>
         <a class="active" href="/social/games">Jogos</a>
-        <a href="/social/rewards">Recompensas</a>
-        <a href="/social/chat">Chat</a>
       </nav>
 
-      <section class="social-card">
-        <h3>Catálogo de jogos</h3>
+      <section class="games-catalog">
         {{#if games.length}}
-          <ul>
+          <div class="icon-grid">
             {{#each games}}
-              <li>
-                <strong>{{nome}}</strong> • Custo: {{custoMoedas}} moedas • <a href="{{url}}" target="_blank">Abrir</a>
-              </li>
+              <button
+                type="button"
+                class="icon-tile game-open-button games-icon-tile"
+                data-game-name="{{nome}}"
+                data-game-url="{{url}}"
+                data-game-cost="{{custoMoedas}}"
+                title="Abrir {{nome}}"
+              >
+                {{#if capaUrl}}
+                  <img class="game-cover" src="{{capaUrl}}" alt="Capa de {{nome}}" />
+                {{else}}
+                  {{#if imagem}}
+                    <img class="game-cover" src="{{imagem}}" alt="Capa de {{nome}}" />
+                  {{else}}
+                    {{#if imagemUrl}}
+                      <img class="game-cover" src="{{imagemUrl}}" alt="Capa de {{nome}}" />
+                    {{else}}
+                      <span class="game-fallback-icon" aria-hidden="true">🎮</span>
+                    {{/if}}
+                  {{/if}}
+                {{/if}}
+                <span class="game-tile-meta">
+                  <span class="tile-label">{{nome}}</span>
+                  <span class="game-cost">{{custoMoedas}} moedas</span>
+                </span>
+              </button>
             {{/each}}
-          </ul>
+          </div>
         {{else}}
           <p class="muted">Nenhum jogo disponível.</p>
         {{/if}}
       </section>
+
+      <div class="game-modal" id="game-modal" aria-hidden="true">
+        <div class="game-modal-backdrop" data-close-modal="true"></div>
+        <section class="game-modal-content" role="dialog" aria-modal="true" aria-label="Jogo em execução">
+          <header class="game-modal-header">
+            <h3 id="game-modal-title">Jogo</h3>
+            <button type="button" class="game-modal-close" id="game-modal-close" aria-label="Fechar">✕</button>
+          </header>
+          <div class="game-modal-body">
+            <iframe id="game-modal-iframe" src="about:blank" title="Jogo" loading="lazy" allowfullscreen></iframe>
+          </div>
+        </section>
+      </div>
+
+      <div class="cost-alert" id="cost-alert" aria-hidden="true">
+        <div class="cost-alert-backdrop" data-close-cost-alert="true"></div>
+        <section class="cost-alert-content" role="dialog" aria-modal="true" aria-label="Confirmação de custo do jogo">
+          <div class="cost-alert-emoji" aria-hidden="true">🪙</div>
+          <h3 class="cost-alert-title">Confirme para jogar</h3>
+          <p class="cost-alert-text" id="cost-alert-text"></p>
+          <div class="cost-alert-actions">
+            <button type="button" class="cost-alert-button cancel" id="cost-alert-cancel">Cancelar</button>
+            <button type="button" class="cost-alert-button confirm" id="cost-alert-confirm">Continuar</button>
+          </div>
+        </section>
+      </div>
     </div>
+
+    <script>
+      (() => {
+        const modal = document.getElementById('game-modal');
+        const modalTitle = document.getElementById('game-modal-title');
+        const modalIframe = document.getElementById('game-modal-iframe');
+        const closeButton = document.getElementById('game-modal-close');
+        const openButtons = document.querySelectorAll('.game-open-button');
+        const costAlert = document.getElementById('cost-alert');
+        const costAlertText = document.getElementById('cost-alert-text');
+        const costAlertCancel = document.getElementById('cost-alert-cancel');
+        const costAlertConfirm = document.getElementById('cost-alert-confirm');
+        let pendingGame = null;
+
+        if (modal && modalTitle && modalIframe && closeButton) {
+          const parseGameCost = (rawCost) => {
+            if (!rawCost) {
+              return 0;
+            }
+
+            const normalized = String(rawCost).replace(',', '.').replace(/[^0-9.]/g, '');
+            const parsed = Number(normalized);
+            return Number.isFinite(parsed) ? parsed : 0;
+          };
+
+          const closeModal = () => {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            modalIframe.src = 'about:blank';
+          };
+
+          const closeCostAlert = () => {
+            if (!costAlert) {
+              return;
+            }
+            costAlert.classList.remove('is-open');
+            costAlert.setAttribute('aria-hidden', 'true');
+            pendingGame = null;
+          };
+
+          const openCostAlert = (name, url, cost) => {
+            if (!costAlert || !costAlertText) {
+              openModal(name, url);
+              return;
+            }
+
+            pendingGame = { name, url };
+            costAlertText.textContent = `Este jogo custa ${cost} moedas para jogar.`;
+            costAlert.classList.add('is-open');
+            costAlert.setAttribute('aria-hidden', 'false');
+          };
+
+          const openModal = (name, url) => {
+            modalTitle.textContent = name || 'Jogo';
+            modalIframe.src = url;
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+          };
+
+          openButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+              const gameName = button.getAttribute('data-game-name');
+              const gameUrl = button.getAttribute('data-game-url');
+              const gameCost = parseGameCost(button.getAttribute('data-game-cost'));
+              if (!gameUrl) {
+                return;
+              }
+
+              if (gameCost > 0) {
+                openCostAlert(gameName, gameUrl, gameCost);
+                return;
+              }
+
+              openModal(gameName, gameUrl);
+            });
+          });
+
+          closeButton.addEventListener('click', closeModal);
+
+          modal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target instanceof HTMLElement && target.getAttribute('data-close-modal') === 'true') {
+              closeModal();
+            }
+          });
+
+          if (costAlert) {
+            costAlert.addEventListener('click', (event) => {
+              const target = event.target;
+              if (target instanceof HTMLElement && target.getAttribute('data-close-cost-alert') === 'true') {
+                closeCostAlert();
+              }
+            });
+          }
+
+          if (costAlertCancel) {
+            costAlertCancel.addEventListener('click', closeCostAlert);
+          }
+
+          if (costAlertConfirm) {
+            costAlertConfirm.addEventListener('click', () => {
+              if (pendingGame && pendingGame.url) {
+                const { name, url } = pendingGame;
+                closeCostAlert();
+                openModal(name, url);
+              } else {
+                closeCostAlert();
+              }
+            });
+          }
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape') {
+              return;
+            }
+
+            if (costAlert && costAlert.classList.contains('is-open')) {
+              closeCostAlert();
+              return;
+            }
+
+            if (modal.classList.contains('is-open')) {
+              closeModal();
+            }
+          });
+        }
+      })();
+    </script>
   </body>
 </html>

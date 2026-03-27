@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rede Social da Organizacao - Shorts</title>
+    <link rel="stylesheet" href="/social/static/css/social.css" />
+    <link rel="stylesheet" href="/social/static/css/social-shorts.css" />
+  </head>
+  <body class="shorts-body">
+    <div class="social-shell shorts-shell-layout">
+      <header class="social-header">
+        <div class="social-header-inner">
+          <div class="social-brand">
+            {{#if organization.logoUrl}}
+              <img class="org-logo" src="{{organization.logoUrl}}" alt="Logo de {{organization.nome}}" />
+            {{else}}
+              <span class="org-logo org-logo-default" aria-label="Logo padrão da organização">🏫</span>
+            {{/if}}
+            <span class="org-name">{{organization.nome}}</span>
+          </div>
+          <div class="social-header-right">
+            <div class="coin-badge">🪙 Moedas: {{moedas}}</div>
+            <a class="user-pill-link" href="/social/profile">
+              <div class="user-pill">
+                {{#if user.urlAvatar}}
+                  <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}" />
+                {{else}}
+                  <span class="user-avatar user-avatar-fallback">🙂</span>
+                {{/if}}
+                <span class="user-name">{{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <nav class="social-nav">
+        <a href="/social/home">Home</a>
+        <a class="active" href="/social/shorts">Shorts</a>
+        <a href="/social/games">Jogos</a>
+      </nav>
+
+      <main class="shorts-page">
+        <section class="shorts-feed" id="shorts-feed" aria-label="Timeline em formato shorts">
+          {{#if timeline.length}}
+            {{#each timeline}}
+              <article class="shorts-card timeline-item" data-post-uuid="{{uuid}}" data-created-at="{{criadoEm}}">
+                <div class="shorts-stage{{#unless midiaUrl}} shorts-stage--text-only{{/unless}}">
+                  {{#if midiaUrl}}
+                    <div class="shorts-media-wrap">
+                      {{#if isVideo}}
+                        <video class="shorts-media shorts-media-video" playsinline muted loop preload="metadata" poster="{{midiaUrl}}">
+                          <source src="{{midiaUrl}}" type="video/mp4" />
+                          Seu navegador não suporta reprodução de vídeo.
+                        </video>
+                      {{else}}
+                        <img class="shorts-media" src="{{midiaUrl}}" alt="Mídia da postagem" />
+                      {{/if}}
+                    </div>
+                  {{else}}
+                    <div class="shorts-text-wrap">
+                      <div class="shorts-text-surface{{#if textHighlightVariant}} shorts-text-surface--{{textHighlightVariant}}{{/if}}">
+                        <p>{{#if texto}}{{texto}}{{else}}Sem legenda{{/if}}</p>
+                      </div>
+                    </div>
+                  {{/if}}
+
+                  <div class="shorts-overlay">
+                    <div class="shorts-meta">
+                      {{#if urlRedirecionamento}}
+                        <a class="shorts-link-chip" href="{{urlRedirecionamento}}" target="_blank" rel="noopener noreferrer">
+                          ↗
+                          {{#if tituloRedirecionamento}}
+                            {{tituloRedirecionamento}}
+                          {{else}}
+                            Abrir link
+                          {{/if}}
+                        </a>
+                      {{/if}}
+
+                      {{#if isOwnPost}}
+                        <button
+                          type="button"
+                          class="shorts-delete"
+                          data-delete-post-button="true"
+                          data-publicacao-uuid="{{uuid}}"
+                        >
+                          Excluir postagem
+                        </button>
+                      {{/if}}
+
+                      {{#if texto}}
+                        {{#if midiaUrl}}
+                          <p class="shorts-caption">{{texto}}</p>
+                        {{/if}}
+                      {{/if}}
+
+                      <div class="shorts-author-row">
+                        {{#if authorAvatarUrl}}
+                          <img class="shorts-avatar-image" src="{{authorAvatarUrl}}" alt="Avatar de {{authorName}}" />
+                        {{else}}
+                          <span class="shorts-avatar">{{authorInitial}}</span>
+                        {{/if}}
+                        <div class="shorts-author-meta">
+                          <span class="shorts-author-name">@{{authorName}}</span>
+                          <time class="shorts-author-time" data-post-timestamp="true"></time>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="shorts-rail" aria-label="Ações da postagem">
+                      <div class="shorts-action-stack">
+                        <button
+                          type="button"
+                          class="shorts-action action-like-button{{#if likedByCurrentUser}} is-liked{{/if}}"
+                          data-like-button="true"
+                          data-publicacao-uuid="{{uuid}}"
+                          aria-label="Curtir"
+                        >
+                          <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6 6 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </button>
+                        <span class="shorts-action-total" data-like-total>{{likes}}</span>
+                        <span class="shorts-action-label">Curtir</span>
+                      </div>
+
+                      <div class="shorts-action-stack">
+                        <button
+                          type="button"
+                          class="shorts-action action-comment-button"
+                          data-comment-button="true"
+                          data-publicacao-uuid="{{uuid}}"
+                          aria-label="Comentar"
+                        >
+                          <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M21 12c0 4.4-4 8-9 8-1.2 0-2.3-.2-3.4-.6L4 20l1.2-3.9C4.4 15 4 13.5 4 12c0-4.4 4-8 9-8s8 3.6 8 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </button>
+                        <span class="shorts-action-total" data-comment-total>{{comments}}</span>
+                        <span class="shorts-action-label">Comentários</span>
+                      </div>
+
+                      <div class="shorts-action-stack">
+                        <span class="shorts-action" aria-hidden="true">
+                          <svg class="shorts-action-icon" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                        <span class="shorts-action-total">{{compartilhars}}</span>
+                        <span class="shorts-action-label">Impulsos</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            {{/each}}
+          {{else}}
+            <section class="shorts-empty">
+              <div class="social-card">
+                <h3>Sem shorts ainda</h3>
+                <p class="muted">Assim que novas publicações chegarem, elas vão aparecer aqui em formato vertical.</p>
+              </div>
+            </section>
+          {{/if}}
+        </section>
+
+      </main>
+
+      <div class="comment-modal" id="comment-modal" aria-hidden="true">
+        <div class="comment-modal-backdrop" data-close-comments-modal="true"></div>
+        <section class="comment-modal-content" role="dialog" aria-modal="true" aria-label="Comentários da postagem">
+          <header class="comment-modal-header">
+            <h3>Comentários</h3>
+            <button type="button" class="comment-modal-close" id="comment-modal-close" aria-label="Fechar">✕</button>
+          </header>
+
+          <div class="comment-modal-body">
+            <section class="comment-modal-post" id="comment-modal-post"></section>
+
+            <section class="comment-modal-side">
+              <div class="comment-list" id="comment-list"></div>
+              <form class="comment-form" id="comment-form">
+                <textarea id="comment-input" maxlength="600" placeholder="Escreva um comentário..." required></textarea>
+                <div class="comment-form-actions">
+                  <div class="emoji-picker-wrap">
+                    <button
+                      type="button"
+                      class="emoji-toggle-button"
+                      id="comment-emoji-toggle"
+                      aria-label="Abrir emojis"
+                      aria-expanded="false"
+                    >😊</button>
+                    <div class="emoji-picker" id="comment-emoji-picker" hidden>
+                      <button type="button" class="emoji-option" data-emoji="😀">😀</button>
+                      <button type="button" class="emoji-option" data-emoji="😂">😂</button>
+                      <button type="button" class="emoji-option" data-emoji="😍">😍</button>
+                      <button type="button" class="emoji-option" data-emoji="🥰">🥰</button>
+                      <button type="button" class="emoji-option" data-emoji="🤩">🤩</button>
+                      <button type="button" class="emoji-option" data-emoji="😎">😎</button>
+                      <button type="button" class="emoji-option" data-emoji="🤗">🤗</button>
+                      <button type="button" class="emoji-option" data-emoji="😅">😅</button>
+                      <button type="button" class="emoji-option" data-emoji="🙌">🙌</button>
+                      <button type="button" class="emoji-option" data-emoji="👏">👏</button>
+                      <button type="button" class="emoji-option" data-emoji="🔥">🔥</button>
+                      <button type="button" class="emoji-option" data-emoji="✨">✨</button>
+                      <button type="button" class="emoji-option" data-emoji="🎉">🎉</button>
+                      <button type="button" class="emoji-option" data-emoji="🫶">🫶</button>
+                      <button type="button" class="emoji-option" data-emoji="❤️">❤️</button>
+                      <button type="button" class="emoji-option" data-emoji="💙">💙</button>
+                      <button type="button" class="emoji-option" data-emoji="💜">💜</button>
+                      <button type="button" class="emoji-option" data-emoji="🌟">🌟</button>
+                      <button type="button" class="emoji-option" data-emoji="😮">😮</button>
+                      <button type="button" class="emoji-option" data-emoji="😢">😢</button>
+                      <button type="button" class="emoji-option" data-emoji="😡">😡</button>
+                      <button type="button" class="emoji-option" data-emoji="🤔">🤔</button>
+                      <button type="button" class="emoji-option" data-emoji="👍">👍</button>
+                      <button type="button" class="emoji-option" data-emoji="👎">👎</button>
+                    </div>
+                  </div>
+                  <button type="submit" id="comment-submit">Enviar</button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const shortsFeed = document.getElementById('shorts-feed');
+        const cards = Array.from(document.querySelectorAll('.shorts-card'));
+        const likeButtons = document.querySelectorAll('[data-like-button="true"]');
+        const deleteButtons = document.querySelectorAll('[data-delete-post-button="true"]');
+        const videos = Array.from(document.querySelectorAll('.shorts-media-video'));
+        const timeElements = document.querySelectorAll('[data-post-timestamp="true"]');
+        const commentModal = document.getElementById('comment-modal');
+        const commentModalClose = document.getElementById('comment-modal-close');
+        const commentModalPost = document.getElementById('comment-modal-post');
+        const commentList = document.getElementById('comment-list');
+        const commentForm = document.getElementById('comment-form');
+        const commentInput = document.getElementById('comment-input');
+        const commentSubmit = document.getElementById('comment-submit');
+        const emojiToggle = document.getElementById('comment-emoji-toggle');
+        const emojiPicker = document.getElementById('comment-emoji-picker');
+        const commentButtons = document.querySelectorAll('[data-comment-button="true"]');
+        let currentCommentPostUuid = null;
+
+        const formatRelativeDate = (value) => {
+          if (!value) {
+            return 'Agora';
+          }
+
+          const parsed = new Date(value);
+          if (Number.isNaN(parsed.getTime())) {
+            return 'Agora';
+          }
+
+          const diff = Date.now() - parsed.getTime();
+          const minutes = Math.max(1, Math.floor(diff / 60000));
+          if (minutes < 60) {
+            return `${minutes} min atrás`;
+          }
+
+          const hours = Math.floor(minutes / 60);
+          if (hours < 24) {
+            return `${hours} h atrás`;
+          }
+
+          const days = Math.floor(hours / 24);
+          return `${days} d atrás`;
+        };
+
+        cards.forEach((card) => {
+          const timeElement = card.querySelector('[data-post-timestamp="true"]');
+          if (!(timeElement instanceof HTMLElement)) {
+            return;
+          }
+
+          timeElement.textContent = formatRelativeDate(card.getAttribute('data-created-at'));
+        });
+
+        if (shortsFeed instanceof HTMLElement && cards.length > 0) {
+          let currentIndex = 0;
+
+          const focusCard = (index) => {
+            const nextCard = cards[index];
+            if (!(nextCard instanceof HTMLElement)) {
+              return;
+            }
+
+            currentIndex = index;
+            nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          };
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowDown' || event.key === 'PageDown') {
+              event.preventDefault();
+              focusCard(Math.min(cards.length - 1, currentIndex + 1));
+            }
+
+            if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+              event.preventDefault();
+              focusCard(Math.max(0, currentIndex - 1));
+            }
+          });
+
+          const activeCardObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const index = cards.indexOf(entry.target);
+                  if (index >= 0) {
+                    currentIndex = index;
+                  }
+                }
+              });
+            },
+            { threshold: 0.7, root: shortsFeed },
+          );
+
+          cards.forEach((card) => activeCardObserver.observe(card));
+        }
+
+        if (videos.length > 0) {
+          const pauseAllVideos = () => {
+            videos.forEach((video) => {
+              video.pause();
+            });
+          };
+
+          const videoObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                const video = entry.target;
+                if (!(video instanceof HTMLVideoElement)) {
+                  return;
+                }
+
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.75) {
+                  pauseAllVideos();
+                  video.play().catch(() => undefined);
+                  return;
+                }
+
+                video.pause();
+              });
+            },
+            { threshold: [0.25, 0.75], root: shortsFeed instanceof HTMLElement ? shortsFeed : null },
+          );
+
+          videos.forEach((video) => videoObserver.observe(video));
+        }
+
+        likeButtons.forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) {
+            return;
+          }
+
+          button.addEventListener('click', async () => {
+            const publicacaoUuid = button.getAttribute('data-publicacao-uuid');
+            if (!publicacaoUuid || button.disabled) {
+              return;
+            }
+
+            const likedBefore = button.classList.contains('is-liked');
+            button.disabled = true;
+
+            try {
+              const response = await fetch(`/social/feed/post/${encodeURIComponent(publicacaoUuid)}/like`, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error('Falha ao curtir postagem');
+              }
+
+              const payload = await response.json();
+              const liked = Boolean(payload?.data?.liked);
+              button.classList.toggle('is-liked', liked);
+
+              const card = button.closest('.shorts-card');
+              const totalEl = card?.querySelector('[data-like-total]');
+              if (totalEl instanceof HTMLElement) {
+                const current = Number.parseInt(totalEl.textContent || '0', 10);
+                if (!Number.isNaN(current) && liked !== likedBefore) {
+                  totalEl.textContent = String(liked ? current + 1 : Math.max(0, current - 1));
+                }
+              }
+            } catch (error) {
+              console.error(error);
+            } finally {
+              button.disabled = false;
+            }
+          });
+        });
+
+        deleteButtons.forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) {
+            return;
+          }
+
+          button.addEventListener('click', async () => {
+            const publicacaoUuid = button.getAttribute('data-publicacao-uuid');
+            if (!publicacaoUuid || button.disabled) {
+              return;
+            }
+
+            const shouldDelete = window.confirm('Deseja excluir esta postagem?');
+            if (!shouldDelete) {
+              return;
+            }
+
+            button.disabled = true;
+
+            try {
+              const response = await fetch(`/social/feed/post/${encodeURIComponent(publicacaoUuid)}`, {
+                method: 'DELETE',
+                headers: {
+                  Accept: 'application/json',
+                },
+              });
+
+              if (!response.ok) {
+                throw new Error('Falha ao excluir postagem');
+              }
+
+              const article = button.closest('.shorts-card');
+              if (article instanceof HTMLElement) {
+                article.remove();
+              }
+            } catch (error) {
+              console.error(error);
+              button.disabled = false;
+            }
+          });
+        });
+
+        if (
+          commentModal &&
+          commentModalClose &&
+          commentModalPost &&
+          commentList &&
+          commentForm &&
+          commentInput &&
+          commentSubmit &&
+          emojiToggle &&
+          emojiPicker
+        ) {
+          const closeEmojiPicker = () => {
+            emojiPicker.setAttribute('hidden', 'true');
+            emojiToggle.setAttribute('aria-expanded', 'false');
+          };
+
+          const openEmojiPicker = () => {
+            emojiPicker.removeAttribute('hidden');
+            emojiToggle.setAttribute('aria-expanded', 'true');
+          };
+
+          const insertEmojiAtCursor = (emoji) => {
+            if (!(commentInput instanceof HTMLTextAreaElement)) {
+              return;
+            }
+
+            const start = commentInput.selectionStart ?? commentInput.value.length;
+            const end = commentInput.selectionEnd ?? commentInput.value.length;
+            const current = commentInput.value;
+            commentInput.value = `${current.slice(0, start)}${emoji}${current.slice(end)}`;
+            const cursor = start + emoji.length;
+            commentInput.focus();
+            commentInput.setSelectionRange(cursor, cursor);
+          };
+
+          const updateCommentTotal = (publicacaoUuid, total) => {
+            const article = document.querySelector(`.shorts-card[data-post-uuid="${publicacaoUuid}"]`);
+            if (!(article instanceof HTMLElement)) {
+              return;
+            }
+
+            const totalEl = article.querySelector('[data-comment-total]');
+            if (totalEl instanceof HTMLElement) {
+              totalEl.textContent = String(total);
+            }
+          };
+
+          const renderPostPreview = (publicacaoUuid) => {
+            commentModalPost.innerHTML = '';
+            const article = document.querySelector(`.shorts-card[data-post-uuid="${publicacaoUuid}"]`);
+            if (!(article instanceof HTMLElement)) {
+              return;
+            }
+
+            const preview = document.createElement('article');
+            preview.className = 'comment-modal-post-preview';
+            const stage = article.querySelector('.shorts-stage');
+            if (stage instanceof HTMLElement) {
+              preview.appendChild(stage.cloneNode(true));
+            }
+            commentModalPost.appendChild(preview);
+          };
+
+          const formatCommentDate = (value) => {
+            try {
+              return new Intl.DateTimeFormat('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              }).format(new Date(value));
+            } catch {
+              return '';
+            }
+          };
+
+          const renderComments = (comments) => {
+            commentList.innerHTML = '';
+
+            if (!Array.isArray(comments) || comments.length === 0) {
+              const empty = document.createElement('p');
+              empty.className = 'comment-empty';
+              empty.textContent = 'Ainda não há comentários nesta postagem.';
+              commentList.appendChild(empty);
+              return;
+            }
+
+            comments.forEach((comment) => {
+              const item = document.createElement('article');
+              item.className = `comment-item${comment?.isFromCurrentUser ? ' is-own' : ''}`;
+
+              const avatarWrap = document.createElement('span');
+              avatarWrap.className = 'comment-avatar-wrap';
+
+              if (comment?.authorAvatarUrl) {
+                const avatarImg = document.createElement('img');
+                avatarImg.className = 'comment-avatar';
+                avatarImg.src = comment.authorAvatarUrl;
+                avatarImg.alt = `Avatar de ${comment.authorName || 'Usuário'}`;
+                avatarWrap.appendChild(avatarImg);
+              } else {
+                const avatarFallback = document.createElement('span');
+                avatarFallback.className = 'comment-avatar comment-avatar-fallback';
+                avatarFallback.textContent = comment?.authorInitial || 'U';
+                avatarWrap.appendChild(avatarFallback);
+              }
+
+              const body = document.createElement('div');
+              body.className = 'comment-item-body';
+
+              const head = document.createElement('div');
+              head.className = 'comment-item-head';
+
+              const author = document.createElement('span');
+              author.className = 'comment-author';
+              author.textContent = `@${comment?.authorName || 'Usuário'}`;
+
+              const date = document.createElement('time');
+              date.className = 'comment-date';
+              date.textContent = formatCommentDate(comment?.criadoEm);
+
+              const text = document.createElement('p');
+              text.className = 'comment-text';
+              text.textContent = comment?.comentario || '';
+
+              head.appendChild(author);
+              head.appendChild(date);
+              body.appendChild(head);
+              body.appendChild(text);
+              item.appendChild(avatarWrap);
+              item.appendChild(body);
+              commentList.appendChild(item);
+            });
+          };
+
+          const loadComments = async (publicacaoUuid) => {
+            commentList.innerHTML = '<p class="comment-empty">Carregando comentários...</p>';
+
+            const response = await fetch(`/social/feed/post/${encodeURIComponent(publicacaoUuid)}/comments`, {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+              },
+            });
+
+            if (!response.ok) {
+              throw new Error('Falha ao carregar comentários');
+            }
+
+            const payload = await response.json();
+            const comments = Array.isArray(payload?.data) ? payload.data : [];
+            renderComments(comments);
+            updateCommentTotal(publicacaoUuid, comments.length);
+          };
+
+          const closeCommentsModal = () => {
+            commentModal.classList.remove('is-open');
+            commentModal.setAttribute('aria-hidden', 'true');
+            currentCommentPostUuid = null;
+            commentModalPost.innerHTML = '';
+            commentList.innerHTML = '';
+            commentInput.value = '';
+            closeEmojiPicker();
+          };
+
+          const openCommentsModal = async (publicacaoUuid) => {
+            currentCommentPostUuid = publicacaoUuid;
+            renderPostPreview(publicacaoUuid);
+            commentModal.classList.add('is-open');
+            commentModal.setAttribute('aria-hidden', 'false');
+
+            try {
+              await loadComments(publicacaoUuid);
+            } catch (error) {
+              console.error(error);
+              commentList.innerHTML = '<p class="comment-empty">Não foi possível carregar os comentários.</p>';
+            }
+          };
+
+          commentButtons.forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            button.addEventListener('click', () => {
+              const publicacaoUuid = button.getAttribute('data-publicacao-uuid');
+              if (!publicacaoUuid) {
+                return;
+              }
+
+              openCommentsModal(publicacaoUuid);
+            });
+          });
+
+          commentModalClose.addEventListener('click', closeCommentsModal);
+
+          emojiToggle.addEventListener('click', () => {
+            if (emojiPicker.hasAttribute('hidden')) {
+              openEmojiPicker();
+              return;
+            }
+
+            closeEmojiPicker();
+          });
+
+          emojiPicker.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) {
+              return;
+            }
+
+            const button = target.closest('.emoji-option');
+            if (!(button instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            const emoji = button.getAttribute('data-emoji');
+            if (!emoji) {
+              return;
+            }
+
+            insertEmojiAtCursor(emoji);
+            closeEmojiPicker();
+          });
+
+          commentModal.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target instanceof HTMLElement && target.getAttribute('data-close-comments-modal') === 'true') {
+              closeCommentsModal();
+            }
+          });
+
+          document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Node)) {
+              return;
+            }
+
+            if (!emojiPicker.hasAttribute('hidden') && !emojiPicker.contains(target) && !emojiToggle.contains(target)) {
+              closeEmojiPicker();
+            }
+          });
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && commentModal.classList.contains('is-open')) {
+              closeCommentsModal();
+            }
+          });
+
+          commentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (!currentCommentPostUuid || !(commentInput instanceof HTMLTextAreaElement)) {
+              return;
+            }
+
+            const comentario = commentInput.value.trim();
+            if (!comentario) {
+              return;
+            }
+
+            commentSubmit.setAttribute('disabled', 'true');
+            commentInput.setAttribute('disabled', 'true');
+            emojiToggle.setAttribute('disabled', 'true');
+            closeEmojiPicker();
+
+            try {
+              const response = await fetch(`/social/feed/post/${encodeURIComponent(currentCommentPostUuid)}/comment`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                },
+                body: JSON.stringify({ comentario }),
+              });
+
+              if (!response.ok) {
+                throw new Error('Falha ao enviar comentário');
+              }
+
+              commentInput.value = '';
+              await loadComments(currentCommentPostUuid);
+            } catch (error) {
+              console.error(error);
+            } finally {
+              commentSubmit.removeAttribute('disabled');
+              commentInput.removeAttribute('disabled');
+              emojiToggle.removeAttribute('disabled');
+              commentInput.focus();
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
