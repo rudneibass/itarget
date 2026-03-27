@@ -24,6 +24,9 @@ async function bootstrap() {
   app.useStaticAssets(join(process.cwd(), 'src', 'app', 'social', 'static'), {
     prefix: '/social/static/',
   });
+  app.useStaticAssets(join(process.cwd(), 'uploads', 'admin'), {
+    prefix: '/admin/uploads/',
+  });
   app.useStaticAssets(join(process.cwd(), 'uploads', 'social'), {
     prefix: '/social/uploads/',
   });

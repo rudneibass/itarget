@@ -4,6 +4,7 @@ import { randomBytes, randomUUID, scryptSync } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { CreateUsuarioAdminDto } from '../../dtos/usuario-admin/create-usuario-admin.dto';
 import { UpdateUsuarioAdminDto } from '../../dtos/usuario-admin/update-usuario-admin.dto';
+import { Arquivo } from '../../models/arquivo/arquivo.entity';
 import { UsuarioAdmin } from '../../models/usuario-admin/usuario-admin.entity';
 
 @Injectable()
@@ -11,6 +12,8 @@ export class UsuarioAdminService {
   constructor(
     @InjectRepository(UsuarioAdmin)
     private readonly usuarioAdminRepository: Repository<UsuarioAdmin>,
+    @InjectRepository(Arquivo)
+    private readonly arquivoRepository: Repository<Arquivo>,
   ) {}
 
   private hashPassword(password: string): string {
@@ -19,14 +22,30 @@ export class UsuarioAdminService {
     return `${salt}:${hash}`;
   }
 
-  private sanitize(user: UsuarioAdmin) {
+  private async resolveAvatarUrl(usuarioId: number) {
+    const avatar = await this.arquivoRepository
+      .createQueryBuilder('arquivo')
+      .where('arquivo.entidadePai = :entidadePai', { entidadePai: 'usuario-admin' })
+      .andWhere('arquivo.entidadePaiId = :entidadePaiId', { entidadePaiId: usuarioId })
+      .andWhere('LOWER(arquivo.tipo) LIKE :tipo', { tipo: 'image/%' })
+      .orderBy('arquivo.id', 'DESC')
+      .getOne();
+
+    return avatar?.url ?? null;
+  }
+
+  private async sanitize(user: UsuarioAdmin) {
     const { senhaHash, ...safeUser } = user;
-    return safeUser;
+    const avatarUrl = await this.resolveAvatarUrl(user.id);
+    return {
+      ...safeUser,
+      avatarUrl,
+    };
   }
 
   async findAll() {
     const users = await this.usuarioAdminRepository.find({ order: { id: 'DESC' } });
-    return users.map((item) => this.sanitize(item));
+    return Promise.all(users.map((item) => this.sanitize(item)));
   }
 
   async get(uuid: string) {
@@ -53,7 +72,6 @@ export class UsuarioAdminService {
       nome,
       email,
       senhaHash: this.hashPassword(senha),
-      organizacaoUuid: payload.organizacaoUuid || null,
       ativo: payload.ativo ?? true,
     });
 
@@ -78,10 +96,6 @@ export class UsuarioAdminService {
 
     if (payload.nome !== undefined) {
       user.nome = payload.nome.trim();
-    }
-
-    if (payload.organizacaoUuid !== undefined) {
-      user.organizacaoUuid = payload.organizacaoUuid || null;
     }
 
     if (typeof payload.ativo === 'boolean') {

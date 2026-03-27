@@ -30,11 +30,8 @@ endpoints = {
     arquivo: {
         form: '/arquivo/form',
         uploadLocalServer: '/arquivo/upload-local-server',  
-        uploadS3: '/arquivo/upload-s3',
-        download: '/arquivo/download',
-        delete: '/arquivo/delete',
-        list: '/arquivo/list',
-        get: '/arquivo/get',
-        save: '/arquivo/save'
+        delete: '/arquivo',
+        list: '/arquivo/all',
+        get: '/arquivo'
     }
 }

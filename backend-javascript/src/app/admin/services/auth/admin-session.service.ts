@@ -5,7 +5,6 @@ export interface AdminSessionUser {
   uuid: string;
   nome: string;
   email: string;
-  organizacaoUuid: string | null;
 }
 
 export interface AdminSessionData {
@@ -31,7 +30,6 @@ export class AdminSessionService {
         uuid: user.uuid,
         nome: user.nome,
         email: user.email,
-        organizacaoUuid: user.organizacaoUuid ?? null,
       },
       criadoEm: now,
       atualizadoEm: now,
@@ -56,17 +54,6 @@ export class AdminSessionService {
     session.atualizadoEm = new Date();
     this.sessions.set(sessaoId, session);
     return session;
-  }
-
-  updateOrganization(sessaoId: string, organizacaoUuid: string | null) {
-    const session = this.sessions.get(sessaoId);
-    if (!session) {
-      return;
-    }
-
-    session.usuario.organizacaoUuid = organizacaoUuid;
-    session.atualizadoEm = new Date();
-    this.sessions.set(sessaoId, session);
   }
 
   delete(sessaoId: string) {

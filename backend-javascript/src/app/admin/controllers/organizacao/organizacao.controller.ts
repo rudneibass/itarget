@@ -15,15 +15,11 @@ import {
 import { CreateOrganizacaoDto } from '../../dtos/organizacao/create-organizacao.dto';
 import { ListOrganizacaoQueryDto } from '../../dtos/organizacao/list-organizacao-query.dto';
 import { UpdateOrganizacaoDto } from '../../dtos/organizacao/update-organizacao.dto';
-import { AdminSessionService } from '../../services/auth/admin-session.service';
 import { OrganizacaoService } from '../../services/organizacao/organizacao.service';
 
 @Controller('admin/organizacao')
 export class OrganizacaoController {
-  constructor(
-    private readonly organizacaoService: OrganizacaoService,
-    private readonly adminSessionService: AdminSessionService,
-  ) {}
+  constructor(private readonly organizacaoService: OrganizacaoService) {}
 
   @Get('list')
   @Render('pages/organizacao/list')
@@ -73,7 +69,6 @@ export class OrganizacaoController {
     try {
       const ownerUuid = req.adminSession.usuario.uuid;
       const data = await this.organizacaoService.create(ownerUuid, createOrganizacaoDto);
-      this.adminSessionService.updateOrganization(req.adminSession.sessaoId, data.uuid);
       return { data };
     } catch (error) {
       throw new HttpException(
@@ -106,7 +101,6 @@ export class OrganizacaoController {
     try {
       const ownerUuid = req.adminSession.usuario.uuid;
       await this.organizacaoService.remove(ownerUuid, uuid);
-      this.adminSessionService.updateOrganization(req.adminSession.sessaoId, null);
       return { message: 'Organização removida com sucesso' };
     } catch (error) {
       throw new HttpException(

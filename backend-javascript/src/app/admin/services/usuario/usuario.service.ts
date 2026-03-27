@@ -47,29 +47,7 @@ export class UsuarioService {
       }
     }
 
-    if (!owner.organizacaoUuid) {
-      throw new BadRequestException('Primeiro é preciso criar uma organização para depois adicionar colaboradores.');
-    }
-
-    const organizacaoByOwner = await this.organizacaoRepository.findOne({
-      where: { uuid: owner.organizacaoUuid, ativo: true },
-    });
-    if (!organizacaoByOwner) {
-      throw new BadRequestException('Primeiro é preciso criar uma organização para depois adicionar colaboradores.');
-    }
-
-    if (!ownerVinculo) {
-      const vinculoOwner = this.usuarioOrganizacaoRepository.create({
-        usuarioId: owner.id,
-        organizacaoId: organizacaoByOwner.id,
-        tipo: 'DONO',
-        criadoPorUsuarioId: owner.id,
-        ativo: true,
-      });
-      await this.usuarioOrganizacaoRepository.save(vinculoOwner);
-    }
-
-    return organizacaoByOwner;
+    throw new BadRequestException('Primeiro é preciso criar uma organização para depois adicionar colaboradores.');
   }
 
   async listOrganizations() {
@@ -100,7 +78,7 @@ export class UsuarioService {
 
     const usuarioIds = vinculos.map((v) => v.usuarioId);
     const usuarios = await this.usuarioRepository.find({
-      where: { id: In(usuarioIds), organizacaoUuid },
+      where: { id: In(usuarioIds) },
       order: { nome: 'ASC' },
     });
 
@@ -148,7 +126,7 @@ export class UsuarioService {
 
   async create(payload: any, ownerUuid?: string) {
     const ownerOrganization = ownerUuid ? await this.getOwnedOrganization(ownerUuid) : null;
-    const organizacaoUuid = ownerOrganization?.uuid ?? payload.organizacaoUuid;
+    const organizacaoUuid = ownerOrganization?.uuid;
 
     if (!organizacaoUuid) {
       throw new BadRequestException('Primeiro é preciso criar uma organização para depois adicionar colaboradores.');

@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { CreateOrganizacaoDto } from '../../dtos/organizacao/create-organizacao.dto';
 import { UpdateOrganizacaoDto } from '../../dtos/organizacao/update-organizacao.dto';
+import { Arquivo } from '../../models/arquivo/arquivo.entity';
 import { UsuarioAdmin } from '../../models/usuario-admin/usuario-admin.entity';
 import { UsuarioOrganizacao } from '../../models/usuario-organizacao/usuario-organizacao.entity';
 import { Organizacao } from '../../../social/models/organizacao/organizacao.entity';
@@ -13,6 +14,8 @@ export class OrganizacaoService {
   constructor(
     @InjectRepository(Organizacao)
     private readonly organizacaoRepository: Repository<Organizacao>,
+    @InjectRepository(Arquivo)
+    private readonly arquivoRepository: Repository<Arquivo>,
     @InjectRepository(UsuarioAdmin)
     private readonly usuarioAdminRepository: Repository<UsuarioAdmin>,
     @InjectRepository(UsuarioOrganizacao)
@@ -45,33 +48,33 @@ export class OrganizacaoService {
       }
     }
 
-    if (!owner.organizacaoUuid) {
-      return null;
-    }
-
-    const organizacaoByOwner = await this.organizacaoRepository.findOne({ where: { uuid: owner.organizacaoUuid } });
-    if (!organizacaoByOwner) {
-      return null;
-    }
-
-    if (!vinculo) {
-      const ownerVinculo = this.usuarioOrganizacaoRepository.create({
-        usuarioId: owner.id,
-        organizacaoId: organizacaoByOwner.id,
-        tipo: 'DONO',
-        criadoPorUsuarioId: owner.id,
-        ativo: true,
-      });
-      await this.usuarioOrganizacaoRepository.save(ownerVinculo);
-    }
-
-    return organizacaoByOwner;
+    return null;
   }
 
   async getOwnedOrganizationUuid(ownerUuid: string) {
     const owner = await this.getOwnerUser(ownerUuid);
     const organizacao = await this.getOwnedOrganization(owner);
     return organizacao?.uuid ?? null;
+  }
+
+  private async resolveLogoUrl(organizacaoId: number) {
+    const avatar = await this.arquivoRepository
+      .createQueryBuilder('arquivo')
+      .where('arquivo.entidadePai = :entidadePai', { entidadePai: 'organizacao' })
+      .andWhere('arquivo.entidadePaiId = :entidadePaiId', { entidadePaiId: organizacaoId })
+      .andWhere('LOWER(arquivo.tipo) LIKE :tipo', { tipo: 'image/%' })
+      .orderBy('arquivo.id', 'DESC')
+      .getOne();
+
+    return avatar?.url ?? null;
+  }
+
+  private async attachLogo(organizacao: Organizacao) {
+    const logoUrl = await this.resolveLogoUrl(organizacao.id);
+    return {
+      ...organizacao,
+      logoUrl,
+    };
   }
 
   async findAll(ownerUuid: string) {
@@ -82,7 +85,7 @@ export class OrganizacaoService {
       return [];
     }
 
-    return [organizacao];
+    return [await this.attachLogo(organizacao)];
   }
 
   async get(ownerUuid: string, uuid?: string) {
@@ -97,7 +100,7 @@ export class OrganizacaoService {
       throw new NotFoundException('Organização não encontrada');
     }
 
-    return organizacao;
+    return this.attachLogo(organizacao);
   }
 
   async create(ownerUuid: string, createOrganizacaoDto: CreateOrganizacaoDto): Promise<Organizacao> {
@@ -110,7 +113,6 @@ export class OrganizacaoService {
 
     return this.organizacaoRepository.manager.transaction(async (entityManager) => {
       const organizacaoRepository = entityManager.getRepository(Organizacao);
-      const usuarioAdminRepository = entityManager.getRepository(UsuarioAdmin);
       const usuarioOrganizacaoRepository = entityManager.getRepository(UsuarioOrganizacao);
 
       const organizacao = organizacaoRepository.create({
@@ -132,9 +134,6 @@ export class OrganizacaoService {
 
       await usuarioOrganizacaoRepository.save(vinculo);
 
-      owner.organizacaoUuid = saved.uuid;
-      await usuarioAdminRepository.save(owner);
-
       return saved;
     });
   }
@@ -153,12 +152,8 @@ export class OrganizacaoService {
 
   async remove(ownerUuid: string, uuid: string): Promise<void> {
     try {
-      const owner = await this.getOwnerUser(ownerUuid);
       const organizacao = await this.get(ownerUuid, uuid);
       await this.organizacaoRepository.remove(organizacao);
-
-      owner.organizacaoUuid = null;
-      await this.usuarioAdminRepository.save(owner);
     } catch (error) {
       throw error;
     }

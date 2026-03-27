@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS public.usuario (
     nome            VARCHAR(255) NOT NULL,
     email           VARCHAR(255) NOT NULL UNIQUE,
     senha_hash      VARCHAR(255) NOT NULL,
-    organizacao_uuid TEXT NULL,
     ativo           BOOLEAN NOT NULL DEFAULT TRUE,
     criado_em       TIMESTAMP NOT NULL DEFAULT NOW(),
     alterado_em     TIMESTAMP NOT NULL DEFAULT NOW()

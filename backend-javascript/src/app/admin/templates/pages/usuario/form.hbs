@@ -69,6 +69,7 @@
         <div class="tab-content bg-white border border-top-0 perfil-form-tab-content">
             <div class="tab-pane active perfil-form-tab-pane" id="tab-meu-perfil">
                 <form id="form-meu-perfil" class="perfil-form-main">
+                    <input type="hidden" id="id" name="id" />
                     <input type="hidden" id="uuid" name="uuid" />
 
                     <div class="row">
@@ -101,6 +102,22 @@
                                 A senha sera atualizada somente se um novo valor for informado.
                             </div>
                         </div>
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Avatar do usuário</small>
+                                </label>
+                                <div class="mb-2">
+                                    <img
+                                        id="usuario-avatar-preview"
+                                        src=""
+                                        alt="Avatar do usuário"
+                                        style="width: 96px; height: 96px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; display: none;"
+                                    />
+                                </div>
+                                <input type="file" name="avatarFile" class="form-control" id="avatarFile" accept="image/*" />
+                            </div>
+                        </div>
                     </div>
                 </form>
 
@@ -129,6 +146,71 @@
         const meuPerfilForm = {
             formId: 'form-meu-perfil',
             profileUuid: '{{uuid}}',
+            setAvatarPreview: (url) => {
+                const $preview = $('#usuario-avatar-preview');
+                if (!url) {
+                    $preview.hide().attr('src', '');
+                    return;
+                }
+                $preview.attr('src', `${url}?t=${Date.now()}`).show();
+            },
+            loadAvatar: (usuarioId) => {
+                if (!usuarioId) {
+                    meuPerfilForm.setAvatarPreview(null);
+                    return;
+                }
+
+                $.ajax({
+                    url: `${admin.baseUrl}/arquivo/avatar`,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        entidadePai: 'usuario-admin',
+                        entidadePaiId: usuarioId,
+                    },
+                    success: function (response) {
+                        const avatarUrl = response?.data?.url || null;
+                        meuPerfilForm.setAvatarPreview(avatarUrl);
+                    },
+                    error: function () {
+                        meuPerfilForm.setAvatarPreview(null);
+                    },
+                });
+            },
+            uploadAvatar: ({ usuarioId, onSuccess, onError }) => {
+                const input = document.getElementById('avatarFile');
+                const file = input?.files?.[0];
+
+                if (!file || !usuarioId) {
+                    if (typeof onSuccess === 'function') {
+                        onSuccess(false);
+                    }
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                $.ajax({
+                    url: `${admin.baseUrl}/arquivo/upload-local-server?entidadePai=usuario-admin&entidadePaiId=${usuarioId}&slug=avatar`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        $('#avatarFile').val('');
+                        meuPerfilForm.loadAvatar(usuarioId);
+                        if (typeof onSuccess === 'function') {
+                            onSuccess(true);
+                        }
+                    },
+                    error: function (jqXHR) {
+                        if (typeof onError === 'function') {
+                            onError(jqXHR);
+                        }
+                    },
+                });
+            },
             edit: () => {
                 $(`#${meuPerfilForm.formId} :input`).prop('disabled', false);
             },
@@ -158,10 +240,12 @@
                         admin.loading(false);
                         const data = response?.data || {};
                         const $form = $('#' + meuPerfilForm.formId);
+                        $form.find('[name="id"]').val(data.id || '');
                         $form.find('[name="uuid"]').val(data.uuid || '');
                         $form.find('[name="nome"]').val(data.nome || '');
                         $form.find('[name="email"]').val(data.email || '');
                         $form.find('[name="senha"]').val('');
+                        meuPerfilForm.loadAvatar(data.id);
                     }
                 });
             },
@@ -208,13 +292,33 @@
                     success: function (responseData) {
                         admin.loading(false);
                         const data = responseData?.data || {};
+                        if (data?.id) {
+                            $form.find('[name="id"]').val(data.id);
+                        }
                         if (data?.uuid) {
                             $form.find('[name="uuid"]').val(data.uuid);
                         }
                         $form.find('[name="senha"]').val('');
-                        toastr['success']('Perfil atualizado com sucesso.');
-                        meuPerfilForm.disable();
-                        meuPerfilForm.load();
+
+                        const persistedId = Number($form.find('[name="id"]').val() || data?.id || 0);
+                        meuPerfilForm.uploadAvatar({
+                            usuarioId: persistedId,
+                            onSuccess: (uploaded) => {
+                                if (uploaded) {
+                                    toastr['success']('Perfil e avatar atualizados com sucesso.');
+                                } else {
+                                    toastr['success']('Perfil atualizado com sucesso.');
+                                }
+                                meuPerfilForm.disable();
+                                meuPerfilForm.load();
+                            },
+                            onError: (jqXHR) => {
+                                const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Perfil salvo, mas o upload do avatar falhou.';
+                                toastr['warning'](message);
+                                meuPerfilForm.disable();
+                                meuPerfilForm.load();
+                            },
+                        });
                     }
                 });
             }

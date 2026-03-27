@@ -1,0 +1,101 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button
+            class="btn btn-success btn-float section-actions-btn"
+            id="btn-arquivo-upload"
+        >
+            <i class="fa fa-upload"></i>
+            <span class="btn-label">Novo Upload</span>
+        </button>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default">
+        <small><i class="fa fa-file"></i></small>
+        <small>Arquivos</small>
+    </div>
+</section>
+
+<section>
+    <div class="list-table-container">
+        <table class="table table-sm table-striped table-hover width-100">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Entidade</th>
+                    <th>Tamanho</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-arquivo"></tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="messages-arquivo"></span>
+        </div>
+    </div>
+</section>
+
+<script>
+    (() => {
+        const arquivoList = {
+            list: () => {
+                $.ajax({
+                    url: `${admin.baseUrl}/arquivo/all`,
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: () => {
+                        admin.loading(true);
+                        $('#messages-arquivo').empty();
+                    },
+                    error: () => {
+                        admin.loading(false);
+                        $('#tbody-arquivo').empty();
+                        $('#messages-arquivo').html('<h6 class="text-muted text-center">Não foi possível listar os arquivos.</h6>');
+                    },
+                    success: (response) => {
+                        admin.loading(false);
+                        const data = response?.data || [];
+                        const $tbody = $('#tbody-arquivo');
+                        $tbody.empty();
+
+                        if (!data.length) {
+                            $('#messages-arquivo').html('<br/><h6 class="text-muted text-center">Nenhum arquivo encontrado.</h6>');
+                            return;
+                        }
+
+                        data.forEach((item) => {
+                            const tamanhoKb = (Number(item.tamanho || 0) / 1024).toFixed(1);
+                            $tbody.append(`
+                                <tr>
+                                    <td>${item.nome}</td>
+                                    <td>${item.entidadePai} #${item.entidadePaiId}</td>
+                                    <td>${tamanhoKb} KB</td>
+                                    <td><a href="${item.url}" target="_blank">Abrir</a></td>
+                                </tr>
+                            `);
+                        });
+                    },
+                });
+            },
+            openModal: () => {
+                admin.showModal({
+                    modalId: 'defaultModal',
+                    title: 'Upload de Arquivo',
+                    url: `${admin.baseUrl}/arquivo/form`,
+                    data: {
+                        idTabelaPai: '',
+                        tabelaPai: 'arquivo',
+                    },
+                });
+            },
+        };
+
+        window.arquivoList = arquivoList;
+
+        $('#btn-arquivo-upload').off('click').on('click', () => arquivoList.openModal());
+        document.addEventListener('admin:arquivo:uploaded', () => arquivoList.list());
+
+        arquivoList.list();
+    })();
+</script>

@@ -16,10 +16,6 @@ export class CreateUsuarioAdminDto {
   senha: string;
 
   @IsOptional()
-  @IsString()
-  organizacaoUuid?: string | null;
-
-  @IsOptional()
   @IsBoolean()
   ativo?: boolean;
 }

@@ -54,7 +54,6 @@ export class AdminAuthService {
       nome,
       email,
       senhaHash: this.hashPassword(senha),
-      organizacaoUuid: null,
       ativo: true,
     });
 
@@ -64,7 +63,6 @@ export class AdminAuthService {
       uuid: saved.uuid,
       nome: saved.nome,
       email: saved.email,
-      organizacaoUuid: saved.organizacaoUuid,
     });
   }
 
@@ -85,7 +83,6 @@ export class AdminAuthService {
       uuid: user.uuid,
       nome: user.nome,
       email: user.email,
-      organizacaoUuid: user.organizacaoUuid,
     });
   }
 

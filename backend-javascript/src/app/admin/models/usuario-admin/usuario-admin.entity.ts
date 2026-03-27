@@ -23,9 +23,6 @@ export class UsuarioAdmin {
   @Column({ name: 'senha_hash', type: 'varchar', length: 255 })
   senhaHash: string;
 
-  @Column({ name: 'organizacao_uuid', type: 'text', nullable: true })
-  organizacaoUuid: string | null;
-
   @Column({ type: 'boolean', default: true })
   ativo: boolean;
 

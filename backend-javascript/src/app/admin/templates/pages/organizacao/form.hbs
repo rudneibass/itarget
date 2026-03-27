@@ -64,6 +64,7 @@
         <div class="tab-content bg-white border border-top-0 organizacao-form-tab-content">
             <div class="tab-pane active organizacao-form-tab-pane" id="tab-form-organizacao">
                 <form id="form-organizacao" class="organizacao-form-main">
+                    <input type="hidden" id="id" name="id" />
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
                         <div class="col-md-12 ">
@@ -72,6 +73,22 @@
                                     <small class="text-muted">Nome</small>
                                 </label>
                                 <input type="text" name="nome" class="form-control" id="nome" maxlength="200" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Avatar da organização</small>
+                                </label>
+                                <div class="mb-2">
+                                    <img
+                                        id="organizacao-avatar-preview"
+                                        src=""
+                                        alt="Avatar da organização"
+                                        style="width: 96px; height: 96px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; display: none;"
+                                    />
+                                </div>
+                                <input type="file" name="avatarFile" class="form-control" id="avatarFile" accept="image/*" />
                             </div>
                         </div>
                         
@@ -118,6 +135,71 @@
         const organizacaoForm = {
             formId: 'form-organizacao',
             tabId: 'tab-form-organizacao',
+            setAvatarPreview: (url) => {
+                const $preview = $('#organizacao-avatar-preview');
+                if (!url) {
+                    $preview.hide().attr('src', '');
+                    return;
+                }
+                $preview.attr('src', `${url}?t=${Date.now()}`).show();
+            },
+            loadAvatar: (organizacaoId) => {
+                if (!organizacaoId) {
+                    organizacaoForm.setAvatarPreview(null);
+                    return;
+                }
+
+                $.ajax({
+                    url: `${admin.baseUrl}/arquivo/avatar`,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        entidadePai: 'organizacao',
+                        entidadePaiId: organizacaoId,
+                    },
+                    success: function (response) {
+                        const avatarUrl = response?.data?.url || null;
+                        organizacaoForm.setAvatarPreview(avatarUrl);
+                    },
+                    error: function () {
+                        organizacaoForm.setAvatarPreview(null);
+                    },
+                });
+            },
+            uploadAvatar: ({ organizacaoId, onSuccess, onError }) => {
+                const input = document.getElementById('avatarFile');
+                const file = input?.files?.[0];
+
+                if (!file || !organizacaoId) {
+                    if (typeof onSuccess === 'function') {
+                        onSuccess(false);
+                    }
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                $.ajax({
+                    url: `${admin.baseUrl}/arquivo/upload-local-server?entidadePai=organizacao&entidadePaiId=${organizacaoId}&slug=avatar`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        $('#avatarFile').val('');
+                        organizacaoForm.loadAvatar(organizacaoId);
+                        if (typeof onSuccess === 'function') {
+                            onSuccess(true);
+                        }
+                    },
+                    error: function (jqXHR) {
+                        if (typeof onError === 'function') {
+                            onError(jqXHR);
+                        }
+                    },
+                });
+            },
             setMode: (mode) => {
                 const $editButtonParent = $('#btn-organizacao-editar').closest('.section-actions-btn-parent');
                 const $saveLabel = $('#btn-organizacao-salvar .btn-label');
@@ -158,6 +240,7 @@
             populateForm: ({ url, uuid = null }) => {
                 if (!uuid) {
                     organizacaoForm.setMode('create');
+                    organizacaoForm.setAvatarPreview(null);
                     return;
                 }
                 $.ajax({
@@ -197,6 +280,7 @@
                             }
                             $field.val(value ?? '');
                         });
+                        organizacaoForm.loadAvatar(data.id);
                         organizacaoForm.setMode('view');
                     }
                 });
@@ -223,7 +307,7 @@
                     obj[item.name] = item.value;
                     return obj;
                 }, {});
-                formData.ativo = $form.find('[name="ativo"]').is(':checked');
+
                 $.ajax({
                     url,
                     type: method,
@@ -243,8 +327,28 @@
                         if (payload?.uuid && !uuid) {
                             $form.find('[name="uuid"]').val(payload.uuid);
                         }
-                        toastr['success']('Operação realizada com sucesso.');
-                        organizacaoForm.cancel('form-organizacao');
+                        if (payload?.id) {
+                            $form.find('[name="id"]').val(payload.id);
+                        }
+
+                        const persistedId = Number($form.find('[name="id"]').val() || payload?.id || 0);
+
+                        organizacaoForm.uploadAvatar({
+                            organizacaoId: persistedId,
+                            onSuccess: (uploaded) => {
+                                if (uploaded) {
+                                    toastr['success']('Dados e avatar salvos com sucesso.');
+                                } else {
+                                    toastr['success']('Operação realizada com sucesso.');
+                                }
+                                organizacaoForm.cancel('form-organizacao');
+                            },
+                            onError: (jqXHR) => {
+                                const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Dados salvos, mas o upload do avatar falhou.';
+                                toastr['warning'](message);
+                                organizacaoForm.cancel('form-organizacao');
+                            },
+                        });
                     }
                 });
             }
