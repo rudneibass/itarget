@@ -7,6 +7,9 @@ import { Publicacao } from '../../../social/models/publicacao/publicacao.entity'
 import { Usuario } from '../../../social/models/usuario/usuario.entity';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
 
+const CONTEUDO_VALUES = ['EXTERNO', 'INTERNO', 'ANUNCIANTE'] as const;
+const ESCOPO_VALUES = ['PRIVADO', 'PUBLICO'] as const;
+
 @Injectable()
 export class PublicacaoAdminService {
   constructor(
@@ -35,6 +38,9 @@ export class PublicacaoAdminService {
   async create(ownerUuid: string, payload: Partial<Publicacao>) {
     const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
     const usuarioId = await this.resolveUsuarioIdForOrganization(organizacaoId, payload.usuarioId);
+    const conteudo = this.parseConteudo(payload.conteudo);
+    const escopo = this.parseEscopo(payload.escopo);
+    const destaque = this.parseBoolean(payload.destaque, false);
 
     const publicacao = this.publicacaoRepository.create({
       uuid: randomUUID(),
@@ -45,6 +51,9 @@ export class PublicacaoAdminService {
       midiaUrl: payload.midiaUrl || null,
       urlRedirecionamento: payload.urlRedirecionamento || null,
       tituloRedirecionamento: payload.tituloRedirecionamento || null,
+      conteudo,
+      escopo,
+      destaque,
     });
 
     return this.publicacaoRepository.save(publicacao);
@@ -58,6 +67,18 @@ export class PublicacaoAdminService {
     publicacao.midiaUrl = payload.midiaUrl ?? publicacao.midiaUrl;
     publicacao.urlRedirecionamento = payload.urlRedirecionamento ?? publicacao.urlRedirecionamento;
     publicacao.tituloRedirecionamento = payload.tituloRedirecionamento ?? publicacao.tituloRedirecionamento;
+
+    if (payload.conteudo !== undefined) {
+      publicacao.conteudo = this.parseConteudo(payload.conteudo);
+    }
+
+    if (payload.escopo !== undefined) {
+      publicacao.escopo = this.parseEscopo(payload.escopo);
+    }
+
+    if (payload.destaque !== undefined) {
+      publicacao.destaque = this.parseBoolean(payload.destaque, publicacao.destaque);
+    }
 
     if (payload.usuarioId !== undefined) {
       publicacao.usuarioId = Number(payload.usuarioId);
@@ -86,19 +107,29 @@ export class PublicacaoAdminService {
       profile: string;
       category?: string | null;
       code: string;
+      conteudo?: string | null;
+      escopo?: string | null;
+      destaque?: boolean | string | null;
     },
   ) {
     const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
     const usuarioId = await this.resolveUsuarioIdForOrganization(organizacaoId, undefined, ownerUuid);
     //const urlRedirecionamento = `https://www.instagram.com/p/${data.code}/`;
     const midiaUrl = `https://www.instagram.com/p/${data.code}/`;
+    const conteudo = this.parseConteudo(data.conteudo);
+    const escopo = this.parseEscopo(data.escopo);
+    const destaque = this.parseBoolean(data.destaque, false);
 
     const existing = await this.publicacaoRepository.findOne({
       where: { organizacaoId, midiaUrl },
     });
 
     if (existing) {
-      return { created: false, publicacao: existing };
+      existing.conteudo = conteudo;
+      existing.escopo = escopo;
+      existing.destaque = destaque;
+      const updated = await this.publicacaoRepository.save(existing);
+      return { created: false, publicacao: updated };
     }
 
     const publicacao = this.publicacaoRepository.create({
@@ -110,6 +141,9 @@ export class PublicacaoAdminService {
       midiaUrl,
       //urlRedirecionamento,
       tituloRedirecionamento: data.category || `Instagram @${data.profile}`,
+      conteudo,
+      escopo,
+      destaque,
     });
 
     const saved = await this.publicacaoRepository.save(publicacao);
@@ -176,6 +210,9 @@ export class PublicacaoAdminService {
             profile: profile.perfil,
             category: profile.categoria,
             code,
+            conteudo: profile.conteudo,
+            escopo: profile.escopo,
+            destaque: profile.destaque,
           });
 
           if (result.created) {
@@ -186,6 +223,8 @@ export class PublicacaoAdminService {
             totalSkipped += 1;
           }
         }
+
+        await this.perfilInstagramRepository.update({ uuid: profile.uuid }, { sincronizadoEm: new Date() } as any);
 
         details.push({
           profile: profile.perfil,
@@ -208,6 +247,75 @@ export class PublicacaoAdminService {
       totalCreated,
       totalSkipped,
       details,
+    };
+  }
+
+  async syncInstagramByUuid(ownerUuid: string, perfilUuid: string) {
+    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
+
+    const profile = await this.perfilInstagramRepository.findOne({
+      where: { uuid: perfilUuid, organizacaoId, ativo: true },
+    });
+
+    if (!profile) {
+      throw new NotFoundException('Perfil de Instagram não encontrado ou inativo.');
+    }
+
+    const apiUrl = process.env.INSTAGRAM_RAPIDAPI_URL || 'https://instagram230.p.rapidapi.com/user/posts';
+    const apiHost = process.env.INSTAGRAM_RAPIDAPI_HOST || 'instagram230.p.rapidapi.com';
+    const apiKey = process.env.INSTAGRAM_RAPIDAPI_KEY;
+
+    if (!apiKey) {
+      throw new BadRequestException('Configure INSTAGRAM_RAPIDAPI_KEY no ambiente para executar o sync.');
+    }
+
+    const requestUrl = `${apiUrl}?username=${encodeURIComponent(profile.perfil)}`;
+    const response = await fetch(requestUrl, {
+      headers: {
+        'x-rapidapi-key': apiKey,
+        'x-rapidapi-host': apiHost,
+      },
+    });
+
+    if (!response.ok) {
+      throw new BadRequestException(`Falha na API externa (${response.status}) para o perfil @${profile.perfil}.`);
+    }
+
+    const payload = await response.json();
+    const items = Array.isArray(payload?.items) ? payload.items : [];
+
+    let totalCreated = 0;
+    let totalSkipped = 0;
+
+    for (const item of items) {
+      const code = item?.code;
+      if (!code) {
+        continue;
+      }
+
+      const result = await this.createInstagramPublication(ownerUuid, {
+        profile: profile.perfil,
+        category: profile.categoria,
+        code,
+        conteudo: profile.conteudo,
+        escopo: profile.escopo,
+        destaque: profile.destaque,
+      });
+
+      if (result.created) {
+        totalCreated += 1;
+      } else {
+        totalSkipped += 1;
+      }
+    }
+
+    await this.perfilInstagramRepository.update({ uuid: perfilUuid }, { sincronizadoEm: new Date() } as any);
+
+    return {
+      profile: profile.perfil,
+      totalCreated,
+      totalSkipped,
+      totalItems: items.length,
     };
   }
 
@@ -251,5 +359,39 @@ export class PublicacaoAdminService {
     }
 
     return firstUser.id;
+  }
+
+  private parseConteudo(value: unknown) {
+    const normalized = String(value ?? 'EXTERNO').trim().toUpperCase();
+    if (!CONTEUDO_VALUES.includes(normalized as (typeof CONTEUDO_VALUES)[number])) {
+      throw new BadRequestException(`Conteúdo inválido. Valores aceitos: ${CONTEUDO_VALUES.join(', ')}`);
+    }
+    return normalized;
+  }
+
+  private parseEscopo(value: unknown) {
+    const normalized = String(value ?? 'PRIVADO').trim().toUpperCase();
+    if (!ESCOPO_VALUES.includes(normalized as (typeof ESCOPO_VALUES)[number])) {
+      throw new BadRequestException(`Escopo inválido. Valores aceitos: ${ESCOPO_VALUES.join(', ')}`);
+    }
+    return normalized;
+  }
+
+  private parseBoolean(value: unknown, defaultValue: boolean) {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const normalized = value.trim().toLowerCase();
+      if (normalized === 'true') {
+        return true;
+      }
+      if (normalized === 'false') {
+        return false;
+      }
+    }
+
+    return defaultValue;
   }
 }

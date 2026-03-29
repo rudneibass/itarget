@@ -4,6 +4,10 @@ import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { PerfilInstagram } from '../../../social/models/perfil-instagram/perfil-instagram.entity';
 import { OrganizacaoService } from '../organizacao/organizacao.service';
+import { PublicacaoAdminService } from '../publicacao/publicacao.service';
+
+const CONTEUDO_VALUES = ['EXTERNO', 'INTERNO', 'ANUNCIANTE'] as const;
+const ESCOPO_VALUES = ['PRIVADO', 'PUBLICO'] as const;
 
 @Injectable()
 export class PerfilInstagramService {
@@ -11,6 +15,7 @@ export class PerfilInstagramService {
     @InjectRepository(PerfilInstagram)
     private readonly perfilInstagramRepository: Repository<PerfilInstagram>,
     private readonly organizacaoService: OrganizacaoService,
+    private readonly publicacaoAdminService: PublicacaoAdminService,
   ) {}
 
   async findAll(ownerUuid: string) {
@@ -55,6 +60,9 @@ export class PerfilInstagramService {
       organizacaoId,
       perfil: perfilValue,
       categoria: payload.categoria || null,
+      conteudo: this.parseConteudo(payload.conteudo),
+      escopo: this.parseEscopo(payload.escopo),
+      destaque: this.parseBoolean(payload.destaque, false),
       ativo: this.parseBoolean(payload.ativo, true),
     });
 
@@ -88,12 +96,28 @@ export class PerfilInstagramService {
       perfil.ativo = this.parseBoolean(payload.ativo, perfil.ativo);
     }
 
+    if (payload.conteudo !== undefined) {
+      perfil.conteudo = this.parseConteudo(payload.conteudo);
+    }
+
+    if (payload.escopo !== undefined) {
+      perfil.escopo = this.parseEscopo(payload.escopo);
+    }
+
+    if (payload.destaque !== undefined) {
+      perfil.destaque = this.parseBoolean(payload.destaque, perfil.destaque);
+    }
+
     return this.perfilInstagramRepository.save(perfil);
   }
 
   async remove(ownerUuid: string, uuid: string) {
     const perfil = await this.get(ownerUuid, uuid);
     await this.perfilInstagramRepository.remove(perfil);
+  }
+
+  async syncInstagram(ownerUuid: string, uuid: string) {
+    return this.publicacaoAdminService.syncInstagramByUuid(ownerUuid, uuid);
   }
 
   private async getOrganizationIdByOwner(ownerUuid: string) {
@@ -134,5 +158,21 @@ export class PerfilInstagramService {
 
   private normalizePerfil(value: string) {
     return value.replace(/^@+/, '').trim().toLowerCase();
+  }
+
+  private parseConteudo(value: unknown) {
+    const normalized = String(value ?? 'EXTERNO').trim().toUpperCase();
+    if (!CONTEUDO_VALUES.includes(normalized as (typeof CONTEUDO_VALUES)[number])) {
+      throw new BadRequestException(`Conteúdo inválido. Valores aceitos: ${CONTEUDO_VALUES.join(', ')}`);
+    }
+    return normalized;
+  }
+
+  private parseEscopo(value: unknown) {
+    const normalized = String(value ?? 'PRIVADO').trim().toUpperCase();
+    if (!ESCOPO_VALUES.includes(normalized as (typeof ESCOPO_VALUES)[number])) {
+      throw new BadRequestException(`Escopo inválido. Valores aceitos: ${ESCOPO_VALUES.join(', ')}`);
+    }
+    return normalized;
   }
 }

@@ -77,6 +77,7 @@
                                     <option value="imagem">Imagem</option>
                                     <option value="video">Vídeo</option>
                                     <option value="link">Link</option>
+                                    <option value="instagram">Instagram</option>
                                 </select>
                             </div>
                         </div>
@@ -94,6 +95,40 @@
                                     <small class="text-muted">Título Redirecionamento</small>
                                 </label>
                                 <input type="text" name="tituloRedirecionamento" class="form-control" id="tituloRedirecionamento" maxlength="255" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Conteúdo</small>
+                                </label>
+                                <select name="conteudo" class="form-select" id="conteudo" required>
+                                    <option value="EXTERNO">EXTERNO</option>
+                                    <option value="INTERNO">INTERNO</option>
+                                    <option value="ANUNCIANTE">ANUNCIANTE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Escopo</small>
+                                </label>
+                                <select name="escopo" class="form-select" id="escopo" required>
+                                    <option value="PRIVADO">PRIVADO</option>
+                                    <option value="PUBLICO">PUBLICO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Destaque</small>
+                                </label>
+                                <select name="destaque" class="form-select" id="destaque" required>
+                                    <option value="false">Não</option>
+                                    <option value="true">Sim</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -224,6 +259,11 @@
                             return;
                         }
 
+                        if (field === 'destaque') {
+                            $field.val(String(!!value));
+                            return;
+                        }
+
                         if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'url' || fieldType === 'number' || fieldType === 'hidden') {
                             $field.val(value ?? '');
                             return;
@@ -259,6 +299,10 @@
                 }
                 if (item.name === 'usuarioId' && item.value) {
                     obj[item.name] = Number(item.value);
+                    return obj;
+                }
+                if (item.name === 'destaque') {
+                    obj[item.name] = String(item.value) === 'true';
                     return obj;
                 }
                 obj[item.name] = item.value;

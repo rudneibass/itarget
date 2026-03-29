@@ -156,6 +156,7 @@ body {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  max-width: 980px;
 }
 
 .social-nav a {

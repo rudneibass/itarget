@@ -4,13 +4,21 @@ CREATE TABLE IF NOT EXISTS social.publicacao (
   organizacao_id INTEGER NOT NULL,
   usuario_id INTEGER NOT NULL,
   tipo VARCHAR(30) NOT NULL,
+  perfil VARCHAR(120) DEFAULT NULL,
   texto TEXT,
   midia_url TEXT,
   url_redirecionamento TEXT,
   titulo_redirecionamento VARCHAR(255),
+  conteudo VARCHAR(20) NOT NULL DEFAULT 'EXTERNO',
+  escopo VARCHAR(20) NOT NULL DEFAULT 'PRIVADO',
+  destaque BOOLEAN NOT NULL DEFAULT FALSE,
   criado_em TIMESTAMP NOT NULL DEFAULT NOW(),
-  CONSTRAINT fk_social_publicacao_organizacao FOREIGN KEY (organizacao_id) REFERENCES social.organizacao(id),
-  CONSTRAINT fk_social_publicacao_usuario FOREIGN KEY (usuario_id) REFERENCES social.usuario(id)
+  CONSTRAINT fk_social_publicacao_organizacao FOREIGN KEY (organizacao_id) REFERENCES public.organizacao(id),
+  CONSTRAINT fk_social_publicacao_usuario FOREIGN KEY (usuario_id) REFERENCES social.usuario(id),
+  CONSTRAINT ck_social_publicacao_conteudo
+    CHECK (conteudo IN ('EXTERNO', 'INTERNO', 'ANUNCIANTE')),
+  CONSTRAINT ck_social_publicacao_escopo
+    CHECK (escopo IN ('PRIVADO', 'PUBLICO'))
 );
 
 CREATE INDEX IF NOT EXISTS idx_social_publicacao_organizacao_id ON social.publicacao (organizacao_id);

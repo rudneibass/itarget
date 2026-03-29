@@ -14,7 +14,7 @@ INSERT INTO social.usuario (
 )
 SELECT
   '22222222-2222-2222-2222-222222222222',
-  (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
+  (SELECT id FROM public.organizacao WHERE id = 1),
   'Usuario Demo Social',
   'Demo',
   NULL,
@@ -27,7 +27,7 @@ WHERE NOT EXISTS (
 
 UPDATE social.usuario
 SET
-  organizacao_id = (SELECT id FROM public.organizacao WHERE uuid = '11111111-1111-1111-1111-111111111111'),
+  organizacao_id = (SELECT id FROM public.organizacao WHERE id = 1),
   nome = 'Usuario Demo Social',
   apelido = 'Demo',
   url_avatar = NULL,

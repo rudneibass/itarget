@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS social.usuario (
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   criado_em TIMESTAMP NOT NULL DEFAULT NOW(),
   alterado_em TIMESTAMP NOT NULL DEFAULT NOW(),
-  CONSTRAINT fk_social_usuario_organizacao FOREIGN KEY (organizacao_id) REFERENCES social.organizacao(id)
+  CONSTRAINT fk_social_usuario_organizacao FOREIGN KEY (organizacao_id) REFERENCES public.organizacao(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_social_usuario_organizacao_id ON social.usuario (organizacao_id);

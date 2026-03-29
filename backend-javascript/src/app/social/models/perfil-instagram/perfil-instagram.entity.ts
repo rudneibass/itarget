@@ -30,8 +30,20 @@ export class PerfilInstagram {
   @Column({ type: 'varchar', length: 120, nullable: true })
   categoria: string | null;
 
+  @Column({ type: 'varchar', length: 20, default: 'EXTERNO' })
+  conteudo: string;
+
+  @Column({ type: 'varchar', length: 20, default: 'PRIVADO' })
+  escopo: string;
+
+  @Column({ type: 'boolean', default: false })
+  destaque: boolean;
+
   @Column({ type: 'boolean', default: true })
   ativo: boolean;
+
+  @Column({ name: 'sincronizado_em', type: 'timestamp', nullable: true, default: () => 'NULL' })
+  sincronizadoEm: Date | null;
 
   @CreateDateColumn({ name: 'criado_em', type: 'timestamp' })
   criadoEm: Date;

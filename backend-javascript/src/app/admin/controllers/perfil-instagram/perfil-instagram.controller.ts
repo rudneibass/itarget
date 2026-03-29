@@ -73,4 +73,15 @@ export class PerfilInstagramController {
     await this.perfilInstagramService.remove(ownerUuid, uuid);
     return { message: 'Perfil de Instagram removido com sucesso' };
   }
+
+  @Post(':uuid/sync-instagram')
+  async syncInstagram(@Req() req: any, @Param('uuid') uuid: string) {
+    try {
+      const ownerUuid = req.adminSession.usuario.uuid;
+      const data = await this.perfilInstagramService.syncInstagram(ownerUuid, uuid);
+      return { data };
+    } catch (error) {
+      throw new HttpException(error instanceof Error ? error.message : 'Erro ao sincronizar perfil de Instagram', HttpStatus.BAD_REQUEST);
+    }
+  }
 }

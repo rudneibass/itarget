@@ -160,6 +160,8 @@
                                             <br/>
                                             <small><b>Categoria:</b> ${data[i].categoria || '-'}</small>
                                             <br/>
+                                            <small><b>Sincronizado em:</b> ${data[i].sincronizadoEm ? new Date(data[i].sincronizadoEm).toLocaleString('pt-BR') : 'Nunca sincronizado'}</small>
+                                            <br/>
                                             <small><b>Código:</b> ${data[i].uuid || ''}</small>
                                         </div>
                                     </td>
@@ -182,6 +184,10 @@
                                             <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.remove('${data[i].uuid}')">
                                                 <i class="fa fa-trash-o"></i>
                                                 <span> Excluir</span>
+                                            </button>
+                                            <button class="btn btn-info btn-sm w-100 mb-2" onclick="perfilInstagramList.syncInstagram('${data[i].uuid}')">
+                                                <i class="fa fa-refresh"></i>
+                                                <span> Sincronizar</span>
                                             </button>
                                         </center>
                                     </td>
@@ -243,8 +249,29 @@
                 },
             });
         },
+        syncInstagram: (uuid) => {
+            $.ajax({
+                url: `${admin.baseUrl}/perfil-instagram/${uuid}/sync-instagram`,
+                type: 'POST',
+                beforeSend: function () {
+                    admin.loading(true);
+                },
+                success: function (response) {
+                    admin.loading(false);
+                    const data = response?.data || {};
+                    toastr['success'](`Sync concluído: ${data.totalCreated || 0} criadas, ${data.totalSkipped || 0} ignoradas.`);
+                },
+                error: function (jqXHR) {
+                    admin.loading(false);
+                    const msg = jqXHR?.responseJSON?.message || 'Não foi possível sincronizar o perfil.';
+                    toastr['error'](msg);
+                },
+            });
+        },
         remove: (uuid) => {
             bootbox.confirm({
+                title: 'Atenção',
+                message: 'Tem certeza que deseja remover este registro?',
                 title: 'Atenção',
                 message: 'Tem certeza que deseja remover este registro?',
                 buttons: {

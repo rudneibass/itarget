@@ -46,6 +46,15 @@ export class Publicacao {
   @Column({ name: 'titulo_redirecionamento', type: 'varchar', length: 255, nullable: true })
   tituloRedirecionamento: string | null;
 
+  @Column({ type: 'varchar', length: 20, default: 'EXTERNO' })
+  conteudo: string;
+
+  @Column({ type: 'varchar', length: 20, default: 'PRIVADO' })
+  escopo: string;
+
+  @Column({ type: 'boolean', default: false })
+  destaque: boolean;
+
   @CreateDateColumn({ name: 'criado_em', type: 'timestamp' })
   criadoEm: Date;
 }

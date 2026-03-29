@@ -66,7 +66,7 @@
                 <form id="form-perfil-instagram" class="perfil-instagram-form-main">
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label>
                                     <small class="text-muted">Perfil Instagram</small>
@@ -75,7 +75,7 @@
                                 <small class="text-muted">Sem @ (o sistema normaliza automaticamente).</small>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group mb-3">
                                 <label>
                                     <small class="text-muted">Status</small>
@@ -86,12 +86,47 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Destaque</small>
+                                </label>
+                                <select name="destaque" class="form-select" id="destaque" required>
+                                    <option value="false">Não</option>
+                                    <option value="true">Sim</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--
                         <div class="col-md-12">
                             <div class="form-group mb-3">
                                 <label>
                                     <small class="text-muted">Categoria</small>
                                 </label>
                                 <input type="text" name="categoria" class="form-control" id="categoria" maxlength="120" placeholder="Ex: Música" />
+                            </div>
+                        </div> -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Conteúdo</small>
+                                </label>
+                                <select name="conteudo" class="form-select" id="conteudo" required>
+                                    <option value="EXTERNO">EXTERNO</option>
+                                    <option value="INTERNO">INTERNO</option>
+                                    <option value="ANUNCIANTE">ANUNCIANTE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Escopo</small>
+                                </label>
+                                <select name="escopo" class="form-select" id="escopo" required>
+                                    <option value="PRIVADO">PRIVADO</option>
+                                    <option value="PUBLICO">PUBLICO</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -190,7 +225,7 @@
                             return;
                         }
 
-                        if (field === 'ativo') {
+                        if (field === 'ativo' || field === 'destaque') {
                             $field.val(String(!!value));
                             return;
                         }
@@ -237,6 +272,10 @@
                     return obj;
                 }
                 if (item.name === 'ativo') {
+                    obj[item.name] = String(item.value) === 'true';
+                    return obj;
+                }
+                if (item.name === 'destaque') {
                     obj[item.name] = String(item.value) === 'true';
                     return obj;
                 }
