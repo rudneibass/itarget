@@ -7,6 +7,7 @@ import { Jogo } from '../../models/jogo/jogo.entity';
 import { PermissaoUsuario } from '../../models/permissao-usuario/permissao-usuario.entity';
 import { Usuario } from '../../models/usuario/usuario.entity';
 import { AtualizarPermissaoUsuarioDto } from '../../dtos/admin/atualizar-permissao-usuario.dto';
+import { AtividadeSocialService } from '../atividade/atividade-social.service';
 import { DadosSessaoSocial, SessaoService } from '../sessao/sessao-social.service';
 
 @Injectable()
@@ -23,6 +24,7 @@ export class EconomiaService {
     @InjectRepository(Arquivo)
     private readonly arquivoRepository: Repository<Arquivo>,
     private readonly sessionService: SessaoService,
+    private readonly activityService: AtividadeSocialService,
   ) {}
 
   private async resolveGameCoverUrl(jogoId: number) {
@@ -99,6 +101,18 @@ export class EconomiaService {
         custoMoedas: game.custoMoedas,
       }),
     );
+
+    try {
+      await this.activityService.registrarAtividade({
+        organizacaoId: user.organizacaoId,
+        usuarioId: user.id,
+        texto: `desbloqueou o jogo ${game.nome}`,
+        urlRedirecionamento: null,
+        tituloRedirecionamento: null,
+      });
+    } catch {
+      // A atividade não deve quebrar o desbloqueio do jogo.
+    }
 
     return { liberado: true, moedasTotais: user.moedas };
   }

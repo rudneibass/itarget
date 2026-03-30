@@ -5,6 +5,7 @@ import { Arquivo } from '../../../admin/models/arquivo/arquivo.entity';
 import { Organizacao } from '../../models/organizacao/organizacao.entity';
 import { PermissaoUsuario } from '../../models/permissao-usuario/permissao-usuario.entity';
 import { Usuario } from '../../models/usuario/usuario.entity';
+import { AtividadeSocialService } from '../atividade/atividade-social.service';
 import { DadosSessaoSocial, SessaoService } from '../sessao/sessao-social.service';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class AutenticacaoService {
     @InjectRepository(Arquivo)
     private readonly arquivoRepository: Repository<Arquivo>,
     private readonly sessionService: SessaoService,
+    private readonly activityService: AtividadeSocialService,
   ) {}
 
   private async resolveOrganizationLogoUrl(organizacaoId: number) {
@@ -69,7 +71,7 @@ export class AutenticacaoService {
     const logoUrl = await this.resolveOrganizationLogoUrl(school.id);
     const avatarUrl = await this.resolveUserAvatarUrl(user.id);
 
-    return this.sessionService.create({
+    const createdSession = this.sessionService.create({
       organizacaoUuid,
       organizacao: {
         nome: school.nome,
@@ -85,6 +87,20 @@ export class AutenticacaoService {
         podePostarLink: permission?.podePostarLink ?? false,
       },
     });
+
+    try {
+      await this.activityService.registrarAtividade({
+        organizacaoId: school.id,
+        usuarioId: user.id,
+        texto: 'Olá rede! Acabei de entrar na minha conta. Vamos interagir? 😊🚀',
+        urlRedirecionamento: null,
+        tituloRedirecionamento: null,
+      });
+    } catch {
+      // A atividade não deve quebrar a autenticação.
+    }
+
+    return createdSession;
   }
 
   obterSessao(sessaoId: string) {

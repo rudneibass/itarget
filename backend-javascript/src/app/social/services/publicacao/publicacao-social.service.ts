@@ -10,6 +10,7 @@ import { CurtidaPublicacao } from '../../models/curtida-publicacao/curtida-publi
 import { CompartilhamentoPublicacao } from '../../models/compartilhamento-publicacao/compartilhamento-publicacao.entity';
 import { Publicacao } from '../../models/publicacao/publicacao.entity';
 import { Usuario } from '../../models/usuario/usuario.entity';
+import { AtividadeSocialService } from '../atividade/atividade-social.service';
 import { DadosSessaoSocial } from '../sessao/sessao-social.service';
 
 @Injectable()
@@ -27,7 +28,22 @@ export class PublicacaoService {
     private readonly userRepository: Repository<Usuario>,
     @InjectRepository(Arquivo)
     private readonly arquivoRepository: Repository<Arquivo>,
+    private readonly activityService: AtividadeSocialService,
   ) {}
+
+  private async logActivitySafe(input: {
+    organizacaoId: number;
+    usuarioId: number;
+    texto: string;
+    urlRedirecionamento?: string | null;
+    tituloRedirecionamento?: string | null;
+  }) {
+    try {
+      await this.activityService.registrarAtividade(input);
+    } catch {
+      // A atividade não pode quebrar a ação principal da rede social.
+    }
+  }
 
   private async resolveUserAvatarUrls(userIds: number[]) {
     if (userIds.length === 0) {
@@ -135,7 +151,7 @@ export class PublicacaoService {
         const instagramSourceUrl = this.normalizeInstagramUrl(post.urlRedirecionamento || post.midiaUrl);
         const isInstagram = post.tipo === 'instagram' || Boolean(instagramSourceUrl);
         const instagramEmbedUrl = isInstagram ? this.buildInstagramEmbedUrl(post.urlRedirecionamento || post.midiaUrl) : null;
-        const isTextHighlight = !post.midiaUrl && !isInstagram && (post.tipo === 'texto' || post.tipo === 'emoji');
+        const isTextHighlight = !post.midiaUrl && !isInstagram && (post.tipo === 'texto' || post.tipo === 'emoji' || post.tipo === 'atividade');
         const [likes, comments, compartilhars] = await Promise.all([
           this.likeRepository.count({ where: { publicacaoId: post.id } }),
           this.commentRepository.count({ where: { publicacaoId: post.id } }),
@@ -148,11 +164,13 @@ export class PublicacaoService {
           authorAvatarUrl: authorAvatarById.get(post.usuarioId) ?? postAuthor?.urlAvatar ?? null,
           authorInitial: authorName.charAt(0).toUpperCase(),
           isOwnPost: currentUser ? post.usuarioId === currentUser.id : false,
+          isAtividade: post.tipo === 'atividade',
           isInstagram,
           instagramEmbedUrl,
           isVideo: post.tipo === 'video',
           isTextHighlight,
           textHighlightVariant: isTextHighlight ? (index % 3) + 1 : null,
+          tempoRelativo: this.tempoRelativo(post.criadoEm),
           likedByCurrentUser: likedPostIds.has(post.id),
           likes,
           comments,
@@ -162,6 +180,24 @@ export class PublicacaoService {
     );
 
     return withCounters;
+  }
+
+  private tempoRelativo(date: Date): string {
+    const diffMs = Date.now() - new Date(date).getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffH = Math.floor(diffMin / 60);
+    const diffD = Math.floor(diffH / 24);
+    const diffW = Math.floor(diffD / 7);
+    const diffM = Math.floor(diffD / 30);
+    const diffY = Math.floor(diffD / 365);
+    if (diffSec < 60) return 'agora mesmo';
+    if (diffMin < 60) return `há ${diffMin} ${diffMin === 1 ? 'minuto' : 'minutos'}`;
+    if (diffH < 24) return `há ${diffH} ${diffH === 1 ? 'hora' : 'horas'}`;
+    if (diffD < 7) return `há ${diffD} ${diffD === 1 ? 'dia' : 'dias'}`;
+    if (diffW < 4) return `há ${diffW} ${diffW === 1 ? 'semana' : 'semanas'}`;
+    if (diffM < 12) return `há ${diffM} ${diffM === 1 ? 'mês' : 'meses'}`;
+    return `há ${diffY} ${diffY === 1 ? 'ano' : 'anos'}`;
   }
 
   async criarPublicacao(session: DadosSessaoSocial, dto: CriarPublicacaoDto) {
@@ -215,7 +251,16 @@ export class PublicacaoService {
       comentario: dto.comentario,
     });
 
-    return this.commentRepository.save(comment);
+    const savedComment = await this.commentRepository.save(comment);
+    await this.logActivitySafe({
+      organizacaoId: user.organizacaoId,
+      usuarioId: user.id,
+      texto: 'comentou em uma publicação',
+      urlRedirecionamento: null,
+      tituloRedirecionamento: null,
+    });
+
+    return savedComment;
   }
 
   async listarComentarios(session: DadosSessaoSocial, publicacaoUuid: string) {
@@ -292,6 +337,22 @@ export class PublicacaoService {
       }),
     );
 
+    const postOwner = post.usuarioId !== user.id
+      ? await this.userRepository.findOne({ where: { id: post.usuarioId } })
+      : null;
+    const postOwnerName = postOwner ? (postOwner.apelido || postOwner.nome) : null;
+    const textoAtividade = postOwnerName
+      ? `Curtiu uma publicação de @${postOwnerName} 😊👍`
+      : 'Curtiu uma publicação 😊👍';
+
+    await this.logActivitySafe({
+      organizacaoId: user.organizacaoId,
+      usuarioId: user.id,
+      texto: textoAtividade,
+      urlRedirecionamento: null,
+      tituloRedirecionamento: null,
+    });
+
     return { liked: true };
   }
 
@@ -306,12 +367,22 @@ export class PublicacaoService {
       throw new NotFoundException('Post não encontrado');
     }
 
-    return this.compartilharRepository.save(
+    const shared = await this.compartilharRepository.save(
       this.compartilharRepository.create({
         publicacaoId: post.id,
         usuarioId: user.id,
       }),
     );
+
+    await this.logActivitySafe({
+      organizacaoId: user.organizacaoId,
+      usuarioId: user.id,
+      texto: 'compartilhou uma publicação',
+      urlRedirecionamento: null,
+      tituloRedirecionamento: null,
+    });
+
+    return shared;
   }
 
   async excluirPublicacao(session: DadosSessaoSocial, publicacaoUuid: string) {

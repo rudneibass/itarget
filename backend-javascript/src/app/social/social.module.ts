@@ -16,6 +16,7 @@ import { PermissaoUsuario } from './models/permissao-usuario/permissao-usuario.e
 import { Usuario } from './models/usuario/usuario.entity';
 import { MiddlewareSessaoSocial } from './middleware/sessao-social.middleware';
 import { AutenticacaoService } from './services/autenticacao/autenticacao-social.service';
+import { AtividadeSocialService } from './services/atividade/atividade-social.service';
 import { EconomiaService } from './services/economia/economia-social.service';
 import { PublicacaoService } from './services/publicacao/publicacao-social.service';
 import { SessaoService } from './services/sessao/sessao-social.service';
@@ -45,6 +46,7 @@ import { Arquivo } from '../admin/models/arquivo/arquivo.entity';
   ],
   providers: [
     SessaoService,
+    AtividadeSocialService,
     AutenticacaoService,
     PublicacaoService,
     EconomiaService,

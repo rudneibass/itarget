@@ -120,8 +120,9 @@
                       <span class="timeline-avatar">{{authorInitial}}</span>
                     {{/if}}
                     @{{authorName}}
+                    <span class="timeline-tempo">{{tempoRelativo}}</span>
                   </div>
-                  {{#if isOwnPost}}
+                  {{#if isOwnPost}}{{#unless isAtividade}}
                     <button
                       type="button"
                       class="timeline-delete-button"
@@ -130,7 +131,7 @@
                     >
                       Excluir
                     </button>
-                  {{/if}}
+                  {{/unless}}{{/if}}
                 </header>
 
                 {{#if isInstagram}}
