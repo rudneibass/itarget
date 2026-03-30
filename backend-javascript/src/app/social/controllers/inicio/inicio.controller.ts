@@ -13,7 +13,8 @@ export class InicioController {
   @Render('social/pages/home/home')
   async renderizarInicio(@Req() req: any) {
     const session = req.socialSession;
-    const timeline = await this.feedService.listTimeline(session.organizacaoUuid, session.usuario.uuid);
+    const allTimeline = await this.feedService.listTimeline(session.organizacaoUuid, session.usuario.uuid);
+    const timeline = allTimeline.filter((post) => !post.isInstagram);
     const games = await this.economyService.listarJogos(session.organizacaoUuid);
 
     return {
@@ -41,12 +42,17 @@ export class InicioController {
 
   @Get('profile')
   @Render('social/pages/profile/profile')
-  renderizarPerfil(@Req() req: any) {
+  async renderizarPerfil(@Req() req: any) {
     const session = req.socialSession;
+    const timeline = await this.feedService.listTimeline(session.organizacaoUuid, session.usuario.uuid);
+    const profileTimeline = timeline.filter((post) => post.isOwnPost && !post.isInstagram);
+
     return {
       user: session.usuario,
       organization: session.organizacao,
       moedas: session.usuario.moedas,
+      profileTimeline,
+      postsCount: profileTimeline.length,
     };
   }
 

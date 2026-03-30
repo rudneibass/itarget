@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { UsuarioAdmin } from '../../models/usuario-admin/usuario-admin.entity';
+import { UsuarioOrganizacao } from '../../models/usuario-organizacao/usuario-organizacao.entity';
 import { AdminSessionData, AdminSessionService } from './admin-session.service';
 
 @Injectable()
@@ -10,8 +11,23 @@ export class AdminAuthService {
   constructor(
     @InjectRepository(UsuarioAdmin)
     private readonly usuarioAdminRepository: Repository<UsuarioAdmin>,
+    @InjectRepository(UsuarioOrganizacao)
+    private readonly usuarioOrganizacaoRepository: Repository<UsuarioOrganizacao>,
     private readonly adminSessionService: AdminSessionService,
   ) {}
+
+  private async resolveOwnedOrganizationId(usuarioId: number): Promise<number | null> {
+    const vinculoDono = await this.usuarioOrganizacaoRepository.findOne({
+      where: {
+        usuarioId,
+        tipo: 'DONO',
+        ativo: true,
+      },
+      order: { id: 'DESC' },
+    });
+
+    return vinculoDono?.organizacaoId ?? null;
+  }
 
   private hashPassword(password: string): string {
     const salt = randomBytes(16).toString('hex');
@@ -58,11 +74,13 @@ export class AdminAuthService {
     });
 
     const saved = await this.usuarioAdminRepository.save(user);
+    const organizacaoId = await this.resolveOwnedOrganizationId(saved.id);
 
     return this.adminSessionService.create({
       uuid: saved.uuid,
       nome: saved.nome,
       email: saved.email,
+      organizacaoId,
     });
   }
 
@@ -79,10 +97,13 @@ export class AdminAuthService {
       throw new UnauthorizedException('Credenciais inválidas.');
     }
 
+    const organizacaoId = await this.resolveOwnedOrganizationId(user.id);
+
     return this.adminSessionService.create({
       uuid: user.uuid,
       nome: user.nome,
       email: user.email,
+      organizacaoId,
     });
   }
 

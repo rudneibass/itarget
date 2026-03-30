@@ -40,13 +40,22 @@ export class ArquivoController {
   }
 
   @Get('all')
-  async findAll(@Query('entidadePai') entidadePai?: string, @Query('entidadePaiId') entidadePaiId?: string) {
-    const data = await this.arquivoService.findAll({ entidadePai, entidadePaiId });
+  async findAll(
+    @Req() req: any,
+    @Query('entidadePai') entidadePai?: string,
+    @Query('entidadePaiId') entidadePaiId?: string,
+  ) {
+    const organizacaoId = req.adminSession?.usuario?.organizacaoId;
+    const data = await this.arquivoService.findAll(organizacaoId, { entidadePai, entidadePaiId });
     return { data };
   }
 
   @Get('avatar')
-  async findAvatar(@Query('entidadePai') entidadePai?: string, @Query('entidadePaiId') entidadePaiId?: string) {
+  async findAvatar(
+    @Req() req: any,
+    @Query('entidadePai') entidadePai?: string,
+    @Query('entidadePaiId') entidadePaiId?: string,
+  ) {
     const normalizedEntidadePai = (entidadePai || '').trim();
     const normalizedId = Number(entidadePaiId);
 
@@ -54,13 +63,15 @@ export class ArquivoController {
       return { data: null };
     }
 
-    const data = await this.arquivoService.findLatestImageByEntity(normalizedEntidadePai, normalizedId);
+    const organizacaoId = req.adminSession?.usuario?.organizacaoId;
+    const data = await this.arquivoService.findLatestImageByEntity(organizacaoId, normalizedEntidadePai, normalizedId);
     return { data };
   }
 
   @Get(':uuid')
-  async get(@Param('uuid') uuid: string) {
-    const data = await this.arquivoService.get(uuid);
+  async get(@Req() req: any, @Param('uuid') uuid: string) {
+    const organizacaoId = req.adminSession?.usuario?.organizacaoId;
+    const data = await this.arquivoService.get(organizacaoId, uuid);
     return { data };
   }
 
@@ -93,11 +104,13 @@ export class ArquivoController {
   ) {
     try {
       const ownerUuid = req.adminSession?.usuario?.uuid;
+      const organizacaoId = req.adminSession?.usuario?.organizacaoId;
       if (!ownerUuid) {
         throw new BadRequestException('Sessão inválida para upload');
       }
 
       const data = await this.arquivoService.createFromUpload(
+        organizacaoId,
         ownerUuid,
         {
           entidadePai,
@@ -117,8 +130,9 @@ export class ArquivoController {
   }
 
   @Delete(':uuid')
-  async remove(@Param('uuid') uuid: string) {
-    await this.arquivoService.remove(uuid);
+  async remove(@Req() req: any, @Param('uuid') uuid: string) {
+    const organizacaoId = req.adminSession?.usuario?.organizacaoId;
+    await this.arquivoService.remove(organizacaoId, uuid);
     return { message: 'Arquivo removido com sucesso' };
   }
 }

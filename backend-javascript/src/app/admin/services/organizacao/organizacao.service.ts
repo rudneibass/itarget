@@ -31,6 +31,15 @@ export class OrganizacaoService {
     return user;
   }
 
+  private normalizeOrganizationId(organizacaoId: number | null | undefined) {
+    const normalized = Number(organizacaoId || 0);
+    if (!Number.isInteger(normalized) || normalized <= 0) {
+      return null;
+    }
+
+    return normalized;
+  }
+
   private async getOwnedOrganization(owner: UsuarioAdmin) {
     const vinculo = await this.usuarioOrganizacaoRepository.findOne({
       where: {
@@ -57,6 +66,21 @@ export class OrganizacaoService {
     return organizacao?.uuid ?? null;
   }
 
+  async getOwnedOrganizationId(ownerUuid: string) {
+    const owner = await this.getOwnerUser(ownerUuid);
+    const organizacao = await this.getOwnedOrganization(owner);
+    return organizacao?.id ?? null;
+  }
+
+  async getByOrganizationId(organizacaoId: number | null | undefined) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    if (!normalizedOrgId) {
+      return null;
+    }
+
+    return this.organizacaoRepository.findOne({ where: { id: normalizedOrgId } });
+  }
+
   private async resolveLogoUrl(organizacaoId: number) {
     const avatar = await this.arquivoRepository
       .createQueryBuilder('arquivo')
@@ -77,10 +101,8 @@ export class OrganizacaoService {
     };
   }
 
-  async findAll(ownerUuid: string) {
-    const owner = await this.getOwnerUser(ownerUuid);
-
-    const organizacao = await this.getOwnedOrganization(owner);
+  async findAll(organizacaoId: number | null | undefined) {
+    const organizacao = await this.getByOrganizationId(organizacaoId);
     if (!organizacao) {
       return [];
     }
@@ -88,10 +110,8 @@ export class OrganizacaoService {
     return [await this.attachLogo(organizacao)];
   }
 
-  async get(ownerUuid: string, uuid?: string) {
-    const owner = await this.getOwnerUser(ownerUuid);
-
-    const organizacao = await this.getOwnedOrganization(owner);
+  async get(organizacaoId: number | null | undefined, uuid?: string) {
+    const organizacao = await this.getByOrganizationId(organizacaoId);
     if (!organizacao) {
       throw new NotFoundException('Organização não encontrada');
     }
@@ -103,8 +123,17 @@ export class OrganizacaoService {
     return this.attachLogo(organizacao);
   }
 
-  async create(ownerUuid: string, createOrganizacaoDto: CreateOrganizacaoDto): Promise<Organizacao> {
+  async create(
+    ownerUuid: string,
+    currentOrganizationId: number | null | undefined,
+    createOrganizacaoDto: CreateOrganizacaoDto,
+  ): Promise<Organizacao> {
     const owner = await this.getOwnerUser(ownerUuid);
+
+    const normalizedOrgId = this.normalizeOrganizationId(currentOrganizationId);
+    if (normalizedOrgId) {
+      throw new BadRequestException('Este usuário já possui uma organização.');
+    }
 
     const ownedOrganization = await this.getOwnedOrganization(owner);
     if (ownedOrganization) {
@@ -138,9 +167,13 @@ export class OrganizacaoService {
     });
   }
 
-  async update(ownerUuid: string, uuid: string, updateOrganizacaoDto: UpdateOrganizacaoDto): Promise<Organizacao> {
+  async update(
+    organizacaoId: number | null | undefined,
+    uuid: string,
+    updateOrganizacaoDto: UpdateOrganizacaoDto,
+  ): Promise<Organizacao> {
     try {
-      const organizacao = await this.get(ownerUuid, uuid);
+      const organizacao = await this.get(organizacaoId, uuid);
       organizacao.nome = updateOrganizacaoDto.nome ?? organizacao.nome;
       organizacao.slug = updateOrganizacaoDto.slug ?? organizacao.slug;
       organizacao.ativo = typeof updateOrganizacaoDto.ativo === 'boolean' ? updateOrganizacaoDto.ativo : organizacao.ativo;
@@ -150,9 +183,9 @@ export class OrganizacaoService {
     }
   }
 
-  async remove(ownerUuid: string, uuid: string): Promise<void> {
+  async remove(organizacaoId: number | null | undefined, uuid: string): Promise<void> {
     try {
-      const organizacao = await this.get(ownerUuid, uuid);
+      const organizacao = await this.get(organizacaoId, uuid);
       await this.organizacaoRepository.remove(organizacao);
     } catch (error) {
       throw error;

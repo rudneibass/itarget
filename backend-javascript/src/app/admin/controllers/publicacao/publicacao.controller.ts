@@ -36,22 +36,25 @@ export class PublicacaoController {
   }
 
   @Get('all')
-  async findAll() {
-    const data = await this.publicacaoService.findAll();
+  async findAll(@Req() req: any) {
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    const data = await this.publicacaoService.findAll(organizacaoId);
     return { data };
   }
 
   @Get(':uuid')
-  async get(@Param('uuid') uuid: string) {
-    const data = await this.publicacaoService.get(uuid);
+  async get(@Req() req: any, @Param('uuid') uuid: string) {
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    const data = await this.publicacaoService.get(organizacaoId, uuid);
     return { data };
   }
 
   @Post()
   async create(@Req() req: any, @Body() payload: any) {
     try {
+      const organizacaoId = req.adminSession.usuario.organizacaoId;
       const ownerUuid = req.adminSession.usuario.uuid;
-      const data = await this.publicacaoService.create(ownerUuid, payload);
+      const data = await this.publicacaoService.create(organizacaoId, payload, ownerUuid);
       return { data };
     } catch (error) {
       throw new HttpException(error instanceof Error ? error.message : 'Erro ao criar publicação', HttpStatus.BAD_REQUEST);
@@ -59,21 +62,23 @@ export class PublicacaoController {
   }
 
   @Patch(':uuid')
-  async update(@Param('uuid') uuid: string, @Body() payload: any) {
-    const data = await this.publicacaoService.update(uuid, payload);
+  async update(@Req() req: any, @Param('uuid') uuid: string, @Body() payload: any) {
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    const data = await this.publicacaoService.update(organizacaoId, uuid, payload);
     return { data };
   }
 
   @Delete(':uuid')
-  async remove(@Param('uuid') uuid: string) {
-    await this.publicacaoService.remove(uuid);
+  async remove(@Req() req: any, @Param('uuid') uuid: string) {
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    await this.publicacaoService.remove(organizacaoId, uuid);
     return { message: 'Publicação removida com sucesso' };
   }
 
   @Post('sync-instagram')
   async syncInstagram(@Req() req: any) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    const data = await this.publicacaoService.syncInstagram(ownerUuid);
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    const data = await this.publicacaoService.syncInstagram(organizacaoId);
     return { data };
   }
 }

@@ -37,23 +37,23 @@ export class PerfilInstagramController {
 
   @Get('all')
   async findAll(@Req() req: any) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    const data = await this.perfilInstagramService.findAll(ownerUuid);
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    const data = await this.perfilInstagramService.findAll(organizacaoId);
     return { data };
   }
 
   @Get(':uuid')
   async get(@Req() req: any, @Param('uuid') uuid: string) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    const data = await this.perfilInstagramService.get(ownerUuid, uuid);
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    const data = await this.perfilInstagramService.get(organizacaoId, uuid);
     return { data };
   }
 
   @Post()
   async create(@Req() req: any, @Body() payload: any) {
     try {
-      const ownerUuid = req.adminSession.usuario.uuid;
-      const data = await this.perfilInstagramService.create(ownerUuid, payload);
+      const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+      const data = await this.perfilInstagramService.create(organizacaoId, payload);
       return { data };
     } catch (error) {
       throw new HttpException(error instanceof Error ? error.message : 'Erro ao criar perfil de Instagram', HttpStatus.BAD_REQUEST);
@@ -62,23 +62,23 @@ export class PerfilInstagramController {
 
   @Patch(':uuid')
   async update(@Req() req: any, @Param('uuid') uuid: string, @Body() payload: any) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    const data = await this.perfilInstagramService.update(ownerUuid, uuid, payload);
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    const data = await this.perfilInstagramService.update(organizacaoId, uuid, payload);
     return { data };
   }
 
   @Delete(':uuid')
   async remove(@Req() req: any, @Param('uuid') uuid: string) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    await this.perfilInstagramService.remove(ownerUuid, uuid);
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    await this.perfilInstagramService.remove(organizacaoId, uuid);
     return { message: 'Perfil de Instagram removido com sucesso' };
   }
 
   @Post(':uuid/sync-instagram')
   async syncInstagram(@Req() req: any, @Param('uuid') uuid: string) {
     try {
-      const ownerUuid = req.adminSession.usuario.uuid;
-      const data = await this.perfilInstagramService.syncInstagram(ownerUuid, uuid);
+      const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+      const data = await this.perfilInstagramService.syncInstagram(organizacaoId, uuid);
       return { data };
     } catch (error) {
       throw new HttpException(error instanceof Error ? error.message : 'Erro ao sincronizar perfil de Instagram', HttpStatus.BAD_REQUEST);

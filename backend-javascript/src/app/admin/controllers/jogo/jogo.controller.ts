@@ -36,22 +36,24 @@ export class JogoController {
   }
 
   @Get('all')
-  async findAll() {
-    const data = await this.jogoService.findAll();
+  async findAll(@Req() req: any) {
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    const data = await this.jogoService.findAll(organizacaoId);
     return { data };
   }
 
   @Get(':uuid')
-  async get(@Param('uuid') uuid: string) {
-    const data = await this.jogoService.get(uuid);
+  async get(@Req() req: any, @Param('uuid') uuid: string) {
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    const data = await this.jogoService.get(uuid, organizacaoId);
     return { data };
   }
 
   @Post()
   async create(@Req() req: any, @Body() payload: any) {
     try {
-      const ownerUuid = req.adminSession.usuario.uuid;
-      const data = await this.jogoService.create(ownerUuid, payload);
+      const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+      const data = await this.jogoService.create(organizacaoId, payload);
       return { data };
     } catch (error) {
       throw new HttpException(error instanceof Error ? error.message : 'Erro ao criar jogo', HttpStatus.BAD_REQUEST);
@@ -59,14 +61,16 @@ export class JogoController {
   }
 
   @Patch(':uuid')
-  async update(@Param('uuid') uuid: string, @Body() payload: any) {
-    const data = await this.jogoService.update(uuid, payload);
+  async update(@Req() req: any, @Param('uuid') uuid: string, @Body() payload: any) {
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    const data = await this.jogoService.update(uuid, payload, organizacaoId);
     return { data };
   }
 
   @Delete(':uuid')
-  async remove(@Param('uuid') uuid: string) {
-    await this.jogoService.remove(uuid);
+  async remove(@Req() req: any, @Param('uuid') uuid: string) {
+    const organizacaoId = Number(req.adminSession?.usuario?.organizacaoId || 0);
+    await this.jogoService.remove(uuid, organizacaoId);
     return { message: 'Jogo removido com sucesso' };
   }
 }

@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Arquivo } from '../../../admin/models/arquivo/arquivo.entity';
 import { AcessoJogo } from '../../models/acesso-jogo/acesso-jogo.entity';
 import { Jogo } from '../../models/jogo/jogo.entity';
 import { PermissaoUsuario } from '../../models/permissao-usuario/permissao-usuario.entity';
@@ -19,8 +20,22 @@ export class EconomiaService {
     private readonly userRepository: Repository<Usuario>,
     @InjectRepository(PermissaoUsuario)
     private readonly permissionRepository: Repository<PermissaoUsuario>,
+    @InjectRepository(Arquivo)
+    private readonly arquivoRepository: Repository<Arquivo>,
     private readonly sessionService: SessaoService,
   ) {}
+
+  private async resolveGameCoverUrl(jogoId: number) {
+    const image = await this.arquivoRepository
+      .createQueryBuilder('arquivo')
+      .where('arquivo.entidadePai = :entidadePai', { entidadePai: 'jogo' })
+      .andWhere('arquivo.entidadePaiId = :entidadePaiId', { entidadePaiId: jogoId })
+      .andWhere('LOWER(arquivo.tipo) LIKE :tipo', { tipo: 'image/%' })
+      .orderBy('arquivo.id', 'DESC')
+      .getOne();
+
+    return image?.url ?? null;
+  }
 
   async listarJogos(organizacaoUuid: string) {
     const organizacao = await this.userRepository.query('SELECT id FROM public.organizacao WHERE uuid = $1', [organizacaoUuid]);
@@ -28,10 +43,23 @@ export class EconomiaService {
       return [];
     }
 
-    return this.gameRepository.find({
+    const games = await this.gameRepository.find({
       where: { organizacaoId: Number(organizacao[0].id), ativo: true },
       order: { criadoEm: 'DESC' },
     });
+
+    if (games.length === 0) {
+      return [];
+    }
+
+    const gamesWithCover = await Promise.all(
+      games.map(async (game) => ({
+        ...game,
+        gameImageUrl: await this.resolveGameCoverUrl(game.id),
+      })),
+    );
+
+    return gamesWithCover;
   }
 
   async liberarJogo(session: DadosSessaoSocial, jogoUuid: string) {

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { PerfilInstagram } from '../../../social/models/perfil-instagram/perfil-instagram.entity';
-import { OrganizacaoService } from '../organizacao/organizacao.service';
 import { PublicacaoAdminService } from '../publicacao/publicacao.service';
 
 const CONTEUDO_VALUES = ['EXTERNO', 'INTERNO', 'ANUNCIANTE'] as const;
@@ -14,21 +13,23 @@ export class PerfilInstagramService {
   constructor(
     @InjectRepository(PerfilInstagram)
     private readonly perfilInstagramRepository: Repository<PerfilInstagram>,
-    private readonly organizacaoService: OrganizacaoService,
     private readonly publicacaoAdminService: PublicacaoAdminService,
   ) {}
 
-  async findAll(ownerUuid: string) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
-    return this.perfilInstagramRepository.find({
-      where: { organizacaoId },
-      order: { id: 'DESC' },
-    });
+  private normalizeOrganizationId(organizacaoId: number | null | undefined) {
+    const normalized = Number(organizacaoId || 0);
+    if (!Number.isInteger(normalized) || normalized <= 0) {
+      throw new BadRequestException('Organização inválida na sessão do usuário.');
+    }
+
+    return normalized;
   }
 
-  async get(ownerUuid: string, uuid: string) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
-
+  /**
+   * Resolve UUID to database entity (with ID).
+   * Pattern: Controller sends UUID → Service resolves to entity with ID → Logic uses ID
+   */
+  private async resolveByUuid(organizacaoId: number, uuid: string) {
     const perfil = await this.perfilInstagramRepository.findOne({
       where: { uuid, organizacaoId },
     });
@@ -40,8 +41,21 @@ export class PerfilInstagramService {
     return perfil;
   }
 
-  async create(ownerUuid: string, payload: Partial<PerfilInstagram>) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
+  async findAll(organizacaoId: number) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    return this.perfilInstagramRepository.find({
+      where: { organizacaoId: normalizedOrgId },
+      order: { id: 'DESC' },
+    });
+  }
+
+  async get(organizacaoId: number, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    return this.resolveByUuid(normalizedOrgId, uuid);
+  }
+
+  async create(organizacaoId: number, payload: Partial<PerfilInstagram>) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
 
     const perfilValue = this.normalizePerfil(payload.perfil || '');
     if (!perfilValue) {
@@ -49,7 +63,7 @@ export class PerfilInstagramService {
     }
 
     const exists = await this.perfilInstagramRepository.findOne({
-      where: { organizacaoId, perfil: perfilValue },
+      where: { organizacaoId: normalizedOrgId, perfil: perfilValue },
     });
     if (exists) {
       throw new BadRequestException('Este perfil já está cadastrado para a organização.');
@@ -57,7 +71,7 @@ export class PerfilInstagramService {
 
     const perfil = this.perfilInstagramRepository.create({
       uuid: randomUUID(),
-      organizacaoId,
+      organizacaoId: normalizedOrgId,
       perfil: perfilValue,
       categoria: payload.categoria || null,
       conteudo: this.parseConteudo(payload.conteudo),
@@ -69,8 +83,9 @@ export class PerfilInstagramService {
     return this.perfilInstagramRepository.save(perfil);
   }
 
-  async update(ownerUuid: string, uuid: string, payload: Partial<PerfilInstagram>) {
-    const perfil = await this.get(ownerUuid, uuid);
+  async update(organizacaoId: number, uuid: string, payload: Partial<PerfilInstagram>) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const perfil = await this.resolveByUuid(normalizedOrgId, uuid);
 
     if (payload.perfil !== undefined) {
       const perfilValue = this.normalizePerfil(String(payload.perfil));
@@ -111,31 +126,17 @@ export class PerfilInstagramService {
     return this.perfilInstagramRepository.save(perfil);
   }
 
-  async remove(ownerUuid: string, uuid: string) {
-    const perfil = await this.get(ownerUuid, uuid);
+  async remove(organizacaoId: number, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const perfil = await this.resolveByUuid(normalizedOrgId, uuid);
     await this.perfilInstagramRepository.remove(perfil);
   }
 
-  async syncInstagram(ownerUuid: string, uuid: string) {
-    return this.publicacaoAdminService.syncInstagramByUuid(ownerUuid, uuid);
-  }
-
-  private async getOrganizationIdByOwner(ownerUuid: string) {
-    const organizacaoUuid = await this.organizacaoService.getOwnedOrganizationUuid(ownerUuid);
-    if (!organizacaoUuid) {
-      throw new BadRequestException('Você precisa criar uma organização antes de continuar.');
-    }
-
-    const rows = await this.perfilInstagramRepository.query(
-      'SELECT id FROM public.organizacao WHERE uuid = $1',
-      [organizacaoUuid],
-    );
-
-    if (!rows?.[0]?.id) {
-      throw new BadRequestException('Organização não encontrada para o usuário atual.');
-    }
-
-    return Number(rows[0].id);
+  async syncInstagram(organizacaoId: number, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const perfil = await this.resolveByUuid(normalizedOrgId, uuid);
+    // Pass ID (not UUID) for internal logic
+    return this.publicacaoAdminService.syncInstagramById(normalizedOrgId, perfil.id);
   }
 
   private parseBoolean(value: unknown, defaultValue: boolean) {

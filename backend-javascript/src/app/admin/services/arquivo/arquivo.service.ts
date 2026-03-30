@@ -7,6 +7,11 @@ import { Repository } from 'typeorm';
 import { UsuarioAdmin } from '../../models/usuario-admin/usuario-admin.entity';
 import { Arquivo } from '../../models/arquivo/arquivo.entity';
 import { Video } from '../../models/video/video.entity';
+import { Organizacao } from '../../../social/models/organizacao/organizacao.entity';
+import { Usuario } from '../../../social/models/usuario/usuario.entity';
+import { Jogo } from '../../../social/models/jogo/jogo.entity';
+import { Publicacao } from '../../../social/models/publicacao/publicacao.entity';
+import { PerfilInstagram } from '../../../social/models/perfil-instagram/perfil-instagram.entity';
 
 interface CreateArquivoPayload {
   slug?: string;
@@ -24,7 +29,42 @@ export class ArquivoService {
     private readonly usuarioAdminRepository: Repository<UsuarioAdmin>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
+    @InjectRepository(Organizacao)
+    private readonly organizacaoRepository: Repository<Organizacao>,
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Jogo)
+    private readonly jogoRepository: Repository<Jogo>,
+    @InjectRepository(Publicacao)
+    private readonly publicacaoRepository: Repository<Publicacao>,
+    @InjectRepository(PerfilInstagram)
+    private readonly perfilInstagramRepository: Repository<PerfilInstagram>,
   ) {}
+
+  private normalizeOrganizationId(organizacaoId: number | null | undefined) {
+    const normalized = Number(organizacaoId || 0);
+    if (!Number.isInteger(normalized) || normalized <= 0) {
+      throw new BadRequestException('Organização inválida na sessão do usuário.');
+    }
+
+    return normalized;
+  }
+
+  /**
+   * Resolve UUID to database entity (with ID).
+   * Pattern: Controller sends UUID → Service resolves to entity with ID → Logic uses ID
+   */
+  private async resolveByUuid(organizacaoId: number, uuid: string) {
+    const arquivo = await this.arquivoRepository.findOne({ where: { uuid } });
+    if (!arquivo) {
+      throw new NotFoundException('Arquivo não encontrado');
+    }
+
+    // Validate that entity belongs to organization
+    await this.assertEntityInOrganization(arquivo.entidadePai, Number(arquivo.entidadePaiId), organizacaoId);
+
+    return arquivo;
+  }
 
   private async getUsuarioAdminId(ownerUuid: string) {
     const owner = await this.usuarioAdminRepository.findOne({ where: { uuid: ownerUuid } });
@@ -111,10 +151,64 @@ export class ArquivoService {
     await this.arquivoRepository.remove(previousAvatars);
   }
 
-  async createFromUpload(ownerUuid: string, payload: CreateArquivoPayload, file: any) {
+  private async assertEntityInOrganization(entidadePai: string, entidadePaiId: number, organizacaoId: number) {
+    const parent = (entidadePai || '').trim().toLowerCase();
+
+    if (parent === 'organizacao') {
+      if (entidadePaiId !== organizacaoId) {
+        throw new NotFoundException('Entidade não encontrada na organização do usuário.');
+      }
+
+      const organizacao = await this.organizacaoRepository.findOne({ where: { id: entidadePaiId } });
+      if (!organizacao) {
+        throw new NotFoundException('Entidade não encontrada na organização do usuário.');
+      }
+      return;
+    }
+
+    if (parent === 'usuario') {
+      const entity = await this.usuarioRepository.findOne({ where: { id: entidadePaiId, organizacaoId } });
+      if (!entity) {
+        throw new NotFoundException('Entidade não encontrada na organização do usuário.');
+      }
+      return;
+    }
+
+    if (parent === 'jogo') {
+      const entity = await this.jogoRepository.findOne({ where: { id: entidadePaiId, organizacaoId } });
+      if (!entity) {
+        throw new NotFoundException('Entidade não encontrada na organização do usuário.');
+      }
+      return;
+    }
+
+    if (parent === 'publicacao') {
+      const entity = await this.publicacaoRepository.findOne({ where: { id: entidadePaiId, organizacaoId } });
+      if (!entity) {
+        throw new NotFoundException('Entidade não encontrada na organização do usuário.');
+      }
+      return;
+    }
+
+    if (parent === 'perfil_instagram' || parent === 'perfil-instagram') {
+      const entity = await this.perfilInstagramRepository.findOne({ where: { id: entidadePaiId, organizacaoId } });
+      if (!entity) {
+        throw new NotFoundException('Entidade não encontrada na organização do usuário.');
+      }
+    }
+  }
+
+  async createFromUpload(
+    organizacaoId: number | null | undefined,
+    ownerUuid: string,
+    payload: CreateArquivoPayload,
+    file: any,
+  ) {
     if (!file) {
       throw new BadRequestException('Arquivo não enviado.');
     }
+
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
 
     const entidadePai = String(payload.entidadePai || '').trim();
     if (!entidadePai) {
@@ -122,6 +216,7 @@ export class ArquivoService {
     }
 
     const entidadePaiId = await this.resolveEntidadePaiId(entidadePai, payload.entidadePaiId || '');
+    await this.assertEntityInOrganization(entidadePai, entidadePaiId, normalizedOrgId);
     const usuarioId = await this.getUsuarioAdminId(ownerUuid);
     const slug = payload.slug?.trim() || null;
 
@@ -144,7 +239,8 @@ export class ArquivoService {
     return this.arquivoRepository.save(arquivo);
   }
 
-  async findAll(filters: { entidadePai?: string; entidadePaiId?: string | number }) {
+  async findAll(organizacaoId: number | null | undefined, filters: { entidadePai?: string; entidadePaiId?: string | number }) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
     const where: any = {};
 
     if (filters.entidadePai) {
@@ -158,13 +254,28 @@ export class ArquivoService {
       }
     }
 
-    return this.arquivoRepository.find({
+    const arquivos = await this.arquivoRepository.find({
       where,
       order: { id: 'DESC' },
     });
+
+    const result: Arquivo[] = [];
+    for (const arquivo of arquivos) {
+      try {
+        await this.assertEntityInOrganization(arquivo.entidadePai, Number(arquivo.entidadePaiId), normalizedOrgId);
+        result.push(arquivo);
+      } catch {
+        // Ignora registros fora do escopo da organização da sessão.
+      }
+    }
+
+    return result;
   }
 
-  async findLatestImageByEntity(entidadePai: string, entidadePaiId: number) {
+  async findLatestImageByEntity(organizacaoId: number | null | undefined, entidadePai: string, entidadePaiId: number) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    await this.assertEntityInOrganization(entidadePai, entidadePaiId, normalizedOrgId);
+
     return this.arquivoRepository
       .createQueryBuilder('arquivo')
       .where('arquivo.entidadePai = :entidadePai', { entidadePai })
@@ -174,17 +285,14 @@ export class ArquivoService {
       .getOne();
   }
 
-  async get(uuid: string) {
-    const arquivo = await this.arquivoRepository.findOne({ where: { uuid } });
-    if (!arquivo) {
-      throw new NotFoundException('Arquivo não encontrado');
-    }
-
-    return arquivo;
+  async get(organizacaoId: number | null | undefined, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    return this.resolveByUuid(normalizedOrgId, uuid);
   }
 
-  async remove(uuid: string) {
-    const arquivo = await this.get(uuid);
+  async remove(organizacaoId: number | null | undefined, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const arquivo = await this.resolveByUuid(normalizedOrgId, uuid);
 
     this.removePhysicalFileByUrl(arquivo.url);
 

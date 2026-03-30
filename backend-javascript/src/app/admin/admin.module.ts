@@ -8,6 +8,7 @@ import { OrganizacaoController } from './controllers/organizacao/organizacao.con
 import { PerfilInstagramController } from './controllers/perfil-instagram/perfil-instagram.controller';
 import { PublicacaoController } from './controllers/publicacao/publicacao.controller';
 import { UsuarioController } from './controllers/usuario/usuario.controller';
+import { UsuarioSocialController } from './controllers/usuario-social/usuario-social.controller';
 import { MiddlewareSessaoAdmin } from './middleware/admin-session.middleware';
 import { UsuarioAdmin } from './models/usuario-admin/usuario-admin.entity';
 import { UsuarioOrganizacao } from './models/usuario-organizacao/usuario-organizacao.entity';
@@ -28,7 +29,7 @@ import { OrganizacaoService } from './services/organizacao/organizacao.service';
 import { PerfilInstagramService } from './services/perfil-instagram/perfil-instagram.service';
 import { PublicacaoAdminService } from './services/publicacao/publicacao.service';
 import { UsuarioAdminService } from './services/usuario-admin/usuario-admin.service';
-import { UsuarioService } from './services/usuario/usuario.service';
+import { UsuarioSocialService } from './services/usuario-social/usuario-social.service';
 import { VideoService } from './services/video/video.service';
 
 @Module({
@@ -53,6 +54,7 @@ import { VideoService } from './services/video/video.service';
     VideoController,
     OrganizacaoController,
     UsuarioController,
+    UsuarioSocialController,
     JogoController,
     PerfilInstagramController,
     PublicacaoController,
@@ -62,7 +64,7 @@ import { VideoService } from './services/video/video.service';
     ArquivoService,
     OrganizacaoService,
     UsuarioAdminService,
-    UsuarioService,
+    UsuarioSocialService,
     JogoService,
     PerfilInstagramService,
     PublicacaoAdminService,
@@ -81,6 +83,7 @@ export class AdminModule implements NestModule {
         VideoController,
         OrganizacaoController,
         UsuarioController,
+        UsuarioSocialController,
         JogoController,
         PerfilInstagramController,
         PublicacaoController,

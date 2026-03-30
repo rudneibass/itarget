@@ -1,0 +1,132 @@
+<section class="section-actions">
+    <div class="section-actions-btn-parent">
+        <button
+            class="btn btn-success btn-float section-actions-btn"
+            onclick="admin.addTab({tabId:'form-usuario-social', title: 'Novo Usuário Rede Social', url: '/admin/usuario-social/form'})"
+        >
+            <i class="fa fa-plus"></i>
+            <span class="btn-label">Novo</span>
+        </button>
+    </div>
+</section>
+
+<section>
+    <div class="page-info-bar shadows-default">
+        <small><i class="fa fa-users"></i></small>
+        <small>Usuários Rede Social</small>
+    </div>
+</section>
+
+<section>
+    <div class="list-table-container">
+        <table class="table table-sm table-striped table-hover width-100">
+            <tbody id="tbody-usuario-social"></tbody>
+        </table>
+        <div class="text-center">
+            <span class="pt-5" id="messages-usuario-social"></span>
+        </div>
+    </div>
+</section>
+
+<script>
+    (() => {
+    const usuarioSocialList = {
+        list: () => {
+            $.ajax({
+                url: `${admin.baseUrl}/usuario-social/all`,
+                cache: false,
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#messages-usuario-social').empty();
+                    $('#tbody-usuario-social').empty();
+                    admin.loading(true);
+                },
+                error: function () {
+                    admin.loading(false);
+                    $('#messages-usuario-social').html("<h6 class='text-muted text-center'>Não foi possível carregar os usuários da rede social.</h6>");
+                },
+                success: function (response) {
+                    admin.loading(false);
+                    const data = response?.data || [];
+
+                    if (!data.length) {
+                        $('#messages-usuario-social').html("<h6 class='text-muted text-center'>Nenhum colaborador encontrado para a organização atual.</h6>");
+                        return;
+                    }
+
+                    data.forEach((item) => {
+                        $('#tbody-usuario-social').append(`
+                            <tr>
+                                <td class="p-3" style="width:90%; vertical-align: middle;">
+                                    <small><b>Nome: </b>${item.nome || ''}</small><br/>
+                                    <small><b>Apelido: </b>${item.apelido || '-'}</small><br/>
+                                    <small><b>Moedas: </b>${Number(item.moedas || 0)}</small><br/>
+                                    <small><b>Permissões: </b>
+                                        ${item.podePostarMidia ? '<span class="badge bg-info me-1">Mídia</span>' : ''}
+                                        ${item.podePostarLink ? '<span class="badge bg-primary">Link</span>' : ''}
+                                        ${!item.podePostarMidia && !item.podePostarLink ? '<span class="text-muted">Sem permissões</span>' : ''}
+                                    </small><br/>
+                                    <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-success">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
+                                </td>
+                                <td style="width: 180px; vertical-align: middle;">
+                                    <button
+                                        class="btn btn-sm btn-secondary w-100 mb-2"
+                                        onclick="admin.addTab({tabId:'form-usuario-social', title: 'Editar Usuário Rede Social', url: '/admin/usuario-social/form/uuid/${item.uuid}'})"
+                                    >
+                                        <i class="fa fa-pencil"></i> Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-danger w-100" onclick="usuarioSocialList.remove('${item.uuid}')">
+                                        <i class="fa fa-trash-o"></i> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                },
+            });
+        },
+        remove: (uuid) => {
+            bootbox.confirm({
+                title: 'Atenção',
+                message: 'Tem certeza que deseja remover este usuário da rede social?',
+                buttons: {
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmar',
+                        className: 'btn-sm btn-success',
+                    },
+                    cancel: {
+                        label: '<i class="fa fa-undo"></i> Cancelar',
+                        className: 'btn-sm btn-secondary',
+                    },
+                },
+                callback: function (result) {
+                    if (!result) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: `${admin.baseUrl}/usuario-social/${uuid}`,
+                        type: 'DELETE',
+                        beforeSend: function () {
+                            admin.loading(true);
+                        },
+                        success: function () {
+                            admin.loading(false);
+                            toastr['success']('Usuário removido com sucesso.');
+                            usuarioSocialList.list();
+                        },
+                        error: function () {
+                            admin.loading(false);
+                            toastr['error']('Não foi possível remover o usuário.');
+                        },
+                    });
+                },
+            });
+        },
+    };
+
+    window.usuarioSocialList = usuarioSocialList;
+    usuarioSocialList.list();
+    })();
+</script>

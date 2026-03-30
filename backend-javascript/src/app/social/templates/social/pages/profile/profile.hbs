@@ -6,45 +6,109 @@
     <title>Rede Social da Organizacao - Perfil</title>
     <link rel="stylesheet" href="/social/static/css/social.css" />
   </head>
-  <body>
+  <body class="profile-page-transparent">
     <div class="social-shell">
-      <header class="social-header">
-        <div class="social-header-inner">
-          <div class="social-brand">
-            {{#if organization.logoUrl}}
-              <img class="org-logo" src="{{organization.logoUrl}}" alt="Logo de {{organization.nome}}" />
-            {{else}}
-              <span class="org-logo org-logo-default" aria-label="Logo padrão da organização">🏫</span>
-            {{/if}}
-            <span class="org-name">{{organization.nome}}</span>
-          </div>
-          <div class="social-header-right">
-            <div class="coin-badge">🪙 {{moedas}}</div>
-            <a class="user-pill-link" href="/social/profile">
-              <div class="user-pill">
-                {{#if user.urlAvatar}}
-                  <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{user.nome}}" />
-                {{else}}
-                  <span class="user-avatar user-avatar-fallback">🙂</span>
-                {{/if}}
-                <span class="user-name">{{user.nome}}</span>
-              </div>
-            </a>
-          </div>
-        </div>
-      </header>
+      {{> socialHeader }}
       <nav class="social-nav">
         <a href="/social/home">Home</a>
         <a href="/social/shorts">Shorts</a>
         <a href="/social/games">Jogos</a>
+        <a class="active" href="/social/profile">Perfil</a>
       </nav>
 
-      <section class="social-card">
-        <h3>{{user.nome}}</h3>
-        <p><strong>UUID:</strong> {{user.uuid}}</p>
-        <p><strong>Pode postar mídia:</strong> {{user.podePostarMidia}}</p>
-        <p><strong>Pode postar link:</strong> {{user.podePostarLink}}</p>
-      </section>
+      <main class="profile-main">
+        <section class="profile-card profile-top">
+          <div class="profile-avatar-wrap">
+            {{#if user.urlAvatar}}
+              <img class="profile-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}" />
+            {{else}}
+              <span class="profile-avatar profile-avatar-fallback" aria-hidden="true">🙂</span>
+            {{/if}}
+          </div>
+
+          <div class="profile-main-info">
+            <div class="profile-handle-row">
+              <h2 class="profile-handle">{{#if user.apelido}}@{{user.apelido}}{{else}}@{{user.nome}}{{/if}}</h2>
+              <span class="profile-chip">Perfil social</span>
+            </div>
+
+            <div class="profile-stats" aria-label="Estatísticas do perfil">
+              <div class="profile-stat">
+                <strong>{{postsCount}}</strong>
+                <span>publicações</span>
+              </div>
+              <div class="profile-stat">
+                <strong>{{moedas}}</strong>
+                <span>moedas</span>
+              </div>
+              <div class="profile-stat">
+                <strong>{{organization.nome}}</strong>
+                <span>organização</span>
+              </div>
+            </div>
+
+            <div class="profile-bio">
+              <strong>{{user.nome}}</strong>
+              <p>Participando da comunidade da {{organization.nome}}.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="profile-highlights" aria-label="Destaques">
+          <article class="highlight-item">
+            <span class="highlight-ring">
+              {{#if user.urlAvatar}}
+                <img src="{{user.urlAvatar}}" alt="Foto do usuário logado" />
+              {{else}}
+                <span class="highlight-fallback">🙂</span>
+              {{/if}}
+            </span>
+            <span class="highlight-label">Você</span>
+          </article>
+
+          <article class="highlight-item">
+            <span class="highlight-ring">
+              {{#if organization.logoUrl}}
+                <img src="{{organization.logoUrl}}" alt="Foto da organização {{organization.nome}}" />
+              {{else}}
+                <span class="highlight-fallback">🏫</span>
+              {{/if}}
+            </span>
+            <span class="highlight-label">{{organization.nome}}</span>
+          </article>
+        </section>
+
+        <section class="profile-posts-card">
+          {{#if profileTimeline.length}}
+            <div class="profile-post-grid">
+              {{#each profileTimeline}}
+                <article class="profile-post-item" data-post-uuid="{{uuid}}">
+                  {{#if midiaUrl}}
+                    {{#if isVideo}}
+                      <video class="profile-post-media" controls preload="metadata" poster="{{midiaUrl}}">
+                        <source src="{{midiaUrl}}" type="video/mp4" />
+                        Seu navegador não suporta reprodução de vídeo.
+                      </video>
+                    {{else}}
+                      <img class="profile-post-media" src="{{midiaUrl}}" alt="Mídia da postagem" />
+                    {{/if}}
+                  {{else if isInstagram}}
+                    <div class="profile-post-instagram">
+                      <span>Instagram</span>
+                    </div>
+                  {{else}}
+                    <div class="profile-post-text">
+                      <p>{{#if texto}}{{texto}}{{else}}Sem legenda{{/if}}</p>
+                    </div>
+                  {{/if}}
+                </article>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="muted">Você ainda não publicou conteúdo.</p>
+          {{/if}}
+        </section>
+      </main>
     </div>
   </body>
 </html>

@@ -1,22 +1,22 @@
 <section>
     <style>
-        .jogo-form-tab-content {
+        .usuario-social-form-tab-content {
             min-height: calc(100vh - 160px);
             display: flex;
             flex-direction: column;
             padding: .75rem;
             box-shadow: var(--shadows-default);
         }
-        .jogo-form-tab-pane {
+        .usuario-social-form-tab-pane {
             display: flex;
             flex-direction: column;
             flex: 1;
             position: relative;
         }
-        .jogo-form-main {
+        .usuario-social-form-main {
             flex: 1;
         }
-        .jogo-form-actions {
+        .usuario-social-form-actions {
             position: absolute;
             width: 100%;
             bottom: 0;
@@ -32,10 +32,10 @@
             border-top: 1px solid var(--border-color-default);
             background-color: #fff;
         }
-        .jogo-form-actions .section-actions-btn-parent {
+        .usuario-social-form-actions .section-actions-btn-parent {
             width: auto;
         }
-        .jogo-form-actions .btn {
+        .usuario-social-form-actions .btn {
             width: 150px;
             height: auto;
             border-radius: .375rem;
@@ -45,11 +45,11 @@
         }
 
         @media (max-width: 767px) {
-            .jogo-form-tab-content {
+            .usuario-social-form-tab-content {
                 min-height: calc(100vh - 130px);
             }
 
-            .jogo-form-actions {
+            .usuario-social-form-actions {
                 flex-wrap: wrap;
                 justify-content: start;
             }
@@ -58,75 +58,88 @@
     <div class="col-md-12 p-0">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-jogo">Cadastro</a>
+                <a class="nav-link active text-muted" data-bs-toggle="tab" href="#tab-form-usuario-social">Cadastro</a>
             </li>
         </ul>
-        <div class="tab-content bg-white border border-top-0 jogo-form-tab-content">
-            <div class="tab-pane active jogo-form-tab-pane" id="tab-form-jogo">
-                <form id="form-jogo" class="jogo-form-main">
+        <div class="tab-content bg-white border border-top-0 usuario-social-form-tab-content">
+            <div class="tab-pane active usuario-social-form-tab-pane" id="tab-form-usuario-social">
+                <form id="form-usuario-social" class="usuario-social-form-main">
                     <input type="hidden" id="id" name="id" />
                     <input type="hidden" id="uuid" name="uuid" />
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label>
                                     <small class="text-muted">Nome</small>
                                 </label>
-                                <input type="text" name="nome" class="form-control" id="nome" maxlength="150" required />
+                                <input type="text" name="nome" class="form-control" id="nome" maxlength="255" required />
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">Descrição</small>
+                                    <small class="text-muted">Apelido</small>
                                 </label>
-                                <textarea name="descricao" class="form-control" id="descricao" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-10">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">URL</small>
-                                </label>
-                                <input type="url" name="url" class="form-control" id="url" required />
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group mb-3">
-                                <label>
-                                    <small class="text-muted">Custo moedas</small>
-                                </label>
-                                <input type="number" min="0" name="custoMoedas" class="form-control" id="custoMoedas" value="0" />
+                                <input type="text" name="apelido" class="form-control" id="apelido" maxlength="120" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label>
-                                    <small class="text-muted">Imagem do jogo</small>
+                                    <small class="text-muted">Moedas</small>
+                                </label>
+                                <input type="number" min="0" name="moedas" class="form-control" id="moedas" value="0" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Status</small>
+                                </label>
+                                <select name="ativo" class="form-select" id="ativo" required>
+                                    <option value="true">Ativo</option>
+                                    <option value="false">Inativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">Avatar</small>
                                 </label>
                                 <div class="mb-2">
                                     <img
-                                        id="jogo-imagem-preview"
+                                        id="usuario-social-avatar-preview"
                                         src=""
-                                        alt="Imagem do jogo"
-                                        style="width: 156px; height: 96px; object-fit: cover; border-radius: .55rem; border: 1px solid #ddd; display: none;"
+                                        alt="Avatar do usuário"
+                                        style="width: 96px; height: 96px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd; display: none;"
                                     />
                                 </div>
-                                <input type="file" name="imagemFile" class="form-control" id="imagemFile" accept="image/*" />
+                                <input type="file" name="avatarFile" class="form-control" id="avatarFile" accept="image/*" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-check form-check-inline mb-2">
+                                <input type="checkbox" class="form-check-input" id="podePostarMidia" name="podePostarMidia" />
+                                <label class="form-check-label" for="podePostarMidia">Pode postar mídia</label>
+                            </div>
+                            <div class="form-check form-check-inline mb-2">
+                                <input type="checkbox" class="form-check-input" id="podePostarLink" name="podePostarLink" />
+                                <label class="form-check-label" for="podePostarLink">Pode postar link</label>
                             </div>
                         </div>
                     </div>
                 </form>
 
-                <section class="section-actions jogo-form-actions">
+                <section class="section-actions usuario-social-form-actions">
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-jogo-editar" class="btn btn-secondary btn-float">
+                        <button type="button" id="btn-usuario-social-editar" class="btn btn-secondary btn-float">
                             <i class="fa fa fa-pencil"></i>
                             <span class="btn-label">Editar</span>
                         </button>
                     </div>
                     <div class="section-actions-btn-parent">
-                        <button type="button" id="btn-jogo-salvar" class="btn btn-success btn-float">
+                        <button type="button" id="btn-usuario-social-salvar" class="btn btn-success btn-float">
                             <i class="fa fa fa-floppy-o"></i>
                             <span class="btn-label">Salvar</span>
                         </button>
@@ -139,20 +152,19 @@
 
 <script>
     (() => {
-    const jogoForm = {
-        formId: 'form-jogo',
-        tabId: 'tab-form-jogo',
-        setImagePreview: (url) => {
-            const $preview = $('#jogo-imagem-preview');
+    const usuarioSocialForm = {
+        formId: 'form-usuario-social',
+        setAvatarPreview: (url) => {
+            const $preview = $('#usuario-social-avatar-preview');
             if (!url) {
                 $preview.hide().attr('src', '');
                 return;
             }
             $preview.attr('src', `${url}?t=${Date.now()}`).show();
         },
-        loadImage: (jogoId) => {
-            if (!jogoId) {
-                jogoForm.setImagePreview(null);
+        loadAvatar: (usuarioId) => {
+            if (!usuarioId) {
+                usuarioSocialForm.setAvatarPreview(null);
                 return;
             }
 
@@ -161,23 +173,23 @@
                 type: 'GET',
                 dataType: 'json',
                 data: {
-                    entidadePai: 'jogo',
-                    entidadePaiId: jogoId,
+                    entidadePai: 'usuario',
+                    entidadePaiId: usuarioId,
                 },
                 success: function (response) {
-                    const imageUrl = response?.data?.url || null;
-                    jogoForm.setImagePreview(imageUrl);
+                    const avatarUrl = response?.data?.url || null;
+                    usuarioSocialForm.setAvatarPreview(avatarUrl);
                 },
                 error: function () {
-                    jogoForm.setImagePreview(null);
+                    usuarioSocialForm.setAvatarPreview(null);
                 },
             });
         },
-        uploadImage: ({ jogoId, onSuccess, onError }) => {
-            const input = document.getElementById('imagemFile');
+        uploadAvatar: ({ usuarioId, onSuccess, onError }) => {
+            const input = document.getElementById('avatarFile');
             const file = input?.files?.[0];
 
-            if (!file || !jogoId) {
+            if (!file || !usuarioId) {
                 if (typeof onSuccess === 'function') {
                     onSuccess(false);
                 }
@@ -188,14 +200,14 @@
             formData.append('file', file);
 
             $.ajax({
-                url: `${admin.baseUrl}/arquivo/upload-local-server?entidadePai=jogo&entidadePaiId=${jogoId}&slug=avatar`,
+                url: `${admin.baseUrl}/arquivo/upload-local-server?entidadePai=usuario&entidadePaiId=${usuarioId}&slug=avatar`,
                 type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function () {
-                    $('#imagemFile').val('');
-                    jogoForm.loadImage(jogoId);
+                    $('#avatarFile').val('');
+                    usuarioSocialForm.loadAvatar(usuarioId);
                     if (typeof onSuccess === 'function') {
                         onSuccess(true);
                     }
@@ -208,15 +220,15 @@
             });
         },
         setMode: (mode) => {
-            const $editButtonParent = $('#btn-jogo-editar').closest('.section-actions-btn-parent');
-            const $saveLabel = $('#btn-jogo-salvar .btn-label');
-            const $saveIcon = $('#btn-jogo-salvar i');
+            const $editButtonParent = $('#btn-usuario-social-editar').closest('.section-actions-btn-parent');
+            const $saveLabel = $('#btn-usuario-social-salvar .btn-label');
+            const $saveIcon = $('#btn-usuario-social-salvar i');
 
             if (mode === 'create') {
                 $editButtonParent.hide();
                 $saveLabel.text('Cadastrar');
                 $saveIcon.attr('class', 'fa fa-plus-circle');
-                $(`#${jogoForm.formId} :input`).prop('disabled', false);
+                $(`#${usuarioSocialForm.formId} :input`).prop('disabled', false);
                 return;
             }
 
@@ -224,30 +236,30 @@
                 $editButtonParent.show();
                 $saveLabel.text('Salvar');
                 $saveIcon.attr('class', 'fa fa-floppy-o');
-                $(`#${jogoForm.formId} :input`).prop('disabled', false);
+                $(`#${usuarioSocialForm.formId} :input`).prop('disabled', false);
                 return;
             }
 
             $editButtonParent.show();
             $saveLabel.text('Salvar');
             $saveIcon.attr('class', 'fa fa-floppy-o');
-            $(`#${jogoForm.formId} :input`).prop('disabled', true);
+            $(`#${usuarioSocialForm.formId} :input`).prop('disabled', true);
         },
         edit: () => {
-            jogoForm.setMode('edit');
+            usuarioSocialForm.setMode('edit');
         },
         cancel: () => {
-            const uuid = ($(`#${jogoForm.formId} [name="uuid"]`).val() || '').toString().trim();
+            const uuid = ($(`#${usuarioSocialForm.formId} [name="uuid"]`).val() || '').toString().trim();
             if (uuid) {
-                jogoForm.setMode('view');
+                usuarioSocialForm.setMode('view');
                 return;
             }
-            jogoForm.setMode('create');
+            usuarioSocialForm.setMode('create');
         },
         populateForm: ({ url, uuid = null }) => {
             if (!uuid) {
-                jogoForm.setMode('create');
-                jogoForm.setImagePreview(null);
+                usuarioSocialForm.setMode('create');
+                usuarioSocialForm.setAvatarPreview(null);
                 return;
             }
             $.ajax({
@@ -256,46 +268,29 @@
                 dataType: 'json',
                 beforeSend: function () {
                     admin.loading(true);
-                    jogoForm.setMode('view');
+                    usuarioSocialForm.setMode('view');
                 },
                 error: function () {
                     admin.loading(false);
                     toastr['error']('Não foi possível carregar o registro.');
-                    jogoForm.setMode('create');
+                    usuarioSocialForm.setMode('create');
                 },
                 success: function (response) {
                     admin.loading(false);
                     var data = response?.data || {};
-                    var $form = $('#' + jogoForm.formId);
+                    var $form = $('#' + usuarioSocialForm.formId);
 
-                    $.each(data, function (field, value) {
-                        var $field = $form.find('[name="' + field + '"]');
-                        if (!$field.length) {
-                            $field = $form.find('#' + field);
-                        }
-                        if (!$field.length) {
-                            return;
-                        }
+                    $form.find('[name="id"]').val(data.id || '');
+                    $form.find('[name="uuid"]').val(data.uuid || '');
+                    $form.find('[name="nome"]').val(data.nome || '');
+                    $form.find('[name="apelido"]').val(data.apelido || '');
+                    $form.find('[name="moedas"]').val(Number(data.moedas || 0));
+                    $form.find('[name="ativo"]').val(String(data.ativo !== false));
+                    $form.find('[name="podePostarMidia"]').prop('checked', !!data.podePostarMidia);
+                    $form.find('[name="podePostarLink"]').prop('checked', !!data.podePostarLink);
 
-                        var fieldType = ($field.attr('type') || '').toLowerCase();
-                        var tagName = ($field.get(0)?.tagName || '').toLowerCase();
-
-                        if (fieldType === 'checkbox') {
-                            $field.prop('checked', !!value);
-                            return;
-                        }
-
-                        if (tagName === 'select' || tagName === 'textarea' || fieldType === 'text' || fieldType === 'url' || fieldType === 'number' || fieldType === 'hidden') {
-                            $field.val(value ?? '');
-                            return;
-                        }
-
-                        $field.val(value ?? '');
-                    });
-
-                    jogoForm.loadImage(data.id);
-
-                    jogoForm.setMode('view');
+                    usuarioSocialForm.loadAvatar(data.id);
+                    usuarioSocialForm.setMode('view');
                 }
             });
         },
@@ -310,21 +305,17 @@
 
             const $form = $('#' + formId);
             const uuid = ($form.find('[name="uuid"]').val() || '').toString().trim();
-            const url = uuid ? `${admin.baseUrl}/jogo/${uuid}` : `${admin.baseUrl}/jogo`;
+            const url = uuid ? `${admin.baseUrl}/usuario-social/${uuid}` : `${admin.baseUrl}/usuario-social`;
             const method = uuid ? 'PATCH' : 'POST';
 
-            const formData = $form.serializeArray().reduce(function (obj, item) {
-                if (item.name === 'id') {
-                    return obj;
-                }
-                if (item.name === 'uuid' && !item.value) {
-                    return obj;
-                }
-                obj[item.name] = item.value;
-                return obj;
-            }, {});
-
-            formData.custoMoedas = Number(formData.custoMoedas || 0);
+            const formData = {
+                nome: ($form.find('[name="nome"]').val() || '').toString().trim(),
+                apelido: ($form.find('[name="apelido"]').val() || '').toString().trim() || null,
+                moedas: Number($form.find('[name="moedas"]').val() || 0),
+                ativo: String($form.find('[name="ativo"]').val()) === 'true',
+                podePostarMidia: $form.find('[name="podePostarMidia"]').is(':checked'),
+                podePostarLink: $form.find('[name="podePostarLink"]').is(':checked'),
+            };
 
             $.ajax({
                 url,
@@ -338,7 +329,7 @@
                 error: function (jqXHR) {
                     admin.loading(false);
                     const msg = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Não foi possível salvar o registro.';
-                    toastr['error'](msg);
+                    toastr['error'](Array.isArray(msg) ? msg.join(', ') : msg);
                 },
                 success: function (responseData) {
                     admin.loading(false);
@@ -353,21 +344,20 @@
                     }
 
                     const persistedId = Number($form.find('[name="id"]').val() || payload?.id || 0);
-
-                    jogoForm.uploadImage({
-                        jogoId: persistedId,
+                    usuarioSocialForm.uploadAvatar({
+                        usuarioId: persistedId,
                         onSuccess: (uploaded) => {
                             if (uploaded) {
-                                toastr['success']('Dados e imagem salvos com sucesso.');
+                                toastr['success']('Dados e avatar salvos com sucesso.');
                             } else {
                                 toastr['success']('Operação realizada com sucesso.');
                             }
-                            jogoForm.cancel('form-jogo');
+                            usuarioSocialForm.cancel('form-usuario-social');
                         },
                         onError: (jqXHR) => {
-                            const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Dados salvos, mas o upload da imagem falhou.';
+                            const message = jqXHR?.responseJSON?.message || jqXHR?.responseText || 'Dados salvos, mas o upload do avatar falhou.';
                             toastr['warning'](message);
-                            jogoForm.cancel('form-jogo');
+                            usuarioSocialForm.cancel('form-usuario-social');
                         },
                     });
                 }
@@ -375,18 +365,18 @@
         }
     };
 
-    window.jogoForm = jogoForm;
+    window.usuarioSocialForm = usuarioSocialForm;
 
-    document.getElementById('btn-jogo-editar')?.addEventListener('click', () => {
-        jogoForm.edit('form-jogo');
+    document.getElementById('btn-usuario-social-editar')?.addEventListener('click', () => {
+        usuarioSocialForm.edit('form-usuario-social');
     });
 
-    document.getElementById('btn-jogo-salvar')?.addEventListener('click', () => {
-        jogoForm.save({ formId: jogoForm.formId });
+    document.getElementById('btn-usuario-social-salvar')?.addEventListener('click', () => {
+        usuarioSocialForm.save({ formId: usuarioSocialForm.formId });
     });
 
-    jogoForm.populateForm({
-        url: admin.baseUrl + '/jogo',
+    usuarioSocialForm.populateForm({
+        url: admin.baseUrl + '/usuario-social',
         uuid: '{{uuid}}'
     });
     })();

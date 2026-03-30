@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { PerfilInstagram } from '../../../social/models/perfil-instagram/perfil-instagram.entity';
 import { Publicacao } from '../../../social/models/publicacao/publicacao.entity';
 import { Usuario } from '../../../social/models/usuario/usuario.entity';
-import { OrganizacaoService } from '../organizacao/organizacao.service';
 
 const CONTEUDO_VALUES = ['EXTERNO', 'INTERNO', 'ANUNCIANTE'] as const;
 const ESCOPO_VALUES = ['PRIVADO', 'PUBLICO'] as const;
@@ -19,15 +18,26 @@ export class PublicacaoAdminService {
     private readonly perfilInstagramRepository: Repository<PerfilInstagram>,
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
-    private readonly organizacaoService: OrganizacaoService,
   ) {}
 
-  async findAll() {
-    return this.publicacaoRepository.find({ order: { id: 'DESC' } });
+  private normalizeOrganizationId(organizacaoId: number | null | undefined) {
+    const normalized = Number(organizacaoId || 0);
+    if (!Number.isInteger(normalized) || normalized <= 0) {
+      throw new BadRequestException('Organização inválida na sessão do usuário.');
+    }
+
+    return normalized;
   }
 
-  async get(uuid: string) {
-    const publicacao = await this.publicacaoRepository.findOne({ where: { uuid } });
+  /**
+   * Resolve UUID to database entity (with ID).
+   * Pattern: Controller sends UUID → Service resolves to entity with ID → Logic uses ID
+   */
+  private async resolveByUuid(organizacaoId: number, uuid: string) {
+    const publicacao = await this.publicacaoRepository.findOne({
+      where: { uuid, organizacaoId },
+    });
+
     if (!publicacao) {
       throw new NotFoundException('Publicação não encontrada');
     }
@@ -35,16 +45,29 @@ export class PublicacaoAdminService {
     return publicacao;
   }
 
-  async create(ownerUuid: string, payload: Partial<Publicacao>) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
-    const usuarioId = await this.resolveUsuarioIdForOrganization(organizacaoId, payload.usuarioId);
+  async findAll(organizacaoId: number) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    return this.publicacaoRepository.find({
+      where: { organizacaoId: normalizedOrgId },
+      order: { id: 'DESC' },
+    });
+  }
+
+  async get(organizacaoId: number, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    return this.resolveByUuid(normalizedOrgId, uuid);
+  }
+
+  async create(organizacaoId: number, payload: Partial<Publicacao>, ownerUuid?: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const usuarioId = await this.resolveUsuarioIdForOrganization(normalizedOrgId, payload.usuarioId, ownerUuid);
     const conteudo = this.parseConteudo(payload.conteudo);
     const escopo = this.parseEscopo(payload.escopo);
     const destaque = this.parseBoolean(payload.destaque, false);
 
     const publicacao = this.publicacaoRepository.create({
       uuid: randomUUID(),
-      organizacaoId,
+      organizacaoId: normalizedOrgId,
       usuarioId,
       tipo: payload.tipo || 'texto',
       texto: payload.texto || null,
@@ -59,8 +82,9 @@ export class PublicacaoAdminService {
     return this.publicacaoRepository.save(publicacao);
   }
 
-  async update(uuid: string, payload: Partial<Publicacao>) {
-    const publicacao = await this.get(uuid);
+  async update(organizacaoId: number, uuid: string, payload: Partial<Publicacao>) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const publicacao = await this.resolveByUuid(normalizedOrgId, uuid);
 
     publicacao.tipo = payload.tipo ?? publicacao.tipo;
     publicacao.texto = payload.texto ?? publicacao.texto;
@@ -81,28 +105,32 @@ export class PublicacaoAdminService {
     }
 
     if (payload.usuarioId !== undefined) {
-      publicacao.usuarioId = Number(payload.usuarioId);
+      publicacao.usuarioId = await this.resolveUsuarioIdForOrganization(
+        normalizedOrgId,
+        Number(payload.usuarioId),
+      );
     }
 
     return this.publicacaoRepository.save(publicacao);
   }
 
-  async remove(uuid: string) {
-    const publicacao = await this.get(uuid);
+  async remove(organizacaoId: number, uuid: string) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const publicacao = await this.resolveByUuid(normalizedOrgId, uuid);
     await this.publicacaoRepository.remove(publicacao);
   }
 
-  async listInstagramProfiles(ownerUuid: string) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
+  async listInstagramProfiles(organizacaoId: number) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
 
     return this.perfilInstagramRepository.find({
-      where: { organizacaoId, ativo: true },
+      where: { organizacaoId: normalizedOrgId, ativo: true },
       order: { id: 'ASC' },
     });
   }
 
   async createInstagramPublication(
-    ownerUuid: string,
+    organizacaoId: number,
     data: {
       profile: string;
       category?: string | null;
@@ -111,9 +139,10 @@ export class PublicacaoAdminService {
       escopo?: string | null;
       destaque?: boolean | string | null;
     },
+    ownerUuid?: string,
   ) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
-    const usuarioId = await this.resolveUsuarioIdForOrganization(organizacaoId, undefined, ownerUuid);
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const usuarioId = await this.resolveUsuarioIdForOrganization(normalizedOrgId, undefined, ownerUuid);
     //const urlRedirecionamento = `https://www.instagram.com/p/${data.code}/`;
     const midiaUrl = `https://www.instagram.com/p/${data.code}/`;
     const conteudo = this.parseConteudo(data.conteudo);
@@ -121,7 +150,7 @@ export class PublicacaoAdminService {
     const destaque = this.parseBoolean(data.destaque, false);
 
     const existing = await this.publicacaoRepository.findOne({
-      where: { organizacaoId, midiaUrl },
+      where: { organizacaoId: normalizedOrgId, midiaUrl },
     });
 
     if (existing) {
@@ -134,7 +163,7 @@ export class PublicacaoAdminService {
 
     const publicacao = this.publicacaoRepository.create({
       uuid: randomUUID(),
-      organizacaoId,
+      organizacaoId: normalizedOrgId,
       usuarioId,
       tipo: 'instagram',
       texto: `Post do Instagram @${data.profile}`,
@@ -150,8 +179,9 @@ export class PublicacaoAdminService {
     return { created: true, publicacao: saved };
   }
 
-  async syncInstagram(ownerUuid: string) {
-    const profiles = await this.listInstagramProfiles(ownerUuid);
+  async syncInstagram(organizacaoId: number) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
+    const profiles = await this.listInstagramProfiles(normalizedOrgId);
 
     if (profiles.length === 0) {
       return {
@@ -206,7 +236,7 @@ export class PublicacaoAdminService {
             continue;
           }
 
-          const result = await this.createInstagramPublication(ownerUuid, {
+          const result = await this.createInstagramPublication(normalizedOrgId, {
             profile: profile.perfil,
             category: profile.categoria,
             code,
@@ -250,11 +280,11 @@ export class PublicacaoAdminService {
     };
   }
 
-  async syncInstagramByUuid(ownerUuid: string, perfilUuid: string) {
-    const organizacaoId = await this.getOrganizationIdByOwner(ownerUuid);
+  async syncInstagramById(organizacaoId: number, perfilId: number) {
+    const normalizedOrgId = this.normalizeOrganizationId(organizacaoId);
 
     const profile = await this.perfilInstagramRepository.findOne({
-      where: { uuid: perfilUuid, organizacaoId, ativo: true },
+      where: { id: perfilId, organizacaoId: normalizedOrgId, ativo: true },
     });
 
     if (!profile) {
@@ -293,7 +323,7 @@ export class PublicacaoAdminService {
         continue;
       }
 
-      const result = await this.createInstagramPublication(ownerUuid, {
+      const result = await this.createInstagramPublication(normalizedOrgId, {
         profile: profile.perfil,
         category: profile.categoria,
         code,
@@ -309,7 +339,7 @@ export class PublicacaoAdminService {
       }
     }
 
-    await this.perfilInstagramRepository.update({ uuid: perfilUuid }, { sincronizadoEm: new Date() } as any);
+    await this.perfilInstagramRepository.update({ id: perfilId }, { sincronizadoEm: new Date() } as any);
 
     return {
       profile: profile.perfil,
@@ -317,20 +347,6 @@ export class PublicacaoAdminService {
       totalSkipped,
       totalItems: items.length,
     };
-  }
-
-  private async getOrganizationIdByOwner(ownerUuid: string) {
-    const organizacaoUuid = await this.organizacaoService.getOwnedOrganizationUuid(ownerUuid);
-    if (!organizacaoUuid) {
-      throw new BadRequestException('Você precisa criar uma organização antes de continuar.');
-    }
-
-    const orgRows = await this.publicacaoRepository.query('SELECT id FROM public.organizacao WHERE uuid = $1', [organizacaoUuid]);
-    if (!orgRows?.[0]?.id) {
-      throw new BadRequestException('Organização não encontrada para o usuário atual.');
-    }
-
-    return Number(orgRows[0].id);
   }
 
   private async resolveUsuarioIdForOrganization(organizacaoId: number, usuarioId?: number, ownerUuid?: string) {

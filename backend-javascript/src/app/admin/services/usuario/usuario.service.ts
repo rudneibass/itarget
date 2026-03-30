@@ -5,7 +5,6 @@ import { In, Repository } from 'typeorm';
 import { Organizacao } from '../../../social/models/organizacao/organizacao.entity';
 import { PermissaoUsuario } from '../../../social/models/permissao-usuario/permissao-usuario.entity';
 import { Usuario } from '../../../social/models/usuario/usuario.entity';
-import { UsuarioAdmin } from '../../models/usuario-admin/usuario-admin.entity';
 import { UsuarioOrganizacao } from '../../models/usuario-organizacao/usuario-organizacao.entity';
 
 @Injectable()
@@ -17,37 +16,22 @@ export class UsuarioService {
     private readonly permissaoRepository: Repository<PermissaoUsuario>,
     @InjectRepository(Organizacao)
     private readonly organizacaoRepository: Repository<Organizacao>,
-    @InjectRepository(UsuarioAdmin)
-    private readonly usuarioAdminRepository: Repository<UsuarioAdmin>,
     @InjectRepository(UsuarioOrganizacao)
     private readonly usuarioOrganizacaoRepository: Repository<UsuarioOrganizacao>,
   ) {}
 
-  private async getOwnedOrganization(ownerUuid: string) {
-    const owner = await this.usuarioAdminRepository.findOne({ where: { uuid: ownerUuid } });
-    if (!owner) {
-      throw new NotFoundException('Usuário admin não encontrado');
+  private async getOrganizationById(organizacaoId: number | null | undefined) {
+    const normalizedId = Number(organizacaoId || 0);
+    if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+      throw new BadRequestException('Organização inválida na sessão do usuário.');
     }
 
-    const ownerVinculo = await this.usuarioOrganizacaoRepository.findOne({
-      where: {
-        usuarioId: owner.id,
-        tipo: 'DONO',
-        ativo: true,
-      },
-      order: { id: 'DESC' },
-    });
-
-    if (ownerVinculo) {
-      const organizacaoByVinculo = await this.organizacaoRepository.findOne({
-        where: { id: ownerVinculo.organizacaoId, ativo: true },
-      });
-      if (organizacaoByVinculo) {
-        return organizacaoByVinculo;
-      }
+    const organizacao = await this.organizacaoRepository.findOne({ where: { id: normalizedId, ativo: true } });
+    if (!organizacao) {
+      throw new BadRequestException('Organização da sessão não encontrada ou inativa.');
     }
 
-    throw new BadRequestException('Primeiro é preciso criar uma organização para depois adicionar colaboradores.');
+    return organizacao;
   }
 
   async listOrganizations() {
@@ -64,9 +48,17 @@ export class UsuarioService {
       return [];
     }
 
+    return this.findColaboradoresByOrganizationId(organizacao.id);
+  }
+
+  async findColaboradoresByOrganizationId(organizacaoId: number | null | undefined) {
+    if (!organizacaoId) {
+      return [];
+    }
+
     const vinculos = await this.usuarioOrganizacaoRepository.find({
       where: {
-        organizacaoId: organizacao.id,
+        organizacaoId,
         tipo: 'COLABORADOR',
         ativo: true,
       },
@@ -110,11 +102,21 @@ export class UsuarioService {
     });
   }
 
-  async get(uuid: string) {
+  private async getOwnedUser(uuid: string, organizacaoId?: number) {
     const user = await this.usuarioRepository.findOne({ where: { uuid } });
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
+
+    if (organizacaoId && user.organizacaoId !== organizacaoId) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
+  }
+
+  async get(uuid: string, organizacaoId?: number) {
+    const user = await this.getOwnedUser(uuid, organizacaoId);
 
     const permission = await this.permissaoRepository.findOne({ where: { usuarioId: user.id } });
     return {
@@ -124,13 +126,8 @@ export class UsuarioService {
     };
   }
 
-  async create(payload: any, ownerUuid?: string) {
-    const ownerOrganization = ownerUuid ? await this.getOwnedOrganization(ownerUuid) : null;
-    const organizacaoUuid = ownerOrganization?.uuid;
-
-    if (!organizacaoUuid) {
-      throw new BadRequestException('Primeiro é preciso criar uma organização para depois adicionar colaboradores.');
-    }
+  async create(payload: any, organizacaoId?: number) {
+    const ownerOrganization = await this.getOrganizationById(organizacaoId);
 
     const saved = await this.usuarioRepository.manager.transaction(async (entityManager) => {
       const usuarioRepository = entityManager.getRepository(Usuario);
@@ -173,56 +170,14 @@ export class UsuarioService {
     return this.get(saved.uuid);
   }
 
-  async update(uuid: string, payload: any, ownerUuid?: string) {
-    const user = await this.usuarioRepository.findOne({ where: { uuid } });
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
-
-    const ownerOrganization = ownerUuid ? await this.getOwnedOrganization(ownerUuid) : null;
-
-    if (ownerOrganization) {
-      user.organizacaoId = ownerOrganization.id;
-    } else {
-      const organizacaoUuid = payload.organizacaoUuid;
-      if (payload.organizacaoId !== undefined) {
-        user.organizacaoId = payload.organizacaoId;
-      } else if (organizacaoUuid) {
-        const organizacao = await this.organizacaoRepository.findOne({ where: { uuid: organizacaoUuid } });
-        if (organizacao) {
-          user.organizacaoId = organizacao.id;
-        }
-      }
-    }
+  async update(uuid: string, payload: any, organizacaoId?: number) {
+    const user = await this.getOwnedUser(uuid, organizacaoId);
     user.nome = payload.nome ?? user.nome;
     user.apelido = payload.apelido ?? user.apelido;
     user.urlAvatar = payload.urlAvatar ?? user.urlAvatar;
     user.moedas = payload.moedas !== undefined ? Number(payload.moedas) : user.moedas;
     user.ativo = typeof payload.ativo === 'boolean' ? payload.ativo : user.ativo;
     await this.usuarioRepository.save(user);
-
-    if (ownerOrganization) {
-      const existingVinculo = await this.usuarioOrganizacaoRepository.findOne({
-        where: {
-          usuarioId: user.id,
-          organizacaoId: ownerOrganization.id,
-        },
-      });
-
-      if (!existingVinculo) {
-        const vinculo = this.usuarioOrganizacaoRepository.create({
-          usuarioId: user.id,
-          organizacaoId: ownerOrganization.id,
-          tipo: 'COLABORADOR',
-          ativo: true,
-        });
-        await this.usuarioOrganizacaoRepository.save(vinculo);
-      } else {
-        existingVinculo.tipo = 'COLABORADOR';
-        existingVinculo.ativo = true;
-        await this.usuarioOrganizacaoRepository.save(existingVinculo);
-      }
-    }
 
     const existingPermission = await this.permissaoRepository.findOne({ where: { usuarioId: user.id } });
     if (!existingPermission) {
@@ -238,14 +193,11 @@ export class UsuarioService {
       await this.permissaoRepository.save(existingPermission);
     }
 
-    return this.get(uuid);
+    return this.get(uuid, organizacaoId);
   }
 
-  async remove(uuid: string) {
-    const user = await this.usuarioRepository.findOne({ where: { uuid } });
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
+  async remove(uuid: string, organizacaoId?: number) {
+    const user = await this.getOwnedUser(uuid, organizacaoId);
 
     await this.permissaoRepository.delete({ usuarioId: user.id });
     await this.usuarioRepository.remove(user);

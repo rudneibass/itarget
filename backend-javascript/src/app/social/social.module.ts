@@ -19,6 +19,7 @@ import { AutenticacaoService } from './services/autenticacao/autenticacao-social
 import { EconomiaService } from './services/economia/economia-social.service';
 import { PublicacaoService } from './services/publicacao/publicacao-social.service';
 import { SessaoService } from './services/sessao/sessao-social.service';
+import { Arquivo } from '../admin/models/arquivo/arquivo.entity';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { SessaoService } from './services/sessao/sessao-social.service';
       CompartilhamentoPublicacao,
       Jogo,
       AcessoJogo,
+      Arquivo,
     ]),
   ],
   controllers: [

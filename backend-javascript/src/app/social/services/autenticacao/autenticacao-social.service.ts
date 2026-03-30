@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Arquivo } from '../../../admin/models/arquivo/arquivo.entity';
 import { Organizacao } from '../../models/organizacao/organizacao.entity';
 import { PermissaoUsuario } from '../../models/permissao-usuario/permissao-usuario.entity';
 import { Usuario } from '../../models/usuario/usuario.entity';
@@ -15,8 +16,34 @@ export class AutenticacaoService {
     private readonly userRepository: Repository<Usuario>,
     @InjectRepository(PermissaoUsuario)
     private readonly permissionRepository: Repository<PermissaoUsuario>,
+    @InjectRepository(Arquivo)
+    private readonly arquivoRepository: Repository<Arquivo>,
     private readonly sessionService: SessaoService,
   ) {}
+
+  private async resolveOrganizationLogoUrl(organizacaoId: number) {
+    const logo = await this.arquivoRepository
+      .createQueryBuilder('arquivo')
+      .where('arquivo.entidadePai = :entidadePai', { entidadePai: 'organizacao' })
+      .andWhere('arquivo.entidadePaiId = :entidadePaiId', { entidadePaiId: organizacaoId })
+      .andWhere('LOWER(arquivo.tipo) LIKE :tipo', { tipo: 'image/%' })
+      .orderBy('arquivo.id', 'DESC')
+      .getOne();
+
+    return logo?.url ?? null;
+  }
+
+  private async resolveUserAvatarUrl(usuarioId: number) {
+    const avatar = await this.arquivoRepository
+      .createQueryBuilder('arquivo')
+      .where('arquivo.entidadePai = :entidadePai', { entidadePai: 'usuario' })
+      .andWhere('arquivo.entidadePaiId = :entidadePaiId', { entidadePaiId: usuarioId })
+      .andWhere('LOWER(arquivo.tipo) LIKE :tipo', { tipo: 'image/%' })
+      .orderBy('arquivo.id', 'DESC')
+      .getOne();
+
+    return avatar?.url ?? null;
+  }
 
   async authenticateByQr(organizacaoUuid: string, userHash: string): Promise<DadosSessaoSocial> {
     const school = await this.schoolRepository.findOne({ where: { uuid: organizacaoUuid, ativo: true } });
@@ -39,18 +66,20 @@ export class AutenticacaoService {
     const permission = await this.permissionRepository.findOne({
       where: { usuarioId: user.id },
     });
+    const logoUrl = await this.resolveOrganizationLogoUrl(school.id);
+    const avatarUrl = await this.resolveUserAvatarUrl(user.id);
 
     return this.sessionService.create({
       organizacaoUuid,
       organizacao: {
         nome: school.nome,
-        logoUrl: null,
+        logoUrl,
       },
       usuario: {
         uuid: user.uuid,
         nome: user.nome,
         apelido: user.apelido,
-        urlAvatar: user.urlAvatar,
+        urlAvatar: avatarUrl ?? user.urlAvatar,
         moedas: user.moedas,
         podePostarMidia: permission?.podePostarMidia ?? false,
         podePostarLink: permission?.podePostarLink ?? false,

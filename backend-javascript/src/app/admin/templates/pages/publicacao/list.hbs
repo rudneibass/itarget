@@ -301,7 +301,26 @@
     });
 
     document.getElementById('btn-sync-instagram-publicacao').addEventListener('click', () => {
-        publicacaoList.syncInstagram();
+        bootbox.confirm({
+            title: 'Confirmar sincronização',
+            message: 'Deseja sincronizar publicações do Instagram agora? O tempo de execução pode variar dependendo da quantidade de publicações a serem sincronizadas.',
+            buttons: {
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Sim, sincronizar',
+                    className: 'btn-sm btn-success',
+                },
+                cancel: {
+                    label: '<i class="fa fa-undo"></i> Cancelar',
+                    className: 'btn-sm btn-secondary',
+                },
+            },
+            callback: function (result) {
+                if (!result) {
+                    return;
+                }
+                publicacaoList.syncInstagram();
+            },
+        });
     });
 
     publicacaoList.list({

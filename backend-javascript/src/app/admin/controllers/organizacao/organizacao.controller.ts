@@ -30,34 +30,34 @@ export class OrganizacaoController {
   @Get('form')
   @Render('pages/organizacao/form')
   async renderForm(@Req() req: any) {
-    const ownerUuid = req.adminSession?.usuario?.uuid;
-    const uuid = ownerUuid ? await this.organizacaoService.getOwnedOrganizationUuid(ownerUuid) : null;
-    return { uuid };
+    const organizacaoId = req.adminSession?.usuario?.organizacaoId;
+    const organizacao = await this.organizacaoService.getByOrganizationId(organizacaoId);
+    return { uuid: organizacao?.uuid ?? null };
   }
 
   @Get('form/uuid/:uuid')
   @Render('pages/organizacao/form')
   async renderFormByUuid(@Req() req: any, @Param('uuid') uuid: string) {
-    const ownerUuid = req.adminSession?.usuario?.uuid;
-    if (!ownerUuid) {
+    const organizacaoId = req.adminSession?.usuario?.organizacaoId;
+    if (!organizacaoId) {
       return { uuid: null };
     }
 
-    const ownedUuid = await this.organizacaoService.getOwnedOrganizationUuid(ownerUuid);
-    return { uuid: ownedUuid === uuid ? ownedUuid : null };
+    const organizacao = await this.organizacaoService.getByOrganizationId(organizacaoId);
+    return { uuid: organizacao?.uuid === uuid ? organizacao.uuid : null };
   }
 
   @Get('all')
   async findAll(@Req() req: any) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    const data = await this.organizacaoService.findAll(ownerUuid);
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    const data = await this.organizacaoService.findAll(organizacaoId);
     return { data };
   }
 
   @Get(':uuid')
   async get(@Req() req: any, @Param('uuid') uuid: string) {
-    const ownerUuid = req.adminSession.usuario.uuid;
-    const data = await this.organizacaoService.get(ownerUuid, uuid);
+    const organizacaoId = req.adminSession.usuario.organizacaoId;
+    const data = await this.organizacaoService.get(organizacaoId, uuid);
     return { data };
   }
 
@@ -68,7 +68,8 @@ export class OrganizacaoController {
   ) {
     try {
       const ownerUuid = req.adminSession.usuario.uuid;
-      const data = await this.organizacaoService.create(ownerUuid, createOrganizacaoDto);
+      const organizacaoId = req.adminSession.usuario.organizacaoId;
+      const data = await this.organizacaoService.create(ownerUuid, organizacaoId, createOrganizacaoDto);
       return { data };
     } catch (error) {
       throw new HttpException(
@@ -85,8 +86,8 @@ export class OrganizacaoController {
     @Body() updateOrganizacaoDto: UpdateOrganizacaoDto,
   ) {
     try {
-      const ownerUuid = req.adminSession.usuario.uuid;
-      const data = await this.organizacaoService.update(ownerUuid, uuid, updateOrganizacaoDto);
+      const organizacaoId = req.adminSession.usuario.organizacaoId;
+      const data = await this.organizacaoService.update(organizacaoId, uuid, updateOrganizacaoDto);
       return { data };
     } catch (error) {
       throw new HttpException(
@@ -99,8 +100,8 @@ export class OrganizacaoController {
   @Delete(':uuid')
   async remove(@Req() req: any, @Param('uuid') uuid: string) {
     try {
-      const ownerUuid = req.adminSession.usuario.uuid;
-      await this.organizacaoService.remove(ownerUuid, uuid);
+      const organizacaoId = req.adminSession.usuario.organizacaoId;
+      await this.organizacaoService.remove(organizacaoId, uuid);
       return { message: 'Organização removida com sucesso' };
     } catch (error) {
       throw new HttpException(

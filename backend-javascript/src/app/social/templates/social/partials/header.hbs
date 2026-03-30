@@ -1,0 +1,25 @@
+<header class="social-header">
+  <div class="social-header-inner">
+    <div class="social-brand">
+      {{#if organization.logoUrl}}
+        <img class="org-logo" src="{{organization.logoUrl}}" alt="Logo de {{organization.nome}}" />
+      {{else}}
+        <span class="org-logo org-logo-default" aria-label="Logo padrão da organização">🏫</span>
+      {{/if}}
+      <span class="org-name">{{organization.nome}}</span>
+    </div>
+    <div class="social-header-right">
+      <div class="coin-badge">🪙 {{moedas}}</div>
+      <a class="user-pill-link" href="/social/profile">
+        <div class="user-pill">
+          {{#if user.urlAvatar}}
+            <img class="user-avatar" src="{{user.urlAvatar}}" alt="Avatar de {{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}" />
+          {{else}}
+            <span class="user-avatar user-avatar-fallback">🙂</span>
+          {{/if}}
+          <span class="user-name">{{#if user.apelido}}{{user.apelido}}{{else}}{{user.nome}}{{/if}}</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</header>

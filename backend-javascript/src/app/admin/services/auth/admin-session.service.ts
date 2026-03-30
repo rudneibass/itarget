@@ -5,6 +5,7 @@ export interface AdminSessionUser {
   uuid: string;
   nome: string;
   email: string;
+  organizacaoId: number | null;
 }
 
 export interface AdminSessionData {
@@ -30,6 +31,7 @@ export class AdminSessionService {
         uuid: user.uuid,
         nome: user.nome,
         email: user.email,
+        organizacaoId: user.organizacaoId ?? null,
       },
       criadoEm: now,
       atualizadoEm: now,

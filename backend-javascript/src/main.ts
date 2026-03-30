@@ -38,6 +38,10 @@ async function bootstrap() {
     'aside',
     readFileSync(join(adminTemplatesPath, 'partials', 'aside.hbs'), 'utf8'),
   );
+  hbs.registerPartial(
+    'socialHeader',
+    readFileSync(join(socialTemplatesPath, 'social', 'partials', 'header.hbs'), 'utf8'),
+  );
 
   // Filters
   // app.useGlobalFilters(new GlobalExceptionCatcher());
