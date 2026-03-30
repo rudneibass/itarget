@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
 import { In, Repository } from 'typeorm';
+import { Arquivo } from '../../../admin/models/arquivo/arquivo.entity';
 import { CriarComentarioDto } from '../../dtos/publicacao/criar-comentario.dto';
 import { CriarPublicacaoDto } from '../../dtos/publicacao/criar-publicacao.dto';
 import { ComentarioPublicacao } from '../../models/comentario-publicacao/comentario-publicacao.entity';
@@ -24,7 +25,33 @@ export class PublicacaoService {
     private readonly compartilharRepository: Repository<CompartilhamentoPublicacao>,
     @InjectRepository(Usuario)
     private readonly userRepository: Repository<Usuario>,
+    @InjectRepository(Arquivo)
+    private readonly arquivoRepository: Repository<Arquivo>,
   ) {}
+
+  private async resolveUserAvatarUrls(userIds: number[]) {
+    if (userIds.length === 0) {
+      return new Map<number, string>();
+    }
+
+    const avatars = await this.arquivoRepository
+      .createQueryBuilder('arquivo')
+      .where('arquivo.entidadePai = :entidadePai', { entidadePai: 'usuario' })
+      .andWhere('arquivo.entidadePaiId IN (:...userIds)', { userIds })
+      .andWhere('LOWER(arquivo.tipo) LIKE :tipo', { tipo: 'image/%' })
+      .orderBy('arquivo.entidadePaiId', 'ASC')
+      .addOrderBy('arquivo.id', 'DESC')
+      .getMany();
+
+    const avatarByUserId = new Map<number, string>();
+    for (const avatar of avatars) {
+      if (!avatarByUserId.has(avatar.entidadePaiId)) {
+        avatarByUserId.set(avatar.entidadePaiId, avatar.url);
+      }
+    }
+
+    return avatarByUserId;
+  }
 
   private normalizeInstagramUrl(url?: string | null) {
     if (!url) {
@@ -84,6 +111,7 @@ export class PublicacaoService {
         urlAvatar: true,
       },
     });
+    const authorAvatarById = await this.resolveUserAvatarUrls(authorIds);
     const authorById = new Map(authors.map((author) => [author.id, author]));
 
     const postIds = posts.map((post) => post.id);
@@ -117,7 +145,7 @@ export class PublicacaoService {
         return {
           ...post,
           authorName,
-          authorAvatarUrl: postAuthor?.urlAvatar ?? null,
+          authorAvatarUrl: authorAvatarById.get(post.usuarioId) ?? postAuthor?.urlAvatar ?? null,
           authorInitial: authorName.charAt(0).toUpperCase(),
           isOwnPost: currentUser ? post.usuarioId === currentUser.id : false,
           isInstagram,
@@ -221,6 +249,7 @@ export class PublicacaoService {
         urlAvatar: true,
       },
     });
+    const authorAvatarById = await this.resolveUserAvatarUrls(authorIds);
     const authorById = new Map(authors.map((author) => [author.id, author]));
 
     return comments.map((comment) => {
@@ -232,7 +261,7 @@ export class PublicacaoService {
         comentario: comment.comentario,
         criadoEm: comment.criadoEm,
         authorName,
-        authorAvatarUrl: author?.urlAvatar ?? null,
+        authorAvatarUrl: authorAvatarById.get(comment.usuarioId) ?? author?.urlAvatar ?? null,
         authorInitial: authorName.charAt(0).toUpperCase(),
         isFromCurrentUser: comment.usuarioId === user.id,
       };

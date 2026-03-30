@@ -8,14 +8,10 @@
     <link rel="stylesheet" href="/social/static/css/social-shorts.css" />
   </head>
   <body class="shorts-body">
-    <div class="social-shell shorts-shell-layout">
+    <div class="social-shell">
       {{> socialHeader }}
 
-      <nav class="social-nav">
-        <a href="/social/home">Home</a>
-        <a class="active" href="/social/shorts">Shorts</a>
-        <a href="/social/games">Jogos</a>
-      </nav>
+      {{> socialNav activeShorts=true }}
 
       <main class="shorts-page">
         <section class="shorts-feed" id="shorts-feed" aria-label="Timeline em formato shorts">

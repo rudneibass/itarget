@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 :root {
   --timeline-content-height: 500px;
 }
@@ -16,7 +21,6 @@ body {
 .social-shell {
   max-width: 980px;
   margin: 0 auto;
-  padding: 0 16px 24px;
 }
 
 .social-header {
@@ -46,7 +50,6 @@ body {
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 0 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1143,7 +1146,6 @@ body {
 
 .profile-page-transparent .social-header::before {
   background: transparent;
-  border-bottom-color: transparent;
 }
 
 .profile-card.profile-top {
@@ -1339,6 +1341,22 @@ body {
   background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
 }
 
+.profile-post-text--highlight {
+  background: linear-gradient(135deg, #8fd3ff 0%, #b8a5ff 52%, #ffc8e8 100%);
+}
+
+.profile-post-text--1 {
+  background: linear-gradient(135deg, #8fd3ff 0%, #b8a5ff 52%, #ffc8e8 100%);
+}
+
+.profile-post-text--2 {
+  background: linear-gradient(135deg, #7fe8c9 0%, #79c9ff 48%, #8f9dff 100%);
+}
+
+.profile-post-text--3 {
+  background: linear-gradient(135deg, #ffd38a 0%, #ff9db2 50%, #c39bff 100%);
+}
+
 .profile-post-text p {
   margin: 0;
   color: #496093;
@@ -1349,6 +1367,12 @@ body {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.profile-post-text--highlight p {
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(56, 44, 113, 0.25);
+  font-weight: 800;
 }
 
 .full-page-center {

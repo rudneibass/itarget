@@ -43,6 +43,7 @@ body.shorts-body {
 
 .shorts-feed {
   width: min(100%, var(--shorts-stage-width));
+  max-width: 100%;
   height: calc(100vh - 146px);
   min-height: 620px;
   overflow-y: auto;
@@ -79,6 +80,7 @@ body.shorts-body {
 
 .shorts-stage {
   width: var(--shorts-stage-width);
+  max-width: 100%;
   min-height: min(82vh, 760px);
   border-radius: 28px;
   overflow: hidden;

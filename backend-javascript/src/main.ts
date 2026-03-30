@@ -42,6 +42,10 @@ async function bootstrap() {
     'socialHeader',
     readFileSync(join(socialTemplatesPath, 'social', 'partials', 'header.hbs'), 'utf8'),
   );
+  hbs.registerPartial(
+    'socialNav',
+    readFileSync(join(socialTemplatesPath, 'social', 'partials', 'nav.hbs'), 'utf8'),
+  );
 
   // Filters
   // app.useGlobalFilters(new GlobalExceptionCatcher());
