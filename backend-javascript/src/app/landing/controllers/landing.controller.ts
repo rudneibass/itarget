@@ -8,6 +8,12 @@ export class LandingController {
     return {};
   }
 
+  @Get('landing/modulos')
+  @Render('pages/landing/modulos')
+  renderLandingModulos() {
+    return {};
+  }
+
   @Get('landing/reuniao')
   @Render('pages/landing/reuniao')
   renderLandingReuniao() {
