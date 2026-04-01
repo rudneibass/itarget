@@ -8,6 +8,59 @@
             <span class="btn-label">Novo</span>
         </button>
     </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-warning btn-float section-actions-btn" id="btn-toggle-barra-usuario-social">
+            <i class="fa fa-search"></i>
+            <span class="btn-label">Pesquisar</span>
+        </button>
+    </div>
+    <div class="section-actions-btn-parent">
+        <button class="btn btn-info btn-float section-actions-btn" id="btn-imprimir-lote-usuario-social">
+            <i class="fa fa-id-badge"></i>
+            <span class="btn-label">Lote A4</span>
+        </button>
+    </div>
+</section>
+
+<section class="section-search-bar hide" id="section-search-bar-usuario-social">
+    <div class="row search-bar" id="search-bar-usuario-social">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-body">
+                    <form id="formSearchUsuarioSocial">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="nome" id="filtro-nome-usuario-social" class="form-control" placeholder="Nome">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="apelido" id="filtro-apelido-usuario-social" class="form-control" placeholder="Apelido">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="status" id="filtro-status-usuario-social" class="form-control" placeholder="Status (ativo/inativo)">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="permissao" id="filtro-permissao-usuario-social" class="form-control" placeholder="Permissão (mídia/link)">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer p-2 border-top-0">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-usuario-social">
+                        <i class="fa fa-search"></i> Pesquisar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -31,6 +84,547 @@
 <script>
     (() => {
     const usuarioSocialList = {
+        formSearchId: 'formSearchUsuarioSocial',
+        data: [],
+        buildQrImageUrl: (value) => {
+            if (!value) {
+                return null;
+            }
+
+            return `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(value)}`;
+        },
+        toAbsoluteSocialAccessUrl: (value) => {
+            if (!value) {
+                return null;
+            }
+
+            if (/^https?:\/\//i.test(value)) {
+                return value;
+            }
+
+            return `${window.location.origin}${value.startsWith('/') ? '' : '/'}${value}`;
+        },
+        escapeHtml: (value) => {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        },
+        formatNameForBadge: (value) => {
+            const tokens = String(value || '')
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean);
+
+            if (tokens.length === 0) {
+                return '';
+            }
+
+            if (tokens.length === 1) {
+                return tokens[0];
+            }
+
+            const firstName = tokens[0];
+            const surnames = tokens.slice(1);
+
+            if (surnames.length === 1) {
+                return `${firstName} ${surnames[0]}`;
+            }
+
+            return `${firstName} ${surnames[1]}`;
+        },
+        fetchAvatarUrl: (usuarioId) => {
+            return new Promise((resolve) => {
+                if (!usuarioId) {
+                    resolve(null);
+                    return;
+                }
+
+                $.ajax({
+                    url: `${admin.baseUrl}/arquivo/avatar`,
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        entidadePai: 'usuario',
+                        entidadePaiId: usuarioId,
+                    },
+                    success: function (response) {
+                        resolve(response?.data?.url || null);
+                    },
+                    error: function () {
+                        resolve(null);
+                    },
+                });
+            });
+        },
+        buildPrintCardHtml: ({ nome, organizacaoNome, qrCodeImageUrl, socialAccessUrl, avatarUrl }) => {
+            const badgeName = usuarioSocialList.formatNameForBadge(nome || 'Usuário');
+            const safeNome = usuarioSocialList.escapeHtml(badgeName);
+            const safeOrganizacaoNome = usuarioSocialList.escapeHtml(organizacaoNome || 'Organização não informada');
+            const safeQrImageUrl = usuarioSocialList.escapeHtml(qrCodeImageUrl || '');
+            const safeAvatarUrl = avatarUrl ? usuarioSocialList.escapeHtml(avatarUrl) : '';
+
+            return `
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    <title>Cartão de Acesso - ${safeNome}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; background: #f2f4f7; margin: 0; padding: 16px; }
+                        .card {
+                            width: 5.5cm;
+                            height: 9cm;
+                            margin: 0 auto;
+                            background:
+                                radial-gradient(120% 62% at 15% 8%, rgba(14, 165, 233, 0.45) 0%, rgba(14, 165, 233, 0.16) 35%, transparent 68%),
+                                radial-gradient(85% 46% at 88% 22%, rgba(59, 130, 246, 0.44) 0%, rgba(59, 130, 246, 0.14) 42%, transparent 74%),
+                                radial-gradient(70% 44% at 24% 88%, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.1) 48%, transparent 78%),
+                                linear-gradient(156deg, #ffffff 0%, #eaf2ff 45%, #d7e8ff 100%);
+                            border: 1px solid #d9dee6;
+                            border-radius: 6px;
+                            padding: 32px 18px;
+                            box-sizing: border-box;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: space-between;
+                        }
+                        .left {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            min-width: 0;
+                            width: 100%;
+                            text-align: center;
+                            background: rgba(255, 255, 255, 0.72);
+                            border: 1px solid rgba(255, 255, 255, 0.55);
+                            border-radius: 10px;
+                            padding: 12px 10px;
+                            box-sizing: border-box;
+                        }
+                        .header { margin-bottom: 6px; }
+                        .title { margin: 0; font-size: 11px; color: #1f2937; letter-spacing: .2px; }
+                        .subtitle { margin: 2px 0 0; font-size: 9px; color: #6b7280; }
+                        .avatar-wrap { display: flex; justify-content: center; margin: 6px 0; }
+                        .avatar {
+                            width: 58px;
+                            height: 58px;
+                            border-radius: 999px;
+                            border: 2px solid #e5e7eb;
+                            object-fit: cover;
+                            background: #f3f4f6;
+                        }
+                        .avatar-fallback {
+                            width: 58px;
+                            height: 58px;
+                            border-radius: 999px;
+                            border: 2px solid #e5e7eb;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 22px;
+                            font-weight: 700;
+                            color: #374151;
+                            background: #f3f4f6;
+                        }
+                        .name {
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #111827;
+                            margin: 2px 0;
+                            line-height: 1.2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                        .org {
+                            font-size: 10px;
+                            color: #4b5563;
+                            margin: 2px 0 0;
+                            line-height: 1.2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                        .qr-wrap { display: flex; justify-content: center; align-items: center; margin-top: 6px; }
+                        .qr { width: 2.6cm; height: 2.6cm; border: 1px solid #e5e7eb; border-radius: 6px; }
+                        .print-bar { text-align: center; margin-top: 10px; }
+                        .print-btn { padding: 8px 14px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; cursor: pointer; }
+                        @page { size: 5.5cm 9cm; margin: 0; }
+                        @media print {
+                            body { background: #fff; padding: 0; }
+                            .card {
+                                border: 1px solid #000;
+                                box-shadow: none;
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                            .print-bar { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <section class="card">
+                        <div class="left">
+                            <header class="header">
+                                <h1 class="title">Cartão de Acesso</h1>
+                                <p class="subtitle">Rede Social</p>
+                            </header>
+
+                            <div class="avatar-wrap">
+                                ${safeAvatarUrl
+                                    ? `<img class="avatar" src="${safeAvatarUrl}" alt="Foto de ${safeNome}" />`
+                                    : `<div class="avatar-fallback">${usuarioSocialList.escapeHtml(String(safeNome || 'U').charAt(0).toUpperCase())}</div>`}
+                            </div>
+
+                            <p class="name">${safeNome}</p>
+                            <p class="org">${safeOrganizacaoNome}</p>
+                        </div>
+
+                        <div class="qr-wrap">
+                            <img class="qr" src="${safeQrImageUrl}" alt="QRCode de acesso" />
+                        </div>
+                    </section>
+
+                    <div class="print-bar">
+                        <button class="print-btn" onclick="window.print()">Imprimir cartão</button>
+                    </div>
+                </body>
+                </html>
+            `;
+        },
+        printCard: async (uuid) => {
+            const item = (usuarioSocialList.data || []).find((user) => user.uuid === uuid);
+            if (!item) {
+                toastr['error']('Usuário não encontrado para gerar cartão.');
+                return;
+            }
+
+            const socialAccessUrl = usuarioSocialList.toAbsoluteSocialAccessUrl(item.socialAccessUrl);
+            if (!socialAccessUrl) {
+                toastr['error']('URL de acesso indisponível para gerar o cartão.');
+                return;
+            }
+
+            const qrCodeImageUrl = usuarioSocialList.buildQrImageUrl(socialAccessUrl);
+            const avatarUrl = await usuarioSocialList.fetchAvatarUrl(item.id);
+            const printWindow = window.open('', '_blank');
+
+            if (!printWindow) {
+                toastr['warning']('Não foi possível abrir a janela de impressão. Verifique se o navegador bloqueou pop-up.');
+                return;
+            }
+
+            const html = usuarioSocialList.buildPrintCardHtml({
+                nome: item.nome,
+                organizacaoNome: item.organizacaoNome,
+                qrCodeImageUrl,
+                socialAccessUrl,
+                avatarUrl,
+            });
+
+            printWindow.document.open();
+            printWindow.document.write(html);
+            printWindow.document.close();
+        },
+        matchesSearch: (item, filters) => {
+            const nome = String(filters?.nome || '').trim().toLowerCase();
+            const apelido = String(filters?.apelido || '').trim().toLowerCase();
+            const statusFiltro = String(filters?.status || '').trim().toLowerCase();
+            const permissaoFiltro = String(filters?.permissao || '').trim().toLowerCase();
+
+            const status = item.ativo ? 'ativo' : 'inativo';
+            const permissoes = [
+                item.podePostarMidia ? 'mídia' : '',
+                item.podePostarLink ? 'link' : '',
+                !item.podePostarMidia && !item.podePostarLink ? 'sem permissões' : '',
+            ]
+                .join(' ')
+                .toLowerCase();
+
+            const byNome = !nome || String(item.nome || '').toLowerCase().includes(nome);
+            const byApelido = !apelido || String(item.apelido || '').toLowerCase().includes(apelido);
+            const byStatus = !statusFiltro || status.includes(statusFiltro);
+            const byPermissao = !permissaoFiltro || permissoes.includes(permissaoFiltro);
+
+            return byNome && byApelido && byStatus && byPermissao;
+        },
+        getFilteredData: () => {
+            const data = Array.isArray(usuarioSocialList.data) ? usuarioSocialList.data : [];
+            const filters = $('#' + usuarioSocialList.formSearchId)
+                .serializeArray()
+                .reduce((acc, item) => {
+                    acc[item.name] = item.value;
+                    return acc;
+                }, {});
+
+            return data.filter((item) => usuarioSocialList.matchesSearch(item, filters));
+        },
+        render: () => {
+            const data = Array.isArray(usuarioSocialList.data) ? usuarioSocialList.data : [];
+            const filtered = usuarioSocialList.getFilteredData();
+
+            $('#messages-usuario-social').empty();
+            $('#tbody-usuario-social').empty();
+
+            if (!data.length) {
+                $('#messages-usuario-social').html("<h6 class='text-muted text-center'>Nenhum colaborador encontrado para a organização atual.</h6>");
+                return;
+            }
+
+            if (!filtered.length) {
+                $('#messages-usuario-social').html("<h6 class='text-muted text-center'>Nenhum usuário encontrado para o filtro informado.</h6>");
+                return;
+            }
+
+            filtered.forEach((item) => {
+                const socialAccessUrl = usuarioSocialList.toAbsoluteSocialAccessUrl(item.socialAccessUrl);
+                const qrCodeImageUrl = usuarioSocialList.buildQrImageUrl(socialAccessUrl);
+
+                $('#tbody-usuario-social').append(`
+                    <tr>
+                        <td class="p-3" style="width:65%; vertical-align: middle;">
+                            <small><b>Nome: </b>${item.nome || ''}</small><br/>
+                            <small><b>Apelido: </b>${item.apelido || '-'}</small><br/>
+                            <small><b>Moedas: </b>${Number(item.moedas || 0)}</small><br/>
+                            <small><b>Permissões: </b>
+                                ${item.podePostarMidia ? '<span class="badge bg-info me-1">Mídia</span>' : ''}
+                                ${item.podePostarLink ? '<span class="badge bg-primary">Link</span>' : ''}
+                                ${!item.podePostarMidia && !item.podePostarLink ? '<span class="text-muted">Sem permissões</span>' : ''}
+                            </small><br/>
+                            <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-success">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
+                        </td>
+                        <td style="width: 20%; min-width: 160px; vertical-align: middle;" class="text-center">
+                            ${qrCodeImageUrl ? `
+                                <img
+                                    src="${qrCodeImageUrl}"
+                                    alt="QR Code de acesso para ${item.nome || 'usuário'}"
+                                    style="width: 120px; height: 120px; border: 1px solid #dee2e6; border-radius: 8px;"
+                                />
+                                <br/>
+                                <small><a href="${socialAccessUrl}" target="_blank" rel="noopener noreferrer">Abrir link de acesso</a></small>
+                            ` : '<small class="text-muted">QR indisponível</small>'}
+                        </td>
+                        <td style="width: 15%; min-width: 170px; vertical-align: middle;">
+                            <button class="btn btn-sm btn-info w-100 mb-2" onclick="usuarioSocialList.printCard('${item.uuid}')">
+                                <i class="fa fa-id-card-o"></i> Cartão
+                            </button>
+                            <button
+                                class="btn btn-sm btn-secondary w-100 mb-2"
+                                onclick="admin.addTab({tabId:'form-usuario-social', title: 'Editar Usuário Rede Social', url: '/admin/usuario-social/form/uuid/${item.uuid}'})"
+                            >
+                                <i class="fa fa-pencil"></i> Editar
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        },
+        buildBatchPrintHtml: (cards) => {
+            const cardsHtml = cards
+                .map((card) => {
+                    const badgeName = usuarioSocialList.formatNameForBadge(card.nome || 'Usuário');
+                    const safeNome = usuarioSocialList.escapeHtml(badgeName);
+                    const safeOrganizacaoNome = usuarioSocialList.escapeHtml(card.organizacaoNome || 'Organização não informada');
+                    const safeQrImageUrl = usuarioSocialList.escapeHtml(card.qrCodeImageUrl || '');
+                    const safeAvatarUrl = card.avatarUrl ? usuarioSocialList.escapeHtml(card.avatarUrl) : '';
+
+                    return `
+                        <article class="badge-card">
+                            <div class="badge-left">
+                                <header class="badge-header">
+                                    <h3 class="badge-title">Cartão de Acesso</h3>
+                                    <p class="badge-subtitle">Rede Social</p>
+                                </header>
+
+                                <div class="badge-avatar-wrap">
+                                    ${safeAvatarUrl
+                                        ? `<img class="badge-avatar" src="${safeAvatarUrl}" alt="Foto de ${safeNome}" />`
+                                        : `<div class="badge-avatar-fallback">${usuarioSocialList.escapeHtml(String(safeNome || 'U').charAt(0).toUpperCase())}</div>`}
+                                </div>
+
+                                <p class="badge-name">${safeNome}</p>
+                                <p class="badge-org">${safeOrganizacaoNome}</p>
+                            </div>
+
+                            <div class="badge-qr-wrap">
+                                <img class="badge-qr" src="${safeQrImageUrl}" alt="QRCode de acesso" />
+                            </div>
+                        </article>
+                    `;
+                })
+                .join('');
+
+            return `
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    <title>Crachás em Lote</title>
+                    <style>
+                        @page { size: A4 portrait; margin: 8mm; }
+                        body { margin: 0; font-family: Arial, sans-serif; background: #eef2f7; }
+                        .sheet-toolbar { text-align: center; padding: 12px; background: #fff; border-bottom: 1px solid #d6dee9; }
+                        .sheet-toolbar button { padding: 8px 14px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; cursor: pointer; }
+                        .sheet {
+                            padding: 8mm;
+                            display: grid;
+                            grid-template-columns: repeat(3, 5.5cm);
+                            grid-auto-rows: 9cm;
+                            gap: .5cm;
+                            justify-content: center;
+                            align-content: start;
+                            box-sizing: border-box;
+                        }
+                        .badge-card {
+                            width: 5.5cm;
+                            height: 9cm;
+                            background:
+                                radial-gradient(120% 62% at 15% 8%, rgba(14, 165, 233, 0.45) 0%, rgba(14, 165, 233, 0.16) 35%, transparent 68%),
+                                radial-gradient(85% 46% at 88% 22%, rgba(59, 130, 246, 0.44) 0%, rgba(59, 130, 246, 0.14) 42%, transparent 74%),
+                                radial-gradient(70% 44% at 24% 88%, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.1) 48%, transparent 78%),
+                                linear-gradient(156deg, #ffffff 0%, #eaf2ff 45%, #d7e8ff 100%);
+                            border: 1px solid #d9dee6;
+                            border-radius: 6px;
+                            padding: 32px 18px;
+                            box-sizing: border-box;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: space-between;
+                            page-break-inside: avoid;
+                            break-inside: avoid;
+                        }
+                        .badge-left {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            min-width: 0;
+                            width: 100%;
+                            text-align: center;
+                            background: rgba(255, 255, 255, 0.72);
+                            border: 1px solid rgba(255, 255, 255, 0.55);
+                            border-radius: 10px;
+                            padding: 12px 10px;
+                            box-sizing: border-box;
+                        }
+                        .badge-header { margin-bottom: 6px; }
+                        .badge-title { margin: 0; font-size: 11px; color: #1f2937; letter-spacing: .2px; }
+                        .badge-subtitle { margin: 2px 0 0; font-size: 9px; color: #6b7280; }
+                        .badge-avatar-wrap { display: flex; justify-content: center; margin: 6px 0; }
+                        .badge-avatar {
+                            width: 58px;
+                            height: 58px;
+                            border-radius: 999px;
+                            border: 2px solid #e5e7eb;
+                            object-fit: cover;
+                            background: #f3f4f6;
+                        }
+                        .badge-avatar-fallback {
+                            width: 58px;
+                            height: 58px;
+                            border-radius: 999px;
+                            border: 2px solid #e5e7eb;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 22px;
+                            font-weight: 700;
+                            color: #374151;
+                            background: #f3f4f6;
+                        }
+                        .badge-name {
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #111827;
+                            margin: 2px 0;
+                            line-height: 1.2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            width: 100%;
+                        }
+                        .badge-org {
+                            font-size: 10px;
+                            color: #4b5563;
+                            margin: 2px 0 0;
+                            line-height: 1.2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            width: 100%;
+                        }
+                        .badge-qr-wrap { display: flex; justify-content: center; align-items: center; margin-top: 6px; }
+                        .badge-qr { width: 2.6cm; height: 2.6cm; border: 1px solid #e5e7eb; border-radius: 6px; }
+
+                        @media print {
+                            body { background: #fff; }
+                            .sheet-toolbar { display: none; }
+                            .sheet { padding: 0; }
+                            .badge-card {
+                                border: 1px solid #000;
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="sheet-toolbar">
+                        <button onclick="window.print()">Imprimir crachás (A4)</button>
+                    </div>
+                    <main class="sheet">
+                        ${cardsHtml}
+                    </main>
+                </body>
+                </html>
+            `;
+        },
+        printBatchCards: async () => {
+            const filtered = usuarioSocialList.getFilteredData();
+            if (!filtered.length) {
+                toastr['warning']('Não há usuários no filtro atual para gerar crachás.');
+                return;
+            }
+
+            admin.loading(true);
+            try {
+                const cards = await Promise.all(
+                    filtered.map(async (item) => {
+                        const socialAccessUrl = usuarioSocialList.toAbsoluteSocialAccessUrl(item.socialAccessUrl);
+                        const qrCodeImageUrl = usuarioSocialList.buildQrImageUrl(socialAccessUrl);
+                        const avatarUrl = await usuarioSocialList.fetchAvatarUrl(item.id);
+
+                        return {
+                            nome: item.nome,
+                            organizacaoNome: item.organizacaoNome,
+                            qrCodeImageUrl,
+                            avatarUrl,
+                        };
+                    }),
+                );
+
+                const printWindow = window.open('', '_blank');
+                if (!printWindow) {
+                    toastr['warning']('Não foi possível abrir a janela de impressão. Verifique bloqueio de pop-up.');
+                    return;
+                }
+
+                const html = usuarioSocialList.buildBatchPrintHtml(cards);
+                printWindow.document.open();
+                printWindow.document.write(html);
+                printWindow.document.close();
+            } finally {
+                admin.loading(false);
+            }
+        },
         list: () => {
             $.ajax({
                 url: `${admin.baseUrl}/usuario-social/all`,
@@ -48,41 +642,8 @@
                 },
                 success: function (response) {
                     admin.loading(false);
-                    const data = response?.data || [];
-
-                    if (!data.length) {
-                        $('#messages-usuario-social').html("<h6 class='text-muted text-center'>Nenhum colaborador encontrado para a organização atual.</h6>");
-                        return;
-                    }
-
-                    data.forEach((item) => {
-                        $('#tbody-usuario-social').append(`
-                            <tr>
-                                <td class="p-3" style="width:90%; vertical-align: middle;">
-                                    <small><b>Nome: </b>${item.nome || ''}</small><br/>
-                                    <small><b>Apelido: </b>${item.apelido || '-'}</small><br/>
-                                    <small><b>Moedas: </b>${Number(item.moedas || 0)}</small><br/>
-                                    <small><b>Permissões: </b>
-                                        ${item.podePostarMidia ? '<span class="badge bg-info me-1">Mídia</span>' : ''}
-                                        ${item.podePostarLink ? '<span class="badge bg-primary">Link</span>' : ''}
-                                        ${!item.podePostarMidia && !item.podePostarLink ? '<span class="text-muted">Sem permissões</span>' : ''}
-                                    </small><br/>
-                                    <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-success">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
-                                </td>
-                                <td style="width: 180px; vertical-align: middle;">
-                                    <button
-                                        class="btn btn-sm btn-secondary w-100 mb-2"
-                                        onclick="admin.addTab({tabId:'form-usuario-social', title: 'Editar Usuário Rede Social', url: '/admin/usuario-social/form/uuid/${item.uuid}'})"
-                                    >
-                                        <i class="fa fa-pencil"></i> Editar
-                                    </button>
-                                    <button class="btn btn-sm btn-danger w-100" onclick="usuarioSocialList.remove('${item.uuid}')">
-                                        <i class="fa fa-trash-o"></i> Excluir
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                    });
+                    usuarioSocialList.data = Array.isArray(response?.data) ? response.data : [];
+                    usuarioSocialList.render();
                 },
             });
         },
@@ -127,6 +688,22 @@
     };
 
     window.usuarioSocialList = usuarioSocialList;
+
+    document.getElementById('btn-toggle-barra-usuario-social').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-usuario-social');
+        barra.classList.toggle('visible');
+    });
+
+    document.getElementById('btn-pesquisar-usuario-social').addEventListener('click', () => {
+        const barra = document.getElementById('section-search-bar-usuario-social');
+        barra.classList.toggle('visible');
+        usuarioSocialList.render();
+    });
+
+    document.getElementById('btn-imprimir-lote-usuario-social').addEventListener('click', () => {
+        usuarioSocialList.printBatchCards();
+    });
+
     usuarioSocialList.list();
     })();
 </script>

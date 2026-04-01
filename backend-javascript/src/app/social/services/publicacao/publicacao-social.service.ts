@@ -182,6 +182,31 @@ export class PublicacaoService {
     return withCounters;
   }
 
+  async listShortsTimeline(organizacaoUuid: string, usuarioUuid?: string) {
+    const timeline = await this.listTimeline(organizacaoUuid, usuarioUuid);
+    const timelineOrderedByUuid = [...timeline].sort((a, b) => String(a.uuid || '').localeCompare(String(b.uuid || '')));
+    const filtered = timelineOrderedByUuid.filter((post) => post.tipo !== 'atividade');
+
+    const destaqueQueue = filtered.filter((p) => p.destaque);
+    const internoQueue = filtered.filter((p) => !p.destaque && (p.conteudo || '').toUpperCase() === 'INTERNO');
+    const anuncianteQueue = filtered.filter((p) => !p.destaque && (p.conteudo || '').toUpperCase() === 'ANUNCIANTE');
+    const externoQueue = filtered.filter((p) => !p.destaque && (p.conteudo || '').toUpperCase() === 'EXTERNO');
+
+    // Intercala na ordem: destaque → INTERNO → ANUNCIANTE → EXTERNO x5 → (repete).
+    const queues = [destaqueQueue, internoQueue, anuncianteQueue, externoQueue, externoQueue, externoQueue, externoQueue, externoQueue];
+    const result: typeof filtered = [];
+
+    while (queues.some((q) => q.length > 0)) {
+      for (const queue of queues) {
+        if (queue.length > 0) {
+          result.push(queue.shift()!);
+        }
+      }
+    }
+
+    return result;
+  }
+
   private tempoRelativo(date: Date): string {
     const diffMs = Date.now() - new Date(date).getTime();
     const diffSec = Math.floor(diffMs / 1000);

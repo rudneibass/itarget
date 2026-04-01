@@ -43,6 +43,21 @@
             gap: .45rem;
             border-radius: 3px!important;
         }
+        .usuario-social-qr-card {
+            border: 1px solid #e9ecef;
+            border-radius: .5rem;
+            padding: .75rem;
+            background: #fafbfc;
+            text-align: center;
+        }
+        .usuario-social-qr-image {
+            width: 140px;
+            height: 140px;
+            border: 1px solid #dee2e6;
+            border-radius: .5rem;
+            background: #fff;
+            object-fit: contain;
+        }
 
         @media (max-width: 767px) {
             .usuario-social-form-tab-content {
@@ -118,6 +133,20 @@
                                 <input type="file" name="avatarFile" class="form-control" id="avatarFile" accept="image/*" />
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label>
+                                    <small class="text-muted">QRCode de acesso</small>
+                                </label>
+                                <div id="usuario-social-qr-card" class="usuario-social-qr-card" style="display:none;">
+                                    <img id="usuario-social-qr-image" class="usuario-social-qr-image" src="" alt="QRCode de acesso do usuário" />
+                                    <div class="mt-2">
+                                        <a id="usuario-social-qr-link" href="#" target="_blank" rel="noopener noreferrer">Abrir link de acesso</a>
+                                    </div>
+                                </div>
+                                <small id="usuario-social-qr-empty" class="text-muted">O QRCode ficará disponível após salvar o usuário.</small>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline mb-2">
                                 <input type="checkbox" class="form-check-input" id="podePostarMidia" name="podePostarMidia" />
@@ -154,6 +183,49 @@
     (() => {
     const usuarioSocialForm = {
         formId: 'form-usuario-social',
+        toAbsoluteSocialAccessUrl: (value) => {
+            if (!value) {
+                return null;
+            }
+
+            if (/^https?:\/\//i.test(value)) {
+                return value;
+            }
+
+            return `${window.location.origin}${value.startsWith('/') ? '' : '/'}${value}`;
+        },
+        buildQrImageUrl: (value) => {
+            if (!value) {
+                return null;
+            }
+
+            return `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(value)}`;
+        },
+        setQrCode: ({ socialAccessUrl, nome }) => {
+            const $card = $('#usuario-social-qr-card');
+            const $image = $('#usuario-social-qr-image');
+            const $link = $('#usuario-social-qr-link');
+            const $empty = $('#usuario-social-qr-empty');
+
+            const absoluteUrl = usuarioSocialForm.toAbsoluteSocialAccessUrl(socialAccessUrl);
+            const qrImageUrl = usuarioSocialForm.buildQrImageUrl(absoluteUrl);
+
+            if (!absoluteUrl || !qrImageUrl) {
+                $card.hide();
+                $image.attr('src', '').attr('alt', 'QRCode indisponível');
+                $link.attr('href', '#');
+                $empty.show();
+                return;
+            }
+
+            $image
+                .attr('src', qrImageUrl)
+                .attr('alt', `QRCode de acesso para ${nome || 'usuário'}`);
+            $link.attr('href', absoluteUrl);
+
+            $empty.hide();
+            $card.show();
+        },
         setAvatarPreview: (url) => {
             const $preview = $('#usuario-social-avatar-preview');
             if (!url) {
@@ -260,6 +332,7 @@
             if (!uuid) {
                 usuarioSocialForm.setMode('create');
                 usuarioSocialForm.setAvatarPreview(null);
+                usuarioSocialForm.setQrCode({ socialAccessUrl: null, nome: null });
                 return;
             }
             $.ajax({
@@ -290,6 +363,10 @@
                     $form.find('[name="podePostarLink"]').prop('checked', !!data.podePostarLink);
 
                     usuarioSocialForm.loadAvatar(data.id);
+                    usuarioSocialForm.setQrCode({
+                        socialAccessUrl: data.socialAccessUrl || null,
+                        nome: data.nome || null,
+                    });
                     usuarioSocialForm.setMode('view');
                 }
             });
@@ -342,6 +419,11 @@
                     if (payload?.id) {
                         $form.find('[name="id"]').val(payload.id);
                     }
+
+                    usuarioSocialForm.setQrCode({
+                        socialAccessUrl: payload?.socialAccessUrl || null,
+                        nome: payload?.nome || formData.nome || null,
+                    });
 
                     const persistedId = Number($form.find('[name="id"]').val() || payload?.id || 0);
                     usuarioSocialForm.uploadAvatar({

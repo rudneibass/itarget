@@ -530,6 +530,41 @@ body {
   padding: 14px 12px 8px;
 }
 
+.timeline-post-content--atividade {
+  position: relative;
+  min-height: var(--timeline-content-height);
+  display: flex;
+  align-items: stretch;
+  background-image:
+    linear-gradient(145deg, rgba(15, 30, 66, 0.75) 0%, rgba(20, 41, 90, 0.72) 45%, rgba(70, 37, 80, 0.68) 100%),
+    var(--activity-bg-image);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.timeline-post-content--atividade-fallback {
+  background-image: linear-gradient(145deg, #273f87 0%, #3358aa 45%, #5f57be 100%);
+}
+
+.timeline-activity-content {
+  width: 100%;
+  margin-top: auto;
+  padding: 28px 22px 30px;
+  background: linear-gradient(180deg, rgba(10, 20, 45, 0) 0%, rgba(10, 20, 45, 0.72) 55%, rgba(10, 20, 45, 0.9) 100%);
+}
+
+.timeline-activity-content p {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.4;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.46);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
 .timeline-instagram-embed {
   display: flex;
   justify-content: center;

@@ -223,6 +223,8 @@
       (() => {
         const shortsFeed = document.getElementById('shorts-feed');
         const cards = Array.from(document.querySelectorAll('.shorts-card'));
+        const INITIAL_SHORTS_BATCH = 8;
+        const NEXT_SHORTS_BATCH = 6;
         const likeButtons = document.querySelectorAll('[data-like-button="true"]');
         const deleteButtons = document.querySelectorAll('[data-delete-post-button="true"]');
         const videos = Array.from(document.querySelectorAll('.shorts-media-video'));
@@ -272,6 +274,73 @@
 
           timeElement.textContent = formatRelativeDate(card.getAttribute('data-created-at'));
         });
+
+        if (shortsFeed instanceof HTMLElement && cards.length > INITIAL_SHORTS_BATCH) {
+          let visibleCount = INITIAL_SHORTS_BATCH;
+          let isLoadingBatch = false;
+
+          const showCard = (card) => {
+            if (!(card instanceof HTMLElement)) {
+              return;
+            }
+
+            card.removeAttribute('hidden');
+            card.style.display = '';
+          };
+
+          cards.forEach((card, index) => {
+            if (!(card instanceof HTMLElement)) {
+              return;
+            }
+
+            if (index < INITIAL_SHORTS_BATCH) {
+              showCard(card);
+              return;
+            }
+
+            card.setAttribute('hidden', 'true');
+            card.style.display = 'none';
+          });
+
+          const revealNextBatch = () => {
+            if (isLoadingBatch || visibleCount >= cards.length) {
+              return;
+            }
+
+            isLoadingBatch = true;
+            const nextCount = Math.min(cards.length, visibleCount + NEXT_SHORTS_BATCH);
+
+            for (let i = visibleCount; i < nextCount; i += 1) {
+              showCard(cards[i]);
+            }
+
+            visibleCount = nextCount;
+            isLoadingBatch = false;
+          };
+
+          const sentinel = document.createElement('div');
+          sentinel.setAttribute('aria-hidden', 'true');
+          sentinel.style.height = '1px';
+          sentinel.style.width = '100%';
+          shortsFeed.appendChild(sentinel);
+
+          const lazyObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  revealNextBatch();
+                }
+              });
+            },
+            {
+              root: shortsFeed,
+              threshold: 0,
+              rootMargin: '0px 0px 120% 0px',
+            },
+          );
+
+          lazyObserver.observe(sentinel);
+        }
 
         if (shortsFeed instanceof HTMLElement && cards.length > 0) {
           let currentIndex = 0;

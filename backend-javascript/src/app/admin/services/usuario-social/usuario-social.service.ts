@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { Organizacao } from '../../../social/models/organizacao/organizacao.entity';
 import { PermissaoUsuario } from '../../../social/models/permissao-usuario/permissao-usuario.entity';
 import { Usuario } from '../../../social/models/usuario/usuario.entity';
 
@@ -19,11 +20,21 @@ import { Usuario } from '../../../social/models/usuario/usuario.entity';
 @Injectable()
 export class UsuarioSocialService {
   constructor(
+    @InjectRepository(Organizacao)
+    private readonly organizacaoRepository: Repository<Organizacao>,
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
     @InjectRepository(PermissaoUsuario)
     private readonly permissaoRepository: Repository<PermissaoUsuario>,
   ) {}
+
+  private buildSocialAccessUrl(organizacaoUuid?: string | null, hashQr?: string | null) {
+    if (!organizacaoUuid || !hashQr) {
+      return null;
+    }
+
+    return `/social/access/${organizacaoUuid}/${hashQr}`;
+  }
 
   /**
    * Resolve UUID para entidade Usuario (com ID).
@@ -61,15 +72,27 @@ export class UsuarioSocialService {
       order: { id: 'DESC' },
     });
 
+    const organizacaoIds = Array.from(new Set(usuarios.map((usuario) => usuario.organizacaoId)));
+    const organizacoes = organizacaoIds.length
+      ? await this.organizacaoRepository.find({
+          where: { id: In(organizacaoIds) },
+          select: { id: true, uuid: true, nome: true },
+        })
+      : [];
+    const organizacaoById = new Map(organizacoes.map((organizacao) => [String(organizacao.id), organizacao]));
+
     const permissions = await this.permissaoRepository.find();
     const permissionMap = new Map(permissions.map((item) => [item.usuarioId, item]));
 
     return usuarios.map((usuario) => {
       const permission = permissionMap.get(usuario.id);
+      const organizacao = organizacaoById.get(String(usuario.organizacaoId));
       return {
         ...usuario,
         podePostarMidia: permission?.podePostarMidia ?? false,
         podePostarLink: permission?.podePostarLink ?? false,
+        organizacaoNome: organizacao?.nome || null,
+        socialAccessUrl: this.buildSocialAccessUrl(organizacao?.uuid, usuario.hashQr),
       };
     });
   }
@@ -81,6 +104,11 @@ export class UsuarioSocialService {
     const usuario = await this.resolveByUuid(uuid);
     this.validateOrganizationScope(usuario, organizacaoId);
 
+    const organizacao = await this.organizacaoRepository.findOne({
+      where: { id: usuario.organizacaoId },
+      select: { uuid: true, nome: true },
+    });
+
     const permission = await this.permissaoRepository.findOne({
       where: { usuarioId: usuario.id },
     });
@@ -89,6 +117,8 @@ export class UsuarioSocialService {
       ...usuario,
       podePostarMidia: permission?.podePostarMidia ?? false,
       podePostarLink: permission?.podePostarLink ?? false,
+      organizacaoNome: organizacao?.nome || null,
+      socialAccessUrl: this.buildSocialAccessUrl(organizacao?.uuid, usuario.hashQr),
     };
   }
 

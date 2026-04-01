@@ -30,8 +30,7 @@ export class InicioController {
   @Render('social/pages/shorts/shorts')
   async renderizarShorts(@Req() req: any) {
     const session = req.socialSession;
-    const allTimeline = await this.feedService.listTimeline(session.organizacaoUuid, session.usuario.uuid);
-    const timeline = allTimeline.filter((post) => post.tipo !== 'atividade');
+    const timeline = await this.feedService.listShortsTimeline(session.organizacaoUuid, session.usuario.uuid);
 
     return {
       user: session.usuario,

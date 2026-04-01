@@ -134,7 +134,20 @@
                   {{/unless}}{{/if}}
                 </header>
 
-                {{#if isInstagram}}
+                {{#if isAtividade}}
+                  <div
+                    class="timeline-post-content timeline-post-content--atividade{{#unless authorAvatarUrl}} timeline-post-content--atividade-fallback{{/unless}}"
+                    {{#if authorAvatarUrl}}style="--activity-bg-image: url('{{authorAvatarUrl}}');"{{/if}}
+                  >
+                    <div class="timeline-activity-content">
+                      {{#if texto}}
+                        <p>{{texto}}</p>
+                      {{else}}
+                        <p>Atividade recente</p>
+                      {{/if}}
+                    </div>
+                  </div>
+                {{else if isInstagram}}
                   <div class="timeline-post-content timeline-post-content--instagram">
                     {{#if instagramEmbedUrl}}
                       <div class="timeline-instagram-embed" data-instagram-embed="true">
@@ -377,6 +390,79 @@
         }
 
         const likeButtons = document.querySelectorAll('[data-like-button="true"]');
+        const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
+        const INITIAL_TIMELINE_BATCH = 8;
+        const NEXT_TIMELINE_BATCH = 6;
+
+        if (timelineItems.length > INITIAL_TIMELINE_BATCH) {
+          let visibleCount = INITIAL_TIMELINE_BATCH;
+          let isLoadingBatch = false;
+
+          const showTimelineItem = (item) => {
+            if (!(item instanceof HTMLElement)) {
+              return;
+            }
+
+            item.removeAttribute('hidden');
+            item.style.display = '';
+          };
+
+          timelineItems.forEach((item, index) => {
+            if (!(item instanceof HTMLElement)) {
+              return;
+            }
+
+            if (index < INITIAL_TIMELINE_BATCH) {
+              showTimelineItem(item);
+              return;
+            }
+
+            item.setAttribute('hidden', 'true');
+            item.style.display = 'none';
+          });
+
+          const revealNextBatch = () => {
+            if (isLoadingBatch || visibleCount >= timelineItems.length) {
+              return;
+            }
+
+            isLoadingBatch = true;
+            const nextCount = Math.min(timelineItems.length, visibleCount + NEXT_TIMELINE_BATCH);
+
+            for (let i = visibleCount; i < nextCount; i += 1) {
+              showTimelineItem(timelineItems[i]);
+            }
+
+            visibleCount = nextCount;
+            isLoadingBatch = false;
+          };
+
+          const sentinel = document.createElement('div');
+          sentinel.setAttribute('aria-hidden', 'true');
+          sentinel.style.height = '1px';
+          sentinel.style.width = '100%';
+
+          const lastTimelineItem = timelineItems[timelineItems.length - 1];
+          if (lastTimelineItem instanceof HTMLElement && lastTimelineItem.parentElement) {
+            lastTimelineItem.parentElement.appendChild(sentinel);
+
+            const lazyObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    revealNextBatch();
+                  }
+                });
+              },
+              {
+                threshold: 0,
+                rootMargin: '0px 0px 120% 0px',
+              },
+            );
+
+            lazyObserver.observe(sentinel);
+          }
+        }
 
         likeButtons.forEach((button) => {
           if (!(button instanceof HTMLButtonElement)) {
