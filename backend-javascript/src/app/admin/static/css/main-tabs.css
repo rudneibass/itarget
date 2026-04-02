@@ -49,10 +49,10 @@
 .main-nav-tabs .main-nav-link.active {
   color: var(--color-default);
   text-decoration: none;
-  background-color: var(--color-default-light);
-  border-color: var(--border-color-default);
-  border-top: 2px solid var(--color-default);
   box-shadow: var(--shadows-default);
+  background-color: var(--color-default-light);
+  border-top: 3px solid #10203a;
+  color:#10203a;
 }
 
 .main-nav-tabs .main-nav-link > span:last-child {

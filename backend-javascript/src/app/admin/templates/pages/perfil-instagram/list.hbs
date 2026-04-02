@@ -1,7 +1,7 @@
 <section class="section-actions">
     <div class="section-actions-btn-parent">
         <button
-            class="btn btn-success btn-float section-actions-btn"
+            class="btn btn-primary btn-float section-actions-btn"
             onclick="admin.addTab({tabId:'form-perfil-instagram', title: 'Novo Perfil Instagram', url: '/admin/perfil-instagram/form'})"
         >
             <i class="fa fa-plus"></i>
@@ -20,7 +20,7 @@
     <div class="row search-bar" id="search-bar-perfil-instagram">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-header bg-primary-light"><span class="text-muted">Pesquisa por...</span></div>
                 <div class="card-body">
                     <form id="formSearchPerfilInstagram">
                         <div class="row">
@@ -52,7 +52,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-perfil-instagram">
+                    <button type="button" class="btn btn-dark btn-sm" id="btn-pesquisar-perfil-instagram">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -153,7 +153,7 @@
                                             <small>
                                                 <b>Perfil:</b> @${data[i].perfil || ''}
                                                 ${data[i].ativo
-                                                    ? '&emsp;<span class="badge bg-success">Ativo</span>'
+                                                    ? '&emsp;<span class="badge bg-primary">Ativo</span>'
                                                     : '&emsp;<span class="badge bg-secondary">Inativo</span>'
                                                 }
                                             </small>
@@ -168,20 +168,20 @@
                                     <td style="width: 8%; vertical-align: middle;">
                                         <center>
                                             <button
-                                                class="btn btn-secondary btn-sm w-100 mb-2"
+                                                class="btn btn-dark btn-sm w-100 mb-2"
                                                 onclick="admin.addTab({tabId:'form-perfil-instagram', title: 'Editar Perfil Instagram', url: '/admin/perfil-instagram/form/uuid/${data[i].uuid}'})"
                                             >
                                                 <i class="fa fa-pencil"></i> Editar
                                             </button>
                                             ${data[i].ativo
-                                                ? `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.toggleAtivo('${data[i].uuid}', false)">
+                                                ? `<button class="btn btn-dark btn-sm w-100 mb-2" onclick="perfilInstagramList.toggleAtivo('${data[i].uuid}', false)">
                                                     <i class="fa fa-download"></i> Desativar
                                                 </button>`
-                                                : `<button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.toggleAtivo('${data[i].uuid}', true)">
+                                                : `<button class="btn btn-dark btn-sm w-100 mb-2" onclick="perfilInstagramList.toggleAtivo('${data[i].uuid}', true)">
                                                     <i class="fa fa-upload"></i> Ativar
                                                 </button>`
                                             }
-                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="perfilInstagramList.remove('${data[i].uuid}')">
+                                            <button class="btn btn-dark btn-sm w-100 mb-2" onclick="perfilInstagramList.remove('${data[i].uuid}')">
                                                 <i class="fa fa-trash-o"></i>
                                                 <span> Excluir</span>
                                             </button>
@@ -277,11 +277,11 @@
                 buttons: {
                     confirm: {
                         label: '<i class="fa fa-check"></i> Confirmar',
-                        className: 'btn-sm btn-success',
+                        className: 'btn-sm btn-primary',
                     },
                     cancel: {
                         label: '<i class="fa fa-undo"></i> Cancelar',
-                        className: 'btn-sm btn-secondary',
+                        className: 'btn-sm btn-dark',
                     },
                 },
                 callback: function (result) {

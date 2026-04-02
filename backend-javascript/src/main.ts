@@ -18,6 +18,9 @@ async function bootstrap() {
   const socialTemplatesPath = join(process.cwd(), 'src', 'app', 'social', 'templates');
   app.setBaseViewsDir([adminTemplatesPath, landingTemplatesPath, socialTemplatesPath]);
   app.setViewEngine('hbs');
+  app.useStaticAssets(join(process.cwd(), 'src', 'app', 'landing', 'static'), {
+    prefix: '/static/',
+  });
   app.useStaticAssets(join(process.cwd(), 'src', 'app', 'admin', 'static'), {
     prefix: '/admin/static/',
   });

@@ -1,7 +1,7 @@
 <section class="section-actions">
     <div class="section-actions-btn-parent">
         <button
-            class="btn btn-success btn-float section-actions-btn"
+            class="btn btn-primary btn-float section-actions-btn"
             onclick="admin.addTab({tabId:'form-usuario-social', title: 'Novo Usuário Rede Social', url: '/admin/usuario-social/form'})"
         >
             <i class="fa fa-plus"></i>
@@ -26,7 +26,7 @@
     <div class="row search-bar" id="search-bar-usuario-social">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-header bg-primary-light"><span class="text-muted">Pesquisa por...</span></div>
                 <div class="card-body">
                     <form id="formSearchUsuarioSocial">
                         <div class="row">
@@ -54,7 +54,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-usuario-social">
+                    <button type="button" class="btn btn-dark btn-sm" id="btn-pesquisar-usuario-social">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -397,7 +397,7 @@
                                 ${item.podePostarLink ? '<span class="badge bg-primary">Link</span>' : ''}
                                 ${!item.podePostarMidia && !item.podePostarLink ? '<span class="text-muted">Sem permissões</span>' : ''}
                             </small><br/>
-                            <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-success">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
+                            <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-primary">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
                         </td>
                         <td style="width: 20%; min-width: 160px; vertical-align: middle;" class="text-center">
                             ${qrCodeImageUrl ? `
@@ -415,7 +415,7 @@
                                 <i class="fa fa-id-card-o"></i> Cartão
                             </button>
                             <button
-                                class="btn btn-sm btn-secondary w-100 mb-2"
+                                class="btn btn-sm btn-dark w-100 mb-2"
                                 onclick="admin.addTab({tabId:'form-usuario-social', title: 'Editar Usuário Rede Social', url: '/admin/usuario-social/form/uuid/${item.uuid}'})"
                             >
                                 <i class="fa fa-pencil"></i> Editar
@@ -654,11 +654,11 @@
                 buttons: {
                     confirm: {
                         label: '<i class="fa fa-check"></i> Confirmar',
-                        className: 'btn-sm btn-success',
+                        className: 'btn-sm btn-primary',
                     },
                     cancel: {
                         label: '<i class="fa fa-undo"></i> Cancelar',
-                        className: 'btn-sm btn-secondary',
+                        className: 'btn-sm btn-dark',
                     },
                 },
                 callback: function (result) {

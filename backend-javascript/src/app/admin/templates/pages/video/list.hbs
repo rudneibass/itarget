@@ -1,7 +1,7 @@
 <section class="section-actions">
     <div class="section-actions-btn-parent">
         <button
-            class="btn btn-success btn-float section-actions-btn"
+            class="btn btn-primary btn-float section-actions-btn"
             onclick="admin.addTab({tabId:'form-video', title: 'Novo Vídeo', url: '/admin/video/form'})"
         >
             <i class="fa fa-plus"></i>
@@ -20,7 +20,7 @@
     <div class="row search-bar" id="search-bar-video">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header bg-success-light"><span class="text-muted">Pesquisa por...</span></div>
+                <div class="card-header bg-primary-light"><span class="text-muted">Pesquisa por...</span></div>
                 <div class="card-body">
                     <form id="formSearchVideo">
                         <div class="row">
@@ -43,7 +43,7 @@
                     </form>
                 </div>
                 <div class="modal-footer p-2 border-top-0">
-                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pesquisar-video">
+                    <button type="button" class="btn btn-dark btn-sm" id="btn-pesquisar-video">
                         <i class="fa fa-search"></i> Pesquisar
                     </button>
                 </div>
@@ -133,7 +133,7 @@
                                                 <small>
                                                     <b>Título: </b>${data[i].titulo} 
                                                     ${data[i].ativo == 'S' 
-                                                        ? '&emsp;<span class="badge bg-success">Ativo</span>' 
+                                                        ? '&emsp;<span class="badge bg-primary">Ativo</span>' 
                                                         :'&emsp;<span class="badge bg-secondary">Desativado</span>'
                                                     }
                                                 </small>
@@ -154,7 +154,7 @@
                                     <td style="width: 8%; vertical-align: middle;">
                                         <center>
                                             <button 
-                                                class="btn btn-secondary btn-sm w-100 mb-2" 
+                                                class="btn btn-dark btn-sm w-100 mb-2" 
                                                 onclick="admin.addTab({
                                                     tabId:'form-video', 
                                                     title: 'Editar Vídeo', 
@@ -165,15 +165,15 @@
                                             </button>
                                             ${data[i].ativo == 'S' 
                                                 ? 
-                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.desativar('${data[i].uuid}')">
+                                                    `<button class="btn btn-dark btn-sm w-100 mb-2"  onclick="videoList.desativar('${data[i].uuid}')">
                                                         <i class="fa fa-download"></i> Desativar
                                                     </button>` 
                                                 : 
-                                                    `<button class="btn btn-secondary btn-sm w-100 mb-2"  onclick="videoList.ativar('${data[i].uuid}')">
+                                                    `<button class="btn btn-dark btn-sm w-100 mb-2"  onclick="videoList.ativar('${data[i].uuid}')">
                                                         <i class="fa fa-upload"></i> Ativar
                                                     </button>` 
                                             }
-                                            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="videoList.remove('${data[i].uuid}')">
+                                            <button class="btn btn-dark btn-sm w-100 mb-2" onclick="videoList.remove('${data[i].uuid}')">
                                                 <i class="fa fa-trash-o"></i>
                                                 <span> Excluir</span>
                                             </button>   
@@ -221,11 +221,11 @@
                 buttons: {
                     confirm: {
                         label: '<i class="fa fa-check"></i> Confirmar',
-                        className: 'btn-sm btn-success'
+                        className: 'btn-sm btn-primary'
                     },
                     cancel: {
                         label: '<i class="fa fa-undo"></i> Cancelar',
-                        className: 'btn-sm btn-secondary'
+                        className: 'btn-sm btn-dark'
                     }
                 },
                 callback: function (result) {

@@ -1,4 +1,4 @@
-<aside class="width-65-px full-height">
+<aside class="full-height width-320-px">
     <div id="jquery-accordion-menu" class="jquery-accordion-menu">
         <div class="jquery-accordion-menu-header">
             <div class="org-brand" id="org-brand">
@@ -57,8 +57,18 @@
         <!-- <div class="jquery-accordion-menu-footer">Footer </div> -->
     </div>
     <style>
+                :root {
+                    --aside-bg: #091220;
+                    --aside-bg-soft: #0d1728;
+                    --aside-bg-hover: #13233b;
+                    --aside-bg-submenu: #0b1424;
+                    --aside-border: rgba(143, 170, 227, 0.12);
+                    --aside-text: #eef4ff;
+                    --aside-text-muted: #b7c8e8;
+                    --aside-accent: #4f7cff;
+                }
         aside{ 
-          background-color: #414956; 
+                    background: linear-gradient(180deg, var(--aside-bg) 0%, var(--aside-bg-soft) 100%);
           max-height: 100vh; 
           overflow-y: scroll; 
           overflow-x: hidden;
@@ -77,14 +87,14 @@
         .content{width: 260px; margin: 100px auto;}
         .colors{width: 260px; float: left; margin: 20px auto;}
         .colors a{width: 43.3px; height: 30px; float: left;}
-        .colors .default{background: #414956;}
+        .colors .default{background: var(--aside-bg);}
         .colors .blue{background: #4A89DC;}
         .colors .green{background: #03A678;}
         .colors .red{background: #ED5565;}
         .colors .white{background: #fff;}
         .colors .black{background: #292929;}
         .jquery-accordion-menu{float:left;position:relative;}
-                .jquery-accordion-menu .jquery-accordion-menu-footer,.jquery-accordion-menu .jquery-accordion-menu-header{width:100%;height:50px;padding-left:22px;float:left;line-height:50px;font-weight:600;color:#f0f0f0;background:#414956}
+            .jquery-accordion-menu .jquery-accordion-menu-footer,.jquery-accordion-menu .jquery-accordion-menu-header{width:100%;height:50px;padding-left:22px;float:left;line-height:50px;font-weight:600;color:var(--aside-text);background:linear-gradient(180deg, var(--aside-bg) 0%, var(--aside-bg-soft) 100%);border-bottom:1px solid var(--aside-border)}
                 .jquery-accordion-menu .jquery-accordion-menu-header{
                     height: 72px;
                     padding: 0 10px;
@@ -103,7 +113,8 @@
                     width: 34px;
                     height: 34px;
                     border-radius: 100%;
-                    background: #3b424d;
+                    background: linear-gradient(135deg, rgba(79, 124, 255, 0.22) 0%, rgba(36, 193, 255, 0.16) 100%);
+                    border: 1px solid rgba(143, 170, 227, 0.2);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -158,14 +169,14 @@
                 .org-brand-text small{
                     font-size: 10px;
                     line-height: 12px;
-                    color: #f0f0f0;
+                    color: var(--aside-text-muted);
                     opacity: .75;
                     white-space: nowrap;
                 }
                 #org-brand-name{
                     font-size: 13px;
                     line-height: 16px;
-                    color: #f0f0f0;
+                    color: var(--aside-text);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -173,17 +184,17 @@
                 }
         .jquery-accordion-menu ul{margin:0;padding:0;list-style:none}
         .jquery-accordion-menu ul li{width:100%;display:block;float:left;position:relative}
-        .jquery-accordion-menu ul li a{width:100%;padding:14px 22px;float:left;text-decoration:none;color:#f0f0f0;font-size:14.5px;background:#414956;white-space:nowrap;position:relative;overflow:hidden;-o-transition:color .2s linear,background .2s linear;-moz-transition:color .2s linear,background .2s linear;-webkit-transition:color .2s linear,background .2s linear;transition:color .2s linear,background .2s linear}
-        .jquery-accordion-menu>ul>li.active>a,.jquery-accordion-menu>ul>li:hover>a{color:#fff;background:#3b424d}
-        .jquery-accordion-menu>ul>li>a{border-bottom:solid 1px #3b424d}
+        .jquery-accordion-menu ul li a{width:100%;padding:14px 22px;float:left;text-decoration:none;color:var(--aside-text);font-size:14.5px;background:transparent;white-space:nowrap;position:relative;overflow:hidden;-o-transition:color .2s linear,background .2s linear,-webkit-box-shadow .2s linear;-moz-transition:color .2s linear,background .2s linear,box-shadow .2s linear;-webkit-transition:color .2s linear,background .2s linear,box-shadow .2s linear;transition:color .2s linear,background .2s linear,box-shadow .2s linear}
+        .jquery-accordion-menu>ul>li.active>a,.jquery-accordion-menu>ul>li:hover>a{color:#fff;background:linear-gradient(135deg, rgba(79, 124, 255, 0.18) 0%, rgba(36, 193, 255, 0.1) 100%);box-shadow: inset 3px 0 0 var(--aside-accent)}
+        .jquery-accordion-menu>ul>li>a{border-bottom:solid 1px var(--aside-border)}
         .jquery-accordion-menu ul li a i{width:34px;float:left;line-height:18px;font-size:16px;text-align:left}
         .jquery-accordion-menu .submenu-indicator{float:right;right:22px;position:absolute;line-height:19px;font-size:20px;-o-transition:transform .3s linear;-moz-transition:transform .3s linear;-webkit-transition:transform .3s linear;-ms-transition:transform .3s linear}
         .jquery-accordion-menu ul ul.submenu .submenu-indicator{line-height:16px}
         .jquery-accordion-menu .submenu-indicator-minus>.submenu-indicator{-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-webkit-transform:rotate(45deg);transform:rotate(45deg)}
         .jquery-accordion-menu ul ul.submenu,.jquery-accordion-menu ul ul.submenu li ul.submenu{width:100%;display:none;position:static}
         .jquery-accordion-menu ul ul.submenu li{clear:both;width:100%}
-        .jquery-accordion-menu ul ul.submenu li a{width:100%;float:left;font-size:12.5px;background:#383838;border-top:none;position:relative;border-left:solid 6px transparent;-o-transition:border .2s linear;-moz-transition:border .2s linear;-webkit-transition:border .2s linear;transition:border .2s linear}
-        .jquery-accordion-menu ul ul.submenu li:hover>a{border-left-color:#414956}
+        .jquery-accordion-menu ul ul.submenu li a{width:100%;float:left;font-size:12.5px;background:var(--aside-bg-submenu);border-top:none;position:relative;border-left:solid 6px transparent;color:var(--aside-text-muted);-o-transition:border .2s linear,background .2s linear,color .2s linear;-moz-transition:border .2s linear,background .2s linear,color .2s linear;-webkit-transition:border .2s linear,background .2s linear,color .2s linear;transition:border .2s linear,background .2s linear,color .2s linear}
+        .jquery-accordion-menu ul ul.submenu li:hover>a{border-left-color:var(--aside-accent);background:#10203a;color:#ffffff}
         .jquery-accordion-menu ul ul.submenu>li>a{padding-left:30px}
         .jquery-accordion-menu ul ul.submenu>li>ul.submenu>li>a{padding-left:45px}
         .jquery-accordion-menu ul ul.submenu>li>ul.submenu>li>ul.submenu>li>a{padding-left:60px}

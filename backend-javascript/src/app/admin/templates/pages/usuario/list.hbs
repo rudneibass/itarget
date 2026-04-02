@@ -1,7 +1,7 @@
 <section class="section-actions">
     <div class="section-actions-btn-parent">
         <button
-            class="btn btn-success btn-float section-actions-btn"
+            class="btn btn-primary btn-float section-actions-btn"
             onclick="admin.addTab({tabId:'form-usuario-admin', title: 'Novo Usuário Admin', url: '/admin/usuario/form'})"
         >
             <i class="fa fa-plus"></i>
@@ -61,11 +61,11 @@
                                 <td class="p-3" style="width:90%; vertical-align: middle;">
                                     <small><b>Nome: </b>${item.nome || ''}</small><br/>
                                     <small><b>Email: </b>${item.email || ''}</small><br/>
-                                    <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-success">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
+                                    <small><b>Status: </b></small>${item.ativo ? '<small class="badge bg-primary">Ativo</small>' : '<small class="badge bg-secondary">Inativo</small>'}</small>
                                 </td>
                                 <td style="width: 150px; vertical-align: middle;">
                                     <button
-                                        class="btn btn-sm btn-secondary btn-sm w-100 mb-2"
+                                        class="btn btn-sm btn-dark btn-sm w-100 mb-2"
                                         onclick="admin.addTab({tabId:'form-usuario-admin', title: 'Editar Usuário Admin', url: '/admin/usuario/form/uuid/${item.uuid}'})"
                                     >
                                         <i class="fa fa-pencil"></i> Editar
@@ -87,11 +87,11 @@
                 buttons: {
                     confirm: {
                         label: '<i class="fa fa-check"></i> Confirmar',
-                        className: 'btn-sm btn-success',
+                        className: 'btn-sm btn-primary',
                     },
                     cancel: {
                         label: '<i class="fa fa-undo"></i> Cancelar',
-                        className: 'btn-sm btn-secondary',
+                        className: 'btn-sm btn-dark',
                     },
                 },
                 callback: function (result) {
