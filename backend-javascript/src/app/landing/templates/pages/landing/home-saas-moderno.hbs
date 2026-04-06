@@ -8,19 +8,19 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <style>
       :root {
-        --bg: #ffffff;
-        --bg-soft: #f4f8ff;
-        --panel: #ffffff;
-        --panel-alt: #f8fbff;
-        --ink: #0f1724;
-        --ink-soft: #2b384d;
-        --muted: #586983;
-        --brand: #0c4ed9;
-        --brand-strong: #0839a0;
-        --line: #dbe6fb;
-        --line-strong: #b9cff7;
-        --shadow: 0 18px 40px rgba(14, 45, 113, 0.1);
-        --success: #1f8f61;
+        --bg: #07111f;
+        --bg-soft: #0d1728;
+        --bg-panel: rgba(12, 21, 36, 0.86);
+        --card: rgba(15, 25, 43, 0.92);
+        --card-strong: #111d31;
+        --ink: #eef4ff;
+        --muted: #96a7c8;
+        --brand: #4f7cff;
+        --brand-2: #24c1ff;
+        --line: rgba(143, 170, 227, 0.16);
+        --line-strong: rgba(143, 170, 227, 0.28);
+        --success: #2ec58d;
+        --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
       }
 
       * {
@@ -31,9 +31,9 @@
         margin: 0;
         font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
         background:
-          radial-gradient(860px 380px at -5% -8%, rgba(12, 78, 217, 0.11) 0%, transparent 60%),
-          radial-gradient(760px 420px at 108% 12%, rgba(12, 78, 217, 0.08) 0%, transparent 52%),
-          var(--bg);
+          radial-gradient(900px 480px at 8% 0%, rgba(79, 124, 255, 0.18) 0%, transparent 54%),
+          radial-gradient(760px 420px at 100% 8%, rgba(36, 193, 255, 0.12) 0%, transparent 45%),
+          linear-gradient(180deg, #060d18 0%, #091220 35%, #08101d 100%);
         color: var(--ink);
         min-height: 100vh;
       }
@@ -44,10 +44,10 @@
         inset: 0;
         pointer-events: none;
         background-image:
-          linear-gradient(rgba(9, 54, 145, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(9, 54, 145, 0.035) 1px, transparent 1px);
-        background-size: 42px 42px;
-        mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 0%, transparent 82%);
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.72) 0%, transparent 85%);
       }
 
       main.container {
@@ -63,21 +63,20 @@
         z-index: 20;
         padding: 18px 0;
         margin-bottom: 12px;
-        backdrop-filter: blur(14px);
+        backdrop-filter: blur(18px);
       }
 
       .topbar-container {
         max-width: 1220px;
         margin: 0 auto;
       }
-
       .topbar::before {
         content: "";
         position: absolute;
-        inset: 0 0 8px;
+        inset: 8px 0;
         border: 1px solid var(--line);
         border-radius: 5px;
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(8, 15, 28, 0.72);
         z-index: -1;
       }
 
@@ -98,11 +97,15 @@
       }
 
       .brand:hover {
-        color: #000;
+        color: #ffffff;
       }
 
       .hero {
         padding: 56px 0 34px;
+      }
+
+      .hero .row {
+        position: relative;
       }
 
       .hero h1 {
@@ -111,21 +114,20 @@
         font-weight: 800;
         letter-spacing: -0.02em;
         max-width: 880px;
-        color: #050a15;
       }
 
       .hero p {
         font-size: 1.08rem;
-        color: var(--ink-soft);
+        color: var(--muted);
         max-width: 700px;
         line-height: 1.72;
       }
 
       .badge-soft {
         display: inline-block;
-        background: rgba(12, 78, 217, 0.1);
-        color: #0b43be;
-        border: 1px solid rgba(12, 78, 217, 0.18);
+        background: rgba(79, 124, 255, 0.12);
+        color: #b7cbff;
+        border: 1px solid rgba(79, 124, 255, 0.18);
         border-radius: 999px;
         padding: 8px 16px;
         font-size: .8rem;
@@ -134,24 +136,25 @@
       }
 
       .card-soft {
-        background: var(--panel);
+        background: var(--card);
         border: 1px solid var(--line);
         border-radius: 5px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
       }
 
       .section-title {
         font-size: 1.7rem;
         font-weight: 800;
         letter-spacing: -0.01em;
-        color: #06122b;
       }
 
       .hero-card {
         position: relative;
         overflow: hidden;
         background:
-          radial-gradient(circle at top right, rgba(12, 78, 217, 0.16) 0%, transparent 34%),
-          linear-gradient(145deg, #f8fbff 0%, #ffffff 100%);
+          radial-gradient(circle at top right, rgba(36, 193, 255, 0.18) 0%, transparent 30%),
+          linear-gradient(145deg, rgba(18, 31, 53, 0.96) 0%, rgba(10, 19, 34, 0.98) 100%);
       }
 
       .hero-card::after {
@@ -161,19 +164,20 @@
         width: 160px;
         height: 160px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(12, 78, 217, 0.22) 0%, rgba(12, 78, 217, 0) 72%);
+        background: radial-gradient(circle, rgba(79, 124, 255, 0.32) 0%, rgba(79, 124, 255, 0) 72%);
         pointer-events: none;
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, var(--brand) 0%, #0a42bb 100%);
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
         border: 0;
-        color: #fff;
+        box-shadow: 0 14px 26px rgba(52, 111, 255, 0.3);
       }
 
       .btn-primary:hover,
       .btn-primary:focus {
-        background: linear-gradient(135deg, #0a42bb 0%, var(--brand-strong) 100%);
+        background: linear-gradient(135deg, #4671f4 0%, #1aaee8 100%);
+        box-shadow: 0 16px 28px rgba(52, 111, 255, 0.34);
       }
 
       .btn,
@@ -184,16 +188,16 @@
       }
 
       .btn-outline-primary {
-        color: #0a3aa4;
-        border-color: #9bb7ef;
-        background: rgba(255, 255, 255, 0.9);
+        color: #dce8ff;
+        border-color: rgba(144, 171, 226, 0.26);
+        background: rgba(255, 255, 255, 0.03);
       }
 
       .btn-outline-primary:hover,
       .btn-outline-primary:focus {
-        color: #072b7b;
-        border-color: #4f7fe0;
-        background: #eaf1ff;
+        color: #ffffff;
+        border-color: rgba(144, 171, 226, 0.4);
+        background: rgba(255, 255, 255, 0.06);
       }
 
       .feature-item h5 {
@@ -203,7 +207,7 @@
       }
 
       .feature-item p {
-        color: var(--ink-soft);
+        color: var(--muted);
         margin-bottom: 0;
         line-height: 1.7;
       }
@@ -212,15 +216,15 @@
         text-align: center;
         padding: 18px 14px;
         border-radius: 5px;
-        background: #fff;
-        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.015) 100%);
+        border: 1px solid rgba(143, 170, 227, 0.14);
       }
 
       .kpi strong {
         display: block;
         font-size: 1.15rem;
         margin-bottom: 4px;
-        color: #0a1f49;
+        color: #dbe7ff;
       }
 
       .kpi small {
@@ -237,18 +241,19 @@
       .proof-strip {
         border-radius: 5px;
         border: 1px solid var(--line);
-        background: #fff;
+        background: linear-gradient(135deg, rgba(10, 18, 32, 0.92) 0%, rgba(14, 24, 42, 0.96) 100%);
         padding: 18px 20px;
+        box-shadow: var(--shadow);
       }
 
       .proof-strip p {
         margin: 0;
-        color: var(--ink-soft);
+        color: var(--muted);
         line-height: 1.7;
       }
 
       .proof-strip strong {
-        color: #08193d;
+        color: #f4f8ff;
       }
 
       .pitch-section {
@@ -274,17 +279,19 @@
         position: relative;
         overflow: hidden;
         border-radius: 5px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         background:
-          radial-gradient(circle at top right, rgba(12, 78, 217, 0.12) 0%, transparent 38%),
-          var(--panel-alt);
+          radial-gradient(circle at top right, rgba(36, 193, 255, 0.14) 0%, transparent 36%),
+          linear-gradient(165deg, rgba(17, 29, 49, 0.98) 0%, rgba(10, 18, 32, 0.98) 100%);
+        box-shadow: var(--shadow);
         padding: 22px;
-        transition: transform .2s ease, border-color .2s ease;
+        transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
       }
 
       .saas-card:hover {
         transform: translateY(-3px);
-        border-color: var(--line-strong);
+        border-color: rgba(143, 170, 227, 0.42);
+        box-shadow: 0 28px 52px rgba(0, 0, 0, 0.38);
       }
 
       .saas-card.wide {
@@ -296,35 +303,15 @@
         align-items: center;
         gap: 8px;
         border-radius: 999px;
-        border: 1px solid rgba(12, 78, 217, 0.22);
-        background: rgba(12, 78, 217, 0.1);
-        color: #0a3aa7;
+        border: 1px solid rgba(79, 124, 255, 0.26);
+        background: rgba(79, 124, 255, 0.12);
+        color: #c7d8ff;
         font-size: .75rem;
         font-weight: 800;
         letter-spacing: .03em;
         text-transform: uppercase;
         padding: 6px 10px;
         margin-bottom: 12px;
-      }
-
-      .saas-media {
-        margin-bottom: 14px;
-        border-radius: 5px;
-        overflow: hidden;
-        border: 1px solid #c8d9fb;
-        height: 168px;
-        background: #f2f7ff;
-      }
-
-      .saas-media img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-
-      .saas-card.wide .saas-media {
-        height: 220px;
       }
 
       .saas-number {
@@ -334,7 +321,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%);
+        background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
         color: #fff;
         font-size: .72rem;
       }
@@ -343,12 +330,12 @@
         margin: 0 0 10px;
         font-size: 1.15rem;
         font-weight: 800;
-        color: #0a1836;
+        color: #f4f8ff;
       }
 
       .saas-copy {
         margin: 0;
-        color: var(--ink-soft);
+        color: var(--muted);
         line-height: 1.72;
       }
 
@@ -356,7 +343,7 @@
       .faq-card {
         border: 1px solid var(--line);
         border-radius: 5px;
-        background: #fff;
+        background: linear-gradient(180deg, rgba(18, 29, 49, 0.96) 0%, rgba(12, 21, 35, 0.96) 100%);
         padding: 18px;
         height: 100%;
       }
@@ -371,28 +358,29 @@
       .objection-card p,
       .faq-card p {
         margin-bottom: 0;
-        color: var(--ink-soft);
+        color: var(--muted);
         line-height: 1.68;
       }
 
       .demo-cta {
         border-radius: 5px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
         background:
-          radial-gradient(circle at top right, rgba(12, 78, 217, 0.14) 0%, transparent 24%),
-          linear-gradient(135deg, #f2f7ff 0%, #ffffff 100%);
+          radial-gradient(circle at top right, rgba(79, 124, 255, 0.18) 0%, transparent 24%),
+          linear-gradient(135deg, rgba(16, 28, 47, 0.96) 0%, rgba(11, 20, 36, 0.96) 100%);
         padding: 28px;
+        box-shadow: var(--shadow);
       }
 
       .demo-cta p {
-        color: var(--ink-soft);
+        color: var(--muted);
         margin-bottom: 0;
         line-height: 1.68;
       }
 
       .demo-cta .h4,
       .demo-cta h3 {
-        color: #071736;
+        color: #f6f9ff;
         font-weight: 800;
       }
 
@@ -405,15 +393,15 @@
       }
 
       .auth-card {
-        background: #fff;
+        background: linear-gradient(180deg, rgba(16, 27, 45, 0.98) 0%, rgba(12, 20, 35, 0.98) 100%);
         border-radius: 5px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--line-strong);
+        box-shadow: var(--shadow);
         padding: 28px;
       }
 
       .auth-card h4 {
         margin-bottom: 12px;
-        color: #091a3f;
       }
 
       .auth-card > p {
@@ -426,51 +414,53 @@
       }
 
       .form-label {
-        color: #132852;
+        color: #dbe7ff;
         font-weight: 700;
       }
 
       .form-control {
         min-height: 50px;
         border-radius: 5px;
-        background: #fff;
-        border: 1px solid #cbd9f6;
-        color: #11294f;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(143, 170, 227, 0.14);
+        color: #eef4ff;
       }
 
       .form-control:focus {
-        color: #11294f;
-        background: #fff;
-        border-color: rgba(12, 78, 217, 0.46);
+        color: #eef4ff;
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(79, 124, 255, 0.42);
+        box-shadow: 0 0 0 0.22rem rgba(79, 124, 255, 0.16);
       }
 
       .form-control::placeholder {
-        color: #7990b8;
+        color: #7f93bb;
       }
 
-      .btn {
-        border-radius: 5px !important;
+      .btn{
+        border-radius: 5px!important;
       }
-
       .btn-success {
-        background: linear-gradient(135deg, var(--success) 0%, #16714b 100%);
+        background: linear-gradient(135deg, var(--success) 0%, #1cb77f 100%);
         border: 0;
+        box-shadow: 0 14px 26px rgba(46, 197, 141, 0.2);
       }
 
       .btn-success:hover,
       .btn-success:focus {
-        background: linear-gradient(135deg, #1a7d54 0%, #136240 100%);
+        background: linear-gradient(135deg, #29bc87 0%, #17a873 100%);
       }
 
       .btn-whatsapp {
-        background: linear-gradient(135deg, #25c06f 0%, #149055 100%);
+        background: linear-gradient(135deg, #2ec58d 0%, #1fa770 100%);
         border: 0;
         color: #ffffff;
+        box-shadow: 0 14px 26px rgba(46, 197, 141, 0.24);
       }
 
       .btn-whatsapp:hover,
       .btn-whatsapp:focus {
-        background: linear-gradient(135deg, #20ad64 0%, #137945 100%);
+        background: linear-gradient(135deg, #27b57f 0%, #178f60 100%);
         color: #ffffff;
       }
 
@@ -497,12 +487,12 @@
       #auth-message {
         min-height: 24px;
         font-weight: 700;
-        color: #d44066 !important;
+        color: #ff8da5 !important;
       }
 
       footer {
         padding: 32px 0 42px;
-        color: #4e607d;
+        color: #7f93b8;
       }
 
       section[id],
@@ -552,11 +542,6 @@
           border-radius: 5px;
         }
 
-        .saas-media,
-        .saas-card.wide .saas-media {
-          height: 160px;
-        }
-
         .whatsapp-float {
           right: 14px;
           bottom: 14px;
@@ -567,17 +552,19 @@
     </style>
   </head>
   <body>
-    <header class="topbar">
-      <div class="topbar-container d-flex justify-content-between align-items-center">
-        <a href="/landing" class="brand">
-          <img src="/static/assets/elo-educacao-solid.png" alt="Elo Educação">
-        </a>
-        <div class="d-flex gap-2">
-          <a href="#acesso" class="btn btn-outline-primary btn-sm">Login</a>
-          <a href="#acesso" class="btn btn-primary btn-sm">Registre-se</a>
+
+      <div class="topbar">
+        <div class="topbar-container d-flex justify-content-between align-items-center">
+          <a href="/landing" class="brand">
+            <img src="/static/assets/Élo Educação-logo.png" alt="Logo">
+          </a>
+          <div class="d-flex gap-2">
+            <a href="#acesso" class="btn btn-outline-primary btn-sm">Login</a>
+            <a href="#acesso" class="btn btn-primary btn-sm">Registre-se</a>
+          </div>
         </div>
       </div>
-    </header>
+  
     <main class="container">
       <section class="hero">
         <!-- <span class="badge-soft mb-3">Plataforma para Escolas Particulares e Mantenedoras</span>
@@ -630,45 +617,30 @@
         <div class="saas-grid">
           <article class="saas-card">
             <span class="saas-chip"><span class="saas-number">1</span> Ecossistema Completo</span>
-            <div class="saas-media">
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80" alt="Equipe escolar em reuniao de planejamento" loading="lazy" />
-            </div>
-            <h3 class="saas-title">Elo.edu: marketing, vendas, serviços e gestão em um unico lugar</h3>
-            <p class="saas-copy">A Elo.edu integra marketing, vendas e relacionamento com familias, além de ensino digital, jogos, rede social privada, rotinas pedagogicas e operação administrativo-financeira. Sua escola centraliza processos, ganha eficiência e cria uma proposta de valor mais forte para atrair e manter alunos.</p>
+            <h3 class="saas-title">Élo Educação: marketing, vendas, serviços e gestão em um unico lugar</h3>
+            <p class="saas-copy">A Élo Educação integra marketing, vendas e relacionamento com familias, além de ensino digital, jogos, rede social privada, rotinas pedagogicas e operação administrativo-financeira. Sua escola centraliza processos, ganha eficiência e cria uma proposta de valor mais forte para atrair e manter alunos.</p>
           </article>
 
           <article class="saas-card">
             <span class="saas-chip"><span class="saas-number">2</span> Proteção Digital</span>
-            <div class="saas-media">
-              <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1000&q=80" alt="Mae e crianca usando plataforma digital com seguranca" loading="lazy" />
-            </div>
             <h3 class="saas-title">Segurança para os pequenos com controle real da escola e dos pais</h3>
             <p class="saas-copy">Com rede social privada e monitorada, jogos e videos educativos selecionados pela escola e endossados pelas familias, a instituição entrega um ambiente digital mais seguro. Isso aumenta confiança, fortalece reputação e impulsiona decisões de matrícula e permanência.</p>
           </article>
 
           <article class="saas-card">
             <span class="saas-chip"><span class="saas-number">3</span> Cursos Livres</span>
-            <div class="saas-media">
-              <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=80" alt="Aluna estudando em ambiente educacional" loading="lazy" />
-            </div>
             <h3 class="saas-title">Novas assinaturas com trilhas como computação, ingles e reforço</h3>
             <p class="saas-copy">Lance cursos livres de alta demanda, como computação na educação infantil, ingles e reforço escolar, dentro da propria plataforma. A escola amplia ticket, cria novas receitas recorrentes e estende o ciclo de relacionamento com as familias.</p>
           </article>
 
           <article class="saas-card">
             <span class="saas-chip"><span class="saas-number">4</span> Loja Online</span>
-            <div class="saas-media">
-              <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1000&q=80" alt="Profissional usando ecommerce para vendas" loading="lazy" />
-            </div>
             <h3 class="saas-title">Loja de produtos fisicos e digitais para gerar renda extra</h3>
             <p class="saas-copy">Ative uma loja online para vender produtos fisicos e digitais com gestão centralizada. De materiais escolares a conteúdos premium, sua escola converte engajamento em faturamento adicional sem aumentar a complexidade da operação.</p>
           </article>
 
           <article class="saas-card wide">
             <span class="saas-chip"><span class="saas-number">5</span> Gestão Integrada</span>
-            <div class="saas-media">
-              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1400&q=80" alt="Lideres escolares analisando indicadores de gestao" loading="lazy" />
-            </div>
             <h3 class="saas-title">Administrativo, financeiro e pedagogico em total sintonia</h3>
             <p class="saas-copy">Unifique dados e rotinas em um sistema integrado para ganhar visão executiva, reduzir retrabalho e acelerar decisões. Com mais controle e previsibilidade, a direção opera melhor hoje e prepara a escola para escalar com sustentabilidade.</p>
           </article>
@@ -789,6 +761,22 @@
 
       <section id="acesso" class="py-5 d-flex justify-content-center">
         <div class="auth-container">
+          <div class="auth-card">
+            <h4>Entrar</h4>
+            <p class="text-muted">Acesse sua conta e continue sua operação.</p>
+            <form id="form-login">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="login-email" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Senha</label>
+                <input type="password" class="form-control" id="login-senha" required />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Entrar</button>
+              <div id="login-message" class="mt-3 text-danger"></div>
+            </form>
+          </div>
 
           <div class="auth-card">
             <h4>Registre-se</h4>
@@ -808,23 +796,6 @@
               </div>
               <button type="submit" class="btn btn-primary w-100">Cadastrar e entrar</button>
               <div id="register-message" class="mt-3 text-danger"></div>
-            </form>
-          </div>
-          
-          <div class="auth-card">
-            <h4>Entrar</h4>
-            <p class="text-muted">Acesse sua conta e continue sua operação.</p>
-            <form id="form-login">
-              <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" id="login-email" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Senha</label>
-                <input type="password" class="form-control" id="login-senha" required />
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Entrar</button>
-              <div id="login-message" class="mt-3 text-danger"></div>
             </form>
           </div>
         </div>

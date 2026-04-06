@@ -11,17 +11,18 @@
     <script src="https://kit.fontawesome.com/f3d2f6e538.js" crossorigin="anonymous"></script>
     <style>
       :root {
-        --bg: #ffffff;
-        --bg-soft: #f4f8ff;
-        --panel: #ffffff;
-        --panel-alt: #f8fbff;
-        --line: #dbe6fb;
-        --line-strong: #b9cff7;
-        --ink: #0f1724;
-        --ink-soft: #2b384d;
-        --muted: #586983;
-        --brand: #0c4ed9;
-        --brand-strong: #0839a0;
+        --bg: #09111f;
+        --bg-soft: #0f1a2d;
+        --panel: rgba(14, 24, 42, 0.86);
+        --panel-strong: #121d31;
+        --border: rgba(124, 151, 214, 0.2);
+        --text: #eef4ff;
+        --muted: #91a3c7;
+        --marketing-1: #3b82f6;
+        --marketing-2: #06b6d4;
+        --disabled-1: rgba(24, 36, 61, 0.98);
+        --disabled-2: rgba(17, 27, 46, 0.98);
+        --shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
       }
 
       * {
@@ -33,34 +34,22 @@
         min-height: 100vh;
         font-family: 'Nunito', 'Trebuchet MS', 'Segoe UI', sans-serif;
         background:
-          radial-gradient(860px 380px at -5% -8%, rgba(12, 78, 217, 0.11) 0%, transparent 60%),
-          radial-gradient(760px 420px at 108% 12%, rgba(12, 78, 217, 0.08) 0%, transparent 52%),
-          var(--bg);
-        color: var(--ink);
+          radial-gradient(circle at top left, rgba(59, 130, 246, 0.18) 0%, transparent 26%),
+          radial-gradient(circle at 85% 15%, rgba(8, 145, 178, 0.16) 0%, transparent 22%),
+          linear-gradient(180deg, #08101c 0%, #0b1423 48%, #0a1120 100%);
+        color: var(--text);
         padding: 24px;
-      }
-
-      body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        background-image:
-          linear-gradient(rgba(9, 54, 145, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(9, 54, 145, 0.035) 1px, transparent 1px);
-        background-size: 42px 42px;
-        mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 0%, transparent 82%);
       }
 
       .module-shell {
         width: min(1120px, 100%);
         margin: 0 auto;
-        border: 1px solid var(--line);
+        border: 1px solid var(--border);
         border-radius: 5px;
-        background: var(--panel);
+        background: linear-gradient(180deg, rgba(14, 24, 42, 0.92) 0%, rgba(10, 17, 30, 0.96) 100%);
+        box-shadow: var(--shadow);
         overflow: hidden;
-        position: relative;
-        z-index: 1;
+        backdrop-filter: blur(16px);
       }
 
       .module-topbar {
@@ -69,8 +58,8 @@
         justify-content: space-between;
         gap: 16px;
         padding: 18px 24px;
-        border-bottom: 1px solid var(--line);
-        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        border-bottom: 1px solid rgba(125, 150, 214, 0.14);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
       }
 
       .module-brand {
@@ -80,29 +69,22 @@
       }
 
       .module-brand-badge {
-        width: 52px;
-        height: 52px;
-        border-radius: 8px;
+        width: 42px;
+        height: 42px;
+        border-radius: 5px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: #fff;
-        border: 1px solid var(--line);
-        overflow: hidden;
-      }
-
-      .module-brand-badge img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        padding: 6px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(6, 182, 212, 0.22) 100%);
+        border: 1px solid rgba(96, 165, 250, 0.26);
+        color: #9fdcff;
+        font-size: 1rem;
       }
 
       .module-brand-title {
         margin: 0;
         font-size: 1rem;
         font-weight: 800;
-        color: #071736;
       }
 
       .module-brand-subtitle {
@@ -125,17 +107,16 @@
         min-height: 42px;
         padding: 0 14px;
         border-radius: 5px;
-        border: 1px solid #9bb7ef;
-        color: #0a3aa4;
+        border: 1px solid rgba(140, 163, 214, 0.18);
+        color: #d9e5ff;
         text-decoration: none;
         font-weight: 800;
-        background: #fff;
+        background: rgba(255, 255, 255, 0.03);
       }
 
       .module-topbar-link:hover {
-        background: #eaf1ff;
-        border-color: #4f7fe0;
-        color: #072b7b;
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(140, 163, 214, 0.28);
       }
 
       .module-header h1 {
@@ -146,7 +127,7 @@
 
       .module-header p {
         margin: 12px 0 0;
-        color: var(--ink-soft);
+        color: var(--muted);
         font-size: 1rem;
         max-width: 620px;
       }
@@ -169,9 +150,9 @@
         min-height: 36px;
         padding: 0 12px;
         border-radius: 999px;
-        background: rgba(12, 78, 217, 0.08);
-        border: 1px solid rgba(12, 78, 217, 0.18);
-        color: #0a3aa4;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(136, 160, 214, 0.16);
+        color: #d8e4ff;
         font-size: 0.86rem;
         font-weight: 700;
       }
@@ -185,8 +166,8 @@
 
       .module-card {
         border-radius: 5px;
-        border: 1px solid var(--line);
-        background: var(--panel-alt);
+        border: 1px solid rgba(141, 164, 214, 0.16);
+        background: linear-gradient(180deg, var(--disabled-1) 0%, var(--disabled-2) 100%);
         min-height: 190px;
         text-decoration: none;
         color: inherit;
@@ -194,7 +175,7 @@
         display: grid;
         align-content: space-between;
         gap: 18px;
-        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
         position: relative;
         overflow: hidden;
       }
@@ -203,7 +184,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(12, 78, 217, 0.08) 0%, rgba(12, 78, 217, 0) 62%);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
         pointer-events: none;
       }
 
@@ -221,9 +202,9 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: rgba(12, 78, 217, 0.1);
-        border: 1px solid rgba(12, 78, 217, 0.22);
-        color: #0a3aa4;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #dfe9ff;
         font-size: 1.2rem;
       }
 
@@ -238,9 +219,8 @@
         font-weight: 800;
         letter-spacing: 0.02em;
         text-transform: uppercase;
-        background: #e9f1ff;
-        border: 1px solid #bfd2f7;
-        color: #0a3aa4;
+        background: rgba(255, 255, 255, 0.07);
+        color: #d8e6ff;
       }
 
       .module-card h2 {
@@ -248,12 +228,11 @@
         font-size: 1.16rem;
         position: relative;
         z-index: 1;
-        color: #0b1b3e;
       }
 
       .module-card p {
         margin: 10px 0 0;
-        color: var(--ink-soft);
+        color: #9eb0d2;
         font-size: 0.92rem;
         line-height: 1.5;
         position: relative;
@@ -261,7 +240,7 @@
       }
 
       .module-card span {
-        color: #35507d;
+        color: #aec0e3;
         font-size: 0.86rem;
         font-weight: 700;
         position: relative;
@@ -269,14 +248,16 @@
       }
 
       .module-card.active {
-        border-color: rgba(12, 78, 217, 0.42);
-        background: linear-gradient(145deg, #0c4ed9 0%, #0a42bb 100%);
+        border-color: rgba(77, 161, 255, 0.4);
+        background: linear-gradient(145deg, rgba(18, 62, 151, 0.96) 0%, rgba(8, 112, 157, 0.96) 100%);
         color: #ffffff;
+        box-shadow: 0 22px 34px rgba(17, 92, 186, 0.32);
       }
 
       .module-card:hover {
         transform: translateY(-3px);
-        border-color: var(--line-strong);
+        border-color: rgba(140, 163, 214, 0.28);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.22);
       }
 
       .module-card.active span {
@@ -285,20 +266,6 @@
 
       .module-card.active p {
         color: rgba(240, 248, 255, 0.88);
-      }
-      .module-card.active h2 {
-        color: rgba(240, 248, 255, 0.88);
-      }
-      .module-card.active .module-icon {
-        background: rgba(255, 255, 255, 0.18);
-        border-color: rgba(255, 255, 255, 0.3);
-        color: #ffffff;
-      }
-
-      .module-card.active .module-badge {
-        background: rgba(255, 255, 255, 0.18);
-        border-color: rgba(255, 255, 255, 0.26);
-        color: #ffffff;
       }
 
       .module-card.disabled {
@@ -311,7 +278,7 @@
       }
 
       .module-card.disabled .module-icon {
-        color: #5e7298;
+        color: #93a5cb;
       }
 
       .module-footer {
@@ -322,19 +289,16 @@
         padding: 0 28px 28px;
         color: var(--muted);
         font-size: 0.9rem;
-        border-top: 1px solid var(--line);
-        margin-top: 6px;
-        padding-top: 18px;
       }
 
       .module-footer a {
-        color: #0a3aa4;
+        color: #d9e5ff;
         text-decoration: none;
         font-weight: 800;
       }
 
       .module-footer a:hover {
-        color: #072b7b;
+        color: #ffffff;
       }
 
       @media (max-width: 760px) {
@@ -366,7 +330,7 @@
       <div class="module-topbar">
         <div class="module-brand">
           <span class="module-brand-badge">
-            <img src="/static/assets/elo-educacao-solid.png" alt="Elo Educação" />
+            <i class="fa-solid fa-grid-2"></i>
           </span>
           <div>
             <p class="module-brand-title">Control Center</p>
